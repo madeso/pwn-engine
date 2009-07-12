@@ -16,14 +16,14 @@ namespace pwn
 			else return -1;
 		}
 
-        const real Curve(const real newValue, const real oldValue, const real smoothingValue)
-        {
-            const int sign = Sign(oldValue - newValue);
-            const real slip = (oldValue - newValue) / smoothingValue;
-            const real val = oldValue - slip;
-            if (sign != Sign(val - newValue)) return newValue;
-            else return val;
-        }
+		const real Curve(const real newValue, const real oldValue, const real smoothingValue)
+		{
+			const int sign = Sign(oldValue - newValue);
+			const real slip = (oldValue - newValue) / smoothingValue;
+			const real val = oldValue - slip;
+			if (sign != Sign(val - newValue)) return newValue;
+			else return val;
+		}
 
 		const real Square(const real r)
 		{
@@ -399,23 +399,23 @@ namespace pwn
 		}
 
 		quat lerp(const quat& a, const float v, const quat& b)
-        {
-            return GetNormalized(a + v * (b - a));
-        }
-		
+		{
+			return GetNormalized(a + v * (b - a));
+		}
+
 		const quat Slerp(const quat& a, const real v, const quat& b)
 		{
-            float d = dot(a, b);
-            if (d > PWN_MATH_VALUE(0.9995))
-            {
-                return lerp(a, v, b);
-            }
-            d = Within(-1, d, 1);
-            const Angle theta0 = Acos(d);
-            const Angle theta = theta0 * v;
+			float d = dot(a, b);
+			if (d > PWN_MATH_VALUE(0.9995))
+			{
+				return lerp(a, v, b);
+			}
+			d = Within(-1, d, 1);
+			const Angle theta0 = Acos(d);
+			const Angle theta = theta0 * v;
 
-            const quat q = GetNormalized(b - a * d);
-            return a * Cos(theta) + q * Sin(theta);
+			const quat q = GetNormalized(b - a * d);
+			return a * Cos(theta) + q * Sin(theta);
 		}
 
 		// forces the interpolatation to go the "short way"
@@ -544,12 +544,12 @@ namespace pwn
 		}
 
 		const quat FpsQuat(const float dx, const float dy)
-        {
+		{
 			const quat rx = cquat(RightHandAround(Up(), Angle::FromDegrees(-dx)));
 			const quat ry = cquat(RightHandAround(Right(), Angle::FromDegrees(-dy)));
-            const quat final = rx * ry;
-            return final;
-        }
+			const quat final = rx * ry;
+			return final;
+		}
 
 		// todo: add
 		//const quat cquat(const Euler& e);
@@ -661,9 +661,9 @@ namespace pwn
 		}
 
 		real dot(const quat& lhs, const quat& rhs)
-        {
-            return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z +lhs.w * rhs.w;
-        }
+		{
+			return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z +lhs.w * rhs.w;
+		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////// rect-op
@@ -914,14 +914,14 @@ namespace pwn
 		}
 
 		const vec2 FromTo(const vec2& from, const vec2& to)
-        {
-            return to - from;
-        }
+		{
+			return to - from;
+		}
 
 		const vec2 Curve(const vec2& target, const vec2& old, float smoothing)
-        {
-            return vec2(Curve(target.x, old.x, smoothing), Curve(target.y, old.y, smoothing));
-        }
+		{
+			return vec2(Curve(target.x, old.x, smoothing), Curve(target.y, old.y, smoothing));
+		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////// vec3
@@ -1070,19 +1070,19 @@ namespace pwn
 		}
 
 		vec3 Curve(const vec3& target, const vec3& old, real smoothing)
-        {
-            return vec3(Curve(target.x, old.x, smoothing), Curve(target.y, old.y, smoothing), Curve(target.z, old.z, smoothing) );
-        }
+		{
+			return vec3(Curve(target.x, old.x, smoothing), Curve(target.y, old.y, smoothing), Curve(target.z, old.z, smoothing) );
+		}
 
 		const vec3 FromTo(const vec3& from, const vec3& to)
-        {
-            return to - from;
-        }
+		{
+			return to - from;
+		}
 
-        vec3 lerp(const vec3& f, real scale, const vec3& t)
-        {
-            return f + (t - f) * scale;
-        }
+		vec3 lerp(const vec3& f, real scale, const vec3& t)
+		{
+			return f + (t - f) * scale;
+		}
 
 		// -----------------------------------------------------------------------------------
 

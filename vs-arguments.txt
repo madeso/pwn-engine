@@ -1,0 +1,4 @@
+output-directory: $(SolutionDir)..\..\dist\$(ConfigurationName)
+intermediate directory: $(SolutionDir)..\..\temp\$(ProjectName)\$(ConfigurationName)
+
+additional include dir: "$(SolutionDir)..\..\inc\"

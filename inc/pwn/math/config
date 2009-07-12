@@ -1,0 +1,13 @@
+#ifndef PWN_MATH_CONFIG
+#define PWN_MATH_CONFIG
+
+namespace pwn
+{
+	namespace math
+	{
+		typedef float real;
+		#define PWN_MATH_VALUE(x) x##f
+	}
+}
+
+#endif

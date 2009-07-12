@@ -1,0 +1,137 @@
+#ifndef PWN_MATH_TYPES
+#define PWN_MATH_TYPES
+
+#include <pwn/math/config>
+
+namespace pwn
+{
+	namespace math
+	{
+		struct quat;
+
+		struct vec2
+		{
+			real x, y;
+
+			vec2(real x, real y);
+
+			real* data();
+			const real* data() const;
+
+			real& operator[](int index);
+			const real operator[](int index) const;
+
+			void operator+=(const vec2& rhs);
+			void operator-=(const vec2& rhs);
+			void operator*=(const real rhs);
+			void operator/=(const real rhs);
+		};
+
+		struct vec3
+		{
+			real x;
+			real y;
+			real z;
+
+			vec3(const real x, const real y, const real z);
+			explicit vec3(const quat& q);
+
+			real* data();
+			const real* data() const;
+
+			real& operator[](int index);
+			const real operator[](int index) const;
+
+			void operator+=(const vec3& rhs);
+			void operator-=(const vec3& rhs);
+			void operator*=(const real rhs);
+			void operator/=(const real rhs);
+		};
+
+		struct quat
+		{
+			real x, y, z, w;
+
+			quat(const real ax, const real ay, const real az, const real aw);
+			quat(const vec3& v, const real w);
+			quat(const real w, const vec3& v);
+			quat(); // does nothing
+			void operator*=(const quat& q);
+
+			void operator+=(const quat& rhs);
+			void operator-=(const quat& rhs);
+			void operator*=(const real rhs);
+			void operator/=(const real rhs);
+		};
+
+		struct direction2
+		{
+			direction2(float x, float y);
+			explicit direction2(const vec2& data);
+
+			void operator+=(const direction2& rhs);
+
+			vec2 vec;
+		};
+
+		struct point2
+		{
+			point2(float x, float y);
+			explicit point2(const vec2& data);
+
+			const real x() const;
+			const real y() const;
+
+			void operator+=(const direction2& dir);
+
+			vec2 vec;
+		};
+
+		struct rect
+		{
+			rect(const point2& ul, const point2& lr);
+			point2 upperLeft;
+			point2 lowerRight;
+		};
+
+		struct Angle
+		{
+		public:
+			const real inDegrees() const;
+			const real inRadians() const;
+
+			static const Angle FromDegrees(real deg);
+			static const Angle FromRadians(real rad);
+
+			void wrap();
+
+			void operator+=(const Angle& rhs);
+			void operator-=(const Angle& rhs);
+			void operator*=(const real r);
+		private:
+			explicit Angle(real rad);
+			real mRad;
+		};
+
+		// axis is unit-vector
+		// rotation works according to right-hand rule
+		struct AxisAngle
+		{
+			// according to righthand rule, prefer RightHandAround function for documentation purposes
+			AxisAngle(const vec3& axis, const Angle& angle);
+
+			vec3 axis;
+			Angle angle;
+		};
+
+		struct ArcBall
+		{
+			ArcBall(const vec2& center, const real radius);
+
+			vec2 center;
+			real radius;
+		};
+	}
+}
+
+#endif

@@ -7,11 +7,11 @@ namespace pwn
 {
 	namespace math
 	{
+		struct vec2;
+		struct vec3;
 		struct point2;
 		struct direction2;
 		struct rect;
-		struct vec2;
-		struct vec3;
 		struct Angle;
 		struct quat;
 		struct AxisAngle;
@@ -21,8 +21,8 @@ namespace pwn
 		// math1
 
 		const int Sign(const real r);
-		 // larger smoothing values result in a smoother but less resposive path
-        const real Curve(const real newValue, const real oldValue, const real smoothingValue);
+		// larger smoothing values result in a smoother but less resposive path
+		const real Curve(const real newValue, const real oldValue, const real smoothingValue);
 		const real Abs(const real r);
 		const real Square(const real r);
 		const real Sqrt(const real r);
@@ -68,72 +68,6 @@ namespace pwn
 		const vec2 FromTo(const vec2& from, const vec2& to);
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////
-		// rect
-
-		const point2 Remap(const rect& from, const point2& p, const rect& to);
-
-		real TopOf(const rect& r);
-		real BottomOf(const rect& r);
-		real LeftOf(const rect& r);
-		real RightOf(const rect& r);
-
-		const rect FromUpperLeftAndSize(const point2& point, const direction2& size);
-		const rect FromUpperLeftAndSize(const point2& point, const real width, const real height);
-		const rect FromUpperLeftAndSize(const point2& point, const real size);
-
-		const rect FromUpperLeftAndLowerRight(const point2& ul, const point2& lr);
-
-		const rect FromSizeAndCenter(const direction2& size, const point2& center);
-		const rect FromSizeAndCenter(const real size, const point2& center);
-		const rect FromLrud(const real left, const real right, const real up, const real down);
-
-		const rect MoveCopyTo(const rect& r, const point2& point);
-
-		const rect TurnCopyUpsideDown(const rect& r, const real scale = 1.0f);
-		// move
-		const rect operator+(const rect& lhs, const direction2& rhs);
-		const rect operator+(const direction2& lhs, const rect& rhs);
-
-		// uniform scale
-		const rect operator*(const rect& r, const real scale);
-		const rect operator*(const real scale, const rect& r);
-
-		const point2 Within(const point2& loc, const rect& region);
-		const point2 Within(const point2& loc, const rect& region, const rect& object);
-		const bool IsWithin(const point2& loc, const rect& region);
-		// IsWithin/DoesOverlap functions?
-
-		//////////////////////////////////////////////////////////////////////////////////////////////////
-		// point2
-
-		//constants
-		const point2 Origo2();
-
-		// standard operators
-		const point2 operator+(const point2& lhs, const direction2& rhs);
-		const point2 operator+(const direction2& lhs, const point2& rhs);
-		const direction2 operator+(const direction2& lhs, const direction2& rhs);
-
-		const point2 operator-(const point2& lhs, const direction2& rhs);
-		const point2 operator-(const direction2& lhs, const point2& rhs);
-		const direction2 operator-(const direction2& lhs, const direction2& rhs);
-
-		const direction2 operator*(const direction2& lhs, const real rhs);
-		const direction2 operator*(const real lhs, const direction2& rhs);
-		// uniform scaling
-		const point2 operator*(const point2& lhs, const real rhs);
-		const point2 operator*(const real lhs, const point2& rhs);
-
-		const direction2 operator/(const direction2& lhs, const real rhs);
-
-		// util functions
-		const real LengthOf(const direction2& dir);
-		const direction2 ToUnit(const direction2& dir);
-
-		const direction2 Between(const point2& from, const point2& to);
-		const float DistanceBetween(const point2& from, const point2& to);
-
-		//////////////////////////////////////////////////////////////////////////////////////////////////
 		// vec3
 
 		real LengthOf(const vec3& vec);
@@ -168,7 +102,7 @@ namespace pwn
 		const Angle AngleBetween(const vec3& a, const vec3& b, const vec3& perpa);
 
 		vec3 Curve(const vec3& target, const vec3& old, real smoothing);
-        vec3 lerp(const vec3& f, real scale, const vec3& t);
+		vec3 lerp(const vec3& f, real scale, const vec3& t);
 
 		const vec3 FromTo(const vec3& from, const vec3& to);
 
@@ -220,10 +154,71 @@ namespace pwn
 
 		real dot(const quat& lhs, const quat& rhs);
 
-		/////////////////////////////////////////////////////////////////
-		// AxisAngle
+		//////////////////////////////////////////////////////////////////////////////////////////////////
+		// point2
 
-		const AxisAngle RightHandAround(const vec3& axis, const Angle& angle);
+		//constants
+		const point2 Origo2();
+
+		// standard operators
+		const point2 operator+(const point2& lhs, const direction2& rhs);
+		const point2 operator+(const direction2& lhs, const point2& rhs);
+		const point2 operator-(const point2& lhs, const direction2& rhs);
+		const point2 operator-(const direction2& lhs, const point2& rhs);
+
+		// uniform scaling
+		const point2 operator*(const point2& lhs, const real rhs);
+		const point2 operator*(const real lhs, const point2& rhs);
+
+		const float DistanceBetween(const point2& from, const point2& to);
+
+		///////////////////////////////////////////////////////////////////////////////////////////////////
+		// direction2
+
+		const direction2 Between(const point2& from, const point2& to);
+		const direction2 ToUnit(const direction2& dir);
+		const direction2 operator/(const direction2& lhs, const real rhs);
+		const direction2 operator*(const direction2& lhs, const real rhs);
+		const direction2 operator*(const real lhs, const direction2& rhs);
+		const real LengthOf(const direction2& dir);
+		const direction2 operator-(const direction2& lhs, const direction2& rhs);
+		const direction2 operator+(const direction2& lhs, const direction2& rhs);
+
+		//////////////////////////////////////////////////////////////////////////////////////////////////
+		// rect
+
+		const point2 Remap(const rect& from, const point2& p, const rect& to);
+
+		real TopOf(const rect& r);
+		real BottomOf(const rect& r);
+		real LeftOf(const rect& r);
+		real RightOf(const rect& r);
+
+		const rect FromUpperLeftAndSize(const point2& point, const direction2& size);
+		const rect FromUpperLeftAndSize(const point2& point, const real width, const real height);
+		const rect FromUpperLeftAndSize(const point2& point, const real size);
+
+		const rect FromUpperLeftAndLowerRight(const point2& ul, const point2& lr);
+
+		const rect FromSizeAndCenter(const direction2& size, const point2& center);
+		const rect FromSizeAndCenter(const real size, const point2& center);
+		const rect FromLrud(const real left, const real right, const real up, const real down);
+
+		const rect MoveCopyTo(const rect& r, const point2& point);
+
+		const rect TurnCopyUpsideDown(const rect& r, const real scale = 1.0f);
+		// move
+		const rect operator+(const rect& lhs, const direction2& rhs);
+		const rect operator+(const direction2& lhs, const rect& rhs);
+
+		// uniform scale
+		const rect operator*(const rect& r, const real scale);
+		const rect operator*(const real scale, const rect& r);
+
+		const point2 Within(const point2& loc, const rect& region);
+		const point2 Within(const point2& loc, const rect& region, const rect& object);
+		const bool IsWithin(const point2& loc, const rect& region);
+		// IsWithin/DoesOverlap functions for rect-rect functions?
 
 		/////////////////////////////////////////////////////////////////
 		// Angle
@@ -245,6 +240,11 @@ namespace pwn
 
 		const Angle FromPercentOf360(const real percent);
 		const Angle Zero();
+
+		/////////////////////////////////////////////////////////////////
+		// AxisAngle
+
+		const AxisAngle RightHandAround(const vec3& axis, const Angle& angle);
 
 		///////////////////////////////////////////////////////////////
 		// ArcBall

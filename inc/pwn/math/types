@@ -7,7 +7,15 @@ namespace pwn
 {
 	namespace math
 	{
+		struct vec2;
+		struct vec3;
 		struct quat;
+		struct point2;
+		struct direction2;
+		struct rect;
+		struct AxisAngle;
+		struct Angle;
+		struct ArcBall;
 
 		struct vec2
 		{
@@ -64,16 +72,6 @@ namespace pwn
 			void operator/=(const real rhs);
 		};
 
-		struct direction2
-		{
-			direction2(float x, float y);
-			explicit direction2(const vec2& data);
-
-			void operator+=(const direction2& rhs);
-
-			vec2 vec;
-		};
-
 		struct point2
 		{
 			point2(float x, float y);
@@ -83,6 +81,16 @@ namespace pwn
 			const real y() const;
 
 			void operator+=(const direction2& dir);
+
+			vec2 vec;
+		};
+
+		struct direction2
+		{
+			direction2(float x, float y);
+			explicit direction2(const vec2& data);
+
+			void operator+=(const direction2& rhs);
 
 			vec2 vec;
 		};

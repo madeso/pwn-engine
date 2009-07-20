@@ -61,11 +61,12 @@ namespace pwn
 			real x, y, z, w;
 
 			quat(const real ax, const real ay, const real az, const real aw);
+
 			quat(const vec3& v, const real w);
 			quat(const real w, const vec3& v);
-			quat(); // does nothing
-			void operator*=(const quat& q);
+			explicit quat(const AxisAngle& aa);
 
+			void operator*=(const quat& q);
 			void operator+=(const quat& rhs);
 			void operator-=(const quat& rhs);
 			void operator*=(const real rhs);
@@ -127,6 +128,7 @@ namespace pwn
 		{
 			// according to righthand rule, prefer RightHandAround function for documentation purposes
 			AxisAngle(const vec3& axis, const Angle& angle);
+			explicit AxisAngle(const quat& q);
 
 			vec3 axis;
 			Angle angle;

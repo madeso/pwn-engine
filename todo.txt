@@ -1,3 +1,4 @@
+remove quatw and quat(x,y,z,w) contructor in favor of the vec-real constructors
 investigate other, more liberal, licenses
 add more tests
 add mat33 & mat44 from old code

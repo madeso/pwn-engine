@@ -219,6 +219,8 @@ namespace pwn
 			y /= rhs;
 		}
 
+		// -----------------------------------------
+
 		real LengthOf(const vec2& vec)
 		{
 			//return c(&vec).length();
@@ -240,6 +242,23 @@ namespace pwn
 		{
 			*vec /= LengthOf(*vec);
 		}
+
+		const vec2 FromTo(const vec2& from, const vec2& to)
+		{
+			return to - from;
+		}
+
+		const vec2 Curve(const vec2& target, const vec2& old, float smoothing)
+		{
+			return vec2(Curve(target.x, old.x, smoothing), Curve(target.y, old.y, smoothing));
+		}
+
+		const vec2 ChangeY(const vec2& v, const real newy)
+		{
+			return vec2(v.x, newy);
+		}
+
+		// ---------------------------------------------------
 
 		const vec2 operator+(const vec2& lhs, const vec2& rhs)
 		{
@@ -275,16 +294,6 @@ namespace pwn
 		const vec2 operator-(const vec2& vec)
 		{
 			return vec2(-vec.x, -vec.y);
-		}
-
-		const vec2 FromTo(const vec2& from, const vec2& to)
-		{
-			return to - from;
-		}
-
-		const vec2 Curve(const vec2& target, const vec2& old, float smoothing)
-		{
-			return vec2(Curve(target.x, old.x, smoothing), Curve(target.y, old.y, smoothing));
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -380,6 +389,38 @@ namespace pwn
 			*vec /= LengthOf(*vec);
 		}
 
+		const vec3 cross(const vec3& lhs, const vec3& rhs)
+		{
+			return vec3(lhs.y*rhs.z - lhs.z*rhs.y, lhs.z*rhs.x - lhs.x*rhs.z, lhs.x*rhs.y - lhs.y*rhs.x);
+		}
+
+		const real dot(const vec3& lhs, const vec3& rhs)
+		{
+			return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
+		}
+
+		const vec3 crossNorm(const vec3& lhs, const vec3& rhs)
+		{
+			return GetNormalized( cross(lhs, rhs) );
+		}
+
+		vec3 Curve(const vec3& target, const vec3& old, real smoothing)
+		{
+			return vec3(Curve(target.x, old.x, smoothing), Curve(target.y, old.y, smoothing), Curve(target.z, old.z, smoothing) );
+		}
+
+		const vec3 FromTo(const vec3& from, const vec3& to)
+		{
+			return to - from;
+		}
+
+		vec3 lerp(const vec3& f, real scale, const vec3& t)
+		{
+			return f + (t - f) * scale;
+		}
+
+		// ----------------------------------------------------------------------------------
+
 		const vec3 operator+(const vec3& lhs, const vec3& rhs)
 		{
 			vec3 temp = lhs;
@@ -418,36 +459,6 @@ namespace pwn
 			return vec3(-vec.x, -vec.y, -vec.z);
 		}
 
-		const vec3 cross(const vec3& lhs, const vec3& rhs)
-		{
-			return vec3(lhs.y*rhs.z - lhs.z*rhs.y, lhs.z*rhs.x - lhs.x*rhs.z, lhs.x*rhs.y - lhs.y*rhs.x);
-		}
-
-		const real dot(const vec3& lhs, const vec3& rhs)
-		{
-			return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
-		}
-
-		const vec3 crossNorm(const vec3& lhs, const vec3& rhs)
-		{
-			return GetNormalized( cross(lhs, rhs) );
-		}
-
-		vec3 Curve(const vec3& target, const vec3& old, real smoothing)
-		{
-			return vec3(Curve(target.x, old.x, smoothing), Curve(target.y, old.y, smoothing), Curve(target.z, old.z, smoothing) );
-		}
-
-		const vec3 FromTo(const vec3& from, const vec3& to)
-		{
-			return to - from;
-		}
-
-		vec3 lerp(const vec3& f, real scale, const vec3& t)
-		{
-			return f + (t - f) * scale;
-		}
-
 		// -----------------------------------------------------------------------------------
 
 		const Angle AngleBetween(const vec3& a, const vec3& b)
@@ -461,7 +472,6 @@ namespace pwn
 			if ( t.inDegrees() > PWN_MATH_VALUE(90.0) ) return Angle::FromDegrees(180)+s;
 			else return s;
 		}
-
 
 		const vec3 Right()
 		{
@@ -492,15 +502,6 @@ namespace pwn
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////// quat
 
-		const vec3 vec(const quat& q)
-		{
-			return vec3(q.x, q.y, q.z);
-		}
-
-		quat::quat()
-		{
-		}
-
 		quat::quat(const real ax, const real ay, const real az, const real aw)
 			: x(ax)
 			, y(ay)
@@ -524,10 +525,22 @@ namespace pwn
 		{
 		}
 
+		quat::quat(const AxisAngle& aa)
+		{
+			const real s = Sin( aa.angle * 0.5 );
+
+			w = Cos( aa.angle * PWN_MATH_VALUE(0.5));
+			x = aa.axis.x * s;
+			y = aa.axis.y * s;
+			z = aa.axis.z * s;
+
+			Normalize(this);
+		}
+
 		void quat::operator*=(const quat& q)
 		{
-			const float sc = w*q.w - dot(vec(*this), vec(q));
-			const vec3 r = vec(q)*w + vec(*this)*q.w + cross(vec(*this), vec(q));
+			const float sc = w*q.w - dot(vec3(*this), vec3(q));
+			const vec3 r = vec3(q)*w + vec3(*this)*q.w + cross(vec3(*this), vec3(q));
 
 			x = r.x;
 			y = r.y;
@@ -537,32 +550,26 @@ namespace pwn
 
 		void quat::operator+=(const quat& rhs)
 		{
-#define ACT +=
-			x ACT rhs.x;
-			y ACT rhs.y;
-			z ACT rhs.z;
-			w ACT rhs.w;
-#undef ACT
+			x += rhs.x;
+			y += rhs.y;
+			z += rhs.z;
+			w += rhs.w;
 		}
 
 		void quat::operator-=(const quat& rhs)
 		{
-#define ACT -=
-			x ACT rhs.x;
-			y ACT rhs.y;
-			z ACT rhs.z;
-			w ACT rhs.w;
-#undef ACT
+			x -= rhs.x;
+			y -= rhs.y;
+			z -= rhs.z;
+			w -= rhs.w;
 		}
 
 		void quat::operator*=(const real rhs)
 		{
-#define ACT *=
-			x ACT rhs;
-			y ACT rhs;
-			z ACT rhs;
-			w ACT rhs;
-#undef ACT
+			x *= rhs;
+			y *= rhs;
+			z *= rhs;
+			w *= rhs;
 		}
 
 		void quat::operator/=(const real rhs)
@@ -651,12 +658,6 @@ namespace pwn
 			Conjugate(&t);
 			return t;
 		}
-		const quat operator*(const quat& lhs, const quat& rhs)
-		{
-			quat temp = lhs;
-			temp *= rhs;
-			return temp;
-		}
 
 		const vec3 In(const quat& q)
 		{
@@ -695,26 +696,13 @@ namespace pwn
 
 		const vec3 RotateAroundOrigo(const quat& q, const vec3& v)
 		{
-			const quat r = q * quat(v.x, v.y, v.z, PWN_MATH_VALUE(0.0)) * GetConjugate(q);
-			return vec3(r.x, r.y, r.z);
+			const quat r = q * quat(v, PWN_MATH_VALUE(0.0)) * GetConjugate(q);
+			return vec3(r);
 		}
 
 		const quat Combine(const quat& current, const quat& extra)
 		{
 			return extra * current;
-		}
-
-		const quat cquat(const AxisAngle& aa)
-		{
-			const real s = Sin( aa.angle * 0.5 );
-			quat q;
-			q.x = aa.axis.x * s;
-			q.y = aa.axis.y * s;
-			q.z = aa.axis.z * s;
-			q.w = Cos( aa.angle * PWN_MATH_VALUE(0.5) );
-
-			Normalize(&q);
-			return q;
 		}
 
 		namespace // local
@@ -725,38 +713,20 @@ namespace pwn
 			}
 		}
 
-		// rewrite to better fit the mathematics instead of this "hack"
-		const AxisAngle ToAxisAngle(const quat& q)
-		{
-			// assert nonunit?
-			// check if w is 1 instead?
-			if ( isZero(q.x) && isZero(q.y) && isZero(q.z) )
-			{
-				return AxisAngle(In(), Angle::FromRadians(PWN_MATH_VALUE(0.0)));
-			}
-			else
-			{
-				return AxisAngle(vec(q), Acos(q.w)*PWN_MATH_VALUE(2.0));
-			}
-		}
-
 		const quat FpsQuat(const float dx, const float dy)
 		{
-			const quat rx = cquat(RightHandAround(Up(), Angle::FromDegrees(-dx)));
-			const quat ry = cquat(RightHandAround(Right(), Angle::FromDegrees(-dy)));
+			const quat rx(RightHandAround(Up(), Angle::FromDegrees(-dx)));
+			const quat ry(RightHandAround(Right(), Angle::FromDegrees(-dy)));
 			const quat final = rx * ry;
 			return final;
 		}
 
-		// todo: add
-		//const quat cquat(const Euler& e);
+		//quat::quat(const Euler& e);
 
 		const quat qIdentity()
 		{
-			quat q;
-			q.x = q.y = q.z = PWN_MATH_VALUE(0.0);
-			q.w = PWN_MATH_VALUE(1.0);
-			return q;
+			return quat(PWN_MATH_VALUE(1.0),
+				vec3(PWN_MATH_VALUE(0.0), PWN_MATH_VALUE(0.0), PWN_MATH_VALUE(0.0)));
 		}
 
 		const quat qLookAt(const vec3& from, const vec3& to, const vec3& up)
@@ -819,6 +789,20 @@ namespace pwn
 			return FromMatrix3(mat);
 		}
 
+		real dot(const quat& lhs, const quat& rhs)
+		{
+			return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z +lhs.w * rhs.w;
+		}
+
+		// -----------------------------------------------------------------------------------------------------------------
+		
+		const quat operator*(const quat& lhs, const quat& rhs)
+		{
+			quat temp = lhs;
+			temp *= rhs;
+			return temp;
+		}
+
 		const quat operator+(const quat& lhs, const quat& rhs)
 		{
 			quat temp = lhs;
@@ -857,11 +841,6 @@ namespace pwn
 			return quat(-vec3(q), -q.w);
 		}
 
-		real dot(const quat& lhs, const quat& rhs)
-		{
-			return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z +lhs.w * rhs.w;
-		}
-
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////// point2
 
@@ -885,39 +864,54 @@ namespace pwn
 		{
 			vec += dir.vec;
 		}
+
+		// -------------------------------------------
+
 		const point2 Origo2()
 		{
 			return point2(PWN_MATH_VALUE(0.0),PWN_MATH_VALUE(0.0));
 		}
 
+		const float DistanceBetween(const point2& from, const point2& to)
+		{
+			return LengthOf(Between(from, to));
+		}
+
+		const point2 ChangeY(const point2& v, const real newy)
+		{
+			return point2(v.vec.x, newy);
+		}
+
+		// -------------------------------------------
+
 		const point2 operator+(const point2& lhs, const direction2& rhs)
 		{
 			return point2(lhs.vec+rhs.vec);
 		}
+
 		const point2 operator+(const direction2& lhs, const point2& rhs)
 		{
 			return point2(lhs.vec+rhs.vec);
 		}
+
 		const point2 operator-(const point2& lhs, const direction2& rhs)
 		{
 			return point2(lhs.vec-rhs.vec);
 		}
+
 		const point2 operator-(const direction2& lhs, const point2& rhs)
 		{
 			return point2(lhs.vec-rhs.vec);
 		}
+
 		const point2 operator*(const point2& lhs, const real rhs)
 		{
 			return point2(lhs.vec*rhs);
 		}
+
 		const point2 operator*(const real lhs, const point2& rhs)
 		{
 			return point2(lhs*rhs.vec);
-		}
-		
-		const float DistanceBetween(const point2& from, const point2& to)
-		{
-			return LengthOf(Between(from, to));
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -927,20 +921,39 @@ namespace pwn
 			: vec(x, y)
 		{
 		}
+
 		direction2::direction2(const vec2& data)
 			: vec(data)
 		{
 		}
+
 		void direction2::operator+=(const direction2& rhs)
 		{
 			vec += rhs.vec;
 		}
+
+		// ------------------------------------------------------------------------
+
+		const real LengthOf(const direction2& dir)
+		{
+			return LengthOf(dir.vec);
+		}
+		const direction2 ToUnit(const direction2& dir)
+		{
+			return direction2( GetNormalized(dir.vec) );
+		}
+
+		const direction2 Between(const point2& from, const point2& to)
+		{
+			return direction2( to.vec-from.vec );
+		}
+
+		// ------------------------------------------------------------------------
 		
 		const direction2 operator+(const direction2& lhs, const direction2& rhs)
 		{
 			return direction2(lhs.vec+rhs.vec);
 		}
-
 		
 		const direction2 operator-(const direction2& lhs, const direction2& rhs)
 		{
@@ -960,20 +973,6 @@ namespace pwn
 			return direction2(lhs.vec / rhs);
 		}
 
-		const real LengthOf(const direction2& dir)
-		{
-			return LengthOf(dir.vec);
-		}
-		const direction2 ToUnit(const direction2& dir)
-		{
-			return direction2( GetNormalized(dir.vec) );
-		}
-
-		const direction2 Between(const point2& from, const point2& to)
-		{
-			return direction2( to.vec-from.vec );
-		}
-
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////// rect
 
@@ -983,21 +982,7 @@ namespace pwn
 		{
 		}
 
-		const vec2 ChangeY(const vec2& v, const real newy)
-		{
-			return vec2(v.x, newy);
-		}
-
-		const point2 ChangeY(const point2& v, const real newy)
-		{
-			return point2(v.vec.x, newy);
-		}
-
-		const point2 Remap(const rect& from, const point2& p, const rect& to)
-		{
-			return point2( Remap(LeftOf(from), RightOf(from), p.vec.x, LeftOf(to), RightOf(to)) ,
-				Remap(TopOf(from), BottomOf(from), p.vec.y, TopOf(to), BottomOf(to)) );
-		}
+		// -----------------------------------------------------------------------------
 
 		real TopOf(const rect& r)
 		{
@@ -1073,6 +1058,30 @@ namespace pwn
 			return FromUpperLeftAndLowerRight(ChangeY(r.upperLeft, upper), ChangeY(r.lowerRight, lower));
 		}
 
+		const point2 Remap(const rect& from, const point2& p, const rect& to)
+		{
+			return point2( Remap(LeftOf(from), RightOf(from), p.vec.x, LeftOf(to), RightOf(to)) ,
+				Remap(TopOf(from), BottomOf(from), p.vec.y, TopOf(to), BottomOf(to)) );
+		}
+
+		const point2 KeepWithin(const point2& loc, const rect& region)
+		{
+			return point2( Within(LeftOf(region), loc.vec.x, RightOf(region)), Within(BottomOf(region), loc.vec.y, TopOf(region)));
+		}
+
+		const point2 KeepWithin(const point2& loc, const rect& region, const rect& object)
+		{
+			return point2( Within(LeftOf(region)-LeftOf(object), loc.vec.x, RightOf(region)-RightOf(object)), Within(BottomOf(region)-BottomOf(object), loc.vec.y, TopOf(region)-TopOf(object)));
+		}
+
+		const bool IsWithin(const point2& loc, const rect& region)
+		{
+			return IsWithin(LeftOf(region), loc.vec.x, RightOf(region))
+				&& IsWithin(BottomOf(region), loc.vec.y, TopOf(region));
+		}
+
+		// ------------------------------------------------------------------------
+
 		const rect operator+(const rect& lhs, const direction2& rhs)
 		{
 			return rect(lhs.upperLeft+rhs, lhs.lowerRight+rhs);
@@ -1091,22 +1100,6 @@ namespace pwn
 		const rect operator*(const real scale, const rect& r)
 		{
 			return rect(r.upperLeft*scale, r.lowerRight*scale);
-		}
-
-		const point2 Within(const point2& loc, const rect& region)
-		{
-			return point2( Within(LeftOf(region), loc.vec.x, RightOf(region)), Within(BottomOf(region), loc.vec.y, TopOf(region)));
-		}
-
-		const point2 Within(const point2& loc, const rect& region, const rect& object)
-		{
-			return point2( Within(LeftOf(region)-LeftOf(object), loc.vec.x, RightOf(region)-RightOf(object)), Within(BottomOf(region)-BottomOf(object), loc.vec.y, TopOf(region)-TopOf(object)));
-		}
-
-		const bool IsWithin(const point2& loc, const rect& region)
-		{
-			return IsWithin(LeftOf(region), loc.vec.x, RightOf(region))
-				&& IsWithin(BottomOf(region), loc.vec.y, TopOf(region));
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1250,6 +1243,15 @@ namespace pwn
 		{
 		}
 
+		// rewrite to better fit the mathematics instead of this "hack"
+		AxisAngle::AxisAngle(const quat& q)
+			: axis(q)
+			, angle(Acos(q.w)*PWN_MATH_VALUE(2.0))
+		{
+			if ( isZero(q.x) && isZero(q.y) && isZero(q.z) ) axis = In();
+			else Normalize(&axis);
+		}
+
 		const AxisAngle RightHandAround(const vec3& axis, const Angle& angle)
 		{
 			return AxisAngle(axis, angle);
@@ -1284,7 +1286,7 @@ namespace pwn
 			const vec3 t = PointOnBall(arc, to);
 			const vec3 axis = crossNorm(f,t);
 			const Angle angle = AngleBetween(f,t);
-			return cquat(RightHandAround(axis, angle));
+			return quat(RightHandAround(axis, angle));
 		}
 	}
 }

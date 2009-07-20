@@ -23,23 +23,26 @@ namespace pwn
 		const int Sign(const real r);
 		// larger smoothing values result in a smoother but less resposive path
 		const real Curve(const real newValue, const real oldValue, const real smoothingValue);
-		const real Abs(const real r);
 		const real Square(const real r);
 		const real Sqrt(const real r);
+		const real Abs(const real r);
 		const real Min(const real lhs, const real rhs);
 		const real Max(const real lhs, const real rhs);
 		const real Limmit(const real min, const real value, const real max);
 		const real To01(const real L, const real v, const real R);
 		const real From01(const real L, const real v, const real R);
 		const real Remap(const real ol, const real or, const real v, const real nl, const real nr);
-		const real Get360Angular(const real min, const real val,const real max);
+		const real Get360Angular(const real min, const real value, const real max);
 		const real Within(const real min, const real v, const real max);
 		const bool IsWithin(const real min, const real c, const real max);
-		const real Wrap(const real min, const real value, const real max);
-		const int Wrapi(const int min, const int value, const int max);
+
+		const real Wrap(const real min, const real v, const real max);
+		const int Wrapi(const int min, const int v, const int max);
+
 		// return number of wraps (with sign)
 		const int IncrementAndWrap(const real min, real* current, const real change, const real max);
 		const int IncrementAndWrapi(const int min, int* current, const int change, const int max);
+
 		// constants
 		const real Pi();
 		const real HalfPi();
@@ -51,44 +54,42 @@ namespace pwn
 
 		real LengthOf(const vec2& vec);
 		real LengthOfSquared(const vec2& vec);
-
 		const vec2 GetNormalized(const vec2& vec);
 		void Normalize(vec2* vec);
+		const vec2 FromTo(const vec2& from, const vec2& to);
+		const vec2 Curve(const vec2& target, const vec2& old, float smoothing);
+		const vec2 ChangeY(const vec2& v, const real newy);
 
 		const vec2 operator+(const vec2& lhs, const vec2& rhs);
 		const vec2 operator-(const vec2& lhs, const vec2& rhs);
-
 		const vec2 operator*(const real scalar, const vec2& vec);
 		const vec2 operator*(const vec2& vec, const real scalar);
-
 		const vec2 operator/(const vec2& vec, const real scalar);
 		const vec2 operator-(const vec2& vec);
-
-		const vec2 Curve(const vec2& target, const vec2& old, float smoothing);
-		const vec2 FromTo(const vec2& from, const vec2& to);
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////
 		// vec3
 
 		real LengthOf(const vec3& vec);
 		real LengthOfSquared(const vec3& vec);
-
 		const vec3 GetNormalized(const vec3& vec);
 		void Normalize(vec3* vec);
+		const vec3 cross(const vec3& lhs, const vec3& rhs);
+		const real dot(const vec3& lhs, const vec3& rhs);
+		const vec3 crossNorm(const vec3& lhs, const vec3& rhs);
+		vec3 Curve(const vec3& target, const vec3& old, real smoothing);
+		const vec3 FromTo(const vec3& from, const vec3& to);
+		vec3 lerp(const vec3& f, real scale, const vec3& t);
 
 		const vec3 operator+(const vec3& lhs, const vec3& rhs);
 		const vec3 operator-(const vec3& lhs, const vec3& rhs);
-
 		const vec3 operator*(const real scalar, const vec3& vec);
 		const vec3 operator*(const vec3& vec, const real scalar);
-
 		const vec3 operator/(const vec3& vec, const real scalar);
 		const vec3 operator-(const vec3& vec);
 
-		const vec3 cross(const vec3& lhs, const vec3& rhs);
-		const real dot(const vec3& lhs, const vec3& rhs);
-
-		const vec3 crossNorm(const vec3& lhs, const vec3& rhs);
+		const Angle AngleBetween(const vec3& a, const vec3& b);
+		const Angle AngleBetween(const vec3& a, const vec3& b, const vec3& perpa);
 
 		const vec3 Right();
 		const vec3 In();
@@ -98,67 +99,56 @@ namespace pwn
 		const vec3 Out();
 		const vec3 Down();
 
-		const Angle AngleBetween(const vec3& a, const vec3& b);
-		const Angle AngleBetween(const vec3& a, const vec3& b, const vec3& perpa);
-
-		vec3 Curve(const vec3& target, const vec3& old, real smoothing);
-		vec3 lerp(const vec3& f, real scale, const vec3& t);
-
-		const vec3 FromTo(const vec3& from, const vec3& to);
-
 		//////////////////////////////////////////////////////////////////////////////////////////////////
 		// quat
 
+		// "constructor" that takes w element first instead of last
 		const quat quatw(const real aw, const real ax, const real ay, const real az);
 
 		real LengthOf(const quat& q);
 		real LengthOfSquared(const quat& q);
+		quat lerp(const quat& a, const float v, const quat& b);
+		const quat Slerp(const quat& a, const real v, const quat& b);
+		const quat SlerpShortway(const quat& a, const real v, const quat& b);
 
 		const quat GetNormalized(const quat& q);
 		void Normalize(quat* q);
 
-		const quat GetConjugate(const quat& q);
 		const void Conjugate(quat* q);
-		const quat operator*(const quat& lhs, const quat& rhs);
-
+		const quat GetConjugate(const quat& q);
 		const vec3 In(const quat& q);
 		const vec3 Right(const quat& q);
 		const vec3 Up(const quat& q);
-
-		const vec3 RightUpIn(const quat& q, const vec3& v);
-
 		const vec3 Out(const quat& q);
 		const vec3 Left(const quat& q);
 		const vec3 Down(const quat& q);
 
+		const vec3 RightUpIn(const quat& q, const vec3& v);
 		const vec3 RotateAroundOrigo(const quat& q, const vec3& v);
-
 		const quat Combine(const quat& current, const quat& extra);
-
-		const quat cquat(const AxisAngle& aa);
-		const AxisAngle ToAxisAngle(const quat& q);
+		const quat FpsQuat(const float dx, const float dy);
 		//const quat cquat(const Euler& e);
-
 		const quat qIdentity();
 		const quat qLookAt(const vec3& from, const vec3& to, const vec3& up);
-		const quat qLookInDirection(const vec3& dir, const vec3& up);
-
+		const quat qLookInDirection(const vec3& adir, const vec3& up);
+		real dot(const quat& lhs, const quat& rhs);
+		
+		const quat operator*(const quat& lhs, const quat& rhs);
 		const quat operator+(const quat& lhs, const quat& rhs);
 		const quat operator-(const quat& lhs, const quat& rhs);
-
 		const quat operator*(const real scalar, const quat& q);
 		const quat operator*(const quat& q, const real scalar);
-
 		const quat operator/(const quat& q, const real scalar);
 		const quat operator-(const quat& q);
-
-		real dot(const quat& lhs, const quat& rhs);
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////
 		// point2
 
 		//constants
 		const point2 Origo2();
+
+		const float DistanceBetween(const point2& from, const point2& to);
+		const point2 ChangeY(const point2& v, const real newy);
 
 		// standard operators
 		const point2 operator+(const point2& lhs, const direction2& rhs);
@@ -170,24 +160,21 @@ namespace pwn
 		const point2 operator*(const point2& lhs, const real rhs);
 		const point2 operator*(const real lhs, const point2& rhs);
 
-		const float DistanceBetween(const point2& from, const point2& to);
-
 		///////////////////////////////////////////////////////////////////////////////////////////////////
 		// direction2
 
-		const direction2 Between(const point2& from, const point2& to);
+		const real LengthOf(const direction2& dir);
 		const direction2 ToUnit(const direction2& dir);
-		const direction2 operator/(const direction2& lhs, const real rhs);
+		const direction2 Between(const point2& from, const point2& to);
+
+		const direction2 operator+(const direction2& lhs, const direction2& rhs);
+		const direction2 operator-(const direction2& lhs, const direction2& rhs);
 		const direction2 operator*(const direction2& lhs, const real rhs);
 		const direction2 operator*(const real lhs, const direction2& rhs);
-		const real LengthOf(const direction2& dir);
-		const direction2 operator-(const direction2& lhs, const direction2& rhs);
-		const direction2 operator+(const direction2& lhs, const direction2& rhs);
+		const direction2 operator/(const direction2& lhs, const real rhs);
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////
 		// rect
-
-		const point2 Remap(const rect& from, const point2& p, const rect& to);
 
 		real TopOf(const rect& r);
 		real BottomOf(const rect& r);
@@ -197,27 +184,23 @@ namespace pwn
 		const rect FromUpperLeftAndSize(const point2& point, const direction2& size);
 		const rect FromUpperLeftAndSize(const point2& point, const real width, const real height);
 		const rect FromUpperLeftAndSize(const point2& point, const real size);
-
 		const rect FromUpperLeftAndLowerRight(const point2& ul, const point2& lr);
-
 		const rect FromSizeAndCenter(const direction2& size, const point2& center);
-		const rect FromSizeAndCenter(const real size, const point2& center);
 		const rect FromLrud(const real left, const real right, const real up, const real down);
-
+		const rect FromSizeAndCenter(const real size, const point2& center);
 		const rect MoveCopyTo(const rect& r, const point2& point);
+		const rect TurnCopyUpsideDown(const rect& r, const real scale);
+		
+		const point2 Remap(const rect& from, const point2& p, const rect& to);
+		// WrapWithin?
+		const point2 KeepWithin(const point2& loc, const rect& region);
+		const point2 KeepWithin(const point2& loc, const rect& region, const rect& extent);
+		const bool IsWithin(const point2& loc, const rect& region);
 
-		const rect TurnCopyUpsideDown(const rect& r, const real scale = 1.0f);
-		// move
 		const rect operator+(const rect& lhs, const direction2& rhs);
 		const rect operator+(const direction2& lhs, const rect& rhs);
-
-		// uniform scale
 		const rect operator*(const rect& r, const real scale);
 		const rect operator*(const real scale, const rect& r);
-
-		const point2 Within(const point2& loc, const rect& region);
-		const point2 Within(const point2& loc, const rect& region, const rect& object);
-		const bool IsWithin(const point2& loc, const rect& region);
 		// IsWithin/DoesOverlap functions for rect-rect functions?
 
 		/////////////////////////////////////////////////////////////////

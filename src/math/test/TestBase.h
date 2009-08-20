@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <pwn/math/types>
-#include <pwn/math/functions>
+#include <pwn/math/operations>
 
 namespace pwn
 {

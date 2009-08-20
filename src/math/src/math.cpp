@@ -1,5 +1,5 @@
 #include <pwn/math/types>
-#include <pwn/math/functions>
+#include <pwn/math/operations>
 
 #include <cmath>
 #include <memory> // memcpy
@@ -877,7 +877,7 @@ namespace pwn
 			return -Up(m);
 		}
 
-		const mat33 mat33_fromRowMajor(const real data[sizes::mat33_matrix_size])
+		const mat33 mat33_FromRowMajor(const real data[sizes::mat33_matrix_size])
 		{
 			const real temp[] = { data[0], data[3], data[6],
 			                      data[1], data[4], data[7],
@@ -890,7 +890,7 @@ namespace pwn
 			const real temp[] = { scale.x, 0,       0,
 			                      0,       scale.y, 0,
 			                      0,       0,       scale.z };
-			return mat33_fromRowMajor(temp);
+			return mat33_FromRowMajor(temp);
 		}
 
 		const mat33 mat33Identity()
@@ -898,7 +898,7 @@ namespace pwn
 			const real temp[] = { 1, 0, 0,
 			                      0, 1, 0,
 			                      0, 0, 1 };
-			return mat33_fromRowMajor(temp);
+			return mat33_FromRowMajor(temp);
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -971,10 +971,10 @@ namespace pwn
 		const mat44 mat44Identity()
 		{
 			const real temp[] = { 1, 0, 0, 0,
-			                      0, 1, 0, 0 
-			                      0, 0, 1, 0
+			                      0, 1, 0, 0,
+			                      0, 0, 1, 0,
 			                      0, 0, 0, 1};
-			return mat44_fromRowMajor(temp);
+			return mat44_FromRowMajor(temp);
 		}
 
 		const vec3 cvec3(const mat44& m)
@@ -985,10 +985,10 @@ namespace pwn
 		const mat44 cmat44(const vec3& v)
 		{
 			const real temp[] = { 1, 0, 0, v.x,
-			                      0, 1, 0, v.y 
-			                      0, 0, 1, v.z
+			                      0, 1, 0, v.y,
+			                      0, 0, 1, v.z,
 			                      0, 0, 0, 1};
-			return mat44_fromRowMajor(temp);
+			return mat44_FromRowMajor(temp);
 		}
 
 		const mat33 cmatt33(const mat44& m)
@@ -996,7 +996,7 @@ namespace pwn
 			const real temp[] = { m.at(0, 0), m.at(0, 1), m.at(0, 2),
 			                      m.at(1, 0), m.at(1, 1), m.at(1, 2),
 			                      m.at(2, 0), m.at(2, 1), m.at(2, 2) };
-			return mat33_fromRowMajor(temp);
+			return mat33_FromRowMajor(temp);
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////

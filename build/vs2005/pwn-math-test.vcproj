@@ -232,7 +232,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\inc\pwn\math\functions"
+				RelativePath="..\..\inc\pwn\math\operations"
 				>
 			</File>
 			<File

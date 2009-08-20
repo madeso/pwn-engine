@@ -92,4 +92,32 @@ SUITE(Vector3d)
 		CHECK_EQUAL(180, AngleBetween(vec3(1,0,0), vec3(-1,0,0), vec3(0,1,0)).inDegrees() );
 		CHECK_EQUAL(270, AngleBetween(vec3(1,0,0), vec3(0,-1,0), vec3(0,1,0)).inDegrees() );
 	}
+
+	TEST(testX)
+	{
+		CHECK_EQUAL(vec3(1, 0, 0), vec3(1, 0, 0));
+		CHECK_EQUAL(vec3(2, 0, 0), vec3(1, 0, 0) * 2);
+		CHECK_EQUAL(vec3(2, 0, 0), vec3(1, 0, 0) + vec3(1, 0, 0));
+	}
+
+	TEST(testY)
+	{
+		CHECK_EQUAL(vec3(0, 1, 0), vec3(0, 1, 0));
+		CHECK_EQUAL(vec3(0, 2, 0), vec3(0, 1, 0) * 2);
+		CHECK_EQUAL(vec3(0, 2, 0), vec3(0, 1, 0) + vec3(0, 1, 0));
+	}
+
+	TEST(testZ)
+	{
+		CHECK_EQUAL(vec3(0, 0, 1), vec3(0, 0, 1));
+		CHECK_EQUAL(vec3(0, 0, 2), vec3(0, 0, 1) * 2);
+		CHECK_EQUAL(vec3(0, 0, 2), vec3(0, 0, 1) + vec3(0, 0, 1));
+	}
+
+	TEST(testLerp)
+	{
+		CHECK_EQUAL(vec3(0, 1, 0), Lerp(vec3(0, 1, 0), 0, vec3(2, 4, 6)));
+		CHECK_EQUAL(vec3(2, 4, 6), Lerp(vec3(0, 1, 0), 1, vec3(2, 4, 6)));
+		CHECK_EQUAL(vec3(3, 5, 7), Lerp(vec3(2, 4, 6), 0.5f, vec3(4, 6, 8)));
+	}
 }

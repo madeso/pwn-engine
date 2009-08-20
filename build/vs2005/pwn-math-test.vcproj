@@ -204,6 +204,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\math\test\TestMat33.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\math\test\TestMat44.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\math\test\TestMath1.cpp"
 				>
 			</File>

@@ -301,6 +301,11 @@ namespace pwn
 			return vec3(q.x, q.y, q.z);
 		}
 
+		const vec3 cvec3(const mat44& m)
+		{
+			return vec3(m.at(0, 3), m.at(1, 3), m.at(2, 3));
+		}
+
 		vec3::vec3(const real ax, const real ay, const real az)
 			: x(ax)
 			, y(ay)
@@ -409,7 +414,7 @@ namespace pwn
 			return to - from;
 		}
 
-		vec3 lerp(const vec3& f, real scale, const vec3& t)
+		vec3 Lerp(const vec3& f, real scale, const vec3& t)
 		{
 			return f + (t - f) * scale;
 		}
@@ -589,7 +594,7 @@ namespace pwn
 			return Square(q.x) + Square(q.y) + Square(q.z) + Square(q.w);
 		}
 
-		quat lerp(const quat& a, const float v, const quat& b)
+		quat Lerp(const quat& a, const float v, const quat& b)
 		{
 			return GetNormalized(a + v * (b - a));
 		}
@@ -599,7 +604,7 @@ namespace pwn
 			float d = dot(a, b);
 			if (d > PWN_MATH_VALUE(0.9995))
 			{
-				return lerp(a, v, b);
+				return Lerp(a, v, b);
 			}
 			d = KeepWithin(-1, d, 1);
 			const Angle theta0 = Acos(d);
@@ -609,16 +614,12 @@ namespace pwn
 			return a * Cos(theta) + q * Sin(theta);
 		}
 
-#pragma warning(push)
-// 'pwn::math::SlerpShortway' : not all control paths return a value
-#pragma warning(disable:4715)
 		// forces the interpolatation to go the "short way"
 		const quat SlerpShortway(const quat& a, const real v, const quat& b)
 		{
 			if( dot(a, b) < PWN_MATH_VALUE(0.0) ) return Slerp(-a, v, b);
-			else Slerp(a, v, b);
+			else return Slerp(a, v, b);
 		}
-#pragma warning(pop)
 
 		const quat GetNormalized(const quat& q)
 		{
@@ -838,30 +839,31 @@ namespace pwn
 
 		mat33::mat33(const real data[sizes::mat33_matrix_size])
 		{
-			memcpy(columnMajor, data, sizes::mat33_matrix_size);
+			memcpy(columnMajor, data, sizeof(real) * sizes::mat33_matrix_size);
 		}
 
-		real mat33::at(int column, int row) const
-		{
-			return const_cast<mat33&>(*this).at(column, row); // call non-const
-		}
-
-		real & mat33::at(int column, int row)
+		real mat33::at(int row, int column) const
 		{
 			return columnMajor[column * sizes::mat33_size + row];
 		}
 
+		real& mat33::at(int row, int column)
+		{
+			return columnMajor[column * sizes::mat33_size + row];
+		}
+
+		// - comes from making the test TestMat44=>TestIn run
 		const vec3 In(const mat33& m)
 		{
-			return vec3( m.at(0,2), m.at(1,2), m.at(2,2));
+			return vec3( m.at(0,2), m.at(1,2), -m.at(2,2));
 		}
 		const vec3 Right(const mat33& m)
 		{
-			return vec3( m.at(0,0), m.at(1,0), m.at(2,0));
+			return vec3( m.at(0,0), m.at(1,0), -m.at(2,0));
 		}
 		const vec3 Up(const mat33& m)
 		{
-			return vec3( m.at(0,1), m.at(1,1), m.at(2,1));
+			return vec3( m.at(0,1), m.at(1,1), -m.at(2,1));
 		}
 
 		const vec3 Out(const mat33& m)
@@ -901,22 +903,61 @@ namespace pwn
 			return mat33_FromRowMajor(temp);
 		}
 
+		const mat33 cmat33(const mat44& m)
+		{
+			const real temp[] = { m.at(0, 0), m.at(0, 1), m.at(0, 2),
+			                      m.at(1, 0), m.at(1, 1), m.at(1, 2),
+			                      m.at(2, 0), m.at(2, 1), m.at(2, 2) };
+			return mat33_FromRowMajor(temp);
+		}
+
+		const mat33 cmat33(const quat& q)
+		{
+			const real x = q.x;
+			const real y = q.y;
+			const real z = q.z;
+			const real w = q.w;
+
+			const real tXX = 2 * Square(x);
+			const real tYY = 2 * Square(y);
+			const real tZZ = 2 * Square(z);
+			const real tXY = 2 * x * y;
+			const real tYZ = 2 * y * z;
+			const real tZW = 2 * z * w;
+			const real tXW = 2 * x * w;
+			const real tXZ = 2 * x * z;
+			const real tYW = 2 * y * w;
+
+			const real temp[] = { 1-tYY-tZZ,  tXY-tZW,    tXZ+tYW,
+			                      tXY+tZW,    1-tXX-tZZ,  tYZ-tXW,
+			                      tXZ-tYW,    tYZ+tXW,    1-tXX-tYY};
+			return mat33_FromRowMajor(temp);
+		}
+
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////// mat44
 
 		mat44::mat44(const real data[sizes::mat44_matrix_size])
 		{
-			memcpy(columnMajor, data, sizes::mat44_matrix_size);
+			memcpy(columnMajor, data, sizeof(real) * sizes::mat44_matrix_size);
 		}
 
-		real mat44::at(int column, int row) const
-		{
-			return const_cast<mat44&>(*this).at(column, row); // call non-const
-		}
-		real& mat44::at(int column, int row)
+		real mat44::at(int row, int column) const
 		{
 			return columnMajor[column * sizes::mat44_size + row];
 		}
+		real& mat44::at(int row, int column)
+		{
+			return columnMajor[column * sizes::mat44_size + row];
+		}
+
+		const vec3 In(const mat44& m) { return In(cmat33(m)); }
+		const vec3 Right(const mat44& m) { return Right(cmat33(m)); }
+		const vec3 Up(const mat44& m) { return Up(cmat33(m)); }
+
+		const vec3 Out(const mat44& m) { return Out(cmat33(m)); }
+		const vec3 Left(const mat44& m) { return Left(cmat33(m)); }
+		const vec3 Down(const mat44& m) { return Down(cmat33(m)); }
 
 		const mat44 mat44_FromRowMajor(const real data[sizes::mat44_matrix_size])
 		{
@@ -925,6 +966,15 @@ namespace pwn
 			                      data[2], data[6], data[10], data[14],
 			                      data[3], data[7], data[11], data[15] };
 			return mat44(temp);
+		}
+
+		const mat44 cmat44(const mat33& m)
+		{
+			const real temp[] = { m.at(0, 0), m.at(0, 1), m.at(0, 2), 0,
+			                      m.at(1, 0), m.at(1, 1), m.at(1, 2), 0,
+			                      m.at(2, 0), m.at(2, 1), m.at(2, 2), 0,
+			                      0         , 0         , 0         , 1};
+			return mat44_FromRowMajor(temp);
 		}
 
 		namespace
@@ -977,11 +1027,6 @@ namespace pwn
 			return mat44_FromRowMajor(temp);
 		}
 
-		const vec3 cvec3(const mat44& m)
-		{
-			return vec3(m.at(0, 3), m.at(1, 3), m.at(2, 3));
-		}
-
 		const mat44 cmat44(const vec3& v)
 		{
 			const real temp[] = { 1, 0, 0, v.x,
@@ -991,12 +1036,32 @@ namespace pwn
 			return mat44_FromRowMajor(temp);
 		}
 
-		const mat33 cmatt33(const mat44& m)
+		mat44helper::mat44helper(const mat44& mat)
+			: mat(mat)
 		{
-			const real temp[] = { m.at(0, 0), m.at(0, 1), m.at(0, 2),
-			                      m.at(1, 0), m.at(1, 1), m.at(1, 2),
-			                      m.at(2, 0), m.at(2, 1), m.at(2, 2) };
-			return mat33_FromRowMajor(temp);
+		}
+		mat44helper& mat44helper::mult(const mat44& m)
+		{
+			mat = mat * m;
+			return *this;
+		}
+		mat44helper& mat44helper::rotate(const AxisAngle& aa)
+		{
+			return mult(cmat44(aa));
+		}
+
+		// GetConjugate(q) comes from making the test TestMat44=>TestRotationQuat run
+		mat44helper& mat44helper::rotate(const quat& q)
+		{
+			return mult( cmat44(cmat33(GetConjugate(q))));
+		}
+		mat44helper& mat44helper::translate(const vec3& t)
+		{
+			return mult(cmat44(t));
+		}
+		const vec3 mat44helper::transform(const vec3& v) const
+		{
+			return mat * v;
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////

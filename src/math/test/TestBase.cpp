@@ -57,6 +57,33 @@ namespace pwn
 			return o;
 		}
 
+		bool operator==(const mat33& lhs, const mat33& rhs)
+		{
+			for(int i=0; i<sizes::mat33_matrix_size; ++i ) if( !equal(lhs.columnMajor[i], rhs.columnMajor[i]) ) return false;
+			return true;
+		}
+		std::ostream& operator<<(std::ostream& o, const mat33& m)
+		{
+			o << "( ";
+			for(int i=0; i<sizes::mat33_matrix_size; ++i ) o << m.columnMajor[i] << " ";
+			o << ")";
+			return o;
+		}
+
+		bool operator==(const mat44& lhs, const mat44& rhs)
+		{
+			for(int i=0; i<sizes::mat44_matrix_size; ++i ) if( !equal(lhs.columnMajor[i], rhs.columnMajor[i]) ) return false;
+			return true;
+		}
+
+		std::ostream& operator<<(std::ostream& o, const mat44& m)
+		{
+			o << "( ";
+			for(int i=0; i<sizes::mat44_matrix_size; ++i ) o << m.columnMajor[i] << " ";
+			o << ")";
+			return o;
+		}
+
 		bool operator==(const AxisAngle& lhs, const AxisAngle& rhs)
 		{
 			if( equal(lhs.angle.inDegrees(), rhs.angle.inDegrees()) && equal(lhs.angle.inDegrees(), 0)) return true; // zero rotation is always equal zero

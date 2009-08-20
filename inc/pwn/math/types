@@ -116,8 +116,8 @@ namespace pwn
 			*     | 2 5 8 |
 			*/
 
-			real at(int column, int row) const;
-			real& at(int column, int row);
+			real at(int row, int column) const;
+			real& at(int row, int column);
 		};
 
 		namespace sizes
@@ -138,8 +138,8 @@ namespace pwn
 			 *     | 3 7 11 15 |
 			 */
 
-			real at(int column, int row) const;
-			real& at(int column, int row);
+			real at(int row, int column) const;
+			real& at(int row, int column);
 		};
 
 		struct point2

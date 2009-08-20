@@ -9,6 +9,11 @@ SUITE(testQuat)
 		CHECK_EQUAL(quatw(1, 0, 0, 0), qIdentity());
 	}
 
+	TEST(testVecOp)
+	{
+		CHECK_EQUAL(vec3(1,2,3), cvec3(quat(4, vec3(1,2,3))));
+	}
+
 	TEST(testCommonRotation)
 	{
 		CHECK_EQUAL(quatw(0, 1, 0, 0), cquat(RightHandAround(Right(), Angle::FromDegrees(180))));
@@ -99,5 +104,37 @@ SUITE(testQuat)
 		CHECK_EQUAL(RightHandAround(Up(), Angle::FromDegrees(-45)), cAxisAngle(cquat(RightHandAround(-Up(), Angle::FromDegrees(45)))));
 		CHECK_EQUAL(RightHandAround(Right(), Angle::FromDegrees(90)), cAxisAngle(cquat(RightHandAround(-Right(), Angle::FromDegrees(-90)))));
 	}
-	// to axis/angle
+	
+	struct Quat
+	{
+		quat qa;
+		quat qb;
+
+		Quat()
+			: qa(cquat(RightHandAround(Up(), Angle::FromDegrees(45))))
+			, qb(cquat(RightHandAround(Up(), Angle::FromDegrees(90))))
+		{
+		}
+	};
+
+	TEST_FIXTURE(Quat, testSlerp1)
+	{
+		CHECK_EQUAL(qIdentity(), Slerp(qIdentity(), 0, qb));
+	}
+	TEST_FIXTURE(Quat, testSlerp2)
+	{
+		CHECK_EQUAL(qb, Slerp(qIdentity(), 1, qb));
+	}
+	TEST_FIXTURE(Quat, testSlerp3)
+	{
+		CHECK_EQUAL(qIdentity(), SlerpShortway(qIdentity(), 0, qb));
+	}
+	TEST_FIXTURE(Quat, testSlerp4)
+	{
+		CHECK_EQUAL(qb, SlerpShortway(qIdentity(), 1, qb));
+	}
+	TEST_FIXTURE(Quat, testSlerp5)
+	{
+		CHECK_EQUAL(qa, SlerpShortway(qIdentity(), 0.5f, qb));
+	}
 }

@@ -1,25 +1,14 @@
 #ifndef PWN_MATH_FUNCTIONS
 #define PWN_MATH_FUNCTIONS
 
-#include <pwn/math/config>
+#include <pwn/math/types>
 
 namespace pwn
 {
 	namespace math
 	{
-		struct vec2;
-		struct vec3;
-		struct point2;
-		struct direction2;
-		struct rect;
-		struct Angle;
-		struct quat;
-		struct mat33;
-		struct AxisAngle;
-		//struct Euler;
-
 		//////////////////////////////////////////////////////////////////////////////////////////////////
-		/// \defgroup math1 1-D math functions
+		/// \defgroup math1 1-D math operations
 		/// @{
 
 		/** Calculates the sign as a positive or a negative int.
@@ -197,7 +186,7 @@ namespace pwn
 
 		/// @}
 		//////////////////////////////////////////////////////////////////////////////////////////////////
-		/// \defgroup vec2 vec2 functions
+		/// \defgroup vec2 vec2 operations
 		/// @{
 
 		/** Calculates the length of a vector.
@@ -236,10 +225,12 @@ namespace pwn
 
 		/// @}
 		//////////////////////////////////////////////////////////////////////////////////////////////////
-		/// \defgroup vec3 vec3 functions
+		/// \defgroup vec3 vec3 operations
 		/// @{
 
 		const vec3 cvec3(const quat& q);
+		const vec3 cvec3(const mat44& m);
+
 		real LengthOf(const vec3& vec);
 		real LengthOfSquared(const vec3& vec);
 		const vec3 GetNormalized(const vec3& vec);
@@ -249,7 +240,7 @@ namespace pwn
 		const vec3 crossNorm(const vec3& lhs, const vec3& rhs);
 		vec3 Curve(const vec3& target, const vec3& old, real smoothing);
 		const vec3 FromTo(const vec3& from, const vec3& to);
-		vec3 lerp(const vec3& f, real scale, const vec3& t);
+		vec3 Lerp(const vec3& f, real scale, const vec3& t);
 
 		const vec3 operator+(const vec3& lhs, const vec3& rhs);
 		const vec3 operator-(const vec3& lhs, const vec3& rhs);
@@ -271,7 +262,66 @@ namespace pwn
 
 		/// @}
 		//////////////////////////////////////////////////////////////////////////////////////////////////
-		/// \defgroup quat quat functions
+		/// \defgroup mat33 mat33 operations
+		/// @{
+
+		const vec3 In(const mat33& m);
+		const vec3 Right(const mat33& m);
+		const vec3 Up(const mat33& m);
+
+		const vec3 Out(const mat33& m);
+		const vec3 Left(const mat33& m);
+		const vec3 Down(const mat33& m);
+
+		const mat33 mat33_FromRowMajor(const real data[sizes::mat33_matrix_size]);
+
+		const mat33 Scale(const vec3& scale);
+
+		const mat33 mat33Identity();
+
+		const mat33 cmat33(const mat44& m);
+
+		/// @}
+		//////////////////////////////////////////////////////////////////////////////////////////////////
+		/// \defgroup mat44 mat44 operations
+		/// @{
+
+		const vec3 In(const mat44& m);
+		const vec3 Right(const mat44& m);
+		const vec3 Up(const mat44& m);
+
+		const vec3 Out(const mat44& m);
+		const vec3 Left(const mat44& m);
+		const vec3 Down(const mat44& m);
+
+		const mat44 mat44_FromRowMajor(const real data[sizes::mat44_matrix_size]);
+
+		const mat44 operator* (const mat44& a, const mat44& b);
+		const vec3 operator *(const mat44& m, const vec3& v);
+
+		const mat44 cmat44(const AxisAngle& aa);
+
+		const mat44 mat44Identity();
+
+		const mat44 cmat44(const vec3& v);
+		const mat44 cmat44(const mat33& m);
+
+		/** Syntax-sugar helper-class for most common mat44 operations
+		*/
+		struct mat44helper
+		{
+			mat44helper(const mat44& mat);
+			mat44helper& mult(const mat44& m);
+			mat44helper& rotate(const AxisAngle& aa);
+			mat44helper& rotate(const quat& q);
+			mat44helper& translate(const vec3& t);
+			const vec3 transform(const vec3& v) const;
+			mat44 mat;
+		};
+
+		/// @}
+		//////////////////////////////////////////////////////////////////////////////////////////////////
+		/// \defgroup quat quat operations
 		/// @{
 
 		// "constructor" that takes w element first instead of last
@@ -281,7 +331,7 @@ namespace pwn
 
 		real LengthOf(const quat& q);
 		real LengthOfSquared(const quat& q);
-		quat lerp(const quat& a, const float v, const quat& b);
+		quat Lerp(const quat& a, const float v, const quat& b);
 		const quat Slerp(const quat& a, const real v, const quat& b);
 		const quat SlerpShortway(const quat& a, const real v, const quat& b);
 
@@ -317,7 +367,7 @@ namespace pwn
 
 		/// @}
 		//////////////////////////////////////////////////////////////////////////////////////////////////
-		/// \defgroup mat33 mat33 functions
+		/// \defgroup mat33 mat33 operations
 		/// @{
 
 		const vec3 In(const mat33& m);
@@ -332,7 +382,7 @@ namespace pwn
 
 		/// @}
 		//////////////////////////////////////////////////////////////////////////////////////////////////
-		/// \defgroup point2 point2 functions
+		/// \defgroup point2 point2 operations
 		/// @{
 
 		//constants
@@ -353,7 +403,7 @@ namespace pwn
 
 		/// @}
 		//////////////////////////////////////////////////////////////////////////////////////////////////
-		/// \defgroup direction2 direction2 functions
+		/// \defgroup direction2 direction2 operations
 		/// @{
 
 		const real LengthOf(const direction2& dir);
@@ -368,7 +418,7 @@ namespace pwn
 
 		/// @}
 		//////////////////////////////////////////////////////////////////////////////////////////////////
-		/// \defgroup rect rect functions
+		/// \defgroup rect rect operations
 		/// @{
 
 		real TopOf(const rect& r);
@@ -396,11 +446,11 @@ namespace pwn
 		const rect operator+(const direction2& lhs, const rect& rhs);
 		const rect operator*(const rect& r, const real scale);
 		const rect operator*(const real scale, const rect& r);
-		// IsWithin/DoesOverlap functions for rect-rect functions?
+		// IsWithin/DoesOverlap operations for rect-rect operations?
 
 		/// @}
 		//////////////////////////////////////////////////////////////////////////////////////////////////
-		/// \defgroup Angle Angle functions
+		/// \defgroup Angle Angle operations
 		/// @{
 
 		const real Sin(const Angle& ang);
@@ -423,7 +473,7 @@ namespace pwn
 
 		/// @}
 		//////////////////////////////////////////////////////////////////////////////////////////////////
-		/// \defgroup AxisAngle AxisAngle functions
+		/// \defgroup AxisAngle AxisAngle operations
 		/// @{
 
 		const AxisAngle RightHandAround(const vec3& axis, const Angle& angle);
@@ -431,7 +481,7 @@ namespace pwn
 
 		/// @}
 		//////////////////////////////////////////////////////////////////////////////////////////////////
-		/// \defgroup ArcBall ArcBall functions
+		/// \defgroup ArcBall ArcBall operations
 		/// @{
 		quat GetRotation(const ArcBall& arc, const vec2 from, const vec2 to);
 	}

@@ -2,6 +2,7 @@
 #include <pwn/math/functions>
 
 #include <cmath>
+#include <memory> // memcpy
 
 namespace pwn
 {
@@ -16,6 +17,7 @@ namespace pwn
 			else return -1;
 		}
 
+		
 		const real Curve(const real newValue, const real oldValue, const real smoothingValue)
 		{
 			const int sign = Sign(oldValue - newValue);
@@ -53,24 +55,19 @@ namespace pwn
 			else return rhs;
 		}
 
-		const real Limmit(const real min, const real value, const real max)
+		const real To01(const real L, const real v, const real U)
 		{
-			return Max(min, Min(max, value));
+			return (v-L)/(U-L);
 		}
 
-		const real To01(const real L, const real v, const real R)
+		const real From01(const real L, const real v, const real U)
 		{
-			return (v-L)/(R-L);
+			return v*(U-L)+L;
 		}
 
-		const real From01(const real L, const real v, const real R)
+		const real Remap(const real ol, const real ou, const real v, const real nl, const real nu)
 		{
-			return v*(R-L)+L;
-		}
-
-		const real Remap(const real ol, const real or, const real v, const real nl, const real nr)
-		{
-			return From01(nl, To01(ol,v,or), nr);
+			return From01(nl, To01(ol,v,ou), nu);
 		}
 
 		const real Get360Angular(const real min, const real value, const real max)
@@ -79,7 +76,7 @@ namespace pwn
 			return min+halfdiff-halfdiff*Cos(Angle::FromDegrees(value*PWN_MATH_VALUE(360.0)));
 		}
 
-		const real Within(const real min, const real v, const real max)
+		const real KeepWithin(const real min, const real v, const real max)
 		{
 			if( v > max ) return max;
 			else if( v < min ) return min;
@@ -109,7 +106,6 @@ namespace pwn
 			return value;
 		}
 
-		// return number of wraps (with sign)
 		const int IncrementAndWrap(const real min, real* current, const real change, const real max)
 		{
 			const real diff = max - min;
@@ -238,6 +234,7 @@ namespace pwn
 			Normalize(&temp);
 			return temp;
 		}
+
 		void Normalize(vec2* vec)
 		{
 			*vec /= LengthOf(*vec);
@@ -299,11 +296,9 @@ namespace pwn
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////// vec3
 
-		vec3::vec3(const quat& q)
-			: x(q.x)
-			, y(q.y)
-			, z(q.z)
+		const vec3 cvec3(const quat& q)
 		{
+			return vec3(q.x, q.y, q.z);
 		}
 
 		vec3::vec3(const real ax, const real ay, const real az)
@@ -525,22 +520,18 @@ namespace pwn
 		{
 		}
 
-		quat::quat(const AxisAngle& aa)
+		const quat cquat(const AxisAngle& aa)
 		{
 			const real s = Sin( aa.angle * 0.5 );
 
-			w = Cos( aa.angle * PWN_MATH_VALUE(0.5));
-			x = aa.axis.x * s;
-			y = aa.axis.y * s;
-			z = aa.axis.z * s;
-
-			Normalize(this);
+			const quat q(aa.axis * s, Cos( aa.angle * PWN_MATH_VALUE(0.5)));
+			return GetNormalized(q);
 		}
 
 		void quat::operator*=(const quat& q)
 		{
-			const float sc = w*q.w - dot(vec3(*this), vec3(q));
-			const vec3 r = vec3(q)*w + vec3(*this)*q.w + cross(vec3(*this), vec3(q));
+			const float sc = w*q.w - dot(cvec3(*this), cvec3(q));
+			const vec3 r = cvec3(q)*w + cvec3(*this)*q.w + cross(cvec3(*this), cvec3(q));
 
 			x = r.x;
 			y = r.y;
@@ -610,7 +601,7 @@ namespace pwn
 			{
 				return lerp(a, v, b);
 			}
-			d = Within(-1, d, 1);
+			d = KeepWithin(-1, d, 1);
 			const Angle theta0 = Acos(d);
 			const Angle theta = theta0 * v;
 
@@ -697,7 +688,7 @@ namespace pwn
 		const vec3 RotateAroundOrigo(const quat& q, const vec3& v)
 		{
 			const quat r = q * quat(v, PWN_MATH_VALUE(0.0)) * GetConjugate(q);
-			return vec3(r);
+			return cvec3(r);
 		}
 
 		const quat Combine(const quat& current, const quat& extra)
@@ -715,8 +706,8 @@ namespace pwn
 
 		const quat FpsQuat(const float dx, const float dy)
 		{
-			const quat rx(RightHandAround(Up(), Angle::FromDegrees(-dx)));
-			const quat ry(RightHandAround(Right(), Angle::FromDegrees(-dy)));
+			const quat rx = cquat(RightHandAround(Up(), Angle::FromDegrees(-dx)));
+			const quat ry = cquat(RightHandAround(Right(), Angle::FromDegrees(-dy)));
 			const quat final = rx * ry;
 			return final;
 		}
@@ -734,6 +725,7 @@ namespace pwn
 			return qLookInDirection(to-from, up);
 		}
 
+		// todo: convert to a mat33 constructor
 		quat FromMatrix3(const real mat[3][3])
 		{
 			int   NXT[] = {1, 2, 0};
@@ -838,7 +830,173 @@ namespace pwn
 		}
 		const quat operator-(const quat& q)
 		{
-			return quat(-vec3(q), -q.w);
+			return quat(-cvec3(q), -q.w);
+		}
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////// mat33
+
+		mat33::mat33(const real data[sizes::mat33_matrix_size])
+		{
+			memcpy(columnMajor, data, sizes::mat33_matrix_size);
+		}
+
+		real mat33::at(int column, int row) const
+		{
+			return const_cast<mat33&>(*this).at(column, row); // call non-const
+		}
+
+		real & mat33::at(int column, int row)
+		{
+			return columnMajor[column * sizes::mat33_size + row];
+		}
+
+		const vec3 In(const mat33& m)
+		{
+			return vec3( m.at(0,2), m.at(1,2), m.at(2,2));
+		}
+		const vec3 Right(const mat33& m)
+		{
+			return vec3( m.at(0,0), m.at(1,0), m.at(2,0));
+		}
+		const vec3 Up(const mat33& m)
+		{
+			return vec3( m.at(0,1), m.at(1,1), m.at(2,1));
+		}
+
+		const vec3 Out(const mat33& m)
+		{
+			return -In(m);
+		}
+		const vec3 Left(const mat33& m)
+		{
+			return -Right(m);
+		}
+		const vec3 Down(const mat33& m)
+		{
+			return -Up(m);
+		}
+
+		const mat33 mat33_fromRowMajor(const real data[sizes::mat33_matrix_size])
+		{
+			const real temp[] = { data[0], data[3], data[6],
+			                      data[1], data[4], data[7],
+			                      data[2], data[5], data[8] };
+			return mat33( temp );
+		}
+
+		const mat33 Scale(const vec3& scale)
+		{
+			const real temp[] = { scale.x, 0,       0,
+			                      0,       scale.y, 0,
+			                      0,       0,       scale.z };
+			return mat33_fromRowMajor(temp);
+		}
+
+		const mat33 mat33Identity()
+		{
+			const real temp[] = { 1, 0, 0,
+			                      0, 1, 0,
+			                      0, 0, 1 };
+			return mat33_fromRowMajor(temp);
+		}
+
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////// mat44
+
+		mat44::mat44(const real data[sizes::mat44_matrix_size])
+		{
+			memcpy(columnMajor, data, sizes::mat44_matrix_size);
+		}
+
+		real mat44::at(int column, int row) const
+		{
+			return const_cast<mat44&>(*this).at(column, row); // call non-const
+		}
+		real& mat44::at(int column, int row)
+		{
+			return columnMajor[column * sizes::mat44_size + row];
+		}
+
+		const mat44 mat44_FromRowMajor(const real data[sizes::mat44_matrix_size])
+		{
+			const real temp[] = { data[0], data[4], data[8],  data[12],
+			                      data[1], data[5], data[9],  data[13],
+			                      data[2], data[6], data[10], data[14],
+			                      data[3], data[7], data[11], data[15] };
+			return mat44(temp);
+		}
+
+		namespace
+		{
+			real multsum(const mat44& a, const mat44& b, int row, int col)
+			{
+				return a.at(row, 0) * b.at(0, col) + a.at(row, 1) * b.at(1, col) + a.at(row, 2) * b.at(2, col) + a.at(row, 3) * b.at(3, col);
+			}
+			real multsum(const mat44& a, const vec3& b, int row)
+			{
+				return a.at(row, 0) * b[0] + a.at(row, 1) * b[1] + a.at(row, 2) * b[2]+ a.at(row, 3) * 1;
+			}
+		}
+
+		const mat44 operator* (const mat44& a, const mat44& b)
+		{
+			const real temp[] = { multsum(a,b, 0,0), multsum(a, b, 0, 1), multsum(a, b, 0, 2), multsum(a, b, 0, 3),
+			                      multsum(a,b, 1,0), multsum(a, b, 1, 1), multsum(a, b, 1, 2), multsum(a, b, 1, 3),
+			                      multsum(a,b, 2,0), multsum(a, b, 2, 1), multsum(a, b, 2, 2), multsum(a, b, 2, 3),
+			                      multsum(a,b, 3,0), multsum(a, b, 3, 1), multsum(a, b, 3, 2), multsum(a, b, 3, 3) };
+			return mat44_FromRowMajor(temp);
+		}
+		const vec3 operator *(const mat44& m, const vec3& v)
+		{
+			return vec3(multsum(m, v, 0), multsum(m, v, 1), multsum(m, v, 2));
+		}
+
+		const mat44 cmat44(const AxisAngle& aa)
+		{
+			const real c = Cos(aa.angle);
+			const real s = Sin(aa.angle);
+			const real x = aa.axis.x;
+			const real y = aa.axis.y;
+			const real z = aa.axis.z;
+
+			const real temp[] = { x*x*(1-c)+c,      x*y*(1-c)-z*s,  x*z*(1-c)+y*s,  0,
+			                      y*x*(1-c)+z*s,    y*y*(1-c)+c,    y*z*(1-c)-x*s,  0,
+			                      x*z*(1-c)-y*s,    y*z*(1-c)+x*s,  z*z*(1-c)+c,    0,
+			                      0,                0,              0,              1 };
+
+			return mat44(temp);
+		}
+
+		const mat44 mat44Identity()
+		{
+			const real temp[] = { 1, 0, 0, 0,
+			                      0, 1, 0, 0 
+			                      0, 0, 1, 0
+			                      0, 0, 0, 1};
+			return mat44_fromRowMajor(temp);
+		}
+
+		const vec3 cvec3(const mat44& m)
+		{
+			return vec3(m.at(0, 3), m.at(1, 3), m.at(2, 3));
+		}
+
+		const mat44 cmat44(const vec3& v)
+		{
+			const real temp[] = { 1, 0, 0, v.x,
+			                      0, 1, 0, v.y 
+			                      0, 0, 1, v.z
+			                      0, 0, 0, 1};
+			return mat44_fromRowMajor(temp);
+		}
+
+		const mat33 cmatt33(const mat44& m)
+		{
+			const real temp[] = { m.at(0, 0), m.at(0, 1), m.at(0, 2),
+			                      m.at(1, 0), m.at(1, 1), m.at(1, 2),
+			                      m.at(2, 0), m.at(2, 1), m.at(2, 2) };
+			return mat33_fromRowMajor(temp);
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1066,12 +1224,12 @@ namespace pwn
 
 		const point2 KeepWithin(const point2& loc, const rect& region)
 		{
-			return point2( Within(LeftOf(region), loc.vec.x, RightOf(region)), Within(BottomOf(region), loc.vec.y, TopOf(region)));
+			return point2( KeepWithin(LeftOf(region), loc.vec.x, RightOf(region)), KeepWithin(BottomOf(region), loc.vec.y, TopOf(region)));
 		}
 
 		const point2 KeepWithin(const point2& loc, const rect& region, const rect& object)
 		{
-			return point2( Within(LeftOf(region)-LeftOf(object), loc.vec.x, RightOf(region)-RightOf(object)), Within(BottomOf(region)-BottomOf(object), loc.vec.y, TopOf(region)-TopOf(object)));
+			return point2( KeepWithin(LeftOf(region)-LeftOf(object), loc.vec.x, RightOf(region)-RightOf(object)), KeepWithin(BottomOf(region)-BottomOf(object), loc.vec.y, TopOf(region)-TopOf(object)));
 		}
 
 		const bool IsWithin(const point2& loc, const rect& region)
@@ -1244,12 +1402,14 @@ namespace pwn
 		}
 
 		// rewrite to better fit the mathematics instead of this "hack"
-		AxisAngle::AxisAngle(const quat& q)
-			: axis(q)
-			, angle(Acos(q.w)*PWN_MATH_VALUE(2.0))
+		const AxisAngle cAxisAngle(const quat& q)
 		{
-			if ( isZero(q.x) && isZero(q.y) && isZero(q.z) ) axis = In();
-			else Normalize(&axis);
+			AxisAngle aa(cvec3(q), Acos(q.w)*PWN_MATH_VALUE(2.0));
+
+			if ( isZero(q.x) && isZero(q.y) && isZero(q.z) ) aa.axis = In();
+			else Normalize(&aa.axis);
+
+			return aa;
 		}
 
 		const AxisAngle RightHandAround(const vec3& axis, const Angle& angle)
@@ -1286,7 +1446,7 @@ namespace pwn
 			const vec3 t = PointOnBall(arc, to);
 			const vec3 axis = crossNorm(f,t);
 			const Angle angle = AngleBetween(f,t);
-			return quat(RightHandAround(axis, angle));
+			return cquat(RightHandAround(axis, angle));
 		}
 	}
 }

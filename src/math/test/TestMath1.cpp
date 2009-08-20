@@ -44,14 +44,6 @@ SUITE(math1)
 		CHECK_EQUAL(-10, Max(-10, -110));
 	}
 
-	TEST(testLimmit)
-	{
-		CHECK_EQUAL(50, Limmit(0, 50, 100));
-		CHECK_EQUAL(0, Limmit(0, -10, 100));
-		CHECK_EQUAL(100, Limmit(0, 150, 100));
-		CHECK_EQUAL(142, Limmit(100, 142, 156));
-	}
-
 	TEST(MathTest_MinMax)
 	{
 		const float max = 3;
@@ -73,7 +65,15 @@ SUITE(math1)
 		CHECK_EQUAL(2, Get360Angular(-1, 0.5f, 2));
 	}
 
-	TEST(MathTest_Within)
+	TEST(testWithin)
+	{
+		CHECK_EQUAL(50, KeepWithin(0, 50, 100));
+		CHECK_EQUAL(0, KeepWithin(0, -10, 100));
+		CHECK_EQUAL(100, KeepWithin(0, 150, 100));
+		CHECK_EQUAL(142, KeepWithin(100, 142, 156));
+	}
+
+	TEST(MathTest_IsWithin)
 	{
 		CHECK_EQUAL(true, IsWithin(0, 1, 3));
 		CHECK_EQUAL(true, IsWithin(2, 2.1f, 3));
@@ -81,10 +81,6 @@ SUITE(math1)
 		CHECK_EQUAL(false, IsWithin(0, 42, 3));
 		CHECK_EQUAL(false, IsWithin(0, -1, 3));
 		CHECK_EQUAL(false, IsWithin(0, 3.01f, 3));
-
-		CHECK_EQUAL(0, Within(0, -50, 100));
-		CHECK_EQUAL(50, Within(0, 50, 100));
-		CHECK_EQUAL(100, Within(0, 150, 100));
 	}
 
 	TEST(MathTest_Wrap)

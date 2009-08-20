@@ -58,6 +58,9 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
+				Description=""
+				CommandLine=""
+				ExcludedFromBuild="false"
 			/>
 			<Tool
 				Name="VCLinkerTool"
@@ -136,6 +139,8 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
+				Description=""
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCLinkerTool"

@@ -17,13 +17,42 @@ namespace pwn
 		struct Angle;
 		struct ArcBall;
 
+		/*
+		struct: vec2
+
+		A 2 dimensional vector
+		*/
 		struct vec2
 		{
-			real x, y;
+			/*
+			Variable: x
+			The x value
+			*/
+			real x;
 
-			vec2(real x, real y);
+			/*
+			Variable: y
+			The y value
+			*/
+			real y;
 
+			/*
+			Constructor: vec2
+			*/
+			vec2(const real x, const real y);
+
+			/*
+			Function: data
+			Returns:
+			A 2-dimensional pointer to the member-variables
+			*/
 			real* data();
+			
+			/*
+			Function: data const
+			Returns:
+			A 2-dimensional pointer to the member-variables
+			*/
 			const real* data() const;
 
 			real& operator[](int index);
@@ -42,7 +71,6 @@ namespace pwn
 			real z;
 
 			vec3(const real x, const real y, const real z);
-			explicit vec3(const quat& q);
 
 			real* data();
 			const real* data() const;
@@ -60,17 +88,58 @@ namespace pwn
 		{
 			real x, y, z, w;
 
-			quat(const real ax, const real ay, const real az, const real aw);
+			quat(const real x, const real y, const real z, const real w); // deprecated
 
 			quat(const vec3& v, const real w);
 			quat(const real w, const vec3& v);
-			explicit quat(const AxisAngle& aa);
 
 			void operator*=(const quat& q);
 			void operator+=(const quat& rhs);
 			void operator-=(const quat& rhs);
 			void operator*=(const real rhs);
 			void operator/=(const real rhs);
+		};
+
+		namespace sizes
+		{
+			const int mat33_size = 3;
+			const int mat33_matrix_size = mat33_size*mat33_size;
+		}
+
+		struct mat33
+		{
+			mat33(const real data[sizes::mat33_matrix_size]);
+			real columnMajor[sizes::mat33_matrix_size];
+			/*
+			*     | 0 3 6 |
+			* M = | 1 4 7 |
+			*     | 2 5 8 |
+			*/
+
+			real at(int column, int row) const;
+			real& at(int column, int row);
+		};
+
+		namespace sizes
+		{
+			const int mat44_size = 4;
+			const int mat44_matrix_size = mat44_size*mat44_size;
+		}
+
+		struct mat44
+		{
+			mat44(const real data[sizes::mat44_matrix_size]);
+
+			real columnMajor[sizes::mat44_matrix_size];
+			/*
+			 *     | 0 4 8  12 |
+			 * M = | 1 5 9  13 |
+			 *     | 2 5 10 14 |
+			 *     | 3 7 11 15 |
+			 */
+
+			real at(int column, int row) const;
+			real& at(int column, int row);
 		};
 
 		struct point2
@@ -128,7 +197,6 @@ namespace pwn
 		{
 			// according to righthand rule, prefer RightHandAround function for documentation purposes
 			AxisAngle(const vec3& axis, const Angle& angle);
-			explicit AxisAngle(const quat& q);
 
 			vec3 axis;
 			Angle angle;

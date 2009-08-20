@@ -1,0 +1,7 @@
+digraph G
+{
+ math -> model;
+ vfs -> model;
+ model -> render;
+ render -> object;
+}

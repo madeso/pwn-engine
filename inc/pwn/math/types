@@ -17,76 +17,135 @@ namespace pwn
 		struct Angle;
 		struct ArcBall;
 
-		/*
-		struct: vec2
-
-		A 2 dimensional vector
+		/** A 2 dimensional vector.
 		*/
 		struct vec2
 		{
-			/*
-			Variable: x
-			The x value
+			/** The x value.
 			*/
 			real x;
 
-			/*
-			Variable: y
-			The y value
+			/** The y value.
 			*/
 			real y;
 
-			/*
-			Constructor: vec2
+			/**
 			*/
 			vec2(const real x, const real y);
 
-			/*
-			Function: data
-			Returns:
-			A 2-dimensional pointer to the member-variables
+			/** a data-pointer.
+			@returns a 2-dimensional pointer to the member-variables
 			*/
 			real* data();
 			
-			/*
-			Function: data const
-			Returns:
-			A 2-dimensional pointer to the member-variables
+			/** a const data-pointer.
+			@returns a 2-dimensional const pointer to the member-variables
 			*/
 			const real* data() const;
 
+			/** index operator.
+			valid indices are 0 and 1
+			*/
 			real& operator[](int index);
+
+			/** const index operator.
+			valid indices are 0 and 1
+			*/
 			const real operator[](int index) const;
 
+			/** vector addition.
+			*/
 			void operator+=(const vec2& rhs);
+
+			/** vector substraction.
+			*/
 			void operator-=(const vec2& rhs);
+
+			/** uniform scaling.
+			*/
 			void operator*=(const real rhs);
+
+			/** uniform scaling.
+			*/
 			void operator/=(const real rhs);
 		};
 
+		/** A 3 dimensional vector.
+		*/
 		struct vec3
 		{
+			/** The x value.
+			*/
 			real x;
+
+			/** The y value.
+			*/
 			real y;
+
+			/** The z value.
+			*/
 			real z;
 
+			/**
+			*/
 			vec3(const real x, const real y, const real z);
 
+			/** a data-pointer.
+			@returns a 2-dimensional pointer to the member-variables
+			*/
 			real* data();
+			
+			/** a const data-pointer.
+			@returns a 2-dimensional const pointer to the member-variables
+			*/
 			const real* data() const;
 
+			/** index operator.
+			valid indices are 0 and 1
+			*/
 			real& operator[](int index);
+
+			/** const index operator.
+			valid indices are 0 and 1
+			*/
 			const real operator[](int index) const;
 
+			/** vector addition.
+			*/
 			void operator+=(const vec3& rhs);
+
+			/** vector substraction.
+			*/
 			void operator-=(const vec3& rhs);
+
+			/** uniform scaling.
+			*/
 			void operator*=(const real rhs);
+
+			/** uniform scaling.
+			*/
 			void operator/=(const real rhs);
 		};
 
+		/** A quaternion
+		*/
 		struct quat
 		{
-			real x, y, z, w;
+			/**
+			*/
+			real x;
+
+			/** The z value.
+			*/
+			real y;
+
+			/** The z value.
+			*/
+			real z;
+
+			/** The z value.
+			*/
+			real w;
 
 			quat(const real x, const real y, const real z, const real w); // deprecated
 
@@ -165,6 +224,9 @@ namespace pwn
 			vec2 vec;
 		};
 
+		/**
+		positive -> right & up
+		*/
 		struct rect
 		{
 			rect(const point2& ul, const point2& lr);

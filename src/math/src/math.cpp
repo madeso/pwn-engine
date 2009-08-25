@@ -1095,9 +1095,9 @@ namespace pwn
 			return point2(PWN_MATH_VALUE(0.0),PWN_MATH_VALUE(0.0));
 		}
 
-		const float DistanceBetween(const point2& from, const point2& to)
+		const real DistanceBetween(const point2& from, const point2& to)
 		{
-			return LengthOf(Between(from, to));
+			return LengthOf(FromTo(from, to));
 		}
 
 		const point2 ChangeY(const point2& v, const real newy)
@@ -1166,7 +1166,7 @@ namespace pwn
 			return direction2( GetNormalized(dir.vec) );
 		}
 
-		const direction2 Between(const point2& from, const point2& to)
+		const direction2 FromTo(const point2& from, const point2& to)
 		{
 			return direction2( to.vec-from.vec );
 		}

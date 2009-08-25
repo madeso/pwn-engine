@@ -190,22 +190,22 @@ namespace pwn
 		/// @{
 
 		/** Calculates the length of a vector.
-		@see LengthOfSquared()
+		@see LengthOfSquared(const vec2&)
 		*/
 		real LengthOf(const vec2& vec);
 
 		/** Calculates the square length of a vector.
-		@see LengthOf()
+		@see LengthOf(const vec2&)
 		*/
 		real LengthOfSquared(const vec2& vec);
 
 		/** Calculates the normalized version of a vector.
-		@see Normalize()
+		@see Normalize(vec2*)
 		*/
 		const vec2 GetNormalized(const vec2& vec);
 
 		/* Normalizes a vector.
-		@see GetNormalized()
+		@see GetNormalized(const vec2&)
 		*/
 		void Normalize(vec2* vec);
 
@@ -213,14 +213,49 @@ namespace pwn
 		@returns a vector pointing from to to.
 		*/
 		const vec2 FromTo(const vec2& from, const vec2& to);
-		const vec2 Curve(const vec2& target, const vec2& old, float smoothing);
+
+		/** Performs a single interpolating step to transform a old vector to a new vector.
+		Larger smoothing values result in a smoother but less resposive path
+
+		Example:
+		@code mousex = Curve( ( MousePos - OldMousePos ) * Sensitivity(), mousex, 6 ); @endcode
+
+		@param target is the target value
+		@param current is the current value
+		@param smoothing is the smoothing value > 0, the lower, the less smooth
+		
+		@returns The smoothed result.
+		*/
+		const vec2 Curve(const vec2& target, const vec2& current, float smoothing);
+
+		/** util chain-function for changing the y value of a vector.
+		Useful for flattening the In-vector
+		@returns the changed vector
+		*/
 		const vec2 ChangeY(const vec2& v, const real newy);
 
+		/** vector addition.
+		*/
 		const vec2 operator+(const vec2& lhs, const vec2& rhs);
+
+		/** vector subtraction.
+		*/
 		const vec2 operator-(const vec2& lhs, const vec2& rhs);
+
+		/** vector scaling with a scalar.
+		*/
 		const vec2 operator*(const real scalar, const vec2& vec);
+
+		/** vector scaling with a scalar.
+		*/
 		const vec2 operator*(const vec2& vec, const real scalar);
+
+		/** vector scaling with scalar.
+		*/
 		const vec2 operator/(const vec2& vec, const real scalar);
+
+		/** vector negation.
+		*/
 		const vec2 operator-(const vec2& vec);
 
 		/// @}
@@ -228,36 +263,132 @@ namespace pwn
 		/// \defgroup vec3 vec3 operations
 		/// @{
 
+		/** simple ignore-w constructor.
+		drops the w value from a quaternion.
+		*/
 		const vec3 cvec3(const quat& q);
+
+		/** gets the transformation of the matrix
+		*/
 		const vec3 cvec3(const mat44& m);
 
+		/** the length of a vector.
+		@see LengthOfSquared(const vec3&)
+		*/
 		real LengthOf(const vec3& vec);
+
+		/** the squared length of a vector.
+		@see LengthOf(const vec3&)
+		*/
 		real LengthOfSquared(const vec3& vec);
+
+		/** normalizes a vector and returns it.
+		@see Normalize(vec3*)
+		*/
 		const vec3 GetNormalized(const vec3& vec);
+
+		/** normalizes a vector.
+		@see GetNormalized(const vec3&)
+		*/
 		void Normalize(vec3* vec);
+
+		/** computes the cross-product between two vectors.
+		*/
 		const vec3 cross(const vec3& lhs, const vec3& rhs);
+
+		/** computes the dot-product between two vectors.
+		*/
 		const real dot(const vec3& lhs, const vec3& rhs);
+
+		/** computes the cross-product and then normalizes the result.
+		@see cross(const vec3&,const vec3&)
+		@see GetNormalized(const vec3&)
+		*/
 		const vec3 crossNorm(const vec3& lhs, const vec3& rhs);
-		vec3 Curve(const vec3& target, const vec3& old, real smoothing);
+		
+		/** Performs a single interpolating step to transform a old vector to a new vector.
+		Larger smoothing values result in a smoother but less resposive path
+
+		@param target is the target value
+		@param current is the current value
+		@param smoothing is the smoothing value > 0, the lower, the less smooth
+		
+		@returns The smoothed result.
+		*/
+		vec3 Curve(const vec3& target, const vec3& current, real smoothing);
+
+		/* Generates a direction given two positions.
+		@returns a vector pointing from to to.
+		*/
 		const vec3 FromTo(const vec3& from, const vec3& to);
+
+		/** linear interpolation between two vectors.
+		*/
 		vec3 Lerp(const vec3& f, real scale, const vec3& t);
 
+		/** vector-addition.
+		*/
 		const vec3 operator+(const vec3& lhs, const vec3& rhs);
+
+		/** vector substraction.
+		*/
 		const vec3 operator-(const vec3& lhs, const vec3& rhs);
+
+		/** vector scaling.
+		*/
 		const vec3 operator*(const real scalar, const vec3& vec);
+
+		/** vector scaling.
+		*/
 		const vec3 operator*(const vec3& vec, const real scalar);
+
+		/** vector scaling.
+		*/
 		const vec3 operator/(const vec3& vec, const real scalar);
+
+		/** vector negation.
+		*/
 		const vec3 operator-(const vec3& vec);
 
+		/** gets the angle between two vectors
+		only able to get 0-180 degrees
+		@see AngleBetween(const vec3&, const vec3&, const vec3&)
+		*/
 		const Angle AngleBetween(const vec3& a, const vec3& b);
+
+		/** gets the angle between two vectors
+		This function is able to get a full 0-360 estimate.
+		For the result of this function to be valid, a 3 vectors should be on the same plane - this is not something that is checked (atm).
+		Assuming all parameters are correct, if b=perpa the return-value is 90, and if b=-perpa the return-value is 270
+		@param a is the first vector
+		@param b is the second vector
+		@param perpa is a vector perpendicular to a, this is not checked
+		@see AngleBetween(const vec3&, const vec3&)
+		*/
 		const Angle AngleBetween(const vec3& a, const vec3& b, const vec3& perpa);
 
-		const vec3 Right();
+		/** Unit-vector pointing in the direction of negative Z, (0,0,-1).
+		*/
 		const vec3 In();
+
+		/** Unit-vector pointing in the direction of positive X, (1,0,0).
+		*/
+		const vec3 Right();
+
+		/** Unit-vector pointing in the direction of positive Y, (0,1,0)
+		*/
 		const vec3 Up();
 
-		const vec3 Left();
+		/** Unit-vector pointing in the direction of positive Z, (0,0,1).
+		*/
 		const vec3 Out();
+
+		/** Unit-vector pointing in the direction of negaitve X, (-1,0,0)
+		*/
+		const vec3 Left();
+
+		/** Unit-vector pointing in the direction of negative Y, (0,-1,0)
+		*/
 		const vec3 Down();
 
 		/// @}
@@ -265,20 +396,46 @@ namespace pwn
 		/// \defgroup mat33 mat33 operations
 		/// @{
 
+		/** Unit-vector pointing in the direction of negative Z, (0,0,-1) in matrix-space.
+		*/
 		const vec3 In(const mat33& m);
+
+		/** Unit-vector pointing in the direction of positive X, (1,0,0) in matrix-space.
+		*/
 		const vec3 Right(const mat33& m);
+
+		/** Unit-vector pointing in the direction of positive Y, (0,1,0) in matrix-space.
+		*/
 		const vec3 Up(const mat33& m);
 
+		/** Unit-vector pointing in the direction of positive Z, (0,0,1) in matrix-space.
+		*/
 		const vec3 Out(const mat33& m);
+
+		/** Unit-vector pointing in the direction of negaitve X, (-1,0,0) in matrix-space.
+		*/
 		const vec3 Left(const mat33& m);
+
+		/** Unit-vector pointing in the direction of negative Y, (0,-1,0) in matrix-space.
+		*/
 		const vec3 Down(const mat33& m);
 
+		/** creates a matrix from the row-major argument.
+		*/
 		const mat33 mat33_FromRowMajor(const real data[sizes::mat33_matrix_size]);
 
+		/** Scaling matrix.
+		*/
 		const mat33 Scale(const vec3& scale);
 
+		/** The identity matrix.
+		@see mat44Identity()
+		@see qIdentity()
+		*/
 		const mat33 mat33Identity();
 
+		/** takes a 4x4 matrix and ignores the 4th row and the 4th column.
+		*/
 		const mat33 cmat33(const mat44& m);
 
 		/// @}
@@ -286,36 +443,91 @@ namespace pwn
 		/// \defgroup mat44 mat44 operations
 		/// @{
 
+		/** Unit-vector pointing in the direction of negative Z, (0,0,-1) in matrix-space.
+		*/
 		const vec3 In(const mat44& m);
+
+		/** Unit-vector pointing in the direction of positive X, (1,0,0) in matrix-space.
+		*/
 		const vec3 Right(const mat44& m);
+
+		/** Unit-vector pointing in the direction of positive Y, (0,1,0) in matrix-space.
+		*/
 		const vec3 Up(const mat44& m);
 
+		/** Unit-vector pointing in the direction of positive Z, (0,0,1) in matrix-space.
+		*/
 		const vec3 Out(const mat44& m);
+
+		/** Unit-vector pointing in the direction of negaitve X, (-1,0,0) in matrix-space.
+		*/
 		const vec3 Left(const mat44& m);
+
+		/** Unit-vector pointing in the direction of negative Y, (0,-1,0) in matrix-space.
+		*/
 		const vec3 Down(const mat44& m);
 
+		/** creates a matrix from the row-major argument.
+		*/
 		const mat44 mat44_FromRowMajor(const real data[sizes::mat44_matrix_size]);
 
+		/** matrix-multiplication.
+		*/
 		const mat44 operator* (const mat44& a, const mat44& b);
+
+		/** matrix-vector multiplication.
+		the "4th" element on the vector is ignored.
+		*/
 		const vec3 operator *(const mat44& m, const vec3& v);
 
+		/** axis-angle rotation.
+		*/
 		const mat44 cmat44(const AxisAngle& aa);
 
+		/** identity matrix
+		*/
 		const mat44 mat44Identity();
 
+		/** translation-matrix.
+		*/
 		const mat44 cmat44(const vec3& v);
+
+		/** fills out the missing items with values from the identy-matrix
+		*/
 		const mat44 cmat44(const mat33& m);
 
-		/** Syntax-sugar helper-class for most common mat44 operations
+		/** Syntax-sugar function-chainer helper-class for most common mat44 operations.
+		Example:
+		@code newMatrix = mat44helper(mat44Identity()).rotate(roation).translate(translation).mat; @endcode
 		*/
 		struct mat44helper
 		{
+			/** copy and store the starting matrix.
+			*/
 			mat44helper(const mat44& mat);
+
+			/** multiply with a custom matrix.
+			*/
 			mat44helper& mult(const mat44& m);
+
+			/** multiply with a rotation matrix.
+			*/
 			mat44helper& rotate(const AxisAngle& aa);
+
+			/** multiply with a rotation matrix.
+			*/
 			mat44helper& rotate(const quat& q);
+
+			/** multiply with a translation matrix
+			*/
 			mat44helper& translate(const vec3& t);
+
+			/** transform a vector with the current matrix.
+			*/
 			const vec3 transform(const vec3& v) const;
+
+			/** the current matrix
+			*/
 			mat44 mat;
 		};
 
@@ -324,81 +536,183 @@ namespace pwn
 		/// \defgroup quat quat operations
 		/// @{
 
-		// "constructor" that takes w element first instead of last
+		/** "constructor" that takes w element first instead of last, obsolete
+		*/
 		const quat quatw(const real aw, const real ax, const real ay, const real az);
 
+		/** construct from a axis and a angle.
+		*/
 		const quat cquat(const AxisAngle& aa);
 
+		/** the length.
+		@see LengthOfSquared(const quat&)
+		*/
 		real LengthOf(const quat& q);
+
+		/** the squared length.
+		@see LengthOf(const quat&)
+		*/
 		real LengthOfSquared(const quat& q);
+
+		/** Linear interpolation.
+		*/
 		quat Lerp(const quat& a, const float v, const quat& b);
+
+		/** Spherical-linear interpolation, may not go the shortest way.
+		@see SlerpShortway(const quat&, const real, const quat&)
+		*/
 		const quat Slerp(const quat& a, const real v, const quat& b);
+
+		/** Spherical linear interpolation that is guarantued to go the shortest way.
+		@see Slerp(const quat&, const real, const quat&)
+		*/
 		const quat SlerpShortway(const quat& a, const real v, const quat& b);
 
+		/** returns a normalized version of the quaternion.
+		@see Normalize(quat*)
+		*/
 		const quat GetNormalized(const quat& q);
+
+		/** normalizes the quaternion.
+		@see Normalize(const quat&)
+		*/
 		void Normalize(quat* q);
 
+		/** sets the quaternion to it's conjugate
+		@see GetConjugate(const quat&)
+		*/
 		const void Conjugate(quat* q);
+
+		/** gets the conjugate of the quaternion
+		@see Conjugate(quat*)
+		*/
 		const quat GetConjugate(const quat& q);
+
+
+		/** Unit-vector pointing in the direction of negative Z, (0,0,-1) in quaternion-space.
+		*/
 		const vec3 In(const quat& q);
+
+		/** Unit-vector pointing in the direction of positive X, (1,0,0) in quaternion-space.
+		*/
 		const vec3 Right(const quat& q);
+
+		/** Unit-vector pointing in the direction of positive Y, (0,1,0) in quaternion-space.
+		*/
 		const vec3 Up(const quat& q);
+
+		/** Unit-vector pointing in the direction of positive Z, (0,0,1) in quaternion-space.
+		*/
 		const vec3 Out(const quat& q);
+
+		/** Unit-vector pointing in the direction of negaitve X, (-1,0,0) in quaternion-space.
+		*/
 		const vec3 Left(const quat& q);
+
+		/** Unit-vector pointing in the direction of negative Y, (0,-1,0) in quaternion-space.
+		*/
 		const vec3 Down(const quat& q);
 
+		/** Util function form muliplying a vector with In, Right and Up.
+		@see In(const quat&)
+		@see Right(const quat&)
+		@see Up(const quat&)
+		@returns In*Z + Right*X + Up*Y
+		*/
 		const vec3 RightUpIn(const quat& q, const vec3& v);
+
+		/** Rotates a vector around origo.
+		*/
 		const vec3 RotateAroundOrigo(const quat& q, const vec3& v);
+
+		/** returns the combined rotations
+		*/
 		const quat Combine(const quat& current, const quat& extra);
-		const quat FpsQuat(const float dx, const float dy);
-		//const quat cquat(const Euler& e);
+
+		//const quat FpsQuat(const float dx, const float dy); // remove?
+		//const quat cquat(const Euler& e); // todo: add construct from angle function?
+
+		/** The identity quaternion.
+		*/
 		const quat qIdentity();
+
+		/** create a look-at quaternion.
+		@see qLookInDirection(const vec3&, const vec3&)
+		*/
 		const quat qLookAt(const vec3& from, const vec3& to, const vec3& up);
+
+		/** creates a look-at quaternion.
+		@see qLookAt(const vec3&, const vec3&, const vec3&)
+		*/
 		const quat qLookInDirection(const vec3& adir, const vec3& up);
+
+		/** the dot product between two quaternions.
+		*/
 		real dot(const quat& lhs, const quat& rhs);
 		
+		/** quaternion multiplication.
+		*/
 		const quat operator*(const quat& lhs, const quat& rhs);
+
+		/** quaternion addition.
+		*/
 		const quat operator+(const quat& lhs, const quat& rhs);
+
+		/** quaternion subtraction.
+		*/
 		const quat operator-(const quat& lhs, const quat& rhs);
+
+		/** quaternion scaling.
+		*/
 		const quat operator*(const real scalar, const quat& q);
+
+		/** quaternion scaling.
+		*/
 		const quat operator*(const quat& q, const real scalar);
+
+		/** quaternion scaling.
+		*/
 		const quat operator/(const quat& q, const real scalar);
+
+		/** the conjugate of the quaternion
+		*/
 		const quat operator-(const quat& q);
-
-		/// @}
-		//////////////////////////////////////////////////////////////////////////////////////////////////
-		/// \defgroup mat33 mat33 operations
-		/// @{
-
-		const vec3 In(const mat33& m);
-		const vec3 Right(const mat33& m);
-		const vec3 Up(const mat33& m);
-
-		const vec3 Out(const mat33& m);
-		const vec3 Left(const mat33& m);
-		const vec3 Down(const mat33& m);
-
-		const mat33 Scale(const vec3& scale);
 
 		/// @}
 		//////////////////////////////////////////////////////////////////////////////////////////////////
 		/// \defgroup point2 point2 operations
 		/// @{
 
-		//constants
+		/** origo.
+		*/
 		const point2 Origo2();
 
-		const float DistanceBetween(const point2& from, const point2& to);
-		const point2 ChangeY(const point2& v, const real newy);
+		/** gets the distance between 2 points.
+		*/
+		const real DistanceBetween(const point2& from, const point2& to);
 
-		// standard operators
+		/** point/direction addition.
+		*/
 		const point2 operator+(const point2& lhs, const direction2& rhs);
+
+		/** point/direction addition.
+		*/
 		const point2 operator+(const direction2& lhs, const point2& rhs);
+
+		/** point/direction subtraction.
+		*/
 		const point2 operator-(const point2& lhs, const direction2& rhs);
+
+		/** point/direction subtraction.
+		*/
 		const point2 operator-(const direction2& lhs, const point2& rhs);
 
-		// uniform scaling
+		/** uniform scaling.
+		*/
 		const point2 operator*(const point2& lhs, const real rhs);
+
+		/** uniform scaling.
+		*/
 		const point2 operator*(const real lhs, const point2& rhs);
 
 		/// @}
@@ -406,14 +720,36 @@ namespace pwn
 		/// \defgroup direction2 direction2 operations
 		/// @{
 
+		/** The length.
+		*/
 		const real LengthOf(const direction2& dir);
-		const direction2 ToUnit(const direction2& dir);
-		const direction2 Between(const point2& from, const point2& to);
 
+		/** convert the direction to a unit vector
+		*/
+		const direction2 ToUnit(const direction2& dir);
+
+		/** create a direction from one point to another.
+		*/
+		const direction2 FromTo(const point2& from, const point2& to);
+
+		/** direction addition.
+		*/
 		const direction2 operator+(const direction2& lhs, const direction2& rhs);
+
+		/** direction subtraction.
+		*/
 		const direction2 operator-(const direction2& lhs, const direction2& rhs);
+
+		/** direction scaling.
+		*/
 		const direction2 operator*(const direction2& lhs, const real rhs);
+
+		/** direction scaling.
+		*/
 		const direction2 operator*(const real lhs, const direction2& rhs);
+
+		/** direction scaling.
+		*/
 		const direction2 operator/(const direction2& lhs, const real rhs);
 
 		/// @}
@@ -421,18 +757,46 @@ namespace pwn
 		/// \defgroup rect rect operations
 		/// @{
 
+		/** the top of the rectangle.
+		*/
 		real TopOf(const rect& r);
+
+		/** The bottom of the rectangle.
+		*/
 		real BottomOf(const rect& r);
+
+		/** The left side of the rectangle.
+		*/
 		real LeftOf(const rect& r);
+
+		/** The right side of the rectangle.
+		*/
 		real RightOf(const rect& r);
 
+		/** creates a rect from upper-left-corner and the size.
+		*/
 		const rect FromUpperLeftAndSize(const point2& point, const direction2& size);
+
+		/** creates a rect from upper-left-corner and the size.
+		*/
 		const rect FromUpperLeftAndSize(const point2& point, const real width, const real height);
+
+		/** creates a rect from upper-left-corner and the size.
+		*/
 		const rect FromUpperLeftAndSize(const point2& point, const real size);
+
+		/** creates a rect from upper-left-corner and the lower right corner
+		*/
 		const rect FromUpperLeftAndLowerRight(const point2& ul, const point2& lr);
-		const rect FromSizeAndCenter(const direction2& size, const point2& center);
+
+		/** from left, right, up and down.
+		*/
 		const rect FromLrud(const real left, const real right, const real up, const real down);
+
+		const rect FromSizeAndCenter(const direction2& size, const point2& center);
 		const rect FromSizeAndCenter(const real size, const point2& center);
+
+
 		const rect MoveCopyTo(const rect& r, const point2& point);
 		const rect TurnCopyUpsideDown(const rect& r, const real scale);
 		

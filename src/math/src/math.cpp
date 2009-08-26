@@ -1252,7 +1252,7 @@ namespace pwn
 			const float w = size.vec.x;
 			const float h = size.vec.y;
 			const float cx = center.vec.x;
-			const float cy = center.vec.y;
+			const float cy = 1-center.vec.y;
 			return FromUpperLeftAndLowerRight(point2(-w*cx, h*cy), point2(w*(1-cx), -h*(1-cy)) );
 		}
 

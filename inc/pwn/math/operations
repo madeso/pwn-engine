@@ -793,46 +793,118 @@ namespace pwn
 		*/
 		const rect FromLrud(const real left, const real right, const real up, const real down);
 
+		/** constructs a rectangle from the size and it's center.
+		@param size is the size of the rect
+		@param center is the percentage expressed as 0-1. (0,0) is bottom left and (1,1) is top right.
+		*/
 		const rect FromSizeAndCenter(const direction2& size, const point2& center);
+
+		/** constructs a rectangle from the size and it's center.
+		@param size is the size of the rect
+		@param center is the percentage expressed as 0-1. (0,0) is bottom left and (1,1) is top right.
+		*/
 		const rect FromSizeAndCenter(const real size, const point2& center);
 
 
+		/** moves a rectangle to a new position, withour altering the source.
+		*/
 		const rect MoveCopyTo(const rect& r, const point2& point);
+
+		/** flips the rectangle upside-down, without altering the source
+		*/
 		const rect TurnCopyUpsideDown(const rect& r, const real scale);
 		
+		/** transforms a point from one source to another.
+		*/
 		const point2 Remap(const rect& from, const point2& p, const rect& to);
-		// WrapWithin?
+		
+		// todo: WrapWithin?
+
+		/** keeps a point within a rectangle.
+		*/
 		const point2 KeepWithin(const point2& loc, const rect& region);
+
+		/** keeps a point within a rectangle, also including a rextent (such as a player or a cursor).
+		*/
 		const point2 KeepWithin(const point2& loc, const rect& region, const rect& extent);
+
+		/** determines if a point is within a rectangle.
+		*/
 		const bool IsWithin(const point2& loc, const rect& region);
 
+		/** move a rectangle.
+		*/
 		const rect operator+(const rect& lhs, const direction2& rhs);
+
+		/** move a rectangle.
+		*/
 		const rect operator+(const direction2& lhs, const rect& rhs);
+
+		/** scale a rectangle.
+		*/
 		const rect operator*(const rect& r, const real scale);
+
+		/** scale a rectangle.
+		*/
 		const rect operator*(const real scale, const rect& r);
-		// IsWithin/DoesOverlap operations for rect-rect operations?
+		
+		// todo: IsWithin/DoesOverlap operations for rect-rect operations?
 
 		/// @}
 		//////////////////////////////////////////////////////////////////////////////////////////////////
 		/// \defgroup Angle Angle operations
 		/// @{
 
+		/** Sine.
+		*/
 		const real Sin(const Angle& ang);
+
+		/** Co-sine.
+		*/
 		const real Cos(const Angle& ang);
+
+		/** Tangent.
+		*/
 		const real Tan(const Angle& ang);
 
+		/** Arc-sine.
+		*/
 		const Angle Asin(const real v);
+
+		/** Arc-co-sine.
+		*/
 		const Angle Acos(const real v);
+
+		/** Arc-tangent.
+		*/
 		const Angle Atan(const real v);
 
+		/** wraps the angle around 360 degrees.
+		*/
 		const Angle GetWrapped(const Angle& a);
 
+		/** angle addition.
+		*/
 		const Angle operator+(const Angle& lhs, const Angle& rhs);
+
+		/** angle subtraction.
+		*/
 		const Angle operator-(const Angle& lhs, const Angle& rhs);
+
+		/** angle multiplication.
+		*/
 		const Angle operator*(const Angle& lhs, const real rhs);
+
+		/** angle multiplication.
+		*/
 		const Angle operator*(const real rhs, const Angle& lhs);
 
+		/** cretes a angle where 1 is 360 degrees and 0 is 0 degrees.
+		*/
 		const Angle FromPercentOf360(const real percent);
+
+		/** zero degrees.
+		*/
 		const Angle Zero();
 
 		/// @}
@@ -840,13 +912,21 @@ namespace pwn
 		/// \defgroup AxisAngle AxisAngle operations
 		/// @{
 
+		/** creates a axis-angle according to the right-hand rule.
+		*/
 		const AxisAngle RightHandAround(const vec3& axis, const Angle& angle);
+
+		/** creates a axis-angle from a quaternion.
+		*/
 		const AxisAngle cAxisAngle(const quat& q);
 
 		/// @}
 		//////////////////////////////////////////////////////////////////////////////////////////////////
 		/// \defgroup ArcBall ArcBall operations
 		/// @{
+
+		/** get the rotation that is done, by moving from one point to another.
+		*/
 		quat GetRotation(const ArcBall& arc, const vec2 from, const vec2 to);
 	}
 }

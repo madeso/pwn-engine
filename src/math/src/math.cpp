@@ -1485,6 +1485,8 @@ namespace pwn
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////// ArcBall
 
+		/*
+
 		ArcBall::ArcBall(const vec2& center, const real radius)
 			: center(center)
 			, radius(radius)
@@ -1513,5 +1515,7 @@ namespace pwn
 			const Angle angle = AngleBetween(f,t);
 			return cquat(RightHandAround(axis, angle));
 		}
+
+		*/
 	}
 }

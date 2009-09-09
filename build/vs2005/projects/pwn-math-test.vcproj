@@ -20,7 +20,7 @@
 			OutputDirectory="$(SolutionDir)..\..\dist\$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)..\..\temp\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -58,7 +58,6 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
-				Description=""
 				CommandLine=""
 				ExcludedFromBuild="false"
 			/>
@@ -103,7 +102,7 @@
 			OutputDirectory="$(SolutionDir)..\..\dist\$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)..\..\temp\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -139,7 +138,6 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
-				Description=""
 				CommandLine=""
 			/>
 			<Tool
@@ -184,78 +182,50 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="test"
+		<File
+			RelativePath="..\..\..\src\math\test\main.cpp"
 			>
-			<File
-				RelativePath="..\..\src\math\test\main.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\test\TestAngle.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\test\TestBase.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\test\TestBase.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\test\TestMat33.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\test\TestMat44.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\test\TestMath1.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\test\TestQuat.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\test\TestRect.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\test\TestVec2.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\test\TestVec3.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="inc"
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\test\TestAngle.cpp"
 			>
-			<File
-				RelativePath="..\..\inc\pwn\math\config"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\pwn\math\operations"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\pwn\math\types"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="src"
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\test\TestBase.cpp"
 			>
-			<File
-				RelativePath="..\..\src\math\src\math.cpp"
-				>
-			</File>
-		</Filter>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\test\TestBase.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\test\TestMat33.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\test\TestMat44.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\test\TestMath1.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\test\TestQuat.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\test\TestRect.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\test\TestVec2.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\test\TestVec3.cpp"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

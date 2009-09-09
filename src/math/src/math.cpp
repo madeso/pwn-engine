@@ -140,6 +140,29 @@ namespace pwn
 			return wraps;
 		}
 
+		namespace // internal
+		{
+			real LowerBound(real num, real gran)
+			{
+				return std::floor(num/gran) * gran;
+			}
+
+			real UpperBound(real num, real gran)
+			{
+				return std::ceil(num/gran) * gran;
+			}
+		}
+
+		const real Round(const real num, const real gran)
+		{
+			const real lower = LowerBound(num, gran);
+			const real upper = UpperBound(num, gran);
+			const real percent = (num-lower)/gran; // 1.0 is upper, 0.0 is lower, 0.25 is 25% between lower and upper, moving from lower to upper
+
+			if( percent >= 0.5 ) return upper;
+			else return lower;
+		}
+
 		const real Pi()
 		{
 			return PWN_MATH_VALUE(3.1415926535897932384626433832795);
@@ -1480,6 +1503,14 @@ namespace pwn
 		const AxisAngle RightHandAround(const vec3& axis, const Angle& angle)
 		{
 			return AxisAngle(axis, angle);
+		}
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		/////////////////////////// Rgba
+
+		Rgba::Rgba(const real r, const real g, const real b, const real a)
+			: r(r), g(g), b(b), a(a)
+		{
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////

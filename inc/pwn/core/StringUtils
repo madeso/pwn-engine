@@ -1,0 +1,28 @@
+// pwn/StringUtils
+
+#ifndef PWN_STRINGUTILS
+#define PWN_STRINGUTILS
+
+#include <pwn/core/string>
+#include <vector>
+
+namespace pwn
+{
+	namespace core
+	{
+		const pwn::core::string& kSpaceCharacters();
+
+		void SplitString(const pwn::core::string& stringToSplit, std::vector<pwn::core::string>* result, const pwn::core::string& delimiterString);
+		std::vector<pwn::core::string> SplitString(const pwn::core::string& stringToSplit, const pwn::core::string& delimiterString);
+		pwn::core::string TrimRight(const pwn::core::string& stringToTrim,const pwn::core::string& trimCharacters=kSpaceCharacters());
+		pwn::core::string TrimLeft(const pwn::core::string& stringToTrim,const pwn::core::string& trimCharacters=kSpaceCharacters());
+		pwn::core::string Trim(const pwn::core::string& stringToTrim,const pwn::core::string& trimCharacters=kSpaceCharacters());
+		bool StartsWith(const pwn::core::string stringToTest, const pwn::core::string& start);
+		bool EndsWith(const pwn::core::string stringToTest, const pwn::core::string& end);
+		pwn::core::string ToLower(const pwn::core::string& string);
+		void StringReplace(pwn::core::string* string, const pwn::core::string& toFind, const pwn::core::string& toReplace);
+		const pwn::core::string StringReplace(const pwn::core::string& string, const pwn::core::string& toFind, const pwn::core::string& toReplace);
+	}
+}
+
+#endif

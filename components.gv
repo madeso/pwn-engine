@@ -1,7 +1,9 @@
 digraph G
 {
- math -> model;
- vfs -> model;
- model -> render;
- render -> object;
+	math -> model;
+	core -> convert;
+	convert -> model;
+	vfs -> model;
+	model -> render;
+	render -> object;
 }

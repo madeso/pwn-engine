@@ -147,6 +147,13 @@ namespace pwn
 		*/
 		const int Wrapi(const int min, const int v, const int max);
 
+		/** rounds a value to the nearest nice value.
+		If the granularity is 1 the function rounds to the closest integer, at .5 the closest half integer, at 2 even integers etc...
+		@param num the number to round
+		@param gran the granularity
+		*/
+		const real Round(const real num, const real gran);
+
 		/** Increment and wrap a value.
 		@returns return number of wraps (with sign)
 		@see Wrap()

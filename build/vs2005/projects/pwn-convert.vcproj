@@ -191,6 +191,14 @@
 			RelativePath="..\..\..\src\convert\WavefrontObj.hpp"
 			>
 		</File>
+		<File
+			RelativePath="..\..\..\src\convert\Writer.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\convert\Writer.hpp"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

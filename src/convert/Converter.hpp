@@ -36,6 +36,7 @@ namespace pwn
 			pwn::core::string textureDiffuse;
 		};
 
+		// sucky name, I realy should rename it to model or something
 		class Converter
 		{
 		public:
@@ -45,7 +46,8 @@ namespace pwn
 			void addFace(const std::size_t material, const std::vector<FaceIndex>& points);
 			void addFace(const Face& face);
 			const std::size_t addMaterial(const Material& material);
-		private:
+
+		public:
 			std::vector<pwn::math::vec3> vertices;
 			std::vector<pwn::math::vec2> textureCoordinates;
 			std::vector<pwn::math::vec3> normals;

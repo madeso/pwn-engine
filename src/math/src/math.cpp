@@ -437,9 +437,15 @@ namespace pwn
 			return to - from;
 		}
 
-		vec3 Lerp(const vec3& f, real scale, const vec3& t)
+		const vec3 Lerp(const vec3& f, real scale, const vec3& t)
 		{
 			return f + (t - f) * scale;
+		}
+
+		const vec3 Qlerp(const vec3& f, real scale, const vec3& t)
+		{
+			const real sscale = Square(scale);
+			return f*(1-sscale) + t*sscale;
 		}
 
 		// ----------------------------------------------------------------------------------
@@ -617,31 +623,37 @@ namespace pwn
 			return Square(q.x) + Square(q.y) + Square(q.z) + Square(q.w);
 		}
 
-		quat Lerp(const quat& a, const float v, const quat& b)
+		const quat Lerp(const quat& f, const float scale, const quat& t)
 		{
-			return GetNormalized(a + v * (b - a));
+			return GetNormalized(f + scale * (t - f));
 		}
 
-		const quat Slerp(const quat& a, const real v, const quat& b)
+		const quat Qlerp(const quat& f, const float scale, const quat& t)
 		{
-			float d = dot(a, b);
+			const real sscale = Square(scale);
+			return f*(1-sscale) + t*sscale;
+		}
+
+		const quat Slerp(const quat& f, const real scale, const quat& t)
+		{
+			float d = dot(f, t);
 			if (d > PWN_MATH_VALUE(0.9995))
 			{
-				return Lerp(a, v, b);
+				return Lerp(f, scale, t);
 			}
 			d = KeepWithin(-1, d, 1);
 			const Angle theta0 = Acos(d);
-			const Angle theta = theta0 * v;
+			const Angle theta = theta0 * scale;
 
-			const quat q = GetNormalized(b - a * d);
-			return a * Cos(theta) + q * Sin(theta);
+			const quat q = GetNormalized(t - f * d);
+			return f * Cos(theta) + q * Sin(theta);
 		}
 
 		// forces the interpolatation to go the "short way"
-		const quat SlerpShortway(const quat& a, const real v, const quat& b)
+		const quat SlerpShortway(const quat& f, const real scale, const quat& t)
 		{
-			if( dot(a, b) < PWN_MATH_VALUE(0.0) ) return Slerp(-a, v, b);
-			else return Slerp(a, v, b);
+			if( dot(f, t) < PWN_MATH_VALUE(0.0) ) return Slerp(-f, scale, t);
+			else return Slerp(f, scale, t);
 		}
 
 		const quat GetNormalized(const quat& q)

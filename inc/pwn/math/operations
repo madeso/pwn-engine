@@ -331,7 +331,11 @@ namespace pwn
 
 		/** linear interpolation between two vectors.
 		*/
-		vec3 Lerp(const vec3& f, real scale, const vec3& t);
+		const vec3 Lerp(const vec3& f, real scale, const vec3& t);
+
+		/** quadratic interpolation between two vectors.
+		*/
+		const vec3 Qlerp(const vec3& f, real scale, const vec3& t);
 
 		/** vector-addition.
 		*/
@@ -563,17 +567,21 @@ namespace pwn
 
 		/** Linear interpolation.
 		*/
-		quat Lerp(const quat& a, const float v, const quat& b);
+		const quat Lerp(const quat& f, const float scale, const quat& t);
+
+		/** Quadratic interpolation.
+		*/
+		const quat Qlerp(const quat& f, const float scale, const quat& t);
 
 		/** Spherical-linear interpolation, may not go the shortest way.
 		@see SlerpShortway(const quat&, const real, const quat&)
 		*/
-		const quat Slerp(const quat& a, const real v, const quat& b);
+		const quat Slerp(const quat& f, const real scale, const quat& t);
 
 		/** Spherical linear interpolation that is guarantued to go the shortest way.
 		@see Slerp(const quat&, const real, const quat&)
 		*/
-		const quat SlerpShortway(const quat& a, const real v, const quat& b);
+		const quat SlerpShortway(const quat& f, const real scale, const quat& t);
 
 		/** returns a normalized version of the quaternion.
 		@see Normalize(quat*)

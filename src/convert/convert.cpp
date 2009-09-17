@@ -21,11 +21,19 @@ void main(int argc, char* argv[])
 		("help,?", "produce help message")
 		("input,i", po::value<std::string>(&inputfile), "the input file")
 		("output,o", po::value<std::string>(&outdir), "the output directory")
+		("optimize", "optimize result")
 		;
 
 	po::variables_map vm;
-	po::store(po::parse_command_line(argc, argv, desc), vm);
-	po::notify(vm);
+	try {
+		po::store(po::parse_command_line(argc, argv, desc), vm);
+		po::notify(vm);
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << "Error while parsing commandline: " << e.what() << std::endl;
+		return;
+	}
 
 	if (vm.count("help"))
 	{
@@ -43,11 +51,12 @@ void main(int argc, char* argv[])
 	}
 	else
 	{
+		const bool optimize = vm.count("optimize") > 0;
 		try
 		{
 			pwn::convert::Converter con;
 			pwn::convert::obj::read(&con, inputfile);
-			pwn::convert::Write(con, (boost::filesystem::path(outdir) / boost::filesystem::path(inputfile).filename()).replace_extension("mesh").string());
+			pwn::convert::Write(con, (boost::filesystem::path(outdir) / boost::filesystem::path(inputfile).filename()).replace_extension("mesh").string(), optimize);
 			cout << "done." << endl;
 		}
 		catch(...)

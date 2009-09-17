@@ -15,7 +15,7 @@ namespace pwn
 {
 	namespace convert
 	{
-		void Write(Converter& data, const pwn::core::string& file);
+		void Write(Converter& data, const pwn::core::string& file, bool optimize);
 	}
 }
 

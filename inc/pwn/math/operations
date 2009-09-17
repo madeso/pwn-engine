@@ -166,6 +166,17 @@ namespace pwn
 		*/
 		const int IncrementAndWrapi(const int min, int* current, const int change, const int max);
 
+		/** Convert a float32 to a "float16".
+		Licensed under the \ref open-exr-license
+		*/
+		uint16 FloatToHalf(float32 f);
+
+		/**
+		* Convert a "float16" to a float32.
+		Licensed under the \ref open-exr-license
+		*/
+		float32 HalfToFloat(uint16 y);
+
 		/// @}
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/// \defgroup constants Constants
@@ -233,7 +244,7 @@ namespace pwn
 		
 		@returns The smoothed result.
 		*/
-		const vec2 Curve(const vec2& target, const vec2& current, float smoothing);
+		const vec2 Curve(const vec2& target, const vec2& current, real smoothing);
 
 		/** util chain-function for changing the y value of a vector.
 		Useful for flattening the In-vector
@@ -567,11 +578,11 @@ namespace pwn
 
 		/** Linear interpolation.
 		*/
-		const quat Lerp(const quat& f, const float scale, const quat& t);
+		const quat Lerp(const quat& f, const real scale, const quat& t);
 
 		/** Quadratic interpolation.
 		*/
-		const quat Qlerp(const quat& f, const float scale, const quat& t);
+		const quat Qlerp(const quat& f, const real scale, const quat& t);
 
 		/** Spherical-linear interpolation, may not go the shortest way.
 		@see SlerpShortway(const quat&, const real, const quat&)
@@ -644,7 +655,7 @@ namespace pwn
 		*/
 		const quat Combine(const quat& current, const quat& extra);
 
-		//const quat FpsQuat(const float dx, const float dy); // remove?
+		//const quat FpsQuat(const real dx, const real dy); // remove?
 		//const quat cquat(const Euler& e); // todo: add construct from angle function?
 
 		/** The identity quaternion.

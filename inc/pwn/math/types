@@ -270,7 +270,7 @@ namespace pwn
 		{
 			/** constructor.
 			*/
-			point2(float x, float y);
+			point2(real x, real y);
 
 			/** constructor.
 			*/
@@ -296,7 +296,7 @@ namespace pwn
 		{
 			/** constructor.
 			*/
-			direction2(float x, float y);
+			direction2(real x, real y);
 
 			/** constructor.
 			*/

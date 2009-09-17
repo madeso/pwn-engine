@@ -17,7 +17,7 @@ namespace pwn
 			else return -1;
 		}
 
-		
+
 		const real Curve(const real newValue, const real oldValue, const real smoothingValue)
 		{
 			const int sign = Sign(oldValue - newValue);
@@ -163,6 +163,351 @@ namespace pwn
 			else return lower;
 		}
 
+		namespace // local
+		{
+			typedef union { float32 f; uint32 i; } uif;
+
+			void initELut (uint16 eLut[]);
+
+			int32 eLut(int32 e)
+			{
+				const int tableSize = 1 << 9; // grabbed from Half/eLut.cpp
+				static uint16 eLutable[tableSize];
+				static bool init = true;
+				if( init )
+				{
+					initELut(eLutable);
+					init = false;
+				}
+				return eLutable[e];
+			}
+		}
+
+		/** Renamed and repurposed conversion routines from OpenEXR.
+		Licensed under the \ref open-exr-license
+		*/
+		namespace
+		{
+			//---------------------------------------------------
+			// Interpret an unsigned short bit pattern as a half,
+			// and convert that half to the corresponding float's
+			// bit pattern.
+			//---------------------------------------------------
+			uint32 Actual_HalfToFloat(uint16 y)
+			{
+
+				int32 s = (y >> 15) & 0x00000001;
+				int32 e = (y >> 10) & 0x0000001f;
+				int32 m =  y        & 0x000003ff;
+
+				if (e == 0)
+				{
+					if (m == 0)
+					{
+						//
+						// Plus or minus zero
+						//
+
+						return s << 31;
+					}
+					else
+					{
+						//
+						// Denormalized number -- renormalize it
+						//
+
+						while (!(m & 0x00000400))
+						{
+							m <<= 1;
+							e -=  1;
+						}
+
+						e += 1;
+						m &= ~0x00000400;
+					}
+				}
+				else if (e == 31)
+				{
+					if (m == 0)
+					{
+						//
+						// Positive or negative infinity
+						//
+
+						return (s << 31) | 0x7f800000;
+					}
+					else
+					{
+						//
+						// Nan -- preserve sign and significand bits
+						//
+
+						return (s << 31) | 0x7f800000 | (m << 13);
+					}
+				}
+
+				//
+				// Normalized number
+				//
+
+				e = e + (127 - 15);
+				m = m << 13;
+
+				//
+				// Assemble s, e and m.
+				//
+
+				return (s << 31) | (e << 23) | m;
+			}
+
+			void initELut (uint16 eLut[])
+			{
+				for (int i = 0; i < 0x100; i++)
+				{
+					int e = (i & 0x0ff) - (127 - 15);
+
+					if (e <= 0 || e >= 30)
+					{
+						//
+						// Special case
+						//
+
+						eLut[i]         = 0;
+						eLut[i | 0x100] = 0;
+					}
+					else
+					{
+						//
+						// Common case - normalized half, no exponent overflow possible
+						//
+
+						eLut[i]         = static_cast<uint16>(e << 10);
+						eLut[i | 0x100] = static_cast<uint16>((e << 10) | 0x8000);
+					}
+				}
+			}
+
+			//-----------------------------------------------
+			// Overflow handler for float-to-half conversion;
+			// generates a hardware floating-point overflow,
+			// which may be trapped by the operating system.
+			//-----------------------------------------------
+
+			float32 overflow ()
+			{
+				volatile float32 f = 1e10;
+
+				for (int i = 0; i < 10; i++)	
+					f *= f;				// this will overflow before
+				// the for­loop terminates
+				return f;
+			}
+			//-----------------------------------------------------
+			// Float-to-half conversion -- general case, including
+			// zeroes, denormalized numbers and exponent overflows.
+			//-----------------------------------------------------
+
+			int16 convert (int32 i)
+			{
+				//
+				// Our floating point number, f, is represented by the bit
+				// pattern in integer i.  Disassemble that bit pattern into
+				// the sign, s, the exponent, e, and the significand, m.
+				// Shift s into the position where it will go in in the
+				// resulting half number.
+				// Adjust e, accounting for the different exponent bias
+				// of float and half (127 versus 15).
+				//
+
+				register int32 s =  (i >> 16) & 0x00008000;
+				register int32 e = ((i >> 23) & 0x000000ff) - (127 - 15);
+				register int32 m =   i        & 0x007fffff;
+
+				//
+				// Now reassemble s, e and m into a half:
+				//
+
+				if (e <= 0)
+				{
+					if (e < -10)
+					{
+						//
+						// E is less than -10.  The absolute value of f is
+						// less than HALF_MIN (f may be a small normalized
+						// float, a denormalized float or a zero).
+						//
+						// We convert f to a half zero.
+						//
+
+						return 0;
+					}
+
+					//
+					// E is between -10 and 0.  F is a normalized float,
+					// whose magnitude is less than HALF_NRM_MIN.
+					//
+					// We convert f to a denormalized half.
+					// 
+
+					m = (m | 0x00800000) >> (1 - e);
+
+					//
+					// Round to nearest, round "0.5" up.
+					//
+					// Rounding may cause the significand to overflow and make
+					// our number normalized.  Because of the way a half's bits
+					// are laid out, we don't have to treat this case separately;
+					// the code below will handle it correctly.
+					// 
+
+					if (m &  0x00001000)
+						m += 0x00002000;
+
+					//
+					// Assemble the half from s, e (zero) and m.
+					//
+
+					return static_cast<int16>(s | (m >> 13));
+				}
+				else if (e == 0xff - (127 - 15))
+				{
+					if (m == 0)
+					{
+						//
+						// F is an infinity; convert f to a half
+						// infinity with the same sign as f.
+						//
+
+						return static_cast<int16>(s | 0x7c00);
+					}
+					else
+					{
+						//
+						// F is a NAN; we produce a half NAN that preserves
+						// the sign bit and the 10 leftmost bits of the
+						// significand of f, with one exception: If the 10
+						// leftmost bits are all zero, the NAN would turn 
+						// into an infinity, so we have to set at least one
+						// bit in the significand.
+						//
+
+						m >>= 13;
+						return static_cast<int16>(s | 0x7c00 | m | (m == 0));
+					}
+				}
+				else
+				{
+					//
+					// E is greater than zero.  F is a normalized float.
+					// We try to convert f to a normalized half.
+					//
+
+					//
+					// Round to nearest, round "0.5" up
+					//
+
+					if (m &  0x00001000)
+					{
+						m += 0x00002000;
+
+						if (m & 0x00800000)
+						{
+							m =  0;		// overflow in significand,
+							e += 1;		// adjust exponent
+						}
+					}
+
+					//
+					// Handle exponent overflow
+					//
+
+					if (e > 30)
+					{
+						overflow ();	// Cause a hardware floating point overflow;
+						return static_cast<int16>(s | 0x7c00);	// if this returns, the half becomes an
+					}   			// infinity with the same sign as f.
+
+					//
+					// Assemble the half from s, e and m.
+					//
+
+					return static_cast<int16>(s | (e << 10) | (m >> 13));
+				}
+			}
+
+			uint16 Actual_FloatToHalf(float32 f)
+			{
+				if (f == 0)
+				{
+					//
+					// Common special case - zero.
+					// For speed, we don't preserve the zero's sign.
+					//
+
+					return 0;
+				}
+				else
+				{
+					//
+					// We extract the combined sign and exponent, e, from our
+					// floating-point number, f.  Then we convert e to the sign
+					// and exponent of the half number via a table lookup.
+					//
+					// For the most common case, where a normalized half is produced,
+					// the table lookup returns a non-zero value; in this case, all
+					// we have to do, is round f's significand to 10 bits and combine
+					// the result with e.
+					//
+					// For all other cases (overflow, zeroes, denormalized numbers
+					// resulting from underflow, infinities and NANs), the table
+					// lookup returns zero, and we call a longer, non-inline function
+					// to do the float-to-half conversion.
+					//
+
+					uif x;
+
+					x.f = f;
+
+					register int32 e = (x.i >> 23) & 0x000001ff;
+
+					e = eLut(e);
+
+					if (e)
+					{
+						//
+						// Simple case - round the significand and
+						// combine it with the sign and exponent.
+						//
+
+						return static_cast<int16>(e + (((x.i & 0x007fffff) + 0x00001000) >> 13));
+					}
+					else
+					{
+						//
+						// Difficult case - call a function.
+						//
+
+						return convert (x.i);
+					}
+				}
+			}
+		}
+
+
+		
+		float32 HalfToFloat(uint16 h)
+		{
+			uif v;
+			v.i = Actual_HalfToFloat (h);
+			return v.f;
+		}
+
+		uint16 FloatToHalf(float32 f)
+		{
+			// this is mostly done due to function-layout. We could have implemented Actual_ here but that would put OpenEXR code here and I don't want that
+			return Actual_FloatToHalf(f);
+		}
+
 		const real Pi()
 		{
 			return PWN_MATH_VALUE(3.1415926535897932384626433832795);
@@ -268,7 +613,7 @@ namespace pwn
 			return to - from;
 		}
 
-		const vec2 Curve(const vec2& target, const vec2& old, float smoothing)
+		const vec2 Curve(const vec2& target, const vec2& old, real smoothing)
 		{
 			return vec2(Curve(target.x, old.x, smoothing), Curve(target.y, old.y, smoothing));
 		}
@@ -564,7 +909,7 @@ namespace pwn
 
 		void quat::operator*=(const quat& q)
 		{
-			const float sc = w*q.w - dot(cvec3(*this), cvec3(q));
+			const real sc = w*q.w - dot(cvec3(*this), cvec3(q));
 			const vec3 r = cvec3(q)*w + cvec3(*this)*q.w + cross(cvec3(*this), cvec3(q));
 
 			x = r.x;
@@ -623,12 +968,12 @@ namespace pwn
 			return Square(q.x) + Square(q.y) + Square(q.z) + Square(q.w);
 		}
 
-		const quat Lerp(const quat& f, const float scale, const quat& t)
+		const quat Lerp(const quat& f, const real scale, const quat& t)
 		{
 			return GetNormalized(f + scale * (t - f));
 		}
 
-		const quat Qlerp(const quat& f, const float scale, const quat& t)
+		const quat Qlerp(const quat& f, const real scale, const quat& t)
 		{
 			const real sscale = Square(scale);
 			return f*(1-sscale) + t*sscale;
@@ -636,7 +981,7 @@ namespace pwn
 
 		const quat Slerp(const quat& f, const real scale, const quat& t)
 		{
-			float d = dot(f, t);
+			real d = dot(f, t);
 			if (d > PWN_MATH_VALUE(0.9995))
 			{
 				return Lerp(f, scale, t);
@@ -740,7 +1085,7 @@ namespace pwn
 			}
 		}
 
-		const quat FpsQuat(const float dx, const float dy)
+		const quat FpsQuat(const real dx, const real dy)
 		{
 			const quat rx = cquat(RightHandAround(Up(), Angle::FromDegrees(-dx)));
 			const quat ry = cquat(RightHandAround(Right(), Angle::FromDegrees(-dy)));
@@ -771,7 +1116,7 @@ namespace pwn
 			const real tr = mat[0][0] + mat[1][1] + mat[2][2];
 			if( tr > PWN_MATH_VALUE(0.0))
 			{
-				const real s = (float)Sqrt(tr + 1.0f);
+				const real s = (real)Sqrt(tr + 1.0f);
 				const real t = PWN_MATH_VALUE(0.5) / s;
 
 				return quat(
@@ -823,7 +1168,7 @@ namespace pwn
 		}
 
 		// -----------------------------------------------------------------------------------------------------------------
-		
+
 		const quat operator*(const quat& lhs, const quat& rhs)
 		{
 			quat temp = lhs;
@@ -917,32 +1262,32 @@ namespace pwn
 		const mat33 mat33_FromRowMajor(const real data[sizes::mat33_matrix_size])
 		{
 			const real temp[] = { data[0], data[3], data[6],
-			                      data[1], data[4], data[7],
-			                      data[2], data[5], data[8] };
+				data[1], data[4], data[7],
+				data[2], data[5], data[8] };
 			return mat33( temp );
 		}
 
 		const mat33 Scale(const vec3& scale)
 		{
 			const real temp[] = { scale.x, 0,       0,
-			                      0,       scale.y, 0,
-			                      0,       0,       scale.z };
+				0,       scale.y, 0,
+				0,       0,       scale.z };
 			return mat33_FromRowMajor(temp);
 		}
 
 		const mat33 mat33Identity()
 		{
 			const real temp[] = { 1, 0, 0,
-			                      0, 1, 0,
-			                      0, 0, 1 };
+				0, 1, 0,
+				0, 0, 1 };
 			return mat33_FromRowMajor(temp);
 		}
 
 		const mat33 cmat33(const mat44& m)
 		{
 			const real temp[] = { m.at(0, 0), m.at(0, 1), m.at(0, 2),
-			                      m.at(1, 0), m.at(1, 1), m.at(1, 2),
-			                      m.at(2, 0), m.at(2, 1), m.at(2, 2) };
+				m.at(1, 0), m.at(1, 1), m.at(1, 2),
+				m.at(2, 0), m.at(2, 1), m.at(2, 2) };
 			return mat33_FromRowMajor(temp);
 		}
 
@@ -964,8 +1309,8 @@ namespace pwn
 			const real tYW = 2 * y * w;
 
 			const real temp[] = { 1-tYY-tZZ,  tXY-tZW,    tXZ+tYW,
-			                      tXY+tZW,    1-tXX-tZZ,  tYZ-tXW,
-			                      tXZ-tYW,    tYZ+tXW,    1-tXX-tYY};
+				tXY+tZW,    1-tXX-tZZ,  tYZ-tXW,
+				tXZ-tYW,    tYZ+tXW,    1-tXX-tYY};
 			return mat33_FromRowMajor(temp);
 		}
 
@@ -997,18 +1342,18 @@ namespace pwn
 		const mat44 mat44_FromRowMajor(const real data[sizes::mat44_matrix_size])
 		{
 			const real temp[] = { data[0], data[4], data[8],  data[12],
-			                      data[1], data[5], data[9],  data[13],
-			                      data[2], data[6], data[10], data[14],
-			                      data[3], data[7], data[11], data[15] };
+				data[1], data[5], data[9],  data[13],
+				data[2], data[6], data[10], data[14],
+				data[3], data[7], data[11], data[15] };
 			return mat44(temp);
 		}
 
 		const mat44 cmat44(const mat33& m)
 		{
 			const real temp[] = { m.at(0, 0), m.at(0, 1), m.at(0, 2), 0,
-			                      m.at(1, 0), m.at(1, 1), m.at(1, 2), 0,
-			                      m.at(2, 0), m.at(2, 1), m.at(2, 2), 0,
-			                      0         , 0         , 0         , 1};
+				m.at(1, 0), m.at(1, 1), m.at(1, 2), 0,
+				m.at(2, 0), m.at(2, 1), m.at(2, 2), 0,
+				0         , 0         , 0         , 1};
 			return mat44_FromRowMajor(temp);
 		}
 
@@ -1027,9 +1372,9 @@ namespace pwn
 		const mat44 operator* (const mat44& a, const mat44& b)
 		{
 			const real temp[] = { multsum(a,b, 0,0), multsum(a, b, 0, 1), multsum(a, b, 0, 2), multsum(a, b, 0, 3),
-			                      multsum(a,b, 1,0), multsum(a, b, 1, 1), multsum(a, b, 1, 2), multsum(a, b, 1, 3),
-			                      multsum(a,b, 2,0), multsum(a, b, 2, 1), multsum(a, b, 2, 2), multsum(a, b, 2, 3),
-			                      multsum(a,b, 3,0), multsum(a, b, 3, 1), multsum(a, b, 3, 2), multsum(a, b, 3, 3) };
+				multsum(a,b, 1,0), multsum(a, b, 1, 1), multsum(a, b, 1, 2), multsum(a, b, 1, 3),
+				multsum(a,b, 2,0), multsum(a, b, 2, 1), multsum(a, b, 2, 2), multsum(a, b, 2, 3),
+				multsum(a,b, 3,0), multsum(a, b, 3, 1), multsum(a, b, 3, 2), multsum(a, b, 3, 3) };
 			return mat44_FromRowMajor(temp);
 		}
 		const vec3 operator *(const mat44& m, const vec3& v)
@@ -1046,9 +1391,9 @@ namespace pwn
 			const real z = aa.axis.z;
 
 			const real temp[] = { x*x*(1-c)+c,      x*y*(1-c)-z*s,  x*z*(1-c)+y*s,  0,
-			                      y*x*(1-c)+z*s,    y*y*(1-c)+c,    y*z*(1-c)-x*s,  0,
-			                      x*z*(1-c)-y*s,    y*z*(1-c)+x*s,  z*z*(1-c)+c,    0,
-			                      0,                0,              0,              1 };
+				y*x*(1-c)+z*s,    y*y*(1-c)+c,    y*z*(1-c)-x*s,  0,
+				x*z*(1-c)-y*s,    y*z*(1-c)+x*s,  z*z*(1-c)+c,    0,
+				0,                0,              0,              1 };
 
 			return mat44(temp);
 		}
@@ -1056,18 +1401,18 @@ namespace pwn
 		const mat44 mat44Identity()
 		{
 			const real temp[] = { 1, 0, 0, 0,
-			                      0, 1, 0, 0,
-			                      0, 0, 1, 0,
-			                      0, 0, 0, 1};
+				0, 1, 0, 0,
+				0, 0, 1, 0,
+				0, 0, 0, 1};
 			return mat44_FromRowMajor(temp);
 		}
 
 		const mat44 cmat44(const vec3& v)
 		{
 			const real temp[] = { 1, 0, 0, v.x,
-			                      0, 1, 0, v.y,
-			                      0, 0, 1, v.z,
-			                      0, 0, 0, 1};
+				0, 1, 0, v.y,
+				0, 0, 1, v.z,
+				0, 0, 0, 1};
 			return mat44_FromRowMajor(temp);
 		}
 
@@ -1102,7 +1447,7 @@ namespace pwn
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////// point2
 
-		point2::point2(float x, float y)
+		point2::point2(real x, real y)
 			: vec(x, y)
 		{
 		}
@@ -1175,7 +1520,7 @@ namespace pwn
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////// direction2
 
-		direction2::direction2(float x, float y)
+		direction2::direction2(real x, real y)
 			: vec(x, y)
 		{
 		}
@@ -1207,12 +1552,12 @@ namespace pwn
 		}
 
 		// ------------------------------------------------------------------------
-		
+
 		const direction2 operator+(const direction2& lhs, const direction2& rhs)
 		{
 			return direction2(lhs.vec+rhs.vec);
 		}
-		
+
 		const direction2 operator-(const direction2& lhs, const direction2& rhs)
 		{
 			return direction2(lhs.vec-rhs.vec);
@@ -1284,10 +1629,10 @@ namespace pwn
 
 		const rect FromSizeAndCenter(const direction2& size, const point2& center)
 		{
-			const float w = size.vec.x;
-			const float h = size.vec.y;
-			const float cx = center.vec.x;
-			const float cy = 1-center.vec.y;
+			const real w = size.vec.x;
+			const real h = size.vec.y;
+			const real cx = center.vec.x;
+			const real cy = 1-center.vec.y;
 			return FromUpperLeftAndLowerRight(point2(-w*cx, h*cy), point2(w*(1-cx), -h*(1-cy)) );
 		}
 
@@ -1531,8 +1876,8 @@ namespace pwn
 		/*
 
 		ArcBall::ArcBall(const vec2& center, const real radius)
-			: center(center)
-			, radius(radius)
+		: center(center)
+		, radius(radius)
 		{
 		}
 
@@ -1540,23 +1885,23 @@ namespace pwn
 
 		namespace // local
 		{
-			vec3 PointOnBall(const ArcBall& ab, const vec2& v)
-			{
-				const real x = ( v.x - ab.center.x ) / ab.radius;
-				const real y = ( v.y - ab.center.y ) / ab.radius;
-				const real rsq = Square(x) + Square(y);
-				const real z = rsq < PWN_MATH_VALUE(1.0) ? Sqrt(PWN_MATH_VALUE(1.0) - rsq) : PWN_MATH_VALUE(0.0);
-				return GetNormalized(vec3(x,y,z));
-			}
+		vec3 PointOnBall(const ArcBall& ab, const vec2& v)
+		{
+		const real x = ( v.x - ab.center.x ) / ab.radius;
+		const real y = ( v.y - ab.center.y ) / ab.radius;
+		const real rsq = Square(x) + Square(y);
+		const real z = rsq < PWN_MATH_VALUE(1.0) ? Sqrt(PWN_MATH_VALUE(1.0) - rsq) : PWN_MATH_VALUE(0.0);
+		return GetNormalized(vec3(x,y,z));
+		}
 		}
 
 		quat GetRotation(const ArcBall& arc, const vec2 from, const vec2 to)
 		{
-			const vec3 f = PointOnBall(arc, from);
-			const vec3 t = PointOnBall(arc, to);
-			const vec3 axis = crossNorm(f,t);
-			const Angle angle = AngleBetween(f,t);
-			return cquat(RightHandAround(axis, angle));
+		const vec3 f = PointOnBall(arc, from);
+		const vec3 t = PointOnBall(arc, to);
+		const vec3 axis = crossNorm(f,t);
+		const Angle angle = AngleBetween(f,t);
+		return cquat(RightHandAround(axis, angle));
 		}
 
 		*/

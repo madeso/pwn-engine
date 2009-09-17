@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include "Converter.hpp"
+#include <pwn/math/operations>
 
 namespace pwn
 {
@@ -11,25 +12,59 @@ namespace pwn
 		{
 			typedef char Byte;
 
-			void Write(std::ofstream* f, const pwn::math::Rgba& c)
+			const pwn::math::vec2 cvec2(const math::vec3& v)
 			{
-				// todo: remove hacky assumption of that the r is the first one
-				f->write(reinterpret_cast<const Byte*>(&c.r), sizeof(pwn::math::real)*4);
+				return pwn::math::vec2(v.x, v.y);
+			}
+
+			void Write(std::ofstream* f, const pwn::math::real& r, bool optimize)
+			{
+				if( optimize )
+				{
+					pwn::math::uint16 i = pwn::math::FloatToHalf(r);
+					f->write(reinterpret_cast<const Byte*>(&i), sizeof(pwn::math::uint16));
+				}
+				else f->write(reinterpret_cast<const Byte*>(&r), sizeof(pwn::math::real));
+			}
+			void Write(std::ofstream* f, const pwn::math::Rgba& c, bool optimize)
+			{
+				Write(f, c.r, optimize);
+				Write(f, c.g, optimize);
+				Write(f, c.b, optimize);
+				Write(f, c.a, optimize);
+			}
+			void Write(std::ofstream* f, const pwn::math::vec3& v, bool optimize)
+			{
+				Write(f, v.x, optimize);
+				Write(f, v.y, optimize);
+				Write(f, v.z, optimize);
+			}
+			void Write(std::ofstream* f, const pwn::math::vec2& v, bool optimize)
+			{
+				Write(f, v.x, optimize);
+				Write(f, v.y, optimize);
 			}
 		}
 
-		void Write(Converter& data, const pwn::core::string& file)
+		void Write(Converter& data, const pwn::core::string& file, bool optimize)
 		{
 			std::ofstream f(file.c_str(), std::ios::out | std::ios::binary);
 			if( !f.good() ) throw "failed to open file for writing";
 			f.exceptions ( std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit );
+
+			/* header */ {
+				pwn::math::uint16 version = 0;
+				f.write( reinterpret_cast<const Byte*>(&version), sizeof(pwn::math::uint16));
+				pwn::math::uint16 flags = optimize? 1 : 0;
+				f.write( reinterpret_cast<const Byte*>(&flags), sizeof(pwn::math::uint16));
+			}
 
 			/* vertices */ {
 				const std::size_t vc = data.vertices.size();
 				f.write( reinterpret_cast<const Byte*>(&vc), sizeof(std::size_t));
 				for(std::size_t i=0; i<vc; ++i)
 				{
-					f.write(reinterpret_cast<const Byte*>(data.vertices[i].data()), sizeof(pwn::math::real) * 3 );
+					Write(&f, data.vertices[i], optimize);
 				}
 			}
 
@@ -38,7 +73,7 @@ namespace pwn
 				f.write(reinterpret_cast<const Byte*>(&tc), sizeof(std::size_t));
 				for(std::size_t i=0; i<tc; ++i)
 				{
-					f.write(reinterpret_cast<const Byte*>(data.textureCoordinates[i].data()), sizeof(pwn::math::real) * 2 );
+					Write(&f, data.textureCoordinates[i], optimize);
 				}
 			}
 
@@ -47,7 +82,7 @@ namespace pwn
 				f.write(reinterpret_cast<const Byte*>(&nc), sizeof(std::size_t));
 				for(std::size_t i=0; i<nc; ++i)
 				{
-					f.write(reinterpret_cast<const Byte*>(data.normals[i].data()), sizeof(pwn::math::real) * 2 );
+					Write(&f, cvec2(data.normals[i]), optimize);
 				}
 			}
 
@@ -56,11 +91,11 @@ namespace pwn
 				f.write(reinterpret_cast<const Byte*>(&mc), sizeof(std::size_t));
 				for(std::size_t i=0; i<mc; ++i)
 				{
-					Write(&f, data.materials[i].ambient);
-					Write(&f, data.materials[i].diffuse);
-					Write(&f, data.materials[i].specular);
-					Write(&f, data.materials[i].emissive);
-					f.write(reinterpret_cast<const Byte*>(&data.materials[i].shininess), sizeof(pwn::math::real));
+					Write(&f, data.materials[i].ambient, optimize);
+					Write(&f, data.materials[i].diffuse, optimize);
+					Write(&f, data.materials[i].specular, optimize);
+					Write(&f, data.materials[i].emissive, optimize);
+					Write(&f, data.materials[i].shininess, optimize);
 				}
 			}
 

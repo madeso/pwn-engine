@@ -57,7 +57,9 @@ void main(int argc, char* argv[])
 			pwn::convert::Converter con;
 			pwn::convert::obj::read(&con, inputfile);
 			pwn::convert::Write(con, (boost::filesystem::path(outdir) / boost::filesystem::path(inputfile).filename()).replace_extension("mesh").string(), optimize);
+			pwn::convert::Test(con);
 			cout << "done." << endl;
+			std::cin.get();
 		}
 		catch(...)
 		{

@@ -4,6 +4,8 @@
 #include "Converter.hpp"
 #include <pwn/math/operations>
 
+#include <iostream>
+
 namespace pwn
 {
 	namespace convert
@@ -43,6 +45,62 @@ namespace pwn
 			{
 				Write(f, v.x, optimize);
 				Write(f, v.y, optimize);
+			}
+		}
+
+		const pwn::math::real f(pwn::math::real r)
+		{
+			return pwn::math::HalfToFloat(pwn::math::FloatToHalf(r));
+		}
+
+		const pwn::math::real PosDiff(const pwn::math::vec3& v)
+		{
+			const pwn::math::vec3 loaded(f(v.x), f(v.y), f(v.z));
+			//const pwn::math::vec3 loaded = pwn::math::CompressedToVector(pwn::math::VectorToCompressed(v));
+			//const pwn::math::vec3 loaded = pwn::math::CompressedToUnitVector(pwn::math::UnitVectorToCompressed(pwn::math::GetNormalized(v))) * f(pwn::math::LengthOf(v));
+			return (pwn::math::LengthOf(v-loaded) / pwn::math::LengthOf(v))*100;
+		}
+
+		const pwn::math::real AngleDiff(const pwn::math::vec3& v)
+		{
+			//const pwn::math::vec3 loaded(f(v.x), f(v.y), f(v.z));
+			const pwn::math::vec3 loaded = pwn::math::CompressedToUnitVector(pwn::math::UnitVectorToCompressed(v));
+			const pwn::math::real a = pwn::math::AngleBetween(v, loaded).inDegrees();
+			return a;
+		}
+
+		void Test(Converter& data)
+		{
+			/* vertices */ {
+				const std::size_t vc = data.vertices.size();
+				pwn::math::real min = 100;
+				pwn::math::real max = -100;
+				pwn::math::real average = 0;
+				for(std::size_t i=0; i<vc; ++i)
+				{
+					const pwn::math::real d = PosDiff(data.vertices[i]*200);
+					average += d;
+					if( min > d ) min = d;
+					if( max < d ) max = d;
+				}
+				average = average / vc;
+				std::cout << "Position (units):" << min << ", " << average << ", " << max << std::endl;
+			}
+
+			/* normals */ {
+				const std::size_t nc = data.normals.size();
+				pwn::math::real min = 100;
+				pwn::math::real max = -100;
+				pwn::math::real average = 0;
+				for(std::size_t i=0; i<nc; ++i)
+				{
+					const pwn::math::real d = AngleDiff(data.normals[i]);
+					average += d;
+					if( min > d ) min = d;
+					if( max < d ) max = d;
+				}
+				average = average / nc;
+				std::cout << "Normal (degrees):" << min << ", " << average << ", " << max << std::endl;
 			}
 		}
 

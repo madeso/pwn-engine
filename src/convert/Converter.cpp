@@ -29,7 +29,15 @@ namespace pwn
 
 		void Converter::addNormal(const pwn::math::vec3& n)
 		{
-			normals.push_back(n);
+			const pwn::math::uint16 c = pwn::math::UnitVectorToCompressed(n);
+
+			if( normalMap.find(c) == normalMap.end() )
+			{
+				normals.push_back(n);
+				normalMap[c] = normalConvertions.size() +1;
+			}
+
+			normalConvertions.push_back(normalMap[c]);
 		}
 
 		const std::size_t Converter::addMaterial(const Material& material)

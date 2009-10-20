@@ -2,6 +2,7 @@
 #define PWN_CONVERT_CONVERTER_HPP
 
 #include <vector>
+#include <map>
 
 #include <pwn/math/types>
 #include <pwn/core/string>
@@ -53,6 +54,11 @@ namespace pwn
 			std::vector<pwn::math::vec3> normals;
 			std::vector<Material> materials;
 			std::vector<Face> faces;
+
+			typedef pwn::math::uint16 NormalIndex;
+			typedef pwn::math::uint16 CompressedNormal;
+			std::map<CompressedNormal, NormalIndex> normalMap;
+			std::vector<NormalIndex> normalConvertions;
 		};
 	}
 }

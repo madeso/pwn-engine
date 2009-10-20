@@ -413,7 +413,14 @@ namespace pwn
 		*/
 		const vec3 Down();
 
+		/** Compresses a unit-vector.
+		@see CompressedToUnitVector(uing16)
+		*/
 		const uint16 UnitVectorToCompressed(const vec3& vec);
+
+		/** Decrompress a compressed unit-vector.
+		@see UnitVectorToCompressed(vec3)
+		*/
 		const vec3 CompressedToUnitVector(uint16 compressed);
 
 		/// @}

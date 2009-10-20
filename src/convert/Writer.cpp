@@ -14,17 +14,19 @@ namespace pwn
 		{
 			typedef char Byte;
 
-			const pwn::math::vec2 cvec2(const math::vec3& v)
+			void Write(std::ofstream* f, const pwn::math::uint16 i)
 			{
-				return pwn::math::vec2(v.x, v.y);
+				f->write(reinterpret_cast<const Byte*>(&i), sizeof(pwn::math::uint16));
 			}
-
+			void Write(std::ofstream* f, const pwn::math::uint32 i)
+			{
+				f->write(reinterpret_cast<const Byte*>(&i), sizeof(pwn::math::uint32));
+			}
 			void Write(std::ofstream* f, const pwn::math::real& r, bool optimize)
 			{
 				if( optimize )
 				{
-					pwn::math::uint16 i = pwn::math::FloatToHalf(r);
-					f->write(reinterpret_cast<const Byte*>(&i), sizeof(pwn::math::uint16));
+					Write(f, pwn::math::FloatToHalf(r));
 				}
 				else f->write(reinterpret_cast<const Byte*>(&r), sizeof(pwn::math::real));
 			}
@@ -48,22 +50,19 @@ namespace pwn
 			}
 		}
 
-		const pwn::math::real f(pwn::math::real r)
+		const pwn::math::real CompressAndUncompress(pwn::math::real r)
 		{
 			return pwn::math::HalfToFloat(pwn::math::FloatToHalf(r));
 		}
 
 		const pwn::math::real PosDiff(const pwn::math::vec3& v)
 		{
-			const pwn::math::vec3 loaded(f(v.x), f(v.y), f(v.z));
-			//const pwn::math::vec3 loaded = pwn::math::CompressedToVector(pwn::math::VectorToCompressed(v));
-			//const pwn::math::vec3 loaded = pwn::math::CompressedToUnitVector(pwn::math::UnitVectorToCompressed(pwn::math::GetNormalized(v))) * f(pwn::math::LengthOf(v));
+			const pwn::math::vec3 loaded(CompressAndUncompress(v.x), CompressAndUncompress(v.y), CompressAndUncompress(v.z));
 			return (pwn::math::LengthOf(v-loaded) / pwn::math::LengthOf(v))*100;
 		}
 
 		const pwn::math::real AngleDiff(const pwn::math::vec3& v)
 		{
-			//const pwn::math::vec3 loaded(f(v.x), f(v.y), f(v.z));
 			const pwn::math::vec3 loaded = pwn::math::CompressedToUnitVector(pwn::math::UnitVectorToCompressed(v));
 			const pwn::math::real a = pwn::math::AngleBetween(v, loaded).inDegrees();
 			return a;
@@ -71,6 +70,7 @@ namespace pwn
 
 		void Test(Converter& data)
 		{
+			std::cout << "Normal: " << data.normalMap.size() << ", " << data.normalConvertions.size() << std::endl;
 			/* vertices */ {
 				const std::size_t vc = data.vertices.size();
 				pwn::math::real min = 100;
@@ -84,7 +84,7 @@ namespace pwn
 					if( max < d ) max = d;
 				}
 				average = average / vc;
-				std::cout << "Position (units):" << min << ", " << average << ", " << max << std::endl;
+				std::cout << "Position (percent): " << min << ", " << average << ", " << max << std::endl;
 			}
 
 			/* normals */ {
@@ -100,7 +100,7 @@ namespace pwn
 					if( max < d ) max = d;
 				}
 				average = average / nc;
-				std::cout << "Normal (degrees):" << min << ", " << average << ", " << max << std::endl;
+				std::cout << "Normal (degrees): " << min << ", " << average << ", " << max << std::endl;
 			}
 		}
 
@@ -140,7 +140,7 @@ namespace pwn
 				f.write(reinterpret_cast<const Byte*>(&nc), sizeof(std::size_t));
 				for(std::size_t i=0; i<nc; ++i)
 				{
-					Write(&f, cvec2(data.normals[i]), optimize);
+					Write(&f, pwn::math::UnitVectorToCompressed(data.normals[i]));
 				}
 			}
 
@@ -165,7 +165,9 @@ namespace pwn
 					for(int faceIndex=0; faceIndex<3; ++faceIndex)
 					{
 						// todo: remove hacky assumption of that the vertex is the first one
-						f.write(reinterpret_cast<const Byte*>(&data.faces[i].indices[faceIndex].vertex), sizeof(std::size_t) * 3);
+						Write(&f, data.faces[i].indices[faceIndex].vertex);
+						Write(&f, data.normalConvertions[ static_cast<Converter::NormalIndex>(data.faces[i].indices[faceIndex].normal)]);
+						Write(&f, data.faces[i].indices[faceIndex].textureCoordiante);
 					}
 					f.write(reinterpret_cast<const Byte*>(&data.faces[i].material), sizeof(std::size_t));
 				}

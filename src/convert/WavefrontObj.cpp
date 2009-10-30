@@ -17,22 +17,22 @@ namespace pwn
 		{
 			namespace // local
 			{
-				std::size_t csizet(const pwn::core::string& str)
+				std::size_t csizet(const pwn::string& str)
 				{
 					return boost::lexical_cast<std::size_t>(str);
 				}
-				pwn::math::real creal(const pwn::core::string& str)
+				pwn::real creal(const pwn::string& str)
 				{
-					return boost::lexical_cast<pwn::math::real>(str);
+					return boost::lexical_cast<pwn::real>(str);
 				}
 
-				const FaceIndex cFaceIndex(const pwn::core::string& astr)
+				const FaceIndex cFaceIndex(const pwn::string& astr)
 				{
-					const pwn::core::string str = pwn::core::Trim(astr);
-					const pwn::core::string::size_type a = str.find_first_of('/');
-					if( a == pwn::core::string::npos ) throw "bad face format 1";
-					const pwn::core::string::size_type b = str.find_first_of('/', a+1);
-					if( b == pwn::core::string::npos ) throw "bad face format 1";
+					const pwn::string str = pwn::core::Trim(astr);
+					const pwn::string::size_type a = str.find_first_of('/');
+					if( a == pwn::string::npos ) throw "bad face format 1";
+					const pwn::string::size_type b = str.find_first_of('/', a+1);
+					if( b == pwn::string::npos ) throw "bad face format 1";
 					FaceIndex f;
 					f.vertex = csizet(str.substr(0, a)) - 1;
 					f.textureCoordiante = csizet(str.substr(a+1, b-a-1)) -1;
@@ -40,7 +40,7 @@ namespace pwn
 					return f;
 				}
 
-				const pwn::math::Rgba cRgba(const pwn::core::string& r, const pwn::core::string& g, const pwn::core::string& b, const pwn::math::real a)
+				const pwn::math::Rgba cRgba(const pwn::string& r, const pwn::string& g, const pwn::string& b, const pwn::real a)
 				{
 					return pwn::math::Rgba(creal(r), creal(g), creal(b), a);
 				}
@@ -54,24 +54,24 @@ namespace pwn
 					materials->insert( std::make_pair(mat.name, converter->addMaterial(mat)) );
 				}
 
-				void LoadMaterialLibrary(Converter* converter, std::map<std::string, std::size_t>* materials, const pwn::core::string& sourceFile, const pwn::core::string& materialLibraryFileName)
+				void LoadMaterialLibrary(Converter* converter, std::map<std::string, std::size_t>* materials, const pwn::string& sourceFile, const pwn::string& materialLibraryFileName)
 				{
-					const pwn::core::string file = (boost::filesystem::path(sourceFile).remove_filename() / materialLibraryFileName).string();
+					const pwn::string file = (boost::filesystem::path(sourceFile).remove_filename() / materialLibraryFileName).string();
 
 					std::ifstream f(file.c_str());
 					if( false == f.good() ) throw "missing file";
 
 					Material material;
 
-					pwn::core::string line;
+					pwn::string line;
 					while( std::getline(f, line) )
 					{
-						const std::vector<pwn::core::string> sline = pwn::core::SplitString(pwn::core::Trim(line), pwn::core::kSpaceCharacters());
+						const std::vector<pwn::string> sline = pwn::core::SplitString(pwn::core::Trim(line), pwn::core::kSpaceCharacters());
 						const std::size_t slineSize = sline.size();
 						if( slineSize == 0 ) continue; // empty line
 						if( sline[0][0] == '#' ) continue; // comment
-						const pwn::core::string command = sline[0];
-						pwn::math::real transperency = 1;
+						const pwn::string command = sline[0];
+						pwn::real transperency = 1;
 
 						if( command == "newmtl" )
 						{
@@ -125,16 +125,16 @@ namespace pwn
 				if( false == f.good() ) throw "missing obj file";
 
 				std::map<std::string, std::size_t> materials;
-				pwn::core::string currentMaterial = "";
+				pwn::string currentMaterial = "";
 
-				pwn::core::string line;
+				pwn::string line;
 				while( std::getline(f, line) )
 				{
-					const std::vector<pwn::core::string> sline = pwn::core::SplitString(pwn::core::Trim(line), pwn::core::kSpaceCharacters());
+					const std::vector<pwn::string> sline = pwn::core::SplitString(pwn::core::Trim(line), pwn::core::kSpaceCharacters());
 					const std::size_t slineSize = sline.size();
 					if( slineSize == 0 ) continue; // empty line
 					if( sline[0][0] == '#' ) continue; // comment
-					const pwn::core::string command = sline[0];
+					const pwn::string command = sline[0];
 					
 					if( command == "v" )
 					{

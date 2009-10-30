@@ -2,6 +2,7 @@
 
 namespace // local
 {
+	using namespace pwn;
 	using namespace pwn::math;
 	bool equal(real lhs, real rhs)
 	{

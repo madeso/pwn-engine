@@ -2,6 +2,7 @@
 
 SUITE(test_mat33)
 {
+	using namespace pwn;
 	using namespace pwn::math;
 
 	const real fe = 0.001f;

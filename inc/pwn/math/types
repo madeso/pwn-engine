@@ -1,7 +1,7 @@
 #ifndef PWN_MATH_TYPES
 #define PWN_MATH_TYPES
 
-#include <pwn/math/config>
+#include <pwn/number>
 
 namespace pwn
 {

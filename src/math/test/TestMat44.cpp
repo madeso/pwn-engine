@@ -2,6 +2,7 @@
 
 SUITE(test_mat44)
 {
+	using namespace pwn;
 	using namespace pwn::math;
 
 	TEST(TestTransormation)

@@ -3,6 +3,7 @@
 
 SUITE(testRect)
 {
+	using namespace pwn;
 	using namespace pwn::math;
 
 	struct wh : boost::noncopyable

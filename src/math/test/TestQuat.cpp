@@ -2,6 +2,7 @@
 
 SUITE(testQuat)
 {
+	using namespace pwn;
 	using namespace pwn::math;
 
 	TEST(testConstants)

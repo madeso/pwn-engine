@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="pwn-core"
-	ProjectGUID="{415CB211-FDB2-4497-910A-539D4E96B3F6}"
-	RootNamespace="pwncore"
+	Name="pwn-mesh"
+	ProjectGUID="{9DD3F329-9640-4A62-A02F-29698B69B71C}"
+	RootNamespace="pwnmesh"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -20,7 +20,7 @@
 			OutputDirectory="$(SolutionDir)..\..\dist\$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)..\..\temp\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="4"
-			CharacterSet="0"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -83,7 +83,7 @@
 			OutputDirectory="$(SolutionDir)..\..\dist\$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)..\..\temp\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="4"
-			CharacterSet="0"
+			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -144,19 +144,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\inc\pwn\core\stdutil"
+			RelativePath="..\..\..\inc\pwn\mesh\mesh"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\string"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\inc\pwn\core\StringUtils"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\core\StringUtils.cpp"
+			RelativePath="..\..\..\src\mesh\mesh.cpp"
 			>
 		</File>
 	</Files>

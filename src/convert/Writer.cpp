@@ -14,21 +14,21 @@ namespace pwn
 		{
 			typedef char Byte;
 
-			void Write(std::ofstream* f, const pwn::math::uint16 i)
+			void Write(std::ofstream* f, const pwn::uint16 i)
 			{
-				f->write(reinterpret_cast<const Byte*>(&i), sizeof(pwn::math::uint16));
+				f->write(reinterpret_cast<const Byte*>(&i), sizeof(pwn::uint16));
 			}
-			void Write(std::ofstream* f, const pwn::math::uint32 i)
+			void Write(std::ofstream* f, const pwn::uint32 i)
 			{
-				f->write(reinterpret_cast<const Byte*>(&i), sizeof(pwn::math::uint32));
+				f->write(reinterpret_cast<const Byte*>(&i), sizeof(pwn::uint32));
 			}
-			void Write(std::ofstream* f, const pwn::math::real& r, bool optimize)
+			void Write(std::ofstream* f, const pwn::real& r, bool optimize)
 			{
 				if( optimize )
 				{
 					Write(f, pwn::math::FloatToHalf(r));
 				}
-				else f->write(reinterpret_cast<const Byte*>(&r), sizeof(pwn::math::real));
+				else f->write(reinterpret_cast<const Byte*>(&r), sizeof(pwn::real));
 			}
 			void Write(std::ofstream* f, const pwn::math::Rgba& c, bool optimize)
 			{
@@ -50,21 +50,21 @@ namespace pwn
 			}
 		}
 
-		const pwn::math::real CompressAndUncompress(pwn::math::real r)
+		const pwn::real CompressAndUncompress(pwn::real r)
 		{
 			return pwn::math::HalfToFloat(pwn::math::FloatToHalf(r));
 		}
 
-		const pwn::math::real PosDiff(const pwn::math::vec3& v)
+		const pwn::real PosDiff(const pwn::math::vec3& v)
 		{
 			const pwn::math::vec3 loaded(CompressAndUncompress(v.x), CompressAndUncompress(v.y), CompressAndUncompress(v.z));
 			return (pwn::math::LengthOf(v-loaded) / pwn::math::LengthOf(v))*100;
 		}
 
-		const pwn::math::real AngleDiff(const pwn::math::vec3& v)
+		const pwn::real AngleDiff(const pwn::math::vec3& v)
 		{
 			const pwn::math::vec3 loaded = pwn::math::CompressedToUnitVector(pwn::math::UnitVectorToCompressed(v));
-			const pwn::math::real a = pwn::math::AngleBetween(v, loaded).inDegrees();
+			const pwn::real a = pwn::math::AngleBetween(v, loaded).inDegrees();
 			return a;
 		}
 
@@ -73,12 +73,12 @@ namespace pwn
 			std::cout << "Normal: " << data.normalMap.size() << ", " << data.normalConvertions.size() << std::endl;
 			/* vertices */ {
 				const std::size_t vc = data.vertices.size();
-				pwn::math::real min = 100;
-				pwn::math::real max = -100;
-				pwn::math::real average = 0;
+				pwn::real min = 100;
+				pwn::real max = -100;
+				pwn::real average = 0;
 				for(std::size_t i=0; i<vc; ++i)
 				{
-					const pwn::math::real d = PosDiff(data.vertices[i]*200);
+					const pwn::real d = PosDiff(data.vertices[i]*200);
 					average += d;
 					if( min > d ) min = d;
 					if( max < d ) max = d;
@@ -89,12 +89,12 @@ namespace pwn
 
 			/* normals */ {
 				const std::size_t nc = data.normals.size();
-				pwn::math::real min = 100;
-				pwn::math::real max = -100;
-				pwn::math::real average = 0;
+				pwn::real min = 100;
+				pwn::real max = -100;
+				pwn::real average = 0;
 				for(std::size_t i=0; i<nc; ++i)
 				{
-					const pwn::math::real d = AngleDiff(data.normals[i]);
+					const pwn::real d = AngleDiff(data.normals[i]);
 					average += d;
 					if( min > d ) min = d;
 					if( max < d ) max = d;
@@ -104,17 +104,17 @@ namespace pwn
 			}
 		}
 
-		void Write(Converter& data, const pwn::core::string& file, bool optimize)
+		void Write(Converter& data, const pwn::string& file, bool optimize)
 		{
 			std::ofstream f(file.c_str(), std::ios::out | std::ios::binary);
 			if( !f.good() ) throw "failed to open file for writing";
 			f.exceptions ( std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit );
 
 			/* header */ {
-				pwn::math::uint16 version = 0;
-				f.write( reinterpret_cast<const Byte*>(&version), sizeof(pwn::math::uint16));
-				pwn::math::uint16 flags = optimize? 1 : 0;
-				f.write( reinterpret_cast<const Byte*>(&flags), sizeof(pwn::math::uint16));
+				pwn::uint16 version = 0;
+				f.write( reinterpret_cast<const Byte*>(&version), sizeof(pwn::uint16));
+				pwn::uint16 flags = optimize? 1 : 0;
+				f.write( reinterpret_cast<const Byte*>(&flags), sizeof(pwn::uint16));
 			}
 
 			/* vertices */ {

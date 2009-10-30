@@ -1,0 +1,78 @@
+http://www.gamedev.net/community/forums/topic.asp?topic_id=456646&PageSize=25&WhichPage=1
+
+When profiling some code I'd been working on recently, I was surprised and dismayed to see boost::signals functions floating to the top. For those of you who are unaware, boost::signals is a wonderfully useful signal/slot library which can be used alongside boost::bind for delegate-based event handling such as one sees in C#. It is robust, featureful, and flexible. It is also, I have learned, incredibly, terrifyingly slow. For a lot of people who use boost::signals this is fine because they call events very seldom. I was calling several events per frame per object, with predictable results.
+
+So I wrote my own. Slightly less flexible and featureful. It's optimized for how everyone tends to actually use events. And event invocation is fifteen to eighty times faster than boost::signals.
+
+The library relies upon Don Clugston's excellent FastDelegate library and upon the deliciously evil, horribly useful boost::preprocessor library. The former is included; the latter is not, so you'll need to have Boost installed and its headers available to the compiler.
+
+A basic usage guide is as follows:
+
+#include <event.h>
+#include <string>
+#include <iostream>
+
+class Subject
+{
+public:
+	// events::Event is parameterized by the argument list passed to the event handlers.
+	// I like to make events public and mutable. If you want you can hide them behind
+	// mutators instead.
+	mutable events::Event<std::string const&> NameChangedEvent;
+
+	// I've decided not to make events invocable via operator(). It's too easy to 
+	// accidentally invoke an event in this way.
+	void SetName(std::string const& name)
+	{
+		m_name = name;
+		NameChangedEvent.Invoke(m_name);
+	}
+
+private:
+	std::string m_name;
+};
+
+class Observer
+{
+public:
+	Observer(Subject const& subject) : m_subject(subject)
+	{
+		// Registers the OnNameChanged function of this object as a listener, and
+		// stores the resultant connection object in the listener's connection set.
+		// This is all you need to do for the most common case, where you want the
+		// connection to be broken when the Observer is destroyed.
+		m_cs.Add(m_subject.NameChangedEvent.Register(*this, &Observer::OnNameChanged));
+	}
+
+private:
+	// I like to make my event handler functions private, delegating to public functions
+	// as necessary.
+	void OnNameChanged(std::string const& newName)
+	{
+		std::cout << "The subject's name is now " << newName << "." << std::endl;
+	}
+
+	// The connection set is a utility class which manages connection lifetimes for
+	// you. It's similar in functionality to boost::signals::trackable, but provides
+	// slightly more flexibility over connection lifetimes. For the normal case,
+	// you only need one connection set per listening object (no matter how many
+	// things it listens to) and you never need to do anything with it except call Add().
+	events::ConnectionSet m_cs;
+
+	Subject const& m_subject;
+};
+
+int main()
+{
+	Subject s;
+	Observer o(s);
+
+	s.SetName("Joe");
+}
+
+
+This is beta-quality software, and its interface and implementation are both still in flux. It's intended primarily to get ideas flowing here on what form the ideal event library would take. Is this library too much or too little? Are there widely useful features it's missing? In particular, I'm interested to hear whether the ConnectionSet system is reasonable.
+
+download (ver 0.08)
+
+[Edited by - Sneftel on July 28, 2007 12:59:58 AM]

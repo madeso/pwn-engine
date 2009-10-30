@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="pwn-core"
-	ProjectGUID="{415CB211-FDB2-4497-910A-539D4E96B3F6}"
-	RootNamespace="pwncore"
+	Name="pwn-render"
+	ProjectGUID="{A1231874-8759-40A6-87D3-6120D2E7D92D}"
+	RootNamespace="pwnrender"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -20,7 +20,7 @@
 			OutputDirectory="$(SolutionDir)..\..\dist\$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)..\..\temp\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="4"
-			CharacterSet="0"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -83,7 +83,7 @@
 			OutputDirectory="$(SolutionDir)..\..\dist\$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)..\..\temp\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="4"
-			CharacterSet="0"
+			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -144,19 +144,7 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\inc\pwn\core\stdutil"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\inc\pwn\string"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\inc\pwn\core\StringUtils"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\core\StringUtils.cpp"
+			RelativePath="..\..\..\src\render\render.cpp"
 			>
 		</File>
 	</Files>

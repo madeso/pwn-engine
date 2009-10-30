@@ -5,7 +5,7 @@
 #include <map>
 
 #include <pwn/math/types>
-#include <pwn/core/string>
+#include <pwn/string>
 
 namespace pwn
 {
@@ -27,14 +27,14 @@ namespace pwn
 		struct Material
 		{
 			Material();
-			pwn::core::string name; // may be empty
+			pwn::string name; // may be empty
 			pwn::math::Rgba ambient;
 			pwn::math::Rgba diffuse;
 			pwn::math::Rgba specular;
 			pwn::math::Rgba emissive;
-			pwn::math::real shininess;
+			pwn::real shininess;
 
-			pwn::core::string textureDiffuse;
+			pwn::string textureDiffuse;
 		};
 
 		// sucky name, I realy should rename it to model or something
@@ -55,8 +55,8 @@ namespace pwn
 			std::vector<Material> materials;
 			std::vector<Face> faces;
 
-			typedef pwn::math::uint16 NormalIndex;
-			typedef pwn::math::uint16 CompressedNormal;
+			typedef pwn::uint16 NormalIndex;
+			typedef pwn::uint16 CompressedNormal;
 			std::map<CompressedNormal, NormalIndex> normalMap;
 			std::vector<NormalIndex> normalConvertions;
 		};

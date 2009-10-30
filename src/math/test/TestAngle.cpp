@@ -2,6 +2,7 @@
 
 SUITE(testAngle)
 {
+	using namespace pwn;
 	using namespace pwn::math;
 
 	real kTolerance()

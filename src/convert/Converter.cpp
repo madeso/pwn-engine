@@ -29,7 +29,7 @@ namespace pwn
 
 		void Converter::addNormal(const pwn::math::vec3& n)
 		{
-			const pwn::math::uint16 c = pwn::math::UnitVectorToCompressed(n);
+			const pwn::uint16 c = pwn::math::UnitVectorToCompressed(n);
 
 			if( normalMap.find(c) == normalMap.end() )
 			{

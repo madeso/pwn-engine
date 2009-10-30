@@ -1,7 +1,7 @@
 #ifndef PWN_CONVERT_WRITER_HPP
 #define PWN_CONVERT_WRITER_HPP
 
-#include <pwn/core/string>
+#include <pwn/string>
 
 namespace pwn
 {
@@ -15,7 +15,7 @@ namespace pwn
 {
 	namespace convert
 	{
-		void Write(Converter& data, const pwn::core::string& file, bool optimize);
+		void Write(Converter& data, const pwn::string& file, bool optimize);
 		void Test(Converter& data);
 	}
 }

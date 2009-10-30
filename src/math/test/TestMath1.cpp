@@ -2,6 +2,7 @@
 
 SUITE(math1)
 {
+	using namespace pwn;
 	using namespace pwn::math;
 
 	TEST(testSquare)

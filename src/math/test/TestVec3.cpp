@@ -2,6 +2,7 @@
 
 SUITE(Vector3d)
 {
+	using namespace pwn;
 	using namespace pwn::math;
 
 	TEST(testLengthOf)

@@ -8,81 +8,81 @@ namespace pwn
 {
 	namespace core
 	{
-		const pwn::core::string& kSpaceCharacters()
+		const pwn::string& kSpaceCharacters()
 		{
-			static const pwn::core::string space = " \n\r\t";
+			static const pwn::string space = " \n\r\t";
 			return space;
 		}
 
-		void SplitString(const pwn::core::string& stringToSplit, std::vector<pwn::core::string>* result, const pwn::core::string& delimiterString)
+		void SplitString(const pwn::string& stringToSplit, std::vector<pwn::string>* result, const pwn::string& delimiterString)
 		{
 			assert(result);
-			boost::char_separator<pwn::core::tchar> sep(delimiterString.c_str());
-			boost::tokenizer< boost::char_separator<pwn::core::tchar> > tok(stringToSplit, sep);
+			boost::char_separator<pwn::tchar> sep(delimiterString.c_str());
+			boost::tokenizer< boost::char_separator<pwn::tchar> > tok(stringToSplit, sep);
 			std::copy(tok.begin(), tok.end(), std::back_inserter(*result));
 		}
 
-		std::vector<pwn::core::string> SplitString(const pwn::core::string& stringToSplit, const pwn::core::string& delimiterString)
+		std::vector<pwn::string> SplitString(const pwn::string& stringToSplit, const pwn::string& delimiterString)
 		{
-			std::vector<pwn::core::string> temp;
+			std::vector<pwn::string> temp;
 			SplitString(stringToSplit, &temp, delimiterString);
 			return temp;
 		}
 
-		pwn::core::string TrimRight(const pwn::core::string& stringToTrim,const pwn::core::string& trimCharacters)
+		pwn::string TrimRight(const pwn::string& stringToTrim,const pwn::string& trimCharacters)
 		{
-			return pwn::core::string(stringToTrim).erase(stringToTrim.find_last_not_of(trimCharacters)+1);
+			return pwn::string(stringToTrim).erase(stringToTrim.find_last_not_of(trimCharacters)+1);
 		}
 
-		pwn::core::string TrimLeft(const pwn::core::string& stringToTrim,const pwn::core::string& trimCharacters)
+		pwn::string TrimLeft(const pwn::string& stringToTrim,const pwn::string& trimCharacters)
 		{
-			return pwn::core::string(stringToTrim).erase(0,stringToTrim.find_first_not_of(trimCharacters));
+			return pwn::string(stringToTrim).erase(0,stringToTrim.find_first_not_of(trimCharacters));
 		}
 
-		pwn::core::string Trim(const pwn::core::string& stringToTrim,const pwn::core::string& trimCharacters)
+		pwn::string Trim(const pwn::string& stringToTrim,const pwn::string& trimCharacters)
 		{
 			return TrimRight( TrimLeft(stringToTrim, trimCharacters), trimCharacters);
 		}
 
-		bool StartsWith(const pwn::core::string stringToTest, const pwn::core::string& start)
+		bool StartsWith(const pwn::string stringToTest, const pwn::string& start)
 		{
-			const pwn::core::string::size_type length = start.length();
-			const pwn::core::string::size_type otherLength = stringToTest.length();
+			const pwn::string::size_type length = start.length();
+			const pwn::string::size_type otherLength = stringToTest.length();
 			if( otherLength < length ) return false;
-			const pwn::core::string actualStart = stringToTest.substr(0, length);
+			const pwn::string actualStart = stringToTest.substr(0, length);
 			return start == actualStart;
 		}
-		bool EndsWith(const pwn::core::string stringToTest, const pwn::core::string& end)
+		bool EndsWith(const pwn::string stringToTest, const pwn::string& end)
 		{
-			const pwn::core::string::size_type length = end.length();
-			const pwn::core::string::size_type otherLength = stringToTest.length();
+			const pwn::string::size_type length = end.length();
+			const pwn::string::size_type otherLength = stringToTest.length();
 			if( otherLength < length ) return false;
-			const pwn::core::string actualEnd = stringToTest.substr(otherLength-length, length);
+			const pwn::string actualEnd = stringToTest.substr(otherLength-length, length);
 			return end == actualEnd;
 		}
 
-		pwn::core::string ToLower(const pwn::core::string& string)
+		pwn::string ToLower(const pwn::string& string)
 		{
-			pwn::core::string result = string;
+			pwn::string result = string;
 			//std::for_each(result.begin(), result.end(), tolower);
 			std::transform(result.begin(), result.end(), result.begin(), tolower);
 			return result;
 		}
 
-		void StringReplace(pwn::core::string* string, const pwn::core::string& toFind, const pwn::core::string& toReplace)
+		void StringReplace(pwn::string* string, const pwn::string& toFind, const pwn::string& toReplace)
 		{
 			std::size_t index = string->find(toFind);
 			const std::size_t findLength = toFind.length();
-			while (index!=pwn::core::string::npos) {
+			while (index!=pwn::string::npos) {
 				string->erase(index, findLength);
 				string->insert(index, toReplace);
 				index = string->find(toFind, index);
 			}
 		}
 
-		const pwn::core::string StringReplace(const pwn::core::string& string, const pwn::core::string& toFind, const pwn::core::string& toReplace)
+		const pwn::string StringReplace(const pwn::string& string, const pwn::string& toFind, const pwn::string& toReplace)
 		{
-			pwn::core::string temp = string;
+			pwn::string temp = string;
 			StringReplace(&temp, toFind, toReplace);
 			return temp;
 		}

@@ -144,11 +144,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\inc\pwn\math\config"
+			RelativePath="..\..\..\src\math\src\math.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\math\src\math.cpp"
+			RelativePath="..\..\..\inc\pwn\number"
 			>
 		</File>
 		<File

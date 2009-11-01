@@ -1,0 +1,41 @@
+#ifndef PWN_ENGINE_LOOP
+#define PWN_ENGINE_LOOP
+
+#include <pwn/engine/autolink>
+#include <pwn/engine/key>
+
+namespace pwn
+{
+	namespace engine
+	{
+		class Game;
+
+		class Loop
+		{
+		public:
+			Loop(Game* game);
+			virtual ~Loop();
+
+			void loop();
+
+			virtual void onKey(Key::Code key, bool isDown) = 0;
+
+			bool isRunning() const;
+		protected:
+			void stop();
+			Game& game();
+
+			virtual void onUpdate() = 0;
+			virtual void onRender() = 0;
+
+			void renderWorld(int id);
+		private:
+			void update();
+			void render();
+			bool isRunning_;
+			Game* game_;
+		};
+	}
+}
+
+#endif

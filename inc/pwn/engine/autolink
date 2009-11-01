@@ -1,0 +1,8 @@
+#ifndef PWN_ENGINE_AUTOLINK
+#define PWN_ENGINE_AUTOLINK
+
+#ifndef PWN_ENGINE_NO_AUTOLINK
+#pragma comment (lib, "pwn-engine.lib")
+#endif
+
+#endif

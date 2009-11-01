@@ -5,13 +5,15 @@ namespace pwn
 {
 	namespace engine
 	{
+		/** basic interface for diplaying something on-screen
+		*/
 		class Display
 		{
 		public:
 			Display();
 			virtual ~Display();
 
-			virtual void render();
+			virtual void render() = 0;
 		};
 	}
 }

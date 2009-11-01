@@ -1,5 +1,8 @@
-#include <pwn/engine/keys>
+#define PWN_ENGINE_NO_AUTOLINK
+
+#include <pwn/engine/key>
 #include <SFML/Window/Event.hpp>
+#include <pwn/core/StringUtils>
 
 #include <map>
 
@@ -7,9 +10,9 @@ namespace pwn
 {
 	namespace engine
 	{
-		namespace Keys
+		namespace Key
 		{
-			const tchar* const ToString(const Type key)
+			const tchar* const ToString(const Code key)
 			{
 				switch(key)
 				{
@@ -130,13 +133,12 @@ namespace pwn
 
 			namespace // local
 			{
-				typedef std::map<pwn::string, Type> Map;
+				typedef std::map<pwn::string, Code> Map;
 				Map BuildMap()
 				{
 					Map map;
-					map.insert( std::make_pair<pwn::string, Type>("-", Unassigned));
-					// todo: run ToLower
-#define KEY(k)		map.insert( std::make_pair<pwn::string, Type>(#k, k))
+					map.insert( std::make_pair<pwn::string, Code>("-", Unassigned));
+#define KEY(k)		map.insert( std::make_pair<pwn::string, Code>(pwn::core::ToLower(#k), k))
 					KEY(A);
 					KEY(B);
 					KEY(C);
@@ -255,9 +257,10 @@ namespace pwn
 				}
 			}
 
-			const Type FromString(const tchar* const string)
+			const Code FromString(const tchar* const string)
 			{
-				Map::const_iterator res = KeyMap().find(string);
+				namespace pc = pwn::core;
+				Map::const_iterator res = KeyMap().find(pc::ToLower(pc::Trim(string)));
 				if( res == KeyMap().end() ) return Undefined;
 				else return res->second;
 			}

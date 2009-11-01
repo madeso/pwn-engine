@@ -5,7 +5,8 @@
 #include <map>
 #include <boost/shared_ptr.hpp>
 
-#include <events/event.h>
+//#include <events/event.h>
+#include <pwn/engine/key>
 
 namespace pwn
 {
@@ -27,9 +28,11 @@ namespace pwn
 
 			// only associate, ownership has to be handled somewhere else
 			void display_add(int id, Display* disp);
+			void display(int id);
 			void display_remove(int id, Display* disp);
 
 			// post events
+			void handleKey(Key::Code key, bool isDown);
 
 			typedef boost::shared_ptr<System> SystemPtr;
 		private:

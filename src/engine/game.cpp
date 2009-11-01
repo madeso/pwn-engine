@@ -1,3 +1,5 @@
+#define PWN_ENGINE_NO_AUTOLINK
+
 #include <pwn/engine/game>
 #include "gameimp.hpp"
 

@@ -1,6 +1,10 @@
+#define PWN_ENGINE_NO_AUTOLINK
+
 #include <pwn/engine/loop>
 #include <pwn/engine/Game>
 #include "GameImp.hpp"
+#include "loop.hpp"
+
 
 namespace pwn
 {
@@ -8,12 +12,18 @@ namespace pwn
 	{
 		Loop::Loop(Game* game)
 			: isRunning_(false)
-			, game(game)
+			, game_(game)
 		{
 		}
 
 		Loop::~Loop()
 		{
+		}
+
+		Game& Loop::game()
+		{
+			if( game_ == 0 ) throw "invalid game variable";
+			return *game_;
 		}
 
 		void Loop::stop()
@@ -52,9 +62,24 @@ namespace pwn
 			};
 		}
 
+		namespace ActiveLoop
+		{
+			Loop& Get()
+			{
+				Loop* loop = InnerMostLoop();
+				if( loop == 0 ) throw "assertion";
+				return *loop;
+			}
+			bool Has()
+			{
+				return InnerMostLoop() != 0;
+			}
+		}
+
 		void Loop::loop()
 		{
 			RaiiInnerMostLoop raiiInnerMostLoop(this);
+			isRunning_ = true;
 			while(isRunning())
 			{
 				update();
@@ -64,12 +89,22 @@ namespace pwn
 
 		void Loop::update()
 		{
-			game->getImp().updateSystems();
+			if( isRunning() == false ) return;
+			game().getImp().updateSystems();
+
+			if( isRunning() == false ) return;
+			onUpdate();
 		}
 
 		void Loop::render()
 		{
 			if( isRunning() == false ) return;
+			onRender();
+		}
+
+		void Loop::renderWorld(int id)
+		{
+			game().getImp().display(id);
 		}
 	}
 }

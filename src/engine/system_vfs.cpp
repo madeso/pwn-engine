@@ -1,9 +1,13 @@
+#define PWN_ENGINE_NO_AUTOLINK
+
 #include "system_vfs.hpp"
 
 #include "system.hpp"
 #include <physfs.h>
 #include <cassert>
 #include <pwn/engine/game>
+
+#pragma comment (lib, "physfs.lib")
 
 namespace pwn
 {

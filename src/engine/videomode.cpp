@@ -1,3 +1,5 @@
+#define PWN_ENGINE_NO_AUTOLINK
+
 #include "videomode.hpp"
 #include <SFML/Window.hpp>
 

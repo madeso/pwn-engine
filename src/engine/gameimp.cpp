@@ -1,6 +1,11 @@
+#define PWN_ENGINE_NO_AUTOLINK
+
 #include "gameimp.hpp"
 #include "system.hpp"
 #include <algorithm>
+#include "loop.hpp"
+#include <pwn/engine/loop>
+#include "display.hpp"
 
 namespace pwn
 {
@@ -12,6 +17,8 @@ namespace pwn
 
 		GameImp::~GameImp()
 		{
+			// important! all systems must be destroyed and destructors need to be run before std clears the display refered in the destructors...
+			systems.clear();
 		}
 
 		void GameImp::install(System* system)
@@ -43,6 +50,18 @@ namespace pwn
 			displays[id] = disp;
 		}
 
+		void GameImp::display(int id)
+		{
+			const DisplayMap::iterator res = displays.find(id);
+			if( res == displays.end() )
+			{
+				throw "id not recognized";
+			}
+
+			Display* display = res->second;
+			display->render();
+		}
+
 		void GameImp::display_remove(int id, Display* disp)
 		{
 			const DisplayMap::iterator res = displays.find(id);
@@ -57,6 +76,14 @@ namespace pwn
 			}
 
 			displays[id] = 0;
+		}
+
+		void GameImp::handleKey(Key::Code key, bool isDown)
+		{
+			if( ActiveLoop::Has() )
+			{
+				ActiveLoop::Get().onKey(key, isDown);
+			}
 		}
 	}
 }

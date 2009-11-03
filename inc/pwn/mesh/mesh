@@ -1,0 +1,27 @@
+#ifndef PWN_MESH_MESH
+#define PWN_MESH_MESH
+
+#include <pwn/math/types>
+#include <pwn/core/sarray>
+
+namespace pwn
+{
+	namespace mesh
+	{
+		class Triangle;
+
+		class Mesh
+		{
+		public:
+			Mesh();
+			~Mesh();
+
+			core::sarray<math::vec3> positions;
+			core::sarray<math::vec3> normals;
+			core::sarray<math::vec2> texcoords;
+			core::sarray<Triangle> triangles;
+		};
+	}
+}
+
+#endif

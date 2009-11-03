@@ -1,0 +1,26 @@
+#ifndef PWN_RENDER_ACTOR
+#define PWN_RENDER_ACTOR
+
+#include <pwn/math/types>
+
+namespace pwn
+{
+	namespace render
+	{
+		class ActorDef;
+
+		class Actor
+		{
+		public:
+			Actor();
+
+			void render();
+
+			ActorDef* model;
+			math::quat rotation;
+			math::pos3 location;
+		};
+	}
+}
+
+#endif

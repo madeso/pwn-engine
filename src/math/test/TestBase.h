@@ -26,6 +26,9 @@ namespace pwn
 		bool operator==(const mat44& lhs, const mat44& rhs);
 		std::ostream& operator<<(std::ostream& o, const mat44& m);
 
+		bool operator==(const rect& lhs, const rect& rhs);
+		std::ostream& operator<<(std::ostream& o, const rect& aa);
+
 		bool operator==(const AxisAngle& lhs, const AxisAngle& rhs);
 		std::ostream& operator<<(std::ostream& o, const AxisAngle& aa);
 	}

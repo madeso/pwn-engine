@@ -1,0 +1,26 @@
+#ifndef PWN_RENDER_WIDGET
+#define PWN_RENDER_WIDGET
+
+namespace pwn
+{
+	namespace math
+	{
+		class rect;
+	}
+
+	namespace render
+	{
+		class Widget
+		{
+		public:
+			Widget();
+			virtual ~Widget();
+
+			virtual void render();
+
+			math::rect rect;
+		};
+	}
+}
+
+#endif

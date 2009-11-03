@@ -1,0 +1,23 @@
+#ifndef PWN_RENDER_ACTORDEF
+#define PWN_RENDER_ACTORDEF
+
+namespace pwn
+{
+	namespace render
+	{
+		class Mesh;
+
+		class ActorDef
+		{
+		public:
+			ActorDef();
+			virtual ~ActorDef();
+
+			virtual void render() = 0;
+		};
+
+		public ActorDef* Compile(Mesh& mesh);
+	}
+}
+
+#endif

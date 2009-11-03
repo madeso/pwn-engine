@@ -809,6 +809,23 @@ namespace pwn
 		*/
 		real RightOf(const rect& r);
 
+		/** The width of the rectangle.
+		*/
+		real WidthOf(const rect& r);
+
+		/** The height of the rectangle.
+		*/
+		real HeightOf(const rect& r);
+
+		/** The aspect ratio of the rectangle.
+		i.e width/height
+		*/
+		real AspectOf(const rect& r);
+
+		/** creates a centered rect filling the whole containing-rect, with a aspect
+		*/
+		const rect FromAspectAndContainingInCenter(const rect& containing, real aspect);
+
 		/** creates a rect from upper-left-corner and the size.
 		*/
 		const rect FromUpperLeftAndSize(const point2& point, const direction2& size);

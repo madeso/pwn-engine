@@ -1,0 +1,31 @@
+#ifndef PWN_RENDER_WORLD2
+#define PWN_RENDER_WORLD2
+
+#include <memory>
+
+namespace pwn
+{
+	namespace render
+	{
+		class Widget;
+
+		class World2
+		{
+		public:
+			World2(int width, int height);
+			~World2();
+
+			// assumes ownership
+			void widget_add(Widget* widget);
+			void widget_remvoe(Widget* widget);
+
+			int getWidth() const;
+			int getHeight() const;
+		private:
+			struct World2Pimpl;
+			std::auto_ptr<World2Pimpl> pimpl;
+		};
+	}
+}
+
+#endif

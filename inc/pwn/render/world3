@@ -1,0 +1,27 @@
+#ifndef PWN_RENDER_WORLD3
+#define PWN_RENDER_WORLD3
+
+namespace pwn
+{
+	namespace render
+	{
+		class Actor;
+		class Camera;
+
+		class World3
+		{
+		public:
+			World3();
+			virtual ~World3();
+
+			virtual void actor_add(Actor* actor);
+			virtual void actor_remove(Actor* actor);
+
+			virtual void render(const Camera& camera) = 0;
+
+			static World3* Create();
+		};
+	}
+}
+
+#endif

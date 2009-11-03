@@ -1,0 +1,27 @@
+#ifndef PWN_RENDER_WORLD3_WIDGET
+#define PWN_RENDER_WORLD3_WIDGET
+
+#include <pwn/render/widget>
+#include <pwn/render/camera>
+
+namespace pwn
+{
+	namespace render
+	{
+		class World3;
+
+		class World3Widget : public Widget
+		{
+		public:
+			World3Widget();
+			~World3Widget();
+
+			void render();
+		private:
+			std::auto_ptr<World3>;
+			Camera camera;
+		};
+	}
+}
+
+#endif

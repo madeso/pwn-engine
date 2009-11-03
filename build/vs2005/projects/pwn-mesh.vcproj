@@ -144,11 +144,27 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\..\..\inc\pwn\mesh\builder"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\mesh\builder.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\inc\pwn\mesh\mesh"
 			>
 		</File>
 		<File
 			RelativePath="..\..\..\src\mesh\mesh.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\mesh\triangle"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\mesh\triangle.cpp"
 			>
 		</File>
 	</Files>

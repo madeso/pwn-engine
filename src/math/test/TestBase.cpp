@@ -85,6 +85,17 @@ namespace pwn
 			return o;
 		}
 
+		bool operator==(const rect& lhs, const rect& rhs)
+		{
+			return lhs.upperLeft == rhs.upperLeft && lhs.lowerRight == rhs.lowerRight;
+		}
+
+		std::ostream& operator<<(std::ostream& o, const rect& t)
+		{
+			o << "(" << t.upperLeft.x() << ", " << t.upperLeft.y() << ", " << t.lowerRight.x()  << ", " << t.lowerRight.y() << ")";
+			return o;
+		}
+
 		bool operator==(const AxisAngle& lhs, const AxisAngle& rhs)
 		{
 			if( equal(lhs.angle.inDegrees(), rhs.angle.inDegrees()) && equal(lhs.angle.inDegrees(), 0)) return true; // zero rotation is always equal zero

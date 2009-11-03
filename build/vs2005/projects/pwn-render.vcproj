@@ -144,7 +144,35 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\..\..\inc\pwn\render\actor"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\actordef"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\camera"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\render\render.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\widget"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\world2"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\world3"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\world3widget"
 			>
 		</File>
 	</Files>

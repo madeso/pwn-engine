@@ -54,6 +54,48 @@ SUITE(testRect)
 		CHECK_EQUAL(-h, BottomOf(c));
 	}
 
+	TEST_FIXTURE(wh, TestWidth)
+	{
+		CHECK_EQUAL(w, WidthOf(FromLrud(-w, 0, 1, 0)) );
+		CHECK_EQUAL(w, WidthOf(FromLrud(0, w, 1, 0) ) );
+		CHECK_EQUAL(w*2, WidthOf(FromLrud(-w, w, 1, 0)) );
+	}
+
+	TEST_FIXTURE(wh, TestHeight)
+	{
+		CHECK_EQUAL(h, HeightOf(FromLrud(0, 1, h, 0)) );
+		CHECK_EQUAL(h, HeightOf(FromLrud(0, 1, 0, -h)) );
+		CHECK_EQUAL(h*2, HeightOf(FromLrud(0, 1, h, -h)) );
+	}
+
+	TEST(TestAspectOf)
+	{
+		CHECK_EQUAL(1, AspectOf(FromLrud(0, 1, 1, 0)) );
+		CHECK_EQUAL(2, AspectOf(FromLrud(0, 2, 1, 0)) );
+		CHECK_EQUAL(0.5f, AspectOf(FromLrud(0, 1, 2, 0)) );
+	}
+
+	TEST(TestAspectCreatorFunction_basic)
+	{
+#define TEST_RECT(l, r, u, d) CHECK_EQUAL( FromLrud(l, r, u, d), FromAspectAndContainingInCenter(FromLrud(l, r, u, d), 1) )
+		TEST_RECT(0, 2, 2, 0);
+		TEST_RECT(1, 3, 3, 1);
+		TEST_RECT(-1, 3, 5, 1);
+#undef TEST_RECT
+	}
+
+	TEST(TestAspectCreatorFunction_CenterOnWidth)
+	{
+		CHECK_EQUAL( FromLrud(5, 6, 1, 0), FromAspectAndContainingInCenter(FromLrud(0, 11, 1, 0), 1) );
+		CHECK_EQUAL( FromLrud(0, 1, 1, 0), FromAspectAndContainingInCenter(FromLrud(-5, 6, 1, 0), 1) );
+	}
+
+	TEST(TestAspectCreatorFunction_CenterOnHeight)
+	{
+		CHECK_EQUAL( FromLrud(0, 1, 6, 5), FromAspectAndContainingInCenter(FromLrud(0, 1, 11, 0), 1) );
+		CHECK_EQUAL( FromLrud(0, 1, 1, 0), FromAspectAndContainingInCenter(FromLrud(0, 1, 6, -5), 1) );
+	}
+
 	TEST(tesRectKeepWithinAndBounds)
 	{
 		// todo: take another look at what I'm doing here???

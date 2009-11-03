@@ -1,0 +1,35 @@
+#ifndef PWN_MESH_BUILDER
+#define PWN_MESH_BUILDER
+
+#include <vector>
+#include <pwn/math/types>
+#include <pwn/mesh/triangle>
+
+namespace pwn
+{
+	namespace mesh
+	{
+		class Mesh;
+
+		class Builder
+		{
+		public:
+			Builder();
+			~Builder();
+
+			void setupMesh(Mesh* mesh) const;
+
+			Triangle::index addPosition(const math::vec3& pos);
+			Triangle::index addNormal(const math::vec3& norm);
+			Triangle::index addTextCoord(const math::vec2& tc);
+			void addTriangle(const Triangle& tri);
+		private:
+			std::vector<math::vec3> positions;
+			std::vector<math::vec3> normals;
+			std::vector<math::vec2> texcoords;
+			std::vector<Triangle> triangles;
+		};
+	}
+}
+
+#endif

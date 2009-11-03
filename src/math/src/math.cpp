@@ -1757,6 +1757,51 @@ namespace pwn
 			return r.lowerRight.vec.x;
 		}
 
+		real WidthOf(const rect& r)
+		{
+			return RightOf(r) - LeftOf(r);
+		}
+
+		real HeightOf(const rect& r)
+		{
+			return TopOf(r) - BottomOf(r);
+		}
+
+		real AspectOf(const rect& r)
+		{
+			return WidthOf(r) / HeightOf(r);
+		}
+
+		const rect FromAspectAndContainingInCenter(const rect& containing, real raspect)
+		{
+			const real aspect = AspectOf(containing);
+
+			// todo: fix equal test...?
+			if( aspect == raspect ) {
+				return containing;
+			}
+			else {
+				if( aspect > raspect ) {
+					// current width is greater than supported
+					// base new on current height
+					const real width = HeightOf(containing) * raspect;
+					const real theRest = WidthOf(containing) - width;
+					const real borderSize = theRest / 2;
+
+					return FromLrud(LeftOf(containing)+borderSize, LeftOf(containing)+borderSize+width, TopOf(containing), BottomOf(containing));
+				}
+				else {
+					// current height is greater than supported
+					// base new on current width
+					const real height = WidthOf(containing) / raspect;
+					const real theRest = HeightOf(containing) - height;
+					const real borderSize = theRest / 2;
+
+					return FromLrud(LeftOf(containing), RightOf(containing), TopOf(containing)-borderSize, BottomOf(containing)+borderSize);
+				}
+			}
+		}
+
 		const rect FromUpperLeftAndSize(const point2& point, const direction2& size)
 		{
 			return rect(point, point2(point.x() + size.vec.x, point.y()-size.vec.y) );

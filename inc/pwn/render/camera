@@ -1,0 +1,19 @@
+#ifndef PWN_RENDER_CAMERA
+#define PWN_RENDER_CAMERA
+
+#include <pwn/math/types>
+
+namespace pwn
+{
+	namespace render
+	{
+		class Camera
+		{
+		public:
+			math::quat quat;
+			math::point3 position;
+		};
+	}
+}
+
+#endif

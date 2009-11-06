@@ -102,9 +102,9 @@ namespace pwn
 			onRender();
 		}
 
-		void Loop::renderWorld(int id)
+		void Loop::renderWorld(int id, render::World2& world)
 		{
-			game().getImp().display(id);
+			game().getImp().display(id, world);
 		}
 	}
 }

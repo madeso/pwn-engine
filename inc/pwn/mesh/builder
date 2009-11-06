@@ -1,9 +1,9 @@
 #ifndef PWN_MESH_BUILDER
 #define PWN_MESH_BUILDER
 
-#include <vector>
+#include <pwn/number>
 #include <pwn/math/types>
-#include <pwn/mesh/triangle>
+#include <pwn/mesh/Triangle>
 
 namespace pwn
 {
@@ -11,24 +11,12 @@ namespace pwn
 	{
 		class Mesh;
 
-		class Builder
-		{
-		public:
-			Builder();
-			~Builder();
+		void Move(Mesh* mesh, const math::vec3& dir);
+		void SetCube(Mesh* mesh, real width, real hight, real depth);
 
-			void setupMesh(Mesh* mesh) const;
-
-			Triangle::index addPosition(const math::vec3& pos);
-			Triangle::index addNormal(const math::vec3& norm);
-			Triangle::index addTextCoord(const math::vec2& tc);
-			void addTriangle(const Triangle& tri);
-		private:
-			std::vector<math::vec3> positions;
-			std::vector<math::vec3> normals;
-			std::vector<math::vec2> texcoords;
-			std::vector<Triangle> triangles;
-		};
+		void AddQuad(Mesh* mesh, const Triangle::Vertex& v0, const Triangle::Vertex& v1, const Triangle::Vertex& v2, const Triangle::Vertex& v3);
+		void BuildNormals(Mesh* mesh);
+		void InvertNormals(Mesh* mesh);
 	}
 }
 

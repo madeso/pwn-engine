@@ -10,6 +10,11 @@
 
 namespace pwn
 {
+	namespace render
+	{
+		class World2;
+	}
+
 	namespace engine
 	{
 		class System;
@@ -28,7 +33,7 @@ namespace pwn
 
 			// only associate, ownership has to be handled somewhere else
 			void display_add(int id, Display* disp);
-			void display(int id);
+			void display(int id, render::World2& world);
 			void display_remove(int id, Display* disp);
 
 			// post events

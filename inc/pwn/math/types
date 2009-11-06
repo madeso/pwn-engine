@@ -12,6 +12,8 @@ namespace pwn
 		struct quat;
 		struct point2;
 		struct direction2;
+		struct point3;
+		struct direction3;
 		struct rect;
 		struct AxisAngle;
 		struct Angle;
@@ -309,6 +311,57 @@ namespace pwn
 			/** the direction itself
 			*/
 			vec2 vec;
+		};
+
+		/** a point in 3d.
+		a simple wrapper over vec3 for added type-safety
+		@see vec3
+		@see direction3
+		*/
+		struct point3
+		{
+			/** constructor.
+			*/
+			point3(real x, real y, real z);
+
+			/** constructor.
+			*/
+			explicit point3(const vec3& data);
+
+			const real x() const;
+			const real y() const;
+			const real z() const;
+
+			/** moves the point.
+			*/
+			void operator+=(const direction3& dir);
+
+			vec3 vec;
+		};
+
+		/** a direction and length in 3d.
+		a simple wrapper over vec3 for added type-safety.
+		@see vec3
+		@see point3
+		@todo rename to something that also idicates a magnitude
+		*/
+		struct direction3
+		{
+			/** constructor.
+			*/
+			direction3(real x, real y, real z);
+
+			/** constructor.
+			*/
+			explicit direction3(const vec3& data);
+
+			/** add to the direction.
+			*/
+			void operator+=(const direction3& rhs);
+
+			/** the direction itself
+			*/
+			vec3 vec;
 		};
 
 		/** a 2 dimensional rect.

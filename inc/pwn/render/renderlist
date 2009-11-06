@@ -1,0 +1,42 @@
+#ifndef PWN_RENDER_RENDERLIST
+#define PWN_RENDER_RENDERLIST
+
+#include <boost/shared_ptr.hpp>
+#include <pwn/math/types>
+#include <vector>
+
+namespace pwn
+{
+	namespace render
+	{
+		class Part;
+
+		class RenderList
+		{
+		public:
+			RenderList();
+			~RenderList();
+
+			typedef boost::shared_ptr<Part> PartPtr;
+
+			struct Command
+			{
+				Command();
+				Command(PartPtr part, const math::point3& location, const math::quat& rotation);
+				PartPtr part;
+
+				// todo: transformed matrix instead?
+				math::point3 location;
+				math::quat rotation;
+			};
+
+			void begin();
+			void add(PartPtr part, math::point3 location, math::quat rotation);
+			void end();
+		private:
+			std::vector<Command> commands;
+		};
+	}
+}
+
+#endif

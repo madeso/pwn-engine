@@ -6,6 +6,11 @@
 
 namespace pwn
 {
+	namespace render
+	{
+		class World2;
+	}
+
 	namespace engine
 	{
 		class Game;
@@ -28,7 +33,7 @@ namespace pwn
 			virtual void onUpdate() = 0;
 			virtual void onRender() = 0;
 
-			void renderWorld(int id);
+			void renderWorld(int id, render::World2& world);
 		private:
 			void update();
 			void render();

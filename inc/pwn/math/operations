@@ -790,6 +790,80 @@ namespace pwn
 
 		/// @}
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		/// \defgroup point3 point3 operations
+		/// @{
+
+		/** origo.
+		*/
+		const point3 Origo3();
+
+		/** gets the distance between 2 points.
+		*/
+		const real DistanceBetween(const point3& from, const point3& to);
+
+		/** point/direction addition.
+		*/
+		const point3 operator+(const point3& lhs, const direction3& rhs);
+
+		/** point/direction addition.
+		*/
+		const point3 operator+(const direction3& lhs, const point3& rhs);
+
+		/** point/direction subtraction.
+		*/
+		const point3 operator-(const point3& lhs, const direction3& rhs);
+
+		/** point/direction subtraction.
+		*/
+		const point3 operator-(const direction3& lhs, const point3& rhs);
+
+		/** uniform scaling.
+		*/
+		const point3 operator*(const point3& lhs, const real rhs);
+
+		/** uniform scaling.
+		*/
+		const point3 operator*(const real lhs, const point3& rhs);
+
+		/// @}
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		/// \defgroup direction3 direction3 operations
+		/// @{
+
+		/** The length.
+		*/
+		const real LengthOf(const direction3& dir);
+
+		/** convert the direction to a unit vector
+		*/
+		const direction3 ToUnit(const direction3& dir);
+
+		/** create a direction from one point to another.
+		*/
+		const direction3 FromTo(const point3& from, const point3& to);
+
+		/** direction addition.
+		*/
+		const direction3 operator+(const direction3& lhs, const direction3& rhs);
+
+		/** direction subtraction.
+		*/
+		const direction3 operator-(const direction3& lhs, const direction3& rhs);
+
+		/** direction scaling.
+		*/
+		const direction3 operator*(const direction3& lhs, const real rhs);
+
+		/** direction scaling.
+		*/
+		const direction3 operator*(const real lhs, const direction3& rhs);
+
+		/** direction scaling.
+		*/
+		const direction3 operator/(const direction3& lhs, const real rhs);
+
+		/// @}
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/// \defgroup rect rect operations
 		/// @{
 

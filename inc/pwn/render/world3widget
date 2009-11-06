@@ -3,6 +3,7 @@
 
 #include <pwn/render/widget>
 #include <pwn/render/camera>
+#include <memory>
 
 namespace pwn
 {
@@ -13,12 +14,14 @@ namespace pwn
 		class World3Widget : public Widget
 		{
 		public:
-			World3Widget();
+			World3Widget(const math::rect& rect);
 			~World3Widget();
+
+			void setCamera(const Camera& camera);
 
 			void render();
 		private:
-			std::auto_ptr<World3>;
+			std::auto_ptr<World3> world;
 			Camera camera;
 		};
 	}

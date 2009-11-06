@@ -3,6 +3,11 @@
 
 namespace pwn
 {
+	namespace render
+	{
+		class World2;
+	}
+
 	namespace engine
 	{
 		/** basic interface for diplaying something on-screen
@@ -13,7 +18,7 @@ namespace pwn
 			Display();
 			virtual ~Display();
 
-			virtual void render() = 0;
+			virtual void render(render::World2& world) = 0;
 		};
 	}
 }

@@ -1,7 +1,8 @@
 #ifndef PWN_RENDER_WORLD2
 #define PWN_RENDER_WORLD2
 
-#include <memory>
+#include <boost/shared_ptr.hpp>
+#include <vector>
 
 namespace pwn
 {
@@ -17,13 +18,17 @@ namespace pwn
 
 			// assumes ownership
 			void widget_add(Widget* widget);
-			void widget_remvoe(Widget* widget);
 
 			int getWidth() const;
 			int getHeight() const;
+
+			void render();
 		private:
-			struct World2Pimpl;
-			std::auto_ptr<World2Pimpl> pimpl;
+			typedef boost::shared_ptr<Widget> WidgetPtr;
+
+			int width;
+			int height;
+			std::vector<WidgetPtr> widgets;
 		};
 	}
 }

@@ -1,8 +1,9 @@
 #ifndef PWN_MESH_MESH
 #define PWN_MESH_MESH
 
+#include <vector>
 #include <pwn/math/types>
-#include <pwn/core/sarray>
+#include <pwn/mesh/triangle>
 
 namespace pwn
 {
@@ -16,10 +17,17 @@ namespace pwn
 			Mesh();
 			~Mesh();
 
-			core::sarray<math::vec3> positions;
-			core::sarray<math::vec3> normals;
-			core::sarray<math::vec2> texcoords;
-			core::sarray<Triangle> triangles;
+			void clear();
+
+			Triangle::index addPosition(const math::vec3& pos);
+			Triangle::index addNormal(const math::vec3& norm);
+			Triangle::index addTextCoord(const math::vec2& tc);
+			void addTriangle(const Triangle& tri);
+		
+			std::vector<math::vec3> positions;
+			std::vector<math::vec3> normals;
+			std::vector<math::vec2> texcoords;
+			std::vector<Triangle> triangles;
 		};
 	}
 }

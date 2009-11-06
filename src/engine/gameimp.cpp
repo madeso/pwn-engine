@@ -50,7 +50,7 @@ namespace pwn
 			displays[id] = disp;
 		}
 
-		void GameImp::display(int id)
+		void GameImp::display(int id, render::World2& world)
 		{
 			const DisplayMap::iterator res = displays.find(id);
 			if( res == displays.end() )
@@ -59,7 +59,7 @@ namespace pwn
 			}
 
 			Display* display = res->second;
-			display->render();
+			display->render(world);
 		}
 
 		void GameImp::display_remove(int id, Display* disp)

@@ -9,6 +9,9 @@
 #include <SFML/Window.hpp>
 #include "display.hpp"
 #include "gameimp.hpp"
+#include <pwn/render/world2>
+
+#include <SFML/OpenGl.hpp>
 
 #ifdef _DEBUG
 #define LIBRARY_SUFFIX "-d"
@@ -55,6 +58,15 @@ namespace pwn
 				window.Create(sf::VideoMode(800, 600, 32), title.c_str());
 				imp.display_add(id, this);
 				doRemove = true;
+
+				// Indicates the quality of color, texture coordinate, and fog coordinate
+				// interpolation.  If perspective-corrected parameter interpolation is not
+				// efficiently supported by the GL implementation, hinting GL_DONT_CARE
+				// or GL_FASTEST can result in simple linear interpolation of colors
+				// and/or texture coordinates.
+				glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+				glShadeModel(GL_SMOOTH);
 			}
 
 			~System_Window()
@@ -88,9 +100,10 @@ namespace pwn
 					}
 				}
 			}
-			void render()
+			void render(render::World2& world)
 			{
 				window.SetActive();
+				world.render();
 				window.Display();
 			}
 		private:

@@ -148,7 +148,15 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\src\render\actor.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\inc\pwn\render\actordef"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\render\actordef.cpp"
 			>
 		</File>
 		<File
@@ -156,7 +164,23 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\render\render.cpp"
+			RelativePath="..\..\..\src\render\camera.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\part"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\render\part.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\renderlist"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\render\renderlist.cpp"
 			>
 		</File>
 		<File
@@ -164,7 +188,15 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\src\render\widget.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\inc\pwn\render\world2"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\render\world2.cpp"
 			>
 		</File>
 		<File
@@ -172,7 +204,15 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\src\render\world3.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\inc\pwn\render\world3widget"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\render\world3widget.cpp"
 			>
 		</File>
 	</Files>

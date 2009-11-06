@@ -10,8 +10,13 @@ namespace pwn
 		class Camera
 		{
 		public:
-			math::quat quat;
+			Camera(math::point3 position, math::quat orientation, real fov, real znear, real zfar);
+
 			math::point3 position;
+			math::quat orientation;
+			real fov;
+			real znear;
+			real zfar;
 		};
 	}
 }

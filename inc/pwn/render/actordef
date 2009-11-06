@@ -1,22 +1,28 @@
 #ifndef PWN_RENDER_ACTORDEF
 #define PWN_RENDER_ACTORDEF
 
+#include <vector>
+#include <boost/shared_ptr.hpp>
+
 namespace pwn
 {
 	namespace render
 	{
 		class Mesh;
+		class Part;
 
 		class ActorDef
 		{
 		public:
 			ActorDef();
-			virtual ~ActorDef();
+			~ActorDef();
 
-			virtual void render() = 0;
+			typedef boost::shared_ptr<Part> PartPtr;
+
+			std::vector<PartPtr> parts;
 		};
 
-		public ActorDef* Compile(Mesh& mesh);
+		ActorDef* Compile(Mesh& mesh);
 	}
 }
 

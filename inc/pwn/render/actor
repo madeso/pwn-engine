@@ -8,17 +8,19 @@ namespace pwn
 	namespace render
 	{
 		class ActorDef;
+		class RenderList;
+		class Camera;
 
 		class Actor
 		{
 		public:
-			Actor();
+			Actor(const math::point3& location, const math::quat& rotation);
 
-			void render();
+			void render(RenderList* rl, const Camera& camera);
 
 			ActorDef* model;
+			math::point3 location;
 			math::quat rotation;
-			math::pos3 location;
 		};
 	}
 }

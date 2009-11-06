@@ -1,22 +1,19 @@
 #ifndef PWN_RENDER_WIDGET
 #define PWN_RENDER_WIDGET
 
+#include <pwn/math/types>
+
 namespace pwn
 {
-	namespace math
-	{
-		class rect;
-	}
-
 	namespace render
 	{
 		class Widget
 		{
 		public:
-			Widget();
+			Widget(const math::rect& rect);
 			virtual ~Widget();
 
-			virtual void render();
+			virtual void render() = 0;
 
 			math::rect rect;
 		};

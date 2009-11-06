@@ -14,8 +14,8 @@ namespace pwn
 			World3();
 			virtual ~World3();
 
-			virtual void actor_add(Actor* actor);
-			virtual void actor_remove(Actor* actor);
+			virtual void actor_add(Actor* actor) = 0;
+			virtual void actor_remove(Actor* actor) = 0;
 
 			virtual void render(const Camera& camera) = 0;
 

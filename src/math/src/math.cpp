@@ -1727,6 +1727,138 @@ namespace pwn
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////// point3
+
+		point3::point3(real x, real y, real z)
+			: vec(x, y, z)
+		{
+		}
+		point3::point3(const vec3& data)
+			: vec(data)
+		{
+		}
+		const real point3::x() const
+		{
+			return vec.x;
+		}
+		const real point3::y() const
+		{
+			return vec.y;
+		}
+		void point3::operator+=(const direction3& dir)
+		{
+			vec += dir.vec;
+		}
+
+		// -------------------------------------------
+
+		const point3 Origo3()
+		{
+			return point3(PWN_MATH_VALUE(0.0),PWN_MATH_VALUE(0.0),PWN_MATH_VALUE(0.0));
+		}
+
+		const real DistanceBetween(const point3& from, const point3& to)
+		{
+			return LengthOf(FromTo(from, to));
+		}
+
+		const point3 ChangeY(const point3& v, const real newy)
+		{
+			return point3(v.vec.x, newy, v.vec.z);
+		}
+
+		// -------------------------------------------
+
+		const point3 operator+(const point3& lhs, const direction3& rhs)
+		{
+			return point3(lhs.vec+rhs.vec);
+		}
+
+		const point3 operator+(const direction3& lhs, const point3& rhs)
+		{
+			return point3(lhs.vec+rhs.vec);
+		}
+
+		const point3 operator-(const point3& lhs, const direction3& rhs)
+		{
+			return point3(lhs.vec-rhs.vec);
+		}
+
+		const point3 operator-(const direction3& lhs, const point3& rhs)
+		{
+			return point3(lhs.vec-rhs.vec);
+		}
+
+		const point3 operator*(const point3& lhs, const real rhs)
+		{
+			return point3(lhs.vec*rhs);
+		}
+
+		const point3 operator*(const real lhs, const point3& rhs)
+		{
+			return point3(lhs*rhs.vec);
+		}
+
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////// direction3
+
+		direction3::direction3(real x, real y, real z)
+			: vec(x, y, z)
+		{
+		}
+
+		direction3::direction3(const vec3& data)
+			: vec(data)
+		{
+		}
+
+		void direction3::operator+=(const direction3& rhs)
+		{
+			vec += rhs.vec;
+		}
+
+		// ------------------------------------------------------------------------
+
+		const real LengthOf(const direction3& dir)
+		{
+			return LengthOf(dir.vec);
+		}
+		const direction3 ToUnit(const direction3& dir)
+		{
+			return direction3( GetNormalized(dir.vec) );
+		}
+
+		const direction3 FromTo(const point3& from, const point3& to)
+		{
+			return direction3( to.vec-from.vec );
+		}
+
+		// ------------------------------------------------------------------------
+
+		const direction3 operator+(const direction3& lhs, const direction3& rhs)
+		{
+			return direction3(lhs.vec+rhs.vec);
+		}
+
+		const direction3 operator-(const direction3& lhs, const direction3& rhs)
+		{
+			return direction3(lhs.vec-rhs.vec);
+		}
+
+		const direction3 operator*(const direction3& lhs, const real rhs)
+		{
+			return direction3(lhs.vec*rhs);
+		}
+		const direction3 operator*(const real lhs, const direction3& rhs)
+		{
+			return direction3(lhs*rhs.vec);
+		}
+		const direction3 operator/(const direction3& lhs, const real rhs)
+		{
+			return direction3(lhs.vec / rhs);
+		}
+
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////// rect
 
 		rect::rect(const point2& ul, const point2& lr)

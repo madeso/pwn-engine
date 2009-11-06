@@ -1,65 +1,87 @@
+#pragma warning(disable:4512) // boost unable to generate assignment operator
+
 #include <pwn/mesh/builder>
 #include <pwn/mesh/mesh>
+#include <boost/foreach.hpp>
+#include <pwn/math/operations>
 
 namespace pwn
 {
 	namespace mesh
 	{
-		Builder::Builder()
+		void Move(Mesh* mesh, const math::vec3& dir)
 		{
-		}
-
-		Builder::~Builder()
-		{
-		}
-
-		namespace // local
-		{
-			template <typename T>
-			void Copy(const std::vector<T>& from, pwn::core::sarray<T>* to)
+			BOOST_FOREACH(math::vec3& v, mesh->positions)
 			{
-				to->size = from.size();
-				if( to->size == 0 )
-				{
-					to->data.reset(0);
-				}
-				else
-				{
-					to->data.reset( new T[to->size] );
-					// todo...
-				}
+				v -= dir;
 			}
 		}
 
-		void Builder::setupMesh(Mesh* mesh) const
+		void SetCube(Mesh* mesh, real w, real h, real d)
 		{
-			Copy<math::vec3>(positions, &mesh->positions);
-			Copy<math::vec3>(normals, &mesh->normals);
-			Copy<math::vec2>(texcoords, &mesh->texcoords);
-			Copy<Triangle>(triangles, &mesh->triangles);
+			using math::vec3;
+
+			mesh->clear();
+
+			const Triangle::Vertex v0(mesh->addPosition(vec3(0, 0, 0)), 0, 0);
+			const Triangle::Vertex v1(mesh->addPosition(vec3(w, 0, 0)), 0, 0);
+			const Triangle::Vertex v2(mesh->addPosition(vec3(0, h, 0)), 0, 0);
+			const Triangle::Vertex v3(mesh->addPosition(vec3(w, h, 0)), 0, 0);
+
+			const Triangle::Vertex v4(mesh->addPosition(vec3(0, 0, d)), 0, 0);
+			const Triangle::Vertex v5(mesh->addPosition(vec3(w, 0, d)), 0, 0);
+			const Triangle::Vertex v6(mesh->addPosition(vec3(0, h, d)), 0, 0);
+			const Triangle::Vertex v7(mesh->addPosition(vec3(w, h, d)), 0, 0);
+
+			AddQuad(mesh, v0, v2, v3, v1); // front
+			AddQuad(mesh, v1, v3, v7, v5); // right
+			AddQuad(mesh, v4, v6, v2, v0); // left
+			AddQuad(mesh, v5, v7, v6, v4); // back
+			AddQuad(mesh, v3, v2, v6, v7); // up
+			AddQuad(mesh, v4, v0, v7, v5); // bottom
 		}
 
-		Triangle::index Builder::addPosition(const math::vec3& pos)
+		void AddQuad(Mesh* mesh, const Triangle::Vertex& v0, const Triangle::Vertex& v1, const Triangle::Vertex& v2, const Triangle::Vertex& v3)
 		{
-			positions.push_back(pos);
-			return static_cast<Triangle::index>(positions.size()-1);
+			mesh->addTriangle(Triangle(v0, v1, v2) );
+			mesh->addTriangle(Triangle(v0, v2, v3) );
 		}
 
-		Triangle::index Builder::addNormal(const math::vec3& norm)
+		void BuildNormals(Mesh* mesh)
 		{
-			normals.push_back(norm);
-			return static_cast<Triangle::index>(normals.size()-1);
+			using math::vec3;
+			std::vector<vec3> vertexNormalsSum(mesh->positions.size(), vec3(0,0,0));
+			BOOST_FOREACH(Triangle& t, mesh->triangles)
+			{
+				const vec3 p0 = mesh->positions[t[0].location];
+				const vec3 p1 = mesh->positions[t[1].location];
+				const vec3 p2 = mesh->positions[t[2].location];
+
+				const vec3 d0 = math::FromTo(p1, p0);
+				const vec3 d1 = math::FromTo(p1, p2);
+
+				const vec3 faceNormal = math::crossNorm(d0, d1);
+
+				vertexNormalsSum[t[0].location] += faceNormal;
+				vertexNormalsSum[t[1].location] += faceNormal;
+				vertexNormalsSum[t[2].location] += faceNormal;
+
+				for(int i=0; i<3; ++i) t[i].normal = t[i].location;
+			}
+
+			mesh->normals.clear();
+			BOOST_FOREACH(const vec3& normalSum, vertexNormalsSum)
+			{
+				mesh->normals.push_back( math::GetNormalized(normalSum) );
+			}
 		}
 
-		Triangle::index Builder::addTextCoord(const math::vec2& tc)
+		void InvertNormals(Mesh* mesh)
 		{
-			texcoords.push_back(tc);
-			return static_cast<Triangle::index>(texcoords.size()-1);
-		}
-
-		void Builder::addTriangle(const Triangle& tri)
-		{
-			triangles.push_back(tri);
+			BOOST_FOREACH(math::vec3& n, mesh->normals)
+			{
+				n = -n;
+			}
 		}
 	}
 }

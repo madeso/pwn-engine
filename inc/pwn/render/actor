@@ -9,14 +9,14 @@ namespace pwn
 	{
 		class ActorDef;
 		class RenderList;
-		class Camera;
+		class CompiledCamera;
 
 		class Actor
 		{
 		public:
 			Actor(const math::point3& location, const math::quat& rotation);
 
-			void render(RenderList* rl, const Camera& camera);
+			void render(RenderList* rl, const CompiledCamera& camera);
 
 			ActorDef* model;
 			math::point3 location;

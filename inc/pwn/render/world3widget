@@ -3,7 +3,7 @@
 
 #include <pwn/render/widget>
 #include <pwn/render/camera>
-#include <memory>
+#include <boost/shared_ptr.hpp>
 
 namespace pwn
 {
@@ -14,14 +14,14 @@ namespace pwn
 		class World3Widget : public Widget
 		{
 		public:
-			World3Widget(const math::rect& rect);
+			World3Widget(const math::rect& rect, boost::shared_ptr<World3> world);
 			~World3Widget();
 
 			void setCamera(const Camera& camera);
 
 			void render();
 		private:
-			std::auto_ptr<World3> world;
+			boost::shared_ptr<World3> world;
 			Camera camera;
 		};
 	}

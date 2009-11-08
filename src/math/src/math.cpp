@@ -1548,6 +1548,11 @@ namespace pwn
 			return mat44(temp);
 		}
 
+		const mat44 cmat44(const quat& q)
+		{
+			return cmat44(cAxisAngle(q));
+		}
+
 		const mat44 mat44Identity()
 		{
 			const real temp[] = { 1, 0, 0, 0,

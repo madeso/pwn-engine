@@ -1,6 +1,9 @@
 #include <pwn/render/actor>
 #include <pwn/render/renderlist>
 #include <pwn/render/actordef>
+#include <pwn/render/part>
+#include <pwn/math/operations>
+#include <pwn/render/compiledcamera>
 
 #pragma warning (disable:4512) // boost\utility\addressof.hpp(30) : warning C4512: 'boost::detail::addr_impl_ref<T>' : assignment operator could not be generated
 #include <boost/foreach.hpp>
@@ -15,14 +18,15 @@ namespace pwn
 		{
 		}
 
-		void Actor::render(RenderList* rl, const Camera&)
+		void Actor::render(RenderList* rl, const CompiledCamera& cam)
 		{
 			if( model == 0 ) return; // abort if no model available
 
+			const math::mat44 mat = cam.mat * cmat44(location.vec) * cmat44(rotation);
+
 			BOOST_FOREACH(ActorDef::PartPtr p, model->parts)
 			{
-				// todo: use camera and add a matrix instead
-				rl->add(p, location, rotation);
+				rl->add(p->mesh, p->material, mat);
 			}
 		}
 	}

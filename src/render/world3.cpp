@@ -3,9 +3,10 @@
 #include <pwn/render/renderlist>
 #include <vector>
 #include <algorithm>
+#include <pwn/render/compiledcamera>
+
 #pragma warning(disable:4512) // warning C4512: 'boost::detail::addr_impl_ref<T>' : assignment operator could not be generated
 #include <boost/foreach.hpp>
-
 namespace pwn
 {
 	namespace render
@@ -34,10 +35,11 @@ namespace pwn
 
 			void render(const Camera& camera)
 			{
+				const CompiledCamera cc(camera);
 				list.begin();
 				BOOST_FOREACH(Actor* a, actors)
 				{
-					a->render(&list, camera);
+					a->render(&list, cc);
 				}
 				list.end();
 			}

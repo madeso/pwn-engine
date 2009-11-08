@@ -516,6 +516,10 @@ namespace pwn
 		*/
 		const mat44 cmat44(const AxisAngle& aa);
 
+		/** quaternion rotation.
+		*/
+		const mat44 cmat44(const quat& q);
+
 		/** identity matrix
 		*/
 		const mat44 mat44Identity();

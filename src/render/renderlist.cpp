@@ -1,7 +1,11 @@
 #include <pwn/render/renderlist>
 #include <pwn/math/operations>
+#include <pwn/render/compiledmesh>
 
 #include <SFML/OpenGl.hpp>
+
+#pragma warning(disable:4512) //'boost::detail::addr_impl_ref<T>' : assignment operator could not be generated
+#include <boost/foreach.hpp>
 
 namespace pwn
 {
@@ -16,44 +20,45 @@ namespace pwn
 
 		// for resize(0) support
 		RenderList::Command::Command()
-			: location(math::Origo3())
-			, rotation(math::qIdentity())
+			: mat( math::mat44Identity() )
 		{
 		}
 
-		RenderList::Command::Command(PartPtr part, const math::point3& location, const math::quat& rotation)
-			: part(part)
-			, location(location)
-			, rotation(rotation)
+		RenderList::Command::Command(MeshPtr mesh, MaterialPtr material, const math::mat44& mat)
+			: mesh(mesh)
+			, material(material)
+			, mat(mat)
 		{
 		}
 
 		void RenderList::begin()
 		{
 			commands.resize(0);
-			int iLeft = 0;
-			int iRight = 1;
-			int iBottom = 0;
-			int iTop = 1;
-			glLoadIdentity();
-			glOrtho(iLeft, iRight, iBottom, iTop, -1, 1);
-			glBegin(GL_QUADS);
-				glVertex2d(iRight, iTop);
-				glVertex2d(iLeft, iTop);
-				glVertex2d(iLeft, iBottom);
-				glVertex2d(iRight, iBottom);
-			glEnd();
-			//glClear( GL_COLOR_BUFFER_BIT );
 		}
 
-		void RenderList::add(PartPtr part, math::point3 location, math::quat rotation)
+		void RenderList::add(MeshPtr mesh, MaterialPtr material, const math::mat44& mat)
 		{
-			commands.push_back( Command(part, location, rotation) );
+			commands.push_back(Command(mesh, material, mat));
 		}
 
 		void RenderList::end()
 		{
-			// todo: sort & send to ogl
+			glMatrixMode( GL_MODELVIEW );
+			glLoadIdentity();
+			// todo: sort
+
+			BOOST_FOREACH(const Command& c, commands)
+			{
+				glLoadMatrixf( c.mat.columnMajor );
+				//glTranslatef(-1.5f,0.0f,-12.0f);
+				apply(c.material);
+				c.mesh->render();
+			}
+		}
+
+		void RenderList::apply(MaterialPtr material)
+		{
+			glColor3f(1,0,0);
 		}
 	}
 }

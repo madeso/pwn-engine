@@ -6,9 +6,13 @@
 
 namespace pwn
 {
-	namespace render
+	namespace mesh
 	{
 		class Mesh;
+	}
+
+	namespace render
+	{
 		class Part;
 
 		class ActorDef
@@ -22,7 +26,7 @@ namespace pwn
 			std::vector<PartPtr> parts;
 		};
 
-		ActorDef* Compile(Mesh& mesh);
+		boost::shared_ptr<ActorDef> Compile(const mesh::Mesh& mesh);
 	}
 }
 

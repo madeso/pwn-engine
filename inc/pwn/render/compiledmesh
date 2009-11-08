@@ -1,0 +1,19 @@
+#ifndef PWN_RENDER_COMPILEDMESH
+#define PWN_RENDER_COMPILEDMESH
+
+namespace pwn
+{
+	namespace render
+	{
+		class CompiledMesh
+		{
+		public:
+			CompiledMesh();
+			virtual ~CompiledMesh();
+
+			virtual void render() = 0;
+		};
+	}
+}
+
+#endif

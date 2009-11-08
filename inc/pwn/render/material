@@ -1,0 +1,19 @@
+#ifndef PWN_RENDER_MATERIAL
+#define PWN_RENDER_MATERIAL
+
+namespace pwn
+{
+	namespace render
+	{
+		class Material
+		{
+		public:
+			Material();
+			// color
+			// maps: diffuse, normal/bump, emissive, specular
+			// general shader?
+		};
+	}
+}
+
+#endif

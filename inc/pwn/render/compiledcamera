@@ -1,0 +1,23 @@
+#ifndef PWN_RENDER_COMPILEDCAMERA
+#define PWN_RENDER_COMPILEDCAMERA
+
+#include <pwn/math/types>
+#include <boost/noncopyable.hpp>
+
+namespace pwn
+{
+	namespace render
+	{
+		class Camera;
+
+		class CompiledCamera : boost::noncopyable
+		{
+		public:
+			CompiledCamera(const Camera& camera);
+
+			const math::mat44 mat;
+		};
+	}
+}
+
+#endif

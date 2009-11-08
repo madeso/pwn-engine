@@ -168,6 +168,30 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\inc\pwn\render\compiledcamera"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\render\compiledcamera.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\compiledmesh"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\render\compiledmesh.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\material"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\render\material.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\inc\pwn\render\part"
 			>
 		</File>

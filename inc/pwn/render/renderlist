@@ -9,7 +9,8 @@ namespace pwn
 {
 	namespace render
 	{
-		class Part;
+		class CompiledMesh;
+		class Material;
 
 		class RenderList
 		{
@@ -17,24 +18,25 @@ namespace pwn
 			RenderList();
 			~RenderList();
 
-			typedef boost::shared_ptr<Part> PartPtr;
+			typedef boost::shared_ptr<CompiledMesh> MeshPtr;
+			typedef boost::shared_ptr<Material> MaterialPtr;
 
 			struct Command
 			{
 				Command();
-				Command(PartPtr part, const math::point3& location, const math::quat& rotation);
-				PartPtr part;
+				Command(MeshPtr mesh, MaterialPtr material, const math::mat44& mat);
 
-				// todo: transformed matrix instead?
-				math::point3 location;
-				math::quat rotation;
+				MaterialPtr material;
+				MeshPtr mesh;
+				math::mat44 mat;
 			};
 
 			void begin();
-			void add(PartPtr part, math::point3 location, math::quat rotation);
+			void add(MeshPtr mesh, MaterialPtr material, const math::mat44& mat);
 			void end();
 		private:
 			std::vector<Command> commands;
+			void apply(MaterialPtr material);
 		};
 	}
 }

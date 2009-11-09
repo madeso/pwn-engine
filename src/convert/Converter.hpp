@@ -5,6 +5,7 @@
 #include <map>
 
 #include <pwn/math/types>
+#include <pwn/math/rgba>
 #include <pwn/string>
 
 namespace pwn

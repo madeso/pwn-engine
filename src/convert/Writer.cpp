@@ -32,10 +32,10 @@ namespace pwn
 			}
 			void Write(std::ofstream* f, const pwn::math::Rgba& c, bool optimize)
 			{
-				Write(f, c.r, optimize);
-				Write(f, c.g, optimize);
-				Write(f, c.b, optimize);
-				Write(f, c.a, optimize);
+				Write(f, c.red(), optimize);
+				Write(f, c.green(), optimize);
+				Write(f, c.blue(), optimize);
+				Write(f, c.alpha(), optimize);
 			}
 			void Write(std::ofstream* f, const pwn::math::vec3& v, bool optimize)
 			{

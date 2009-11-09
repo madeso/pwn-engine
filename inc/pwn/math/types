@@ -443,29 +443,6 @@ namespace pwn
 			Angle angle;
 		};
 
-		/** a color with alpha component.
-		*/
-		struct Rgba
-		{
-			Rgba(const real r, const real g, const real b, const real a);
-
-			/** Red.
-			*/
-			real r;
-
-			/** Green.
-			*/
-			real g;
-
-			/** Blue
-			*/
-			real b;
-
-			/** Alpha.
-			*/
-			real a;
-		};
-
 		// arc-ball is on ice since it's implementation was/is crude/not accurate
 		/*struct ArcBall
 		{

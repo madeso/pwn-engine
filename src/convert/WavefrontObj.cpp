@@ -103,10 +103,10 @@ namespace pwn
 						{
 							// transparency v
 							transperency = creal(sline[1]);
-							material.ambient.a = transperency;
-							material.diffuse.a = transperency;
-							material.specular.a = transperency;
-							material.emissive.a = transperency;
+							material.ambient.alpha(transperency);
+							material.diffuse.alpha(transperency);
+							material.specular.alpha(transperency);
+							material.emissive.alpha(transperency);
 						}
 						else if( command == "map_Kd")
 						{

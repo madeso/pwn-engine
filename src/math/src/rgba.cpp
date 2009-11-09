@@ -1,8 +1,8 @@
-#include <pwn/render/rgba>
+#include <pwn/math/rgba>
 
 namespace pwn
 {
-	namespace render
+	namespace math
 	{
 		Rgba::Rgba(const real r, const real g, const real b, const real a)
 		{

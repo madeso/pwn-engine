@@ -1,9 +1,28 @@
-digraph G
+digraph pwn_component_dependencies
 {
-	math -> model;
+	/* convert */
 	core -> convert;
-	convert -> model;
-	vfs -> model;
-	model -> render;
-	render -> object;
+	math -> convert;
+
+	/* core */
+
+	/* engine */
+	core -> engine;
+	mesh -> engine;
+	render -> engine;
+	math -> engine;
+
+	/* game */
+	engine -> game;
+	math -> game;
+	render -> game;
+
+	/* math */
+
+	/* mesh */
+	math -> mesh;
+
+	/* render */
+	mesh -> render;
+	math -> render;
 }

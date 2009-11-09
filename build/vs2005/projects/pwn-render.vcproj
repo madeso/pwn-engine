@@ -208,6 +208,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\inc\pwn\render\rgba"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\render\rgba.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\inc\pwn\render\widget"
 			>
 		</File>

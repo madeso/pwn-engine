@@ -3,6 +3,7 @@
 
 #include <pwn/engine/autolink>
 #include <pwn/engine/key>
+#include <pwn/number>
 
 namespace pwn
 {
@@ -30,12 +31,12 @@ namespace pwn
 			void stop();
 			Game& game();
 
-			virtual void onUpdate() = 0;
+			virtual void onUpdate(real delta) = 0;
 			virtual void onRender() = 0;
 
 			void renderWorld(int id, render::World2& world);
 		private:
-			void update();
+			void update(real delta);
 			void render();
 			bool isRunning_;
 			Game* game_;

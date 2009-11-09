@@ -5,6 +5,7 @@
 #include "GameImp.hpp"
 #include "loop.hpp"
 
+#include <SFML/System/Clock.hpp>
 
 namespace pwn
 {
@@ -80,20 +81,23 @@ namespace pwn
 		{
 			RaiiInnerMostLoop raiiInnerMostLoop(this);
 			isRunning_ = true;
+			sf::Clock clock;
 			while(isRunning())
 			{
-				update();
+				const real delta = clock.GetElapsedTime();
+				clock.Reset();
+				update(delta);
 				render();
 			}
 		}
 
-		void Loop::update()
+		void Loop::update(real delta)
 		{
 			if( isRunning() == false ) return;
 			game().getImp().updateSystems();
 
 			if( isRunning() == false ) return;
-			onUpdate();
+			onUpdate(delta);
 		}
 
 		void Loop::render()

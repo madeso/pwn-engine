@@ -10,6 +10,7 @@
 #include <pwn/mesh/mesh>
 #include <pwn/mesh/builder>
 
+using namespace pwn;
 using namespace pwn::engine;
 using namespace pwn::render;
 using namespace pwn::math;
@@ -26,7 +27,7 @@ public:
 		const rect res = FromUpperLeftAndSize(Origo2(), direction2(world2.getWidth(), world2.getHeight()));
 
 		Mesh mesh;
-		const pwn::real halfsize = 0.7;
+		const pwn::real halfsize = 0.7f;
 		SetCube(&mesh, halfsize*2, halfsize*2, halfsize*2);
 		BuildNormals(&mesh);
 		Move(&mesh, vec3(-halfsize, -halfsize, -halfsize));
@@ -36,7 +37,7 @@ public:
 		boost::shared_ptr<World3> world( World3::Create() );
 		world->actor_add(&act);
 
-		world2.widget_add( new World3Widget( FromAspectAndContainingInCenter(res, 1.618f), world ) ); // golden-ratio 1.618f
+		world2.widget_add( new World3Widget( FromAspectAndContainingInCenter(res, 14.0f/19.0f), world ) ); // http://en.wikipedia.org/wiki/14:9
 	}
 
 	void onKey(Key::Code key, bool isDown)
@@ -47,7 +48,7 @@ public:
 		}
 	}
 
-	void onUpdate()
+	void onUpdate(real)
 	{
 	}
 

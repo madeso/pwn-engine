@@ -37,4 +37,26 @@ SUITE(testStdUtil)
 		CHECK_EQUAL(-12, vec[3]);
 		CHECK_EQUAL(5, vec[4]);
 	}
+
+	TEST(stringBuilderStartsEmpty)
+	{
+		CHECK_EQUAL("", static_cast<pwn::string>(StringBuilder()));
+	}
+
+	TEST(stringBuilderEmptyResultsInEmpty)
+	{
+		const pwn::string empty("");
+		CHECK_EQUAL(empty, static_cast<pwn::string>(StringBuilder() << empty));
+	}
+
+	TEST(stringBuilderTextResultsInText)
+	{
+		const pwn::string text("abc");
+		CHECK_EQUAL(text, static_cast<pwn::string>(StringBuilder() << text));
+	}
+
+	TEST(stringBuilderNumberResultsInText)
+	{
+		CHECK_EQUAL("42", static_cast<pwn::string>(StringBuilder() << 42));
+	}
 }

@@ -1,6 +1,7 @@
 #include <pwn/render/renderlist>
 #include <pwn/math/operations>
 #include <pwn/render/compiledmesh>
+#include <pwn/render/material>
 
 #include <SFML/OpenGl.hpp>
 
@@ -58,7 +59,15 @@ namespace pwn
 
 		void RenderList::apply(MaterialPtr material)
 		{
-			glColor3f(1,0,0);
+			glColor4fv( material->diffuse.data() );
+			/*
+			const GLenum face = GL_FRONT_AND_BACK;
+			glMaterialfv(face, GL_AMBIENT, material->ambient.data());
+			glMaterialfv(face, GL_DIFFUSE, material->diffuse.data());
+			glMaterialfv(face, GL_SPECULAR, material->specular.data());
+			glMaterialfv(face, GL_EMISSION, material->emission.data());
+			glMaterialf(face, GL_SHININESS, material->shininess);
+			*/
 		}
 	}
 }

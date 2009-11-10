@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="pwn-core"
-	ProjectGUID="{415CB211-FDB2-4497-910A-539D4E96B3F6}"
-	RootNamespace="pwncore"
+	Name="pwn-core-test"
+	ProjectGUID="{806198CE-50D9-4ED2-A6B7-FD7D24236AC7}"
+	RootNamespace="pwncoretest"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -19,7 +19,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)..\..\dist\$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)..\..\temp\$(ProjectName)\$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="1"
 			CharacterSet="0"
 			>
 			<Tool
@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\..\inc\&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -58,12 +58,23 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
+				CommandLine=""
+				ExcludedFromBuild="false"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				AdditionalDependencies="UnitTest++.vsnet2005.lib"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="D:\ms_dep\unittest-cpp\UnitTest++\$(ConfigurationName)"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -75,14 +86,22 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Perfoming unit tests..."
+				CommandLine="$(TargetPath)"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)..\..\dist\$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)..\..\temp\$(ProjectName)\$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="1"
 			CharacterSet="0"
 			WholeProgramOptimization="1"
 			>
@@ -104,7 +123,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\..\inc\&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
@@ -119,12 +138,24 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
+				CommandLine=""
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				AdditionalDependencies="UnitTest++.vsnet2005.lib"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="D:\ms_dep\unittest-cpp\UnitTest++\$(ConfigurationName)"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -136,7 +167,15 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Perfoming unit tests..."
+				CommandLine="$(TargetPath)"
 			/>
 		</Configuration>
 	</Configurations>
@@ -144,19 +183,15 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\inc\pwn\core\stdutil"
+			RelativePath="..\..\..\src\core\test\main.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\string"
+			RelativePath="..\..\..\src\core\test\TestStdUtil.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\core\StringUtils"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\core\src\StringUtils.cpp"
+			RelativePath="..\..\..\src\core\test\TestStringUtils.cpp"
 			>
 		</File>
 	</Files>

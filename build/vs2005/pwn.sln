@@ -40,6 +40,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pwn-engine", "projects\pwn-
 		{51313010-54F3-4338-AFC5-9FF92790EF1D} = {51313010-54F3-4338-AFC5-9FF92790EF1D}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pwn-core-test", "projects\pwn-core-test.vcproj", "{806198CE-50D9-4ED2-A6B7-FD7D24236AC7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -78,6 +80,10 @@ Global
 		{EEA71607-A0C6-4819-982D-94DB16D54755}.Debug|Win32.Build.0 = Debug|Win32
 		{EEA71607-A0C6-4819-982D-94DB16D54755}.Release|Win32.ActiveCfg = Release|Win32
 		{EEA71607-A0C6-4819-982D-94DB16D54755}.Release|Win32.Build.0 = Release|Win32
+		{806198CE-50D9-4ED2-A6B7-FD7D24236AC7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{806198CE-50D9-4ED2-A6B7-FD7D24236AC7}.Debug|Win32.Build.0 = Debug|Win32
+		{806198CE-50D9-4ED2-A6B7-FD7D24236AC7}.Release|Win32.ActiveCfg = Release|Win32
+		{806198CE-50D9-4ED2-A6B7-FD7D24236AC7}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

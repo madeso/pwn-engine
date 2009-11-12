@@ -1,11 +1,11 @@
-#ifndef PWN_RENDER_MATERIAL
-#define PWN_RENDER_MATERIAL
+#ifndef PWN_MESH_MATERIAL
+#define PWN_MESH_MATERIAL
 
 #include <pwn/math/rgba>
 
 namespace pwn
 {
-	namespace render
+	namespace mesh
 	{
 		class Material
 		{
@@ -17,10 +17,6 @@ namespace pwn
 			math::Rgba specular; // -1 - 1
 			math::Rgba emission; // -1 - 1
 			real shininess; // 0-1
-
-			// color
-			// maps: diffuse, normal/bump, emissive, specular
-			// general shader?
 		};
 	}
 }

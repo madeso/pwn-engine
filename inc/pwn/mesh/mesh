@@ -2,14 +2,18 @@
 #define PWN_MESH_MESH
 
 #include <vector>
+#include <map>
 #include <pwn/math/types>
 #include <pwn/mesh/triangle>
+
+#include <boost/shared_ptr.hpp>
 
 namespace pwn
 {
 	namespace mesh
 	{
 		class Triangle;
+		class Material;
 
 		class Mesh
 		{
@@ -23,11 +27,15 @@ namespace pwn
 			Triangle::index addNormal(const math::vec3& norm);
 			Triangle::index addTextCoord(const math::vec2& tc);
 			void addTriangle(const Triangle& tri);
-		
+
+			typedef std::vector<Triangle> TriangleList;
+			typedef boost::shared_ptr<Material> MaterialPtr;
+
 			std::vector<math::vec3> positions;
 			std::vector<math::vec3> normals;
 			std::vector<math::vec2> texcoords;
-			std::vector<Triangle> triangles;
+			TriangleList triangles; // the map key referenses the materials vector below
+			std::vector<MaterialPtr> materials; // this is done so materials could easily be swapped and overriden later on per actor
 		};
 	}
 }

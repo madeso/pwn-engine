@@ -4,6 +4,8 @@
 #pragma warning(disable:4512) //'boost::detail::addr_impl_ref<T>' : assignment operator could not be generated
 #include <boost/foreach.hpp>
 #include <pwn/render/compiledmesh>
+#include <pwn/render/material>
+#include <pwn/mesh/material>
 
 #include <sfml/OpenGl.hpp>
 
@@ -37,9 +39,9 @@ namespace pwn
 		class ImmediateMode : public CompiledMesh
 		{
 		public:
-			ImmediateMode(boost::shared_ptr<SharedMesh> smesh, const mesh::Mesh& mesh)
+			ImmediateMode(boost::shared_ptr<SharedMesh> smesh, const mesh::Mesh::TriangleList& tridata)
 				: smesh(smesh)
-				, triangles(mesh.triangles)
+				, triangles(tridata)
 			{
 			}
 
@@ -73,16 +75,39 @@ namespace pwn
 			std::vector<mesh::Triangle> triangles;
 		};
 
+		boost::shared_ptr<render::Material> Compile(boost::shared_ptr<mesh::Material> mm)
+		{
+			boost::shared_ptr<render::Material> rm( new render::Material() );
+			rm->ambient = mm->ambient;
+			rm->diffuse = mm->diffuse;
+			rm->specular = mm->specular;
+			rm->emission = mm->emission;
+			rm->shininess = mm->shininess;
+			return rm;
+		}
+
 		boost::shared_ptr<ActorDef> Compile(const mesh::Mesh& mesh)
 		{
 			boost::shared_ptr<ActorDef> def( new ActorDef() );
 			boost::shared_ptr<SharedMesh> smesh( new SharedMesh(mesh) );
 
-			ActorDef::PartPtr part( new Part() );
-			// todo: implement better rendering
-			part->mesh.reset( new ImmediateMode(smesh, mesh) );
+			typedef std::map<pwn::uint32, mesh::Mesh::TriangleList> TriangleMap;
+			TriangleMap triangles;
 
-			def->parts.push_back(part);
+			BOOST_FOREACH(const mesh::Triangle& t, mesh.triangles)
+			{
+				triangles[t.material].push_back(t);
+			}
+
+			// todo: implement better rendering
+			BOOST_FOREACH(TriangleMap::const_reference r, triangles)
+			{
+				ActorDef::PartPtr part( new Part() );
+				const pwn::uint32 index = r.first;
+				part->material = Compile( mesh.materials[index] );
+				part->mesh.reset( new ImmediateMode(smesh, r.second) );
+				def->parts.push_back(part);
+			}
 			return def;
 		}
 	}

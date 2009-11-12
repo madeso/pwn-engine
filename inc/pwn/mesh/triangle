@@ -22,9 +22,10 @@ namespace pwn
 			Vertex v0;
 			Vertex v1;
 			Vertex v2;
+			pwn::uint32 material;
 
-			Triangle(Vertex v0, Vertex v1, Vertex v2);
-			Triangle(Vertex v[3]);
+			Triangle(pwn::uint32 material, Vertex v0, Vertex v1, Vertex v2);
+			Triangle(pwn::uint32 material, Vertex v[3]);
 
 			Vertex& operator[](pwn::uint32 index);
 			const Vertex& operator[](pwn::uint32 index) const;

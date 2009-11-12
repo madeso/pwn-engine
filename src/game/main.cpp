@@ -9,6 +9,7 @@
 #include <pwn/render/actor>
 #include <pwn/mesh/mesh>
 #include <pwn/mesh/builder>
+#include <pwn/mesh/predefinedmaterials>
 
 using namespace pwn;
 using namespace pwn::engine;
@@ -28,7 +29,10 @@ public:
 
 		Mesh mesh;
 		const pwn::real halfsize = 0.7f;
-		SetCube(&mesh, halfsize*2, halfsize*2, halfsize*2);
+		SetCube(&mesh, materials::Plastic_Red(), halfsize*2, halfsize*2, halfsize*2);
+		mesh.materials.push_back( materials::Plastic_Green() );
+		mesh.triangles[0].material = 1;
+		//mesh.triangles[1].material = 1;
 		BuildNormals(&mesh);
 		Move(&mesh, vec3(-halfsize, -halfsize, -halfsize));
 		def = Compile(mesh);

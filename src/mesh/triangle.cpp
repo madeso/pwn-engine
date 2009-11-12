@@ -11,17 +11,19 @@ namespace pwn
 		{
 		}
 
-		Triangle::Triangle(Vertex v0, Vertex v1, Vertex v2)
+		Triangle::Triangle(pwn::uint32 material, Vertex v0, Vertex v1, Vertex v2)
 			: v0(v0)
 			, v1(v1)
 			, v2(v2)
+			, material(material)
 		{
 		}
 
-		Triangle::Triangle(Vertex v[3])
+		Triangle::Triangle(pwn::uint32 material, Vertex v[3])
 			: v0(v[0])
 			, v1(v[1])
 			, v2(v[2])
+			, material(material)
 		{
 		}
 

@@ -152,11 +152,23 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\inc\pwn\mesh\material"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\mesh\material.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\inc\pwn\mesh\mesh"
 			>
 		</File>
 		<File
 			RelativePath="..\..\..\src\mesh\mesh.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\mesh\predefinedmaterials"
 			>
 		</File>
 		<File

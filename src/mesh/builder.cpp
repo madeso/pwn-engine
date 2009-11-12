@@ -17,7 +17,7 @@ namespace pwn
 			}
 		}
 
-		void SetCube(Mesh* mesh, real w, real h, real d)
+		void SetCube(Mesh* mesh, boost::shared_ptr<Material> material, real w, real h, real d)
 		{
 			using math::vec3;
 
@@ -33,18 +33,20 @@ namespace pwn
 			const Triangle::Vertex v6(mesh->addPosition(vec3(0, h, d)), 0, 0);
 			const Triangle::Vertex v7(mesh->addPosition(vec3(w, h, d)), 0, 0);
 
-			AddQuad(mesh, v0, v2, v3, v1); // front
-			AddQuad(mesh, v1, v3, v7, v5); // right
-			AddQuad(mesh, v4, v6, v2, v0); // left
-			AddQuad(mesh, v5, v7, v6, v4); // back
-			AddQuad(mesh, v3, v2, v6, v7); // up
-			AddQuad(mesh, v4, v0, v7, v5); // bottom
+			AddQuad(mesh, 0, v0, v2, v3, v1); // front
+			AddQuad(mesh, 0, v1, v3, v7, v5); // right
+			AddQuad(mesh, 0, v4, v6, v2, v0); // left
+			AddQuad(mesh, 0, v5, v7, v6, v4); // back
+			AddQuad(mesh, 0, v3, v2, v6, v7); // up
+			AddQuad(mesh, 0, v4, v0, v7, v5); // bottom
+
+			mesh->materials.push_back(material);
 		}
 
-		void AddQuad(Mesh* mesh, const Triangle::Vertex& v0, const Triangle::Vertex& v1, const Triangle::Vertex& v2, const Triangle::Vertex& v3)
+		void AddQuad(Mesh* mesh, pwn::uint32 material, const Triangle::Vertex& v0, const Triangle::Vertex& v1, const Triangle::Vertex& v2, const Triangle::Vertex& v3)
 		{
-			mesh->addTriangle(Triangle(v0, v1, v2) );
-			mesh->addTriangle(Triangle(v0, v2, v3) );
+			mesh->addTriangle(Triangle(material, v0, v1, v2) );
+			mesh->addTriangle(Triangle(material, v0, v2, v3) );
 		}
 
 		void BuildNormals(Mesh* mesh)

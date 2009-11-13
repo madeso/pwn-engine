@@ -3,6 +3,8 @@
 
 #include <pwn/math/types>
 
+#include <boost/shared_ptr.hpp>
+
 namespace pwn
 {
 	namespace render
@@ -18,7 +20,7 @@ namespace pwn
 
 			void render(RenderList* rl, const CompiledCamera& camera);
 
-			ActorDef* model;
+			boost::shared_ptr<ActorDef> model;
 			math::point3 location;
 			math::quat rotation;
 		};

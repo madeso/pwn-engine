@@ -67,6 +67,7 @@ namespace pwn
 				glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 				glShadeModel(GL_SMOOTH);
+				glEnable(GL_CULL_FACE);
 			}
 
 			~System_Window()

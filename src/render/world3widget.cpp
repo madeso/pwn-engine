@@ -38,7 +38,11 @@ namespace pwn
 			glLoadIdentity();
 			gluPerspective(camera.fov, AspectOf(rect), camera.znear, camera.zfar);
 			// todo: test for mask occlusion and possible render to a temporary texture
+
+			glClear(GL_DEPTH_BUFFER_BIT);
+			glEnable(GL_DEPTH_TEST);
 			world->render(camera);
+			glDisable(GL_DEPTH_TEST);
 		}
 	}
 }

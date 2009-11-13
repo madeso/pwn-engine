@@ -23,23 +23,35 @@ public:
 	EasyLoop(Game* game)
 		: Loop(game)
 		, world2(800, 600)
-		, act(point3(-1.5,0, -12), qIdentity())
 	{
 		const rect res = FromUpperLeftAndSize(Origo2(), direction2(world2.getWidth(), world2.getHeight()));
 
 		Mesh mesh;
 		const pwn::real halfsize = 0.7f;
-		SetCube(&mesh, materials::Plastic_Red(), halfsize*2, halfsize*2, halfsize*2);
+		SetCube(&mesh, materials::Plastic_Red(), halfsize*2, halfsize*2, halfsize*2, true);
 		mesh.materials.push_back( materials::Plastic_Green() );
 		mesh.triangles[0].material = 1;
-		//mesh.triangles[1].material = 1;
 		BuildNormals(&mesh);
 		Move(&mesh, vec3(-halfsize, -halfsize, -halfsize));
 		def = Compile(mesh);
-		act.model = def.get();
+
+		
+		act.reset( new Actor(point3(0,0, -12), qIdentity()) );
+		act->model = def;
 
 		boost::shared_ptr<World3> world( World3::Create() );
-		world->actor_add(&act);
+		world->actor_add(act);
+
+		{
+			Mesh mesh;
+			const pwn::real h = 900;
+			SetCube(&mesh, materials::Pearl(), h*2, h*2, h*2, false);
+			BuildNormals(&mesh);
+			Move(&mesh, vec3(-h, -h,-h));
+			boost::shared_ptr<Actor> act( new Actor(Origo3(), qIdentity()) );
+			act->model = Compile(mesh);
+			world->actor_add(act);
+		}
 
 		world2.widget_add( new World3Widget( FromAspectAndContainingInCenter(res, 14.0f/19.0f), world ) ); // http://en.wikipedia.org/wiki/14:9
 	}
@@ -63,7 +75,7 @@ public:
 
 	World2 world2;
 	boost::shared_ptr<ActorDef> def;
-	Actor act;
+	boost::shared_ptr<Actor> act;
 };
 
 int main(int, char** argv)

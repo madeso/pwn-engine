@@ -1,6 +1,8 @@
 #ifndef PWN_RENDER_WORLD3
 #define PWN_RENDER_WORLD3
 
+#include <boost/shared_ptr.hpp>
+
 namespace pwn
 {
 	namespace render
@@ -14,8 +16,10 @@ namespace pwn
 			World3();
 			virtual ~World3();
 
-			virtual void actor_add(Actor* actor) = 0;
-			virtual void actor_remove(Actor* actor) = 0;
+			typedef boost::shared_ptr<Actor> ActorPtr;
+
+			virtual void actor_add(ActorPtr actor) = 0;
+			virtual void actor_remove(ActorPtr actor) = 0;
 
 			virtual void render(const Camera& camera) = 0;
 

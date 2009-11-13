@@ -21,12 +21,12 @@ namespace pwn
 		class BasicWorld : public World3
 		{
 		public:
-			void actor_add(Actor* actor)
+			void actor_add(ActorPtr actor)
 			{
 				actors.push_back(actor);
 			}
 
-			void actor_remove(Actor* actor)
+			void actor_remove(ActorPtr actor)
 			{
 				ActorList::iterator res = std::find(actors.begin(), actors.end(), actor);
 				if( res == actors.end() ) return;
@@ -37,7 +37,7 @@ namespace pwn
 			{
 				const CompiledCamera cc(camera);
 				list.begin();
-				BOOST_FOREACH(Actor* a, actors)
+				BOOST_FOREACH(ActorPtr a, actors)
 				{
 					a->render(&list, cc);
 				}
@@ -45,7 +45,7 @@ namespace pwn
 			}
 
 			RenderList list;
-			typedef std::vector<Actor*> ActorList;
+			typedef std::vector<ActorPtr> ActorList;
 			ActorList actors;
 		};
 

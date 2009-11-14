@@ -681,6 +681,12 @@ namespace pwn
 		*/
 		const quat qLookAt(const vec3& from, const vec3& to, const vec3& up);
 
+		/** create a look-at quaternion or qIdentity if no directoion could be generated.
+		@see qLookInDirection(const vec3&, const vec3&)
+		@see qIdentity()
+		*/
+		const quat qLookAtOrNot(const vec3& from, const vec3& to, const vec3& up);
+
 		/** creates a look-at quaternion.
 		@see qLookAt(const vec3&, const vec3&, const vec3&)
 		*/

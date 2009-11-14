@@ -16,16 +16,15 @@ namespace pwn
 			World2(int width, int height);
 			~World2();
 
-			// assumes ownership
-			void widget_add(Widget* widget);
+			typedef boost::shared_ptr<Widget> WidgetPtr;
+
+			void widget_add(WidgetPtr widget);
 
 			int getWidth() const;
 			int getHeight() const;
 
 			void render();
 		private:
-			typedef boost::shared_ptr<Widget> WidgetPtr;
-
 			int width;
 			int height;
 			std::vector<WidgetPtr> widgets;

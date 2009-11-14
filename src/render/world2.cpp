@@ -20,10 +20,9 @@ namespace pwn
 		{
 		}
 
-		void World2::widget_add(Widget* widget)
+		void World2::widget_add(WidgetPtr widget)
 		{
-			WidgetPtr w(widget);
-			widgets.push_back(w);
+			widgets.push_back(widget);
 		}
 
 		int World2::getWidth() const

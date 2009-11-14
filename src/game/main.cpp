@@ -10,6 +10,7 @@
 #include <pwn/mesh/mesh>
 #include <pwn/mesh/builder>
 #include <pwn/mesh/predefinedmaterials>
+#include <pwn/engine/democamera>
 
 using namespace pwn;
 using namespace pwn::engine;
@@ -31,12 +32,11 @@ public:
 		SetCube(&mesh, materials::Plastic_Red(), halfsize*2, halfsize*2, halfsize*2, true);
 		mesh.materials.push_back( materials::Plastic_Green() );
 		mesh.triangles[0].material = 1;
-		BuildNormals(&mesh);
+		//BuildNormals(&mesh);
 		Move(&mesh, vec3(-halfsize, -halfsize, -halfsize));
 		def = Compile(mesh);
-
 		
-		act.reset( new Actor(point3(0,0, -12), qIdentity()) );
+		act.reset( new Actor(point3(0,0, 0), qIdentity()) );
 		act->model = def;
 
 		boost::shared_ptr<World3> world( World3::Create() );
@@ -44,16 +44,20 @@ public:
 
 		{
 			Mesh mesh;
-			const pwn::real h = 900;
+			const pwn::real h = 200;
 			SetCube(&mesh, materials::Pearl(), h*2, h*2, h*2, false);
-			BuildNormals(&mesh);
+			//BuildNormals(&mesh);
 			Move(&mesh, vec3(-h, -h,-h));
 			boost::shared_ptr<Actor> act( new Actor(Origo3(), qIdentity()) );
 			act->model = Compile(mesh);
 			world->actor_add(act);
 		}
 
-		world2.widget_add( new World3Widget( FromAspectAndContainingInCenter(res, 14.0f/19.0f), world ) ); // http://en.wikipedia.org/wiki/14:9
+		boost::shared_ptr<World3Widget > wid( new World3Widget( FromAspectAndContainingInCenter(res, 14.0f/9.0f), world ) ); // http://en.wikipedia.org/wiki/14:9
+
+		dcam.world = wid;
+
+		world2.widget_add( wid );
 	}
 
 	void onKey(Key::Code key, bool isDown)
@@ -62,10 +66,15 @@ public:
 		{
 			stop();
 		}
+		else
+		{
+			dcam.onKey(key, isDown);
+		}
 	}
 
-	void onUpdate(real)
+	void onUpdate(real delta)
 	{
+		dcam.update(delta, 3.0f);
 	}
 
 	void onRender()
@@ -76,6 +85,7 @@ public:
 	World2 world2;
 	boost::shared_ptr<ActorDef> def;
 	boost::shared_ptr<Actor> act;
+	DemoCamera dcam;
 };
 
 int main(int, char** argv)

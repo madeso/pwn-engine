@@ -146,7 +146,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\inc\pwn\engine\autolink"
+			RelativePath="..\..\..\inc\pwn\engine\democamera"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\engine\democamera.cpp"
 			>
 		</File>
 		<File

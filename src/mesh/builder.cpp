@@ -38,7 +38,7 @@ namespace pwn
 			AddQuad(mesh, !faceOut, 0, v4, v6, v2, v0); // left
 			AddQuad(mesh, !faceOut, 0, v5, v7, v6, v4); // back
 			AddQuad(mesh, !faceOut, 0, v3, v2, v6, v7); // up
-			AddQuad(mesh, !faceOut, 0, v4, v0, v7, v5); // bottom
+			AddQuad(mesh, !faceOut, 0, v4, v0, v1, v5); // bottom
 
 			mesh->materials.push_back(material);
 		}

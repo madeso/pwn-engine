@@ -1,7 +1,6 @@
 #ifndef PWN_ENGINE_GAME
 #define PWN_ENGINE_GAME
 
-#include <pwn/engine/autolink>
 #include <pwn/string>
 #include <memory>
 

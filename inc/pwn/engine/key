@@ -2,7 +2,6 @@
 #define PWN_ENGINE_KEYS
 
 #include <pwn/string>
-#include <pwn/engine/autolink>
 
 namespace pwn
 {

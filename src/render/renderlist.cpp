@@ -45,12 +45,15 @@ namespace pwn
 		void RenderList::end()
 		{
 			glMatrixMode( GL_MODELVIEW );
+			assert( glGetError() == GL_NO_ERROR);
 			glLoadIdentity();
+			assert( glGetError() == GL_NO_ERROR);
 			// todo: sort
 
 			BOOST_FOREACH(const Command& c, commands)
 			{
 				glLoadMatrixf( c.mat.columnMajor );
+				assert( glGetError() == GL_NO_ERROR);
 				//glTranslatef(-1.5f,0.0f,-12.0f);
 				apply(c.material);
 				c.mesh->render();
@@ -60,6 +63,7 @@ namespace pwn
 		void RenderList::apply(MaterialPtr material)
 		{
 			glColor4fv( material->diffuse.data() );
+			assert( glGetError() == GL_NO_ERROR);
 			/*
 			const GLenum face = GL_FRONT_AND_BACK;
 			glMaterialfv(face, GL_AMBIENT, material->ambient.data());

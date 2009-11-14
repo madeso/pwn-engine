@@ -1,7 +1,6 @@
 #ifndef PWN_ENGINE_LOOP
 #define PWN_ENGINE_LOOP
 
-#include <pwn/engine/autolink>
 #include <pwn/engine/key>
 #include <pwn/number>
 

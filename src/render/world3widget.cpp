@@ -34,15 +34,25 @@ namespace pwn
 			const int w = static_cast<GLsizei>(WidthOf(rect));
 			const int h = static_cast<GLsizei>(HeightOf(rect));
 			glViewport(x, y, w, h);
+			assert( glGetError() == GL_NO_ERROR);
 			glMatrixMode(GL_PROJECTION);
+			assert( glGetError() == GL_NO_ERROR);
 			glLoadIdentity();
+			assert( glGetError() == GL_NO_ERROR);
 			gluPerspective(camera.fov, AspectOf(rect), camera.znear, camera.zfar);
+			assert( glGetError() == GL_NO_ERROR);
 			// todo: test for mask occlusion and possible render to a temporary texture
 
 			glClear(GL_DEPTH_BUFFER_BIT);
+			assert( glGetError() == GL_NO_ERROR);
 			glEnable(GL_DEPTH_TEST);
+			assert( glGetError() == GL_NO_ERROR);
+			glEnable(GL_CULL_FACE);
+			assert( glGetError() == GL_NO_ERROR);
 			world->render(camera);
+			assert( glGetError() == GL_NO_ERROR);
 			glDisable(GL_DEPTH_TEST);
+			assert( glGetError() == GL_NO_ERROR);
 		}
 	}
 }

@@ -757,7 +757,9 @@ namespace pwn
 
 		void Normalize(vec3* vec)
 		{
-			*vec /= LengthOf(*vec);
+			const real length = LengthOf(*vec);
+			assert( Abs(length) > 0.001f );
+			*vec /= length;
 		}
 
 		const vec3 cross(const vec3& lhs, const vec3& rhs)
@@ -1256,6 +1258,14 @@ namespace pwn
 			return qLookInDirection(to-from, up);
 		}
 
+		const quat qLookAtOrNot(const vec3& from, const vec3& to, const vec3& up)
+		{
+			const vec3 dir = to-from;
+			const real len = LengthOfSquared(dir);
+			if( len > 0.001f ) return qLookInDirection(dir, up);
+			else return qIdentity();
+		}
+
 		// todo: convert to a mat33 constructor
 		quat FromMatrix3(const real mat[3][3])
 		{
@@ -1302,6 +1312,7 @@ namespace pwn
 
 		const quat qLookInDirection(const vec3& adir, const vec3& up)
 		{
+			assert(LengthOf(adir) > 0.01f );
 			const vec3 dir = GetNormalized(adir);
 			const vec3 v = GetNormalized(cross(dir, up));
 			const vec3 u = cross(v, dir);
@@ -2185,10 +2196,9 @@ namespace pwn
 		// rewrite to better fit the mathematics instead of this "hack"
 		const AxisAngle cAxisAngle(const quat& q)
 		{
-			AxisAngle aa(cvec3(q), Acos(q.w)*PWN_MATH_VALUE(2.0));
-
-			if ( isZero(q.x) && isZero(q.y) && isZero(q.z) ) aa.axis = In();
-			else Normalize(&aa.axis);
+			const vec3 axis = ( isZero(q.x) && isZero(q.y) && isZero(q.z) ) ? In()
+				: cvec3(q);
+			AxisAngle aa(axis, Acos(q.w)*PWN_MATH_VALUE(2.0));
 
 			return aa;
 		}

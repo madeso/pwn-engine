@@ -11,6 +11,9 @@
 #include "gameimp.hpp"
 #include <pwn/render/world2>
 
+#include <pwn/math/types>
+#include <pwn/math/operations>
+
 #include <SFML/OpenGl.hpp>
 
 #ifdef _DEBUG
@@ -112,6 +115,16 @@ namespace pwn
 						break;
 					}
 				}
+				const sf::Input& i = window.GetInput();
+				const math::vec2 size(window.GetWidth(), window.GetHeight());
+				const math::vec2 center = size / 2;
+				const math::vec2 movement( (i.GetMouseX()-center.x)/ size.x, (center.y - i.GetMouseY())/size.y );
+				imp.handleMouse(movement);
+				resetMouse();
+			}
+			void resetMouse()
+			{
+				window.SetCursorPosition(window.GetWidth()/2, window.GetHeight()/2);
 			}
 			void render(render::World2& world)
 			{

@@ -758,8 +758,10 @@ namespace pwn
 		void Normalize(vec3* vec)
 		{
 			const real length = LengthOf(*vec);
-			assert( Abs(length) > 0.001f );
-			*vec /= length;
+			if( length > PWN_MATH_VALUE(0.001) )
+			{
+				*vec /= length;
+			}
 		}
 
 		const vec3 cross(const vec3& lhs, const vec3& rhs)
@@ -1226,7 +1228,7 @@ namespace pwn
 
 		const quat Combine(const quat& current, const quat& extra)
 		{
-			return extra * current;
+			return GetNormalized(extra * current);
 		}
 
 		namespace // local
@@ -2196,8 +2198,8 @@ namespace pwn
 		// rewrite to better fit the mathematics instead of this "hack"
 		const AxisAngle cAxisAngle(const quat& q)
 		{
-			const vec3 axis = ( isZero(q.x) && isZero(q.y) && isZero(q.z) ) ? In()
-				: cvec3(q);
+			assert( q.w <= 1 ); // if this happes, we should normalize, but this shouldnt happen
+			const vec3 axis = cvec3(q);
 			AxisAngle aa(axis, Acos(q.w)*PWN_MATH_VALUE(2.0));
 
 			return aa;

@@ -20,6 +20,7 @@ namespace pwn
 			, rightState(false)
 			, upState(false)
 			, downState(false)
+			, mouse(0, 0)
 		{
 		}
 
@@ -38,6 +39,11 @@ namespace pwn
 			else HANDLEKEY( down )
 #undef HANDLEKEY
 			else return false;
+		}
+
+		void DemoCamera::onMouse(const math::vec2 movement)
+		{
+			mouse += movement;
 		}
 
 		namespace // local
@@ -59,8 +65,12 @@ namespace pwn
 				+ multi(upState, downState) * Up();
 			camera.position.vec += movement * delta * speed;
 
+			//camera.position.vec += vec3(mouse.x, mouse.y, 0);
 
-			camera.orientation = math::qLookAtOrNot(camera.position.vec, vec3(0,0,0), Up());
+			camera.orientation = math::Combine(math::cquat( math::AxisAngle(Up(), Angle::FromDegrees(mouse.x)) )
+				,camera.orientation);
+
+			mouse = vec2(0,0);
 
 			world->setCamera(camera);
 		}

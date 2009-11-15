@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <boost/shared_ptr.hpp>
+#include <pwn/math/types>
 
 //#include <events/event.h>
 #include <pwn/engine/key>
@@ -38,6 +39,7 @@ namespace pwn
 
 			// post events
 			void handleKey(Key::Code key, bool isDown);
+			void handleMouse(const math::vec2 movement);
 
 			typedef boost::shared_ptr<System> SystemPtr;
 		private:

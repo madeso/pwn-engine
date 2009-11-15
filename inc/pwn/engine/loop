@@ -2,7 +2,7 @@
 #define PWN_ENGINE_LOOP
 
 #include <pwn/engine/key>
-#include <pwn/number>
+#include <pwn/math/types>
 
 namespace pwn
 {
@@ -24,6 +24,7 @@ namespace pwn
 			void loop();
 
 			virtual void onKey(Key::Code key, bool isDown) = 0;
+			virtual void onMouse(const math::vec2 movement) = 0;
 
 			bool isRunning() const;
 		protected:

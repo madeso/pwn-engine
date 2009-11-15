@@ -85,5 +85,13 @@ namespace pwn
 				ActiveLoop::Get().onKey(key, isDown);
 			}
 		}
+
+		void GameImp::handleMouse(const math::vec2 movement)
+		{
+			if( ActiveLoop::Has() )
+			{
+				ActiveLoop::Get().onMouse(movement);
+			}
+		}
 	}
 }

@@ -82,6 +82,11 @@ public:
 		renderWorld(0, world2);
 	}
 
+	void onMouse(const math::vec2 movement)
+	{
+		dcam.onMouse(movement);
+	}
+
 	World2 world2;
 	boost::shared_ptr<ActorDef> def;
 	boost::shared_ptr<Actor> act;

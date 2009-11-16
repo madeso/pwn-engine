@@ -1239,14 +1239,6 @@ namespace pwn
 			}
 		}
 
-		const quat FpsQuat(const real dx, const real dy)
-		{
-			const quat rx = cquat(RightHandAround(Up(), Angle::FromDegrees(-dx)));
-			const quat ry = cquat(RightHandAround(Right(), Angle::FromDegrees(-dy)));
-			const quat final = rx * ry;
-			return final;
-		}
-
 		//quat::quat(const Euler& e);
 
 		const quat qIdentity()

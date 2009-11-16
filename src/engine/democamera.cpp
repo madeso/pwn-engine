@@ -57,7 +57,7 @@ namespace pwn
 			}
 		}
 
-		void DemoCamera::update(const real delta, const real speed)
+		void DemoCamera::update(const real delta, const real speed, const real sensitivity)
 		{
 			using namespace pwn::math;
 			const vec3 movement = multi(forwardState, backwardState) * In(camera.orientation)
@@ -67,8 +67,9 @@ namespace pwn
 
 			//camera.position.vec += vec3(mouse.x, mouse.y, 0);
 
-			camera.orientation = math::Combine(math::cquat( math::AxisAngle(Up(), Angle::FromDegrees(mouse.x)) )
-				,camera.orientation);
+			const math::quat updown = math::cquat(math::RightHandAround(Right(camera.orientation), Angle::FromDegrees(mouse.y*sensitivity)));
+			const math::quat rightleft = math::cquat( math::RightHandAround(Up(), Angle::FromDegrees(-mouse.x*sensitivity)));
+			camera.orientation = math::Combine(camera.orientation, rightleft * updown);
 
 			mouse = vec2(0,0);
 

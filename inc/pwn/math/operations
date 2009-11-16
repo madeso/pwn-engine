@@ -669,7 +669,6 @@ namespace pwn
 		*/
 		const quat Combine(const quat& current, const quat& extra);
 
-		//const quat FpsQuat(const real dx, const real dy); // remove?
 		//const quat cquat(const Euler& e); // todo: add construct from angle function?
 
 		/** The identity quaternion.

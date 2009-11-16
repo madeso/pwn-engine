@@ -31,7 +31,7 @@ namespace pwn
 
 			bool onKey(Key::Code key, bool newState);
 			void onMouse(const math::vec2 movement);
-			void update(const real delta, const real speed);
+			void update(const real delta, const real speed, const real sensitivity);
 
 			boost::shared_ptr<render::World3Widget> world;
 		private:

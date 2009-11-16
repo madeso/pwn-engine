@@ -63,6 +63,7 @@ namespace pwn
 				doRemove = true;
 
 				window.EnableKeyRepeat(false);
+				// window.UseVerticalSync(true);
 
 				// Indicates the quality of color, texture coordinate, and fog coordinate
 				// interpolation.  If perspective-corrected parameter interpolation is not

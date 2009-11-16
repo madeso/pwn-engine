@@ -74,7 +74,7 @@ public:
 
 	void onUpdate(real delta)
 	{
-		dcam.update(delta, 3.0f);
+		dcam.update(delta, 3.0f, 10.0f);
 	}
 
 	void onRender()

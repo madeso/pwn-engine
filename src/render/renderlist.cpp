@@ -25,21 +25,48 @@ namespace pwn
 		{
 		}
 
+		namespace
+		{
+			RenderList::ID CalcId(RenderList::MeshPtr, RenderList::MaterialPtr, const math::mat44&)
+			{
+				// todo: calculate a better id
+				return 0;
+			}
+		}
+
 		RenderList::Command::Command(MeshPtr mesh, MaterialPtr material, const math::mat44& mat)
 			: mesh(mesh)
 			, material(material)
 			, mat(mat)
+			, id( CalcId(mesh, material, mat) )
 		{
 		}
 
 		void RenderList::begin()
 		{
-			commands.resize(0);
+			transparent.resize(0);
+			solid.resize(0);
 		}
 
 		void RenderList::add(MeshPtr mesh, MaterialPtr material, const math::mat44& mat)
 		{
-			commands.push_back(Command(mesh, material, mat));
+			solid.push_back(Command(mesh, material, mat));
+		}
+
+		void Render(RenderList* r, const RenderList::CommandList& commands)
+		{
+			BOOST_FOREACH(const RenderList::Command& c, commands)
+			{
+				glLoadMatrixf( c.mat.columnMajor );
+				assert( glGetError() == GL_NO_ERROR);
+				r->apply(c.material);
+				c.mesh->render();
+			}
+		}
+
+		bool CommandSort(const RenderList::Command& lhs, const RenderList::Command& rhs)
+		{
+			return lhs.id < rhs.id;
 		}
 
 		void RenderList::end()
@@ -48,16 +75,12 @@ namespace pwn
 			assert( glGetError() == GL_NO_ERROR);
 			glLoadIdentity();
 			assert( glGetError() == GL_NO_ERROR);
-			// todo: sort
-
-			BOOST_FOREACH(const Command& c, commands)
-			{
-				glLoadMatrixf( c.mat.columnMajor );
-				assert( glGetError() == GL_NO_ERROR);
-				//glTranslatef(-1.5f,0.0f,-12.0f);
-				apply(c.material);
-				c.mesh->render();
-			}
+			
+			// todo: send correct commands to gl
+			std::sort(solid.begin(), solid.end(), CommandSort);
+			Render(this, solid);
+			std::sort(transparent.begin(), transparent.end(), CommandSort);
+			Render(this, transparent);
 		}
 
 		void RenderList::apply(MaterialPtr material)

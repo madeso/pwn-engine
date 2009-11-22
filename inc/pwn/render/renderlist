@@ -21,6 +21,8 @@ namespace pwn
 			typedef boost::shared_ptr<CompiledMesh> MeshPtr;
 			typedef boost::shared_ptr<Material> MaterialPtr;
 
+			typedef uint32 ID;
+
 			struct Command
 			{
 				Command();
@@ -29,14 +31,20 @@ namespace pwn
 				MaterialPtr material;
 				MeshPtr mesh;
 				math::mat44 mat;
+
+				ID id;
 			};
 
 			void begin();
 			void add(MeshPtr mesh, MaterialPtr material, const math::mat44& mat);
 			void end();
-		private:
-			std::vector<Command> commands;
+
+			typedef std::vector<Command> CommandList;
 			void apply(MaterialPtr material);
+
+		private:
+			CommandList transparent;
+			CommandList solid;
 		};
 	}
 }

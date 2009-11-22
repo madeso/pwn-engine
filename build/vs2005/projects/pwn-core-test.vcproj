@@ -183,6 +183,10 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\..\..\src\core\test\idpooltest.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\core\test\main.cpp"
 			>
 		</File>

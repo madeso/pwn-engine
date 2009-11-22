@@ -144,6 +144,14 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\..\..\inc\pwn\core\idpool"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\core\src\idpool.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\inc\pwn\core\stdutil"
 			>
 		</File>

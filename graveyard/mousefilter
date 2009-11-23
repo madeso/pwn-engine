@@ -1,0 +1,29 @@
+#ifndef PWN_ENGINE_MOUSEFILTER
+#define PWN_ENGINE_MOUSEFILTER
+
+#include <pwn/math/types>
+#include <deque>
+
+namespace pwn
+{
+	namespace engine
+	{
+		class MouseFilter
+		{
+		public:
+			MouseFilter();
+
+			void setBufferSize(const std::size_t size);
+
+			void update(const math::vec2& movement);
+			const math::vec2 getMovement() const;
+
+			real factor;
+		private:
+			std::size_t buffersize;
+			std::deque<math::vec2> buffer;
+		};
+	}
+}
+
+#endif

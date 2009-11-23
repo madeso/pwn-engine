@@ -29,5 +29,16 @@ namespace pwn
 		{
 			released.push_back(id);
 		}
+
+		Id::Id(IdPool* pool)
+			: value( pool->generate() )
+			, pool(pool)
+		{
+		}
+
+		Id::~Id()
+		{
+			pool->release(value);
+		}
 	}
 }

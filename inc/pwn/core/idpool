@@ -22,6 +22,17 @@ namespace pwn
 			ID current;
 			std::vector<ID> released;
 		};
+
+		class Id : boost::noncopyable
+		{
+		public:
+			Id(IdPool* pool);
+			~Id();
+
+			const IdPool::ID value;
+		private:
+			IdPool* pool;
+		};
 	}
 }
 

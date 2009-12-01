@@ -6,6 +6,7 @@
 #include <pwn/render/compiledmesh>
 #include <pwn/render/material>
 #include <pwn/mesh/material>
+#include <pwn/render/texturepool2>
 
 #include <sfml/OpenGl.hpp>
 
@@ -57,12 +58,18 @@ namespace pwn
 				BOOST_FOREACH(const mesh::Triangle& tri, triangles)
 				{
 					const std::size_t nc = smesh->normals.size();
+					const std::size_t tc = smesh->texcoords.size();
 					for(int i=0; i<3; ++i)
 					{
 						if( nc != 0 )
 						{
 							const math::vec3 n = smesh->normals[tri[i].normal];
 							glNormal3f(n.x, n.y, n.z);
+						}
+						if( tc != 0 )
+						{
+							const math::vec2 t = smesh->texcoords[tri[i].texcoord];
+							glTexCoord2f(t.x, t.y);
 						}
 						const math::vec3 p = smesh->positions[tri[i].location];
 						glVertex3f(p.x, p.y, p.z);
@@ -77,7 +84,7 @@ namespace pwn
 			std::vector<mesh::Triangle> triangles;
 		};
 
-		boost::shared_ptr<render::Material> Compile(boost::shared_ptr<mesh::Material> mm)
+		boost::shared_ptr<render::Material> Compile(boost::shared_ptr<mesh::Material> mm, TexturePool2* pool)
 		{
 			boost::shared_ptr<render::Material> rm( new render::Material() );
 			rm->ambient = mm->ambient;
@@ -85,10 +92,14 @@ namespace pwn
 			rm->specular = mm->specular;
 			rm->emission = mm->emission;
 			rm->shininess = mm->shininess;
+			if( false == mm->texture.empty() )
+			{
+				rm->texture = pool->get(mm->texture);
+			}
 			return rm;
 		}
 
-		boost::shared_ptr<ActorDef> Compile(const mesh::Mesh& mesh)
+		boost::shared_ptr<ActorDef> Compile(const mesh::Mesh& mesh, TexturePool2* pool)
 		{
 			boost::shared_ptr<ActorDef> def( new ActorDef() );
 			boost::shared_ptr<SharedMesh> smesh( new SharedMesh(mesh) );
@@ -106,7 +117,7 @@ namespace pwn
 			{
 				ActorDef::PartPtr part( new Part() );
 				const pwn::uint32 index = r.first;
-				part->material = Compile( mesh.materials[index] );
+				part->material = Compile( mesh.materials[index], pool );
 				part->mesh.reset( new ImmediateMode(smesh, r.second) );
 				def->parts.push_back(part);
 			}

@@ -226,6 +226,22 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\src\engine\vfs_util.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\engine\vfs_util.hpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\engine\vfstexturepool2"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\engine\vfstexturepool2.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\engine\videomode.cpp"
 			>
 		</File>

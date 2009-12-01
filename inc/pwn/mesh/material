@@ -2,6 +2,7 @@
 #define PWN_MESH_MATERIAL
 
 #include <pwn/math/rgba>
+#include <pwn/string>
 
 namespace pwn
 {
@@ -17,6 +18,8 @@ namespace pwn
 			math::Rgba specular; // -1 - 1
 			math::Rgba emission; // -1 - 1
 			real shininess; // 0-1
+
+			string texture;
 		};
 	}
 }

@@ -17,7 +17,8 @@ namespace pwn
 	typedef unsigned short uint16;
 	typedef unsigned char uint8;
 
-	typedef uint8 byte;
+	typedef int8 byte;
+	typedef uint8 ubyte;
 
 	// and finally real
 	typedef float32 real;

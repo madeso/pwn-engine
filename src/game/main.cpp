@@ -11,6 +11,8 @@
 #include <pwn/mesh/builder>
 #include <pwn/mesh/predefinedmaterials>
 #include <pwn/engine/democamera>
+#include <pwn/engine/vfstexturepool2>
+#include <pwn/mesh/material>
 
 using namespace pwn;
 using namespace pwn::engine;
@@ -29,12 +31,13 @@ public:
 
 		Mesh mesh;
 		const pwn::real halfsize = 0.7f;
-		SetCube(&mesh, materials::Plastic_Red(), halfsize*2, halfsize*2, halfsize*2, true);
+		SetCube(&mesh, materials::Plastic_White(), halfsize*2, halfsize*2, halfsize*2, true);
 		mesh.materials.push_back( materials::Plastic_Green() );
 		mesh.triangles[0].material = 1;
+		mesh.materials[0]->texture = "crate01a.jpg";
 		//BuildNormals(&mesh);
 		Move(&mesh, vec3(-halfsize, -halfsize, -halfsize));
-		def = Compile(mesh);
+		def = Compile(mesh, &tpool);
 		
 		act.reset( new Actor(point3(0,0, 0), qIdentity()) );
 		act->model = def;
@@ -49,7 +52,7 @@ public:
 			//BuildNormals(&mesh);
 			Move(&mesh, vec3(-h, -h,-h));
 			boost::shared_ptr<Actor> act( new Actor(Origo3(), qIdentity()) );
-			act->model = Compile(mesh);
+			act->model = Compile(mesh, &tpool);
 			world->actor_add(act);
 		}
 
@@ -91,6 +94,7 @@ public:
 	boost::shared_ptr<ActorDef> def;
 	boost::shared_ptr<Actor> act;
 	DemoCamera dcam;
+	VfsTexturePool2 tpool;
 };
 
 int main(int, char** argv)

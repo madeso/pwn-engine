@@ -1,0 +1,18 @@
+textures
+- load texture from filesystem
+- replace sfml image loading with direct soil loading/other "better" library
+load mesh
+animated objects
+line/wire rendering
+generate sphears
+make compiled objects faster/better
+make world rendering faster/better - octree/portal
+full-screen effects
+- basic
+- function-like calls
+add lightning
+- ssao
+- simple lightning
+- variance shapow maps? (depth) shadow maps?
+particle effects
+improved rain effect

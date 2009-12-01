@@ -7,6 +7,8 @@
 #include <cassert>
 #include <pwn/engine/game>
 
+#include <boost/filesystem.hpp>
+
 #pragma comment (lib, "physfs.lib")
 
 namespace pwn
@@ -51,13 +53,22 @@ namespace pwn
 			}
 		};
 
+		namespace // local
+		{
+			const pwn::string GetParent(const pwn::string& app)
+			{
+				return (boost::filesystem::path(app).parent_path().parent_path() / "dummy.exe" ).file_string();
+			}
+		}
+
 		class System_Vfs : public System
 		{
 		public:
 			System_Vfs(const pwn::string& argv0, const pwn::string& company, const pwn::string& app)
 			{
 				{
-					PhysFsStarter start(argv0);
+					const pwn::string parentdir = GetParent(argv0);
+					PhysFsStarter start(parentdir);
 					const int result = PHYSFS_setSaneConfig(company.c_str(), app.c_str(), "vfs", 0, 0); // ignore cd-rom, append archives to search-list
 					if( result == 0 ) ThrowPhysFsError();
 
@@ -78,9 +89,35 @@ namespace pwn
 			}
 		};
 
+		namespace
+		{
+			std::vector<pwn::string> FilesSeen(const pwn::string& dir)
+			{
+				std::vector<pwn::string> files;
+				char **rc = PHYSFS_enumerateFiles(dir.c_str());
+				char **i;
+
+				for (i = rc; *i != NULL; i++)
+				{
+					files.push_back(*i);
+				}
+
+				PHYSFS_freeList(rc);
+
+				return files;
+			}
+
+			void WriteFilesSeen()
+			{
+				std::vector<pwn::string> root = FilesSeen("");
+			}
+		}
+
 		void SystemInstall_Vfs(Game* game, const pwn::string& argv0, const pwn::string& company, const pwn::string& app)
 		{
 			game->install(new System_Vfs(argv0, company, app));
+
+			WriteFilesSeen();
 		}
 
 		/*

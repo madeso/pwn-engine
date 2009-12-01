@@ -17,28 +17,43 @@ namespace pwn
 			}
 		}
 
+		namespace // local
+		{
+			Triangle::Vertex v(Triangle::index p, Triangle::index t)
+			{
+				return Triangle::Vertex(p, 0, t);
+			}
+		}
+
 		void SetCube(Mesh* mesh, boost::shared_ptr<Material> material, real w, real h, real d, bool faceOut)
 		{
+			using math::vec2;
 			using math::vec3;
 
 			mesh->clear();
+			const Triangle::index t0 = mesh->addTextCoord(vec2(0,1));
+			const Triangle::index t1 = mesh->addTextCoord(vec2(1,1));
+			const Triangle::index t2 = mesh->addTextCoord(vec2(0,0));
+			const Triangle::index t3 = mesh->addTextCoord(vec2(1,0));
 
-			const Triangle::Vertex v0(mesh->addPosition(vec3(0, 0, 0)), 0, 0);
-			const Triangle::Vertex v1(mesh->addPosition(vec3(w, 0, 0)), 0, 0);
-			const Triangle::Vertex v2(mesh->addPosition(vec3(0, h, 0)), 0, 0);
-			const Triangle::Vertex v3(mesh->addPosition(vec3(w, h, 0)), 0, 0);
+			// front side
+			const Triangle::index v0 = mesh->addPosition(vec3(0, 0, 0));
+			const Triangle::index v1 = mesh->addPosition(vec3(w, 0, 0));
+			const Triangle::index v2 = mesh->addPosition(vec3(0, h, 0));
+			const Triangle::index v3 = mesh->addPosition(vec3(w, h, 0));
 
-			const Triangle::Vertex v4(mesh->addPosition(vec3(0, 0, d)), 0, 0);
-			const Triangle::Vertex v5(mesh->addPosition(vec3(w, 0, d)), 0, 0);
-			const Triangle::Vertex v6(mesh->addPosition(vec3(0, h, d)), 0, 0);
-			const Triangle::Vertex v7(mesh->addPosition(vec3(w, h, d)), 0, 0);
+			// back side
+			const Triangle::index v4 = mesh->addPosition(vec3(0, 0, d));
+			const Triangle::index v5 = mesh->addPosition(vec3(w, 0, d));
+			const Triangle::index v6 = mesh->addPosition(vec3(0, h, d));
+			const Triangle::index v7 = mesh->addPosition(vec3(w, h, d));
 
-			AddQuad(mesh, !faceOut, 0, v0, v2, v3, v1); // front
-			AddQuad(mesh, !faceOut, 0, v1, v3, v7, v5); // right
-			AddQuad(mesh, !faceOut, 0, v4, v6, v2, v0); // left
-			AddQuad(mesh, !faceOut, 0, v5, v7, v6, v4); // back
-			AddQuad(mesh, !faceOut, 0, v3, v2, v6, v7); // up
-			AddQuad(mesh, !faceOut, 0, v4, v0, v1, v5); // bottom
+			AddQuad(mesh, !faceOut, 0, v(v0,t2), v(v2,t0), v(v3,t1), v(v1,t3)); // front
+			AddQuad(mesh, !faceOut, 0, v(v1,t3), v(v3,t1), v(v7,t0), v(v5,t2)); // right
+			AddQuad(mesh, !faceOut, 0, v(v4,t3), v(v6,t1), v(v2,t0), v(v0,t2)); // left
+			AddQuad(mesh, !faceOut, 0, v(v5,t2), v(v7,t0), v(v6,t1), v(v4,t3)); // back
+			AddQuad(mesh, !faceOut, 0, v(v3,t1), v(v2,t3), v(v6,t2), v(v7,t0)); // up
+			AddQuad(mesh, !faceOut, 0, v(v4,t0), v(v0,t1), v(v1,t3), v(v5,t2)); // bottom
 
 			mesh->materials.push_back(material);
 		}

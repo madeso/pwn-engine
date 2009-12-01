@@ -13,6 +13,8 @@ namespace pwn
 	namespace render
 	{
 		RenderList::RenderList()
+			: texture(0)
+			, applied(false)
 		{
 		}
 		RenderList::~RenderList()
@@ -76,17 +78,46 @@ namespace pwn
 			glLoadIdentity();
 			assert( glGetError() == GL_NO_ERROR);
 			
+			applied = false;
+			texture = 0;
+			
 			// todo: send correct commands to gl
 			std::sort(solid.begin(), solid.end(), CommandSort);
 			Render(this, solid);
 			std::sort(transparent.begin(), transparent.end(), CommandSort);
 			Render(this, transparent);
+
+			if( applied )
+			{
+				glDisable(GL_TEXTURE_2D);
+			}
 		}
 
 		void RenderList::apply(MaterialPtr material)
 		{
 			glColor4fv( material->diffuse.data() );
 			assert( glGetError() == GL_NO_ERROR);
+			if( material->texture.get() )
+			{
+				if( applied == false )
+				{
+					glEnable(GL_TEXTURE_2D);
+				}
+				if( material->texture.get() != texture )
+				{
+					glBindTexture(GL_TEXTURE_2D, material->texture->tid());
+				}
+				applied = true;
+				texture = material->texture.get();
+			}
+			else
+			{
+				if( applied )
+				{
+					glDisable(GL_TEXTURE_2D);
+				}
+				applied = false;
+			}
 			/*
 			const GLenum face = GL_FRONT_AND_BACK;
 			glMaterialfv(face, GL_AMBIENT, material->ambient.data());

@@ -1,0 +1,30 @@
+#ifndef PWN_RENDER_TEXTURE2
+#define PWN_RENDER_TEXTURE2
+
+#include <pwn/number>
+#include <pwn/core/idpool>
+
+#include <boost/shared_ptr.hpp>
+
+namespace pwn
+{
+	namespace render
+	{
+		class Texture2
+		{
+		public:
+			Texture2(core::IdPool* pool);
+			~Texture2();
+
+			const uint32 tid() const; // texture id
+			const uint32 sid() const; // sort id
+		private:
+			uint32 texture;
+			core::Id id;
+		};
+
+		void Load(Texture2* tex, uint32 width, uint32 height, const byte* pixels);
+	}
+}
+
+#endif

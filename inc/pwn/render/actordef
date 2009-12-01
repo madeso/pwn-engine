@@ -14,6 +14,7 @@ namespace pwn
 	namespace render
 	{
 		class Part;
+		class TexturePool2;
 
 		class ActorDef
 		{
@@ -26,7 +27,7 @@ namespace pwn
 			std::vector<PartPtr> parts;
 		};
 
-		boost::shared_ptr<ActorDef> Compile(const mesh::Mesh& mesh);
+		boost::shared_ptr<ActorDef> Compile(const mesh::Mesh& mesh, TexturePool2* pool);
 	}
 }
 

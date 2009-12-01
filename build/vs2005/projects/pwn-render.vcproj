@@ -208,6 +208,22 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\inc\pwn\render\texture2"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\render\texture2.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\texturepool2"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\render\texturepool2.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\inc\pwn\render\widget"
 			>
 		</File>

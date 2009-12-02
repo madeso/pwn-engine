@@ -145,6 +145,50 @@
 	<References>
 	</References>
 	<Files>
+		<Filter
+			Name="soil"
+			>
+			<File
+				RelativePath="..\..\..\external\soil\image_DXT.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\external\soil\image_DXT.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\external\soil\image_helper.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\external\soil\image_helper.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\external\soil\SOIL.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\external\soil\SOIL.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\external\soil\stb_image_aug.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\external\soil\stb_image_aug.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\external\soil\stbi_DDS_aug.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\external\soil\stbi_DDS_aug_c.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\..\..\inc\pwn\engine\democamera"
 			>

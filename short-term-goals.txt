@@ -1,7 +1,9 @@
 textures
-- load texture from filesystem
-- replace sfml image loading with direct soil loading/other "better" library
+-investigate/improve gl texture filters?
 load mesh
+-rewrite mesh-compiler
+-test uv-coordinates
+-actor def files, share mesh between actordefs
 animated objects
 line/wire rendering
 generate sphears
@@ -10,9 +12,11 @@ make world rendering faster/better - octree/portal
 full-screen effects
 - basic
 - function-like calls
+decals
 add lightning
 - ssao
 - simple lightning
+- improve materials with shaders?
 - variance shapow maps? (depth) shadow maps?
 particle effects
 improved rain effect

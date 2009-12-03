@@ -87,11 +87,17 @@ namespace pwn
 		boost::shared_ptr<render::Material> Compile(boost::shared_ptr<mesh::Material> mm, TexturePool2* pool)
 		{
 			boost::shared_ptr<render::Material> rm( new render::Material() );
+
+			// todo: move to the render::Material constructor..
 			rm->ambient = mm->ambient;
 			rm->diffuse = mm->diffuse;
 			rm->specular = mm->specular;
 			rm->emission = mm->emission;
 			rm->shininess = mm->shininess;
+
+			// todo: check more than diffuse alpha
+			rm->hasTransperency = mm->diffuse.alpha() < 0.9f;
+
 			if( false == mm->texture.empty() )
 			{
 				rm->texture = pool->get(mm->texture);

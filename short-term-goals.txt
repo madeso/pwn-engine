@@ -1,4 +1,5 @@
-textures
+transperency & sorting test
+- test sorting and transperency
 -investigate/improve gl texture filters?
 load mesh
 -rewrite mesh-compiler

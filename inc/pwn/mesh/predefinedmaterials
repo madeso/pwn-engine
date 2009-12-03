@@ -35,6 +35,8 @@ namespace pwn
 			boost::shared_ptr<Material> Rubber_Red();
 			boost::shared_ptr<Material> Rubber_White();
 			boost::shared_ptr<Material> Rubber_Yellow();
+
+			boost::shared_ptr<Material> White();
 		}
 	}
 }

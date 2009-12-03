@@ -12,10 +12,17 @@ namespace pwn
 {
 	namespace render
 	{
-		Actor::Actor(const math::point3& location, const math::quat& rotation)
+		Actor::Actor(const math::point3& location, const math::quat& rotation, boost::shared_ptr<ActorDef> model)
 			: location(location)
 			, rotation(rotation)
+			, model(model)
 		{
+		}
+
+		boost::shared_ptr<Actor> Actor::Create(const math::point3& location, const math::quat& rotation, boost::shared_ptr<ActorDef> model)
+		{
+			boost::shared_ptr<Actor> a( new Actor(location, rotation, model) );
+			return a;
 		}
 
 		void Actor::render(RenderList* rl, const CompiledCamera& cam)

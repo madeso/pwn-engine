@@ -9,12 +9,14 @@ namespace pwn
 {
 	namespace mesh
 	{
-		void Move(Mesh* mesh, const math::vec3& dir)
+		Mesh* Move(Mesh* mesh, const math::vec3& dir)
 		{
 			BOOST_FOREACH(math::vec3& v, mesh->positions)
 			{
 				v += dir;
 			}
+
+			return mesh;
 		}
 
 		namespace // local
@@ -25,12 +27,13 @@ namespace pwn
 			}
 		}
 
-		void SetCube(Mesh* mesh, boost::shared_ptr<Material> material, real w, real h, real d, bool faceOut)
+		Mesh* SetBox(Mesh* mesh, boost::shared_ptr<Material> material, real w, real h, real d, bool faceOut)
 		{
 			using math::vec2;
 			using math::vec3;
 
 			mesh->clear();
+
 			const Triangle::index t0 = mesh->addTextCoord(vec2(0,1));
 			const Triangle::index t1 = mesh->addTextCoord(vec2(1,1));
 			const Triangle::index t2 = mesh->addTextCoord(vec2(0,0));
@@ -56,6 +59,8 @@ namespace pwn
 			AddQuad(mesh, !faceOut, 0, v(v4,t0), v(v0,t1), v(v1,t3), v(v5,t2)); // bottom
 
 			mesh->materials.push_back(material);
+
+			return mesh;
 		}
 
 		void AddQuad(Mesh* mesh, bool reverse, pwn::uint32 material, const Triangle::Vertex& v0, const Triangle::Vertex& v1, const Triangle::Vertex& v2, const Triangle::Vertex& v3)
@@ -72,7 +77,7 @@ namespace pwn
 			}
 		}
 
-		void BuildNormals(Mesh* mesh)
+		Mesh* BuildNormals(Mesh* mesh)
 		{
 			using math::vec3;
 			std::vector<vec3> vertexNormalsSum(mesh->positions.size(), vec3(0,0,0));
@@ -99,14 +104,18 @@ namespace pwn
 			{
 				mesh->normals.push_back( math::GetNormalized(normalSum) );
 			}
+
+			return mesh;
 		}
 
-		void InvertNormals(Mesh* mesh)
+		Mesh* InvertNormals(Mesh* mesh)
 		{
 			BOOST_FOREACH(math::vec3& n, mesh->normals)
 			{
 				n = -n;
 			}
+
+			return mesh;
 		}
 	}
 }

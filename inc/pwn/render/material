@@ -21,6 +21,8 @@ namespace pwn
 			math::Rgba emission; // -1 - 1
 			real shininess; // 0-1
 
+			bool hasTransperency;
+
 			boost::shared_ptr<render::Texture2> texture;
 			// color
 			// maps: diffuse, normal/bump, emissive, specular

@@ -20,6 +20,18 @@ using namespace pwn::render;
 using namespace pwn::math;
 using namespace pwn::mesh;
 
+boost::shared_ptr<ActorDef> CreateCube(real size, const string& texture, TexturePool2* tpool, real alpha, bool out)
+{
+	Mesh mesh;
+	const real halfsize = size/2;
+
+	SetBox(&mesh, materials::White(), halfsize*2, halfsize*2, halfsize*2, out);
+	mesh.materials[0]->texture = texture;
+	mesh.materials[0]->diffuse.alpha(alpha);
+	Move(&mesh, vec3(-halfsize, -halfsize, -halfsize));
+	return Compile(mesh, tpool);
+}
+
 class EasyLoop : public Loop
 {
 public:
@@ -29,32 +41,31 @@ public:
 	{
 		const rect res = FromUpperLeftAndSize(Origo2(), direction2(world2.getWidth(), world2.getHeight()));
 
-		Mesh mesh;
-		const pwn::real halfsize = 0.7f;
-		SetCube(&mesh, materials::Plastic_White(), halfsize*2, halfsize*2, halfsize*2, true);
-		mesh.materials.push_back( materials::Plastic_Green() );
-		mesh.triangles[0].material = 1;
-		mesh.materials[0]->texture = "crate01a.jpg";
-		//BuildNormals(&mesh);
-		Move(&mesh, vec3(-halfsize, -halfsize, -halfsize));
-		def = Compile(mesh, &tpool);
-		
-		act.reset( new Actor(point3(0,0, 0), qIdentity()) );
-		act->model = def;
+		boost::shared_ptr<ActorDef> crate = CreateCube(1.5f, "crate01a.jpg", &tpool, 1, true);
+		boost::shared_ptr<ActorDef> glass = CreateCube(1.5f, "glass.png", &tpool, 0.5f, true);
+		boost::shared_ptr<ActorDef> pattern = CreateCube(1.5f, "pattern1.png", &tpool, 1, true);
 
 		boost::shared_ptr<World3> world( World3::Create() );
-		world->actor_add(act);
-
+		const real spacing = 3;
+		for(int i=0; i<5; ++i)
 		{
-			Mesh mesh;
-			const pwn::real h = 200;
-			SetCube(&mesh, materials::Pearl(), h*2, h*2, h*2, false);
-			//BuildNormals(&mesh);
-			Move(&mesh, vec3(-h, -h,-h));
-			boost::shared_ptr<Actor> act( new Actor(Origo3(), qIdentity()) );
-			act->model = Compile(mesh, &tpool);
-			world->actor_add(act);
+			const real x = (i-2)*spacing;
+			for(int i=0; i<5; ++i)
+			{
+				const real z = (i-2)*spacing;
+
+				world->actor_add( Actor::Create(point3(x,-3,z), qIdentity(), crate) );
+				world->actor_add( Actor::Create(point3(x,0,z), qIdentity(), glass) );
+				world->actor_add( Actor::Create(point3(x,3,z), qIdentity(), pattern) );
+			}
 		}
+
+		// sky texture
+		world->actor_add(
+			Actor::Create(Origo3(), qIdentity(),
+				CreateCube(400, "_stars-texture.jpg", &tpool, 1, false)
+				)
+			);
 
 		boost::shared_ptr<World3Widget > wid( new World3Widget( FromAspectAndContainingInCenter(res, 14.0f/9.0f), world ) ); // http://en.wikipedia.org/wiki/14:9
 
@@ -91,8 +102,6 @@ public:
 	}
 
 	World2 world2;
-	boost::shared_ptr<ActorDef> def;
-	boost::shared_ptr<Actor> act;
 	DemoCamera dcam;
 	VfsTexturePool2 tpool;
 };

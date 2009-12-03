@@ -52,7 +52,14 @@ namespace pwn
 
 		void RenderList::add(MeshPtr mesh, MaterialPtr material, const math::mat44& mat)
 		{
-			solid.push_back(Command(mesh, material, mat));
+			if( material->hasTransperency )
+			{
+				transparent.push_back(Command(mesh, material, mat));
+			}
+			else
+			{
+				solid.push_back(Command(mesh, material, mat));
+			}
 		}
 
 		void Render(RenderList* r, const RenderList::CommandList& commands)
@@ -82,10 +89,15 @@ namespace pwn
 			texture = 0;
 			
 			// todo: send correct commands to gl
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 			std::sort(solid.begin(), solid.end(), CommandSort);
 			Render(this, solid);
 			std::sort(transparent.begin(), transparent.end(), CommandSort);
+			glDisable(GL_DEPTH_TEST);
 			Render(this, transparent);
+			glEnable(GL_DEPTH_TEST);
+			glDisable(GL_BLEND);
 
 			if( applied )
 			{

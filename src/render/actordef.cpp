@@ -10,6 +10,8 @@
 
 #include <sfml/OpenGl.hpp>
 
+#include <pwn/assert>
+
 namespace pwn
 {
 	namespace render
@@ -52,7 +54,7 @@ namespace pwn
 
 			void render()
 			{
-				assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError() == GL_NO_ERROR);
 				glBegin(GL_TRIANGLES);
 
 				BOOST_FOREACH(const mesh::Triangle& tri, triangles)
@@ -77,7 +79,7 @@ namespace pwn
 				}
 
 				glEnd();
-				assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError() == GL_NO_ERROR);
 			}
 		private:
 			boost::shared_ptr<SharedMesh> smesh;

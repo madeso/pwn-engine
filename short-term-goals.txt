@@ -1,3 +1,4 @@
+create assert library
 transperency & sorting test
 - test sorting and transperency
 -investigate/improve gl texture filters?

@@ -1,6 +1,6 @@
 #include <pwn/core/StringUtils>
 
-#include <cassert>
+#include <pwn/Assert>
 #include <boost/tokenizer.hpp>
 #include <boost/smart_ptr.hpp>
 
@@ -16,7 +16,7 @@ namespace pwn
 
 		void SplitString(const pwn::string& stringToSplit, std::vector<pwn::string>* result, const pwn::string& delimiterString)
 		{
-			assert(result);
+			Assert(result);
 			boost::char_separator<pwn::tchar> sep(delimiterString.c_str());
 			boost::tokenizer< boost::char_separator<pwn::tchar> > tok(stringToSplit, sep);
 			std::copy(tok.begin(), tok.end(), std::back_inserter(*result));

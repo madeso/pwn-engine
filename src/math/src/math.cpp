@@ -3,8 +3,7 @@
 
 #include <cmath>
 #include <memory> // memcpy
-
-#define assert(x) do { if( (x)==0 ) _asm { int 3 }; } while( ::pwn::math::kFalse() )
+#include <pwn/Assert>
 
 namespace pwn
 {
@@ -36,7 +35,7 @@ namespace pwn
 
 		const real Sqrt(const real r)
 		{
-			assert(r >= 0 && "input must be bigger than 0");
+			Assert(r >= 0 && "input must be bigger than 0");
 			return std::sqrt(r);
 		}
 
@@ -849,7 +848,7 @@ namespace pwn
 
 							// calculate the amount of normalization required
 							mUVAdjustment[idx] = 1.0f / sqrtf( y*y + z*z + x*x );
-							//assert( _finite( mUVAdjustment[idx]));
+							//Assert( _finite( mUVAdjustment[idx]));
 						}
 					}
 				};
@@ -866,11 +865,11 @@ namespace pwn
 		{
 			// convert from vec3 to cUnitVector
 
-			//assert( vec.isValid());
+			//Assert( vec.isValid());
 			vec3 tmp = vec;
 
 			// input vector does not have to be unit length
-			// assert( tmp.length() <= 1.001f );
+			// Assert( tmp.length() <= 1.001f );
 
 			uint16 compressed = 0;
 			if ( tmp.x < 0 ) { compressed |= unit::XSIGN_MASK; tmp.x = -tmp.x; }
@@ -888,10 +887,10 @@ namespace pwn
 			long xbits = (long)( tmp.x * w );
 			long ybits = (long)( tmp.y * w );
 
-			assert( xbits <  127 );
-			assert( xbits >= 0   );
-			assert( ybits <  127 );
-			assert( ybits >= 0   );
+			Assert( xbits <  127 );
+			Assert( xbits >= 0   );
+			Assert( ybits <  127 );
+			Assert( ybits >= 0   );
 
 			// Now we can be sure that 0<=xp<=126, 0<=yp<=126, 0<=xp+yp<=126
 			// however for the sampling we want to transform this triangle
@@ -942,7 +941,7 @@ namespace pwn
 			if ( compressed & unit::YSIGN_MASK ) vec.y = -vec.y;
 			if ( compressed & unit::ZSIGN_MASK ) vec.z = -vec.z;
 
-			//assert( vec.isValid());
+			//Assert( vec.isValid());
 
 			return vec;
 		}
@@ -1306,7 +1305,7 @@ namespace pwn
 
 		const quat qLookInDirection(const vec3& adir, const vec3& up)
 		{
-			assert(LengthOf(adir) > 0.01f );
+			Assert(LengthOf(adir) > 0.01f );
 			const vec3 dir = GetNormalized(adir);
 			const vec3 v = GetNormalized(cross(dir, up));
 			const vec3 u = cross(v, dir);
@@ -2118,15 +2117,15 @@ namespace pwn
 
 		const Angle Asin(const real v)
 		{
-			assert(v <= 1 && "v must be smaller than 1, use Limmit or Max on the value to not trigger this assert");
-			assert(v >= -1 && "v must be greater than -1, use Limmit or Min on the value to not trigger this assert");
+			Assert(v <= 1 && "v must be smaller than 1, use Limmit or Max on the value to not trigger this Assert");
+			Assert(v >= -1 && "v must be greater than -1, use Limmit or Min on the value to not trigger this Assert");
 			return Angle::FromRadians(std::asin(v));
 		}
 
 		const Angle Acos(const real v)
 		{
-			assert(v <= 1 && "v must be smaller than 1, use Limmit or Max on the value to not trigger this assert");
-			assert(v >= -1 && "v must be greater than -1, use Limmit or Min on the value to not trigger this assert");
+			Assert(v <= 1 && "v must be smaller than 1, use Limmit or Max on the value to not trigger this Assert");
+			Assert(v >= -1 && "v must be greater than -1, use Limmit or Min on the value to not trigger this Assert");
 			return Angle::FromRadians(std::acos(v));
 		}
 
@@ -2190,7 +2189,7 @@ namespace pwn
 		// rewrite to better fit the mathematics instead of this "hack"
 		const AxisAngle cAxisAngle(const quat& q)
 		{
-			assert( q.w <= 1 ); // if this happes, we should normalize, but this shouldnt happen
+			Assert( q.w <= 1 ); // if this happes, we should normalize, but this shouldnt happen
 			const vec3 axis = cvec3(q);
 			AxisAngle aa(axis, Acos(q.w)*PWN_MATH_VALUE(2.0));
 

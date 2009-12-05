@@ -1,0 +1,8 @@
+#ifndef PWN_ASSERT
+#define PWN_ASSERT
+
+#include <pwn/math/constants>
+
+#define Assert(x) do { if( (x)==0 ) _asm { int 3 }; } while( ::pwn::math::kFalse() )
+
+#endif

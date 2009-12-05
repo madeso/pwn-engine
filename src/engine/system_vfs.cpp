@@ -4,8 +4,8 @@
 
 #include "system.hpp"
 #include <physfs.h>
-#include <cassert>
 #include <pwn/engine/game>
+#include <pwn/assert>
 
 #include <boost/filesystem.hpp>
 
@@ -20,7 +20,7 @@ namespace pwn
 			void ThrowPhysFsError()
 			{
 				const char* error = PHYSFS_getLastError();
-				assert(error);
+				Assert(error);
 				const std::string message = error;
 				throw message;
 			}
@@ -39,7 +39,7 @@ namespace pwn
 			PhysFsStarter(const pwn::string& argv0)
 				: deinitInDestructor(true)
 			{
-				assert(gPhysFsCreated()==false);
+				Assert(gPhysFsCreated()==false);
 				const int result = PHYSFS_init(argv0.c_str());
 				if( result == 0) ThrowPhysFsError();
 			}

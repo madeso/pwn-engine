@@ -5,6 +5,7 @@
 
 #include <pwn/engine/game>
 #include <pwn/engine/key>
+#include <pwn/assert>
 
 #include <SFML/Window.hpp>
 #include "display.hpp"
@@ -70,19 +71,22 @@ namespace pwn
 				// efficiently supported by the GL implementation, hinting GL_DONT_CARE
 				// or GL_FASTEST can result in simple linear interpolation of colors
 				// and/or texture coordinates.
-				assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError() == GL_NO_ERROR);
+
 				glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-				assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError() == GL_NO_ERROR);
+
 				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-				assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError() == GL_NO_ERROR);
+
 				glShadeModel(GL_SMOOTH);
-				assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError() == GL_NO_ERROR);
 
 				glMatrixMode( GL_MODELVIEW );
-				assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError() == GL_NO_ERROR);
 
 				glEnable(GL_CULL_FACE);
-				assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError() == GL_NO_ERROR);
 			}
 
 			~System_Window()

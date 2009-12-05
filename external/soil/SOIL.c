@@ -1997,7 +1997,7 @@ int query_DXT_capability( void )
 						"glCompressedTexImage2DARB",
 						kCFStringEncodingASCII );
 				bundle = CFBundleCreate( kCFAllocatorDefault, bundleURL );
-				assert( bundle != NULL );
+				Assert( bundle != NULL );
 				ext_addr = (P_SOIL_GLCOMPRESSEDTEXIMAGE2DPROC)
 						CFBundleGetFunctionPointerForName
 						(

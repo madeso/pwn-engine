@@ -1,0 +1,38 @@
+#ifndef PWN_MATH_CONSTANTS
+#define PWN_MATH_CONSTANTS
+
+#include <pwn/math/types>
+
+namespace pwn
+{
+	namespace math
+	{
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		/// \defgroup constants Constants
+		/// @{
+
+		/** The matematical constant pi.
+		@see HalfPi()
+		*/
+		const real Pi();
+
+		/** The matematical constant pi divided by 2.
+		@see Pi()
+		*/
+		const real HalfPi();
+
+		/** The boolean value true.
+		@see kFalse()
+		*/
+		const bool kTrue();
+
+		/** The boolean value false.
+		@see kTrue()
+		*/
+		const bool kFalse();
+
+		/// @}
+	}
+}
+
+#endif

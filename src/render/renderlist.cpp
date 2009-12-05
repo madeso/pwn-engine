@@ -2,7 +2,7 @@
 #include <pwn/math/operations>
 #include <pwn/render/compiledmesh>
 #include <pwn/render/material>
-
+#include <pwn/assert>
 #include <SFML/OpenGl.hpp>
 
 #pragma warning(disable:4512) //'boost::detail::addr_impl_ref<T>' : assignment operator could not be generated
@@ -67,7 +67,7 @@ namespace pwn
 			BOOST_FOREACH(const RenderList::Command& c, commands)
 			{
 				glLoadMatrixf( c.mat.columnMajor );
-				assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError() == GL_NO_ERROR);
 				r->apply(c.material);
 				c.mesh->render();
 			}
@@ -81,34 +81,56 @@ namespace pwn
 		void RenderList::end()
 		{
 			glMatrixMode( GL_MODELVIEW );
-			assert( glGetError() == GL_NO_ERROR);
+			Assert( glGetError() == GL_NO_ERROR);
 			glLoadIdentity();
-			assert( glGetError() == GL_NO_ERROR);
+			Assert( glGetError() == GL_NO_ERROR);
 			
 			applied = false;
 			texture = 0;
 			
 			// todo: send correct commands to gl
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
+			glAlphaFunc ( GL_GREATER, 0.2f ) ;
+			Assert( glGetError() == GL_NO_ERROR);
+
+			glEnable ( GL_ALPHA_TEST ) ;
+			Assert( glGetError() == GL_NO_ERROR);
+
 			std::sort(solid.begin(), solid.end(), CommandSort);
 			Render(this, solid);
 			std::sort(transparent.begin(), transparent.end(), CommandSort);
-			glDisable(GL_DEPTH_TEST);
+
+			glDisable(GL_ALPHA_TEST);
+			Assert( glGetError() == GL_NO_ERROR);
+
+			glEnable(GL_BLEND);
+			Assert( glGetError() == GL_NO_ERROR);
+
+			glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+			Assert( glGetError() == GL_NO_ERROR);
+
+			glDepthMask(GL_FALSE); // disable depth-write
+			Assert( glGetError() == GL_NO_ERROR);
+
 			Render(this, transparent);
-			glEnable(GL_DEPTH_TEST);
+
+			glDepthMask(GL_TRUE); // enable depth.write again
+			Assert( glGetError() == GL_NO_ERROR);
+
 			glDisable(GL_BLEND);
+			Assert( glGetError() == GL_NO_ERROR);
 
 			if( applied )
 			{
 				glDisable(GL_TEXTURE_2D);
+				Assert( glGetError() == GL_NO_ERROR);
 			}
 		}
 
 		void RenderList::apply(MaterialPtr material)
 		{
 			glColor4fv( material->diffuse.data() );
-			assert( glGetError() == GL_NO_ERROR);
+			Assert( glGetError() == GL_NO_ERROR);
 			if( material->texture.get() )
 			{
 				if( applied == false )

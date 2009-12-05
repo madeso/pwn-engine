@@ -3,7 +3,6 @@
 #include <iostream>
 #include <pwn/math/types>
 #include <pwn/math/operations>
-#include <pwn/math/constants>
 
 namespace pwn
 {

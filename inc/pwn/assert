@@ -1,8 +1,14 @@
 #ifndef PWN_ASSERT
 #define PWN_ASSERT
 
-#include <pwn/math/constants>
+#define Assert(x) do { if( (x)==0 ) _asm { int 3 }; } while( ::pwn::assert::kFalse() )
 
-#define Assert(x) do { if( (x)==0 ) _asm { int 3 }; } while( ::pwn::math::kFalse() )
+namespace pwn
+{
+	namespace assert
+	{
+		bool kFalse();
+	}
+}
 
 #endif

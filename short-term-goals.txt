@@ -1,4 +1,5 @@
-create assert library
+add noncopyable to thoose classes who deserve it
+
 transperency & sorting test
 - test sorting and transperency
 -investigate/improve gl texture filters?
@@ -22,3 +23,6 @@ add lightning
 - variance shapow maps? (depth) shadow maps?
 particle effects
 improved rain effect
+
+start on google sketchup clone for games / my world editor
+make a game!

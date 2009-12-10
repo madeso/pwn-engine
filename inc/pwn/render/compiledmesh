@@ -1,11 +1,14 @@
 #ifndef PWN_RENDER_COMPILEDMESH
 #define PWN_RENDER_COMPILEDMESH
 
+#include <boost/noncopyable.hpp>
+
 namespace pwn
 {
 	namespace render
 	{
 		class CompiledMesh
+			: boost::noncopyable
 		{
 		public:
 			CompiledMesh();

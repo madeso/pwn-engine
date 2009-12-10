@@ -1,21 +1,30 @@
 #include <pwn/render/texture2>
 
 #include <SFML/OpenGl.hpp>
+#pragma comment(lib, "opengl32.lib")
+#pragma comment(lib, "glu32.lib")
 
 namespace pwn
 {
 	namespace render
 	{
-		Texture2::Texture2(core::IdPool* pool)
-			: texture(0)
+		Texture2::Texture2(core::IdPool* pool, bool useGlTexture)
+			: useGlTexture(useGlTexture)
+			, texture(0)
 			, id(pool)
 		{
-			glGenTextures( 1, &texture );
+			if( useGlTexture )
+			{
+				glGenTextures( 1, &texture );
+			}
 		}
 
 		Texture2::~Texture2()
 		{
-			glDeleteTextures( 1, &texture );
+			if( useGlTexture )
+			{
+				glDeleteTextures( 1, &texture );
+			}
 		}
 
 		const uint32 Texture2::tid() const

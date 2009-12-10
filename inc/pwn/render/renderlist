@@ -2,6 +2,7 @@
 #define PWN_RENDER_RENDERLIST
 
 #include <boost/shared_ptr.hpp>
+#include <boost/noncopyable.hpp>
 #include <pwn/math/types>
 #include <vector>
 
@@ -14,9 +15,10 @@ namespace pwn
 		class Texture2;
 
 		class RenderList
+			: boost::noncopyable
 		{
 		public:
-			RenderList();
+			RenderList(bool useGlCommands);
 			~RenderList();
 
 			typedef boost::shared_ptr<CompiledMesh> MeshPtr;
@@ -44,6 +46,8 @@ namespace pwn
 			void apply(MaterialPtr material);
 
 		private:
+			void render(const CommandList& commands);
+			const bool useGlCommands;
 			CommandList transparent;
 			CommandList solid;
 

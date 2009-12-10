@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="pwn-render"
-	ProjectGUID="{A1231874-8759-40A6-87D3-6120D2E7D92D}"
-	RootNamespace="pwnrender"
+	Name="pwn-render-test"
+	ProjectGUID="{22EE5619-A659-490E-B137-EEE1CA873059}"
+	RootNamespace="pwnrendertest"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -19,7 +19,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)..\..\dist\$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)..\..\temp\$(ProjectName)\$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="1"
 			CharacterSet="1"
 			>
 			<Tool
@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\..\inc\&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -60,10 +60,19 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				AdditionalDependencies="UnitTest++.vsnet2005.lib"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;D:\ms_dep\unittest-cpp\UnitTest++\$(ConfigurationName)&quot;;&quot;$(OutDir)&quot;"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -75,14 +84,22 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Performing unit tests..."
+				CommandLine="$(TargetPath)"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)..\..\dist\$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)..\..\temp\$(ProjectName)\$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -104,7 +121,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\..\inc\&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
@@ -121,10 +138,21 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				AdditionalDependencies="UnitTest++.vsnet2005.lib"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;D:\ms_dep\unittest-cpp\UnitTest++\$(ConfigurationName)&quot;;&quot;$(OutDir)&quot;"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -136,7 +164,15 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Performing unit tests..."
+				CommandLine="$(TargetPath)"
 			/>
 		</Configuration>
 	</Configurations>
@@ -144,115 +180,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\inc\pwn\render\actor"
+			RelativePath="..\..\..\src\render\test\main.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\render\src\actor.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\inc\pwn\render\actordef"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\render\src\actordef.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\inc\pwn\render\camera"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\render\src\camera.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\inc\pwn\render\compiledcamera"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\render\src\compiledcamera.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\inc\pwn\render\compiledmesh"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\render\src\compiledmesh.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\inc\pwn\render\material"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\render\src\material.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\inc\pwn\render\part"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\render\src\part.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\inc\pwn\render\renderlist"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\render\src\renderlist.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\inc\pwn\render\texture2"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\render\src\texture2.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\inc\pwn\render\texturepool2"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\render\src\texturepool2.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\inc\pwn\render\widget"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\render\src\widget.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\inc\pwn\render\world2"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\render\src\world2.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\inc\pwn\render\world3"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\render\src\world3.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\inc\pwn\render\world3widget"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\render\src\world3widget.cpp"
+			RelativePath="..\..\..\src\render\test\TestRenderList.cpp"
 			>
 		</File>
 	</Files>

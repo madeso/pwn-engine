@@ -24,7 +24,7 @@ namespace pwn
 			{
 				if( pixels == 0)
 				{
-					pwn::string error = SOIL_last_result();
+					const pwn::string error = SOIL_last_result();
 					throw "Failed to load b/c " + error;
 				}
 			}
@@ -39,11 +39,9 @@ namespace pwn
 
 		boost::shared_ptr<render::Texture2> VfsTexturePool2::doLoad(core::IdPool* pool, const string& filename)
 		{
-			// sf::Image img;
 			boost::scoped_array<byte> memory;
-			// todo: replace sfml loading with a better version
 			const std::size_t size = File(PHYSFS_openRead(filename.c_str())).loadToMemory(&memory);
-			boost::shared_ptr<render::Texture2> tex( new render::Texture2(pool) );
+			boost::shared_ptr<render::Texture2> tex( new render::Texture2(pool, true) );
 			int width = -1;
 			int height = -1;
 			int channels = -1;

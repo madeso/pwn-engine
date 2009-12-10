@@ -23,7 +23,8 @@ namespace pwn
 
 			bool hasTransperency;
 
-			boost::shared_ptr<render::Texture2> texture;
+			typedef boost::shared_ptr<render::Texture2> TexturePtr;
+			TexturePtr texture;
 			// color
 			// maps: diffuse, normal/bump, emissive, specular
 			// general shader?

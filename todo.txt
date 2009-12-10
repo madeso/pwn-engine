@@ -1,6 +1,4 @@
-add functioncalltype specifications for easy use with libraries
-remove quatw and quat(x,y,z,w) contructor in favor of the vec-real constructors
-investigate other, more liberal, licenses
-add more tests
-start on google sketchup clone for games / my world editor
-make a game!
+math: add functioncalltype specifications for easy use with libraries
+math: remove quatw and quat(x,y,z,w) contructor in favor of the vec-real constructors
+general: investigate other, more liberal, licenses
+test: add more tests

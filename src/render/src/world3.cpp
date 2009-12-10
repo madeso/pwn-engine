@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <pwn/render/compiledcamera>
+#include <boost/utility.hpp>
 
 #pragma warning(disable:4512) // warning C4512: 'boost::detail::addr_impl_ref<T>' : assignment operator could not be generated
 #include <boost/foreach.hpp>
@@ -18,9 +19,16 @@ namespace pwn
 		{
 		}
 
-		class BasicWorld : public World3
+		class BasicWorld
+			: public World3
+			, boost::noncopyable
 		{
 		public:
+			BasicWorld()
+				: list(true)
+			{
+			}
+
 			void actor_add(ActorPtr actor)
 			{
 				actors.push_back(actor);

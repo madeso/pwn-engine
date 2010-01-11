@@ -5,7 +5,7 @@ namespace pwn
 	namespace core
 	{
 		IdPool::IdPool()
-			: current(0)
+			: current(1)
 		{
 		}
 

@@ -3,6 +3,7 @@
 #include <pwn/render/compiledmesh>
 #include <pwn/render/material>
 #include <pwn/assert>
+#include <limits>
 
 #include <SFML/OpenGl.hpp>
 #pragma comment(lib, "opengl32.lib")
@@ -33,10 +34,28 @@ namespace pwn
 
 		namespace
 		{
-			RenderList::ID CalcId(RenderList::MeshPtr, RenderList::MaterialPtr, const math::mat44&)
+			const uint32 CompressDistance(bool reverse, const real znear, const real dist, const real zfar)
+			{
+				const real value = pwn::math::KeepWithin(0, pwn::math::To01(znear, dist, zfar), 1);
+				const real v = reverse ? 1-value : value;
+				return static_cast<uint32>(v * std::numeric_limits<uint32>::max());
+			}
+
+			RenderList::ID CalcId(RenderList::MeshPtr, RenderList::MaterialPtr material, const math::mat44& mat)
 			{
 				// todo: calculate a better id
-				return 0;
+				const uint64 texture = material->texture ? material->texture->sid() : 0;
+				const uint64 distance =  CompressDistance(material->hasTransperency, 0, cvec3(mat).z, 100); // todo: use the camera frustrum
+
+
+				if( material->hasTransperency )
+				{
+					return (distance << 32) | texture;
+				}
+				else
+				{
+					return (texture << 32) | distance;
+				}
 			}
 		}
 

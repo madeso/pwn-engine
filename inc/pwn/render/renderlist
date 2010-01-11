@@ -24,7 +24,7 @@ namespace pwn
 			typedef boost::shared_ptr<CompiledMesh> MeshPtr;
 			typedef boost::shared_ptr<Material> MaterialPtr;
 
-			typedef uint32 ID;
+			typedef uint64 ID;
 
 			struct Command
 			{

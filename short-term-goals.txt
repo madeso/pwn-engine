@@ -1,7 +1,7 @@
 add noncopyable to thoose classes who deserve it
 
 transperency & sorting test
-- test sorting and transperency
+- sorting respects camera near/far
 -investigate/improve gl texture filters?
 load mesh
 -rewrite mesh-compiler

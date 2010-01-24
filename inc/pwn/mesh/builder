@@ -6,6 +6,7 @@
 #include <pwn/mesh/Triangle>
 
 #include <boost/shared_ptr.hpp>
+#include <vector>
 
 namespace pwn
 {
@@ -20,6 +21,8 @@ namespace pwn
 		void AddQuad(Mesh* mesh, bool reverse, const pwn::uint32 material, const Triangle::Vertex& v0, const Triangle::Vertex& v1, const Triangle::Vertex& v2, const Triangle::Vertex& v3);
 		Mesh* BuildNormals(Mesh* mesh);
 		Mesh* InvertNormals(Mesh* mesh);
+
+		void AddFace(Mesh* mesh, pwn::uint32 material, const std::vector<Triangle::Vertex>& vertices);
 	}
 }
 

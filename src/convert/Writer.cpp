@@ -1,10 +1,12 @@
 #include "Writer.hpp"
 
 #include <fstream>
-#include "Converter.hpp"
 #include <pwn/math/operations>
+#include <pwn/mesh/material>
 
 #include <iostream>
+
+#include <pwn/mesh/Mesh>
 
 namespace pwn
 {
@@ -50,61 +52,7 @@ namespace pwn
 			}
 		}
 
-		const pwn::real CompressAndUncompress(pwn::real r)
-		{
-			return pwn::math::HalfToFloat(pwn::math::FloatToHalf(r));
-		}
-
-		const pwn::real PosDiff(const pwn::math::vec3& v)
-		{
-			const pwn::math::vec3 loaded(CompressAndUncompress(v.x), CompressAndUncompress(v.y), CompressAndUncompress(v.z));
-			return (pwn::math::LengthOf(v-loaded) / pwn::math::LengthOf(v))*100;
-		}
-
-		const pwn::real AngleDiff(const pwn::math::vec3& v)
-		{
-			const pwn::math::vec3 loaded = pwn::math::CompressedToUnitVector(pwn::math::UnitVectorToCompressed(v));
-			const pwn::real a = pwn::math::AngleBetween(v, loaded).inDegrees();
-			return a;
-		}
-
-		void Test(Converter& data)
-		{
-			std::cout << "Normal: " << data.normalMap.size() << ", " << data.normalConvertions.size() << std::endl;
-			/* vertices */ {
-				const std::size_t vc = data.vertices.size();
-				pwn::real min = 100;
-				pwn::real max = -100;
-				pwn::real average = 0;
-				for(std::size_t i=0; i<vc; ++i)
-				{
-					const pwn::real d = PosDiff(data.vertices[i]*200);
-					average += d;
-					if( min > d ) min = d;
-					if( max < d ) max = d;
-				}
-				average = average / vc;
-				std::cout << "Position (percent): " << min << ", " << average << ", " << max << std::endl;
-			}
-
-			/* normals */ {
-				const std::size_t nc = data.normals.size();
-				pwn::real min = 100;
-				pwn::real max = -100;
-				pwn::real average = 0;
-				for(std::size_t i=0; i<nc; ++i)
-				{
-					const pwn::real d = AngleDiff(data.normals[i]);
-					average += d;
-					if( min > d ) min = d;
-					if( max < d ) max = d;
-				}
-				average = average / nc;
-				std::cout << "Normal (degrees): " << min << ", " << average << ", " << max << std::endl;
-			}
-		}
-
-		void Write(Converter& data, const pwn::string& file, bool optimize)
+		void Write(mesh::Mesh& mesh, const pwn::string& file, bool optimize)
 		{
 			std::ofstream f(file.c_str(), std::ios::out | std::ios::binary);
 			if( !f.good() ) throw "failed to open file for writing";
@@ -118,58 +66,59 @@ namespace pwn
 			}
 
 			/* vertices */ {
-				const std::size_t vc = data.vertices.size();
+				const std::size_t vc = mesh.positions.size();
 				f.write( reinterpret_cast<const Byte*>(&vc), sizeof(std::size_t));
 				for(std::size_t i=0; i<vc; ++i)
 				{
-					Write(&f, data.vertices[i], optimize);
+					Write(&f, mesh.positions[i], optimize);
 				}
 			}
 
 			/* texture coordinates */ {
-				const std::size_t tc = data.textureCoordinates.size();
+				const std::size_t tc = mesh.texcoords.size();
 				f.write(reinterpret_cast<const Byte*>(&tc), sizeof(std::size_t));
 				for(std::size_t i=0; i<tc; ++i)
 				{
-					Write(&f, data.textureCoordinates[i], optimize);
+					Write(&f, mesh.texcoords[i], optimize);
 				}
 			}
 
 			/* normals */ {
-				const std::size_t nc = data.normals.size();
+				const std::size_t nc = mesh.normals.size();
 				f.write(reinterpret_cast<const Byte*>(&nc), sizeof(std::size_t));
 				for(std::size_t i=0; i<nc; ++i)
 				{
-					Write(&f, pwn::math::UnitVectorToCompressed(data.normals[i]));
+					Write(&f, pwn::math::UnitVectorToCompressed(mesh.normals[i]));
 				}
 			}
 
 			/* materials */ {
-				const std::size_t mc = data.materials.size();
+				const std::size_t mc = mesh.materials.size();
 				f.write(reinterpret_cast<const Byte*>(&mc), sizeof(std::size_t));
 				for(std::size_t i=0; i<mc; ++i)
 				{
-					Write(&f, data.materials[i].ambient, optimize);
-					Write(&f, data.materials[i].diffuse, optimize);
-					Write(&f, data.materials[i].specular, optimize);
-					Write(&f, data.materials[i].emissive, optimize);
-					Write(&f, data.materials[i].shininess, optimize);
+					Write(&f, mesh.materials[i]->ambient, optimize);
+					Write(&f, mesh.materials[i]->diffuse, optimize);
+					Write(&f, mesh.materials[i]->specular, optimize);
+					Write(&f, mesh.materials[i]->emission, optimize);
+					Write(&f, mesh.materials[i]->shininess, optimize);
 				}
 			}
 
 			/* faces */ {
-				const std::size_t fc = data.faces.size();
+				const std::size_t fc = mesh.triangles.size();
 				f.write(reinterpret_cast<const Byte*>(&fc), sizeof(std::size_t));
 				for(std::size_t i=0; i<fc; ++i)
 				{
+					::pwn::mesh::Triangle& t = mesh.triangles[i];
 					for(int faceIndex=0; faceIndex<3; ++faceIndex)
 					{
-						// todo: remove hacky assumption of that the vertex is the first one
-						Write(&f, data.faces[i].indices[faceIndex].vertex);
-						Write(&f, data.normalConvertions[ static_cast<Converter::NormalIndex>(data.faces[i].indices[faceIndex].normal)]);
-						Write(&f, data.faces[i].indices[faceIndex].textureCoordiante);
+						::pwn::mesh::Triangle::Vertex& v = t[faceIndex];
+						Write(&f, v.location);
+						Write(&f, v.normal);
+						Write(&f, v.texcoord);
 					}
-					f.write(reinterpret_cast<const Byte*>(&data.faces[i].material), sizeof(std::size_t));
+					f.write(reinterpret_cast<const Byte*>(&t.material), sizeof(std::size_t));
 				}
 			}
 		}

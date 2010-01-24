@@ -5,9 +5,9 @@
 
 namespace pwn
 {
-	namespace convert
+	namespace mesh
 	{
-		class Converter;
+		class Mesh;
 	}
 }
 
@@ -15,8 +15,8 @@ namespace pwn
 {
 	namespace convert
 	{
-		void Write(Converter& data, const pwn::string& file, bool optimize);
-		void Test(Converter& data);
+		void Write(mesh::Mesh& data, const pwn::string& file, bool optimize);
+		void Test(mesh::Mesh& data);
 	}
 }
 

@@ -9,10 +9,6 @@ namespace pwn
 		{
 		}
 
-		Mesh::~Mesh()
-		{
-		}
-
 		void Mesh::clear()
 		{
 			positions.clear();
@@ -42,6 +38,12 @@ namespace pwn
 		void Mesh::addTriangle(const Triangle& tri)
 		{
 			triangles.push_back(tri);
+		}
+
+		Triangle::index Mesh::addMaterial(MaterialPtr m)
+		{
+			materials.push_back(m);
+			return static_cast<Triangle::index>(materials.size()-1);
 		}
 	}
 }

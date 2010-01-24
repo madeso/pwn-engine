@@ -26,7 +26,7 @@ boost::shared_ptr<ActorDef> CreateCube(real size, const string& texture, Texture
 	const real halfsize = size/2;
 
 	SetBox(&mesh, materials::White(), halfsize*2, halfsize*2, halfsize*2, out);
-	mesh.materials[0]->texture = texture;
+	mesh.materials[0]->texture_diffuse = texture;
 	mesh.materials[0]->diffuse.alpha(alpha);
 	Move(&mesh, vec3(-halfsize, -halfsize, -halfsize));
 	return Compile(mesh, tpool);

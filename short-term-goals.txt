@@ -25,4 +25,5 @@ particle effects
 improved rain effect
 
 start on google sketchup clone for games / my world editor
+look into using a existing modeler/animation -app or making a pwn version
 make a game!

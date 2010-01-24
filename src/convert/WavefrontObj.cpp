@@ -9,6 +9,13 @@
 #include <pwn/core/StringUtils>
 #include <pwn/math/operations>
 
+#include <pwn/mesh/material>
+#include <pwn/mesh/builder>
+
+#include <pwn/mesh/Mesh>
+
+#include <iostream>
+
 namespace pwn
 {
 	namespace convert
@@ -26,18 +33,17 @@ namespace pwn
 					return boost::lexical_cast<pwn::real>(str);
 				}
 
-				const FaceIndex cFaceIndex(const pwn::string& astr)
+				const mesh::Triangle::Vertex cFaceIndex(const pwn::string& astr)
 				{
 					const pwn::string str = pwn::core::Trim(astr);
 					const pwn::string::size_type a = str.find_first_of('/');
 					if( a == pwn::string::npos ) throw "bad face format 1";
 					const pwn::string::size_type b = str.find_first_of('/', a+1);
 					if( b == pwn::string::npos ) throw "bad face format 1";
-					FaceIndex f;
-					f.vertex = csizet(str.substr(0, a)) - 1;
-					f.textureCoordiante = csizet(str.substr(a+1, b-a-1)) -1;
-					f.normal = csizet(str.substr(b+1, str.length()-b-1)) -1;
-					return f;
+					const std::size_t vertex = csizet(str.substr(0, a)) - 1;
+					const std::size_t textureCoordiante = csizet(str.substr(a+1, b-a-1)) -1;
+					const std::size_t normal = csizet(str.substr(b+1, str.length()-b-1)) -1;
+					return mesh::Triangle::Vertex(vertex, normal, textureCoordiante);
 				}
 
 				const pwn::math::Rgba cRgba(const pwn::string& r, const pwn::string& g, const pwn::string& b, const pwn::real a)
@@ -48,20 +54,21 @@ namespace pwn
 
 			namespace // local
 			{
-				void AddIfValid(const Material& mat, Converter* converter, std::map<std::string, std::size_t>* materials)
+				void Add(mesh::Mesh::MaterialPtr material, std::map<std::string, std::size_t>* materials, mesh::Mesh* converter)
 				{
-					if( mat.name == "" ) return;
-					materials->insert( std::make_pair(mat.name, converter->addMaterial(mat)) );
+					if( material )
+					{
+						materials->insert( std::make_pair(material->name, converter->addMaterial(material)) );
+					}
 				}
-
-				void LoadMaterialLibrary(Converter* converter, std::map<std::string, std::size_t>* materials, const pwn::string& sourceFile, const pwn::string& materialLibraryFileName)
+				void LoadMaterialLibrary(mesh::Mesh* converter, std::map<std::string, std::size_t>* materials, const pwn::string& sourceFile, const pwn::string& materialLibraryFileName)
 				{
 					const pwn::string file = (boost::filesystem::path(sourceFile).remove_filename() / materialLibraryFileName).string();
 
 					std::ifstream f(file.c_str());
 					if( false == f.good() ) throw "missing file";
 
-					Material material;
+					mesh::Mesh::MaterialPtr material;
 
 					pwn::string line;
 					while( std::getline(f, line) )
@@ -75,51 +82,51 @@ namespace pwn
 
 						if( command == "newmtl" )
 						{
-							AddIfValid(material, converter, materials);
-							material = Material();
-							material.name = sline[1];
+							Add(material, materials, converter);
+							material.reset(new mesh::Material());
+							material->name = sline[1];
 						}
 						else if( command == "Ka")
 						{
 							// ambient r g b
-							material.ambient = cRgba(sline[1], sline[2], sline[3], transperency);
+							material->ambient = cRgba(sline[1], sline[2], sline[3], transperency);
 						}
 						else if( command == "Kd")
 						{
 							// diffuse r g b
-							material.diffuse = cRgba(sline[1], sline[2], sline[3], transperency);
+							material->diffuse = cRgba(sline[1], sline[2], sline[3], transperency);
 						}
 						else if( command == "Ks")
 						{
 							// specular r g b
-							material.specular = cRgba(sline[1], sline[2], sline[3], transperency);
+							material->specular = cRgba(sline[1], sline[2], sline[3], transperency);
 						}
 						else if( command == "Ke")
 						{
 							// emissive r g b
-							material.emissive = cRgba(sline[1], sline[2], sline[3], transperency);
+							material->emission = cRgba(sline[1], sline[2], sline[3], transperency);
 						}
 						else if( command == "d")
 						{
 							// transparency v
 							transperency = creal(sline[1]);
-							material.ambient.alpha(transperency);
-							material.diffuse.alpha(transperency);
-							material.specular.alpha(transperency);
-							material.emissive.alpha(transperency);
+							material->ambient.alpha(transperency);
+							material->diffuse.alpha(transperency);
+							material->specular.alpha(transperency);
+							material->emission.alpha(transperency);
 						}
 						else if( command == "map_Kd")
 						{
 							// texture relative
-							material.textureDiffuse = (boost::filesystem::path(sourceFile).remove_filename() / sline[1]).string();
+							material->texture_diffuse = (boost::filesystem::path(sourceFile).remove_filename() / sline[1]).string();
 						}
 					}
 
-					AddIfValid(material, converter, materials);
+					Add(material, materials, converter);
 				}
 			}
 
-			void read(Converter* converter, const std::string& file)
+			void read(OptimizedMeshBuilder* builder, const std::string& file, VoidVoidCallback& cb)
 			{
 				std::ifstream f(file.c_str());
 				if( false == f.good() ) throw "missing obj file";
@@ -127,9 +134,17 @@ namespace pwn
 				std::map<std::string, std::size_t> materials;
 				pwn::string currentMaterial = "";
 
+				int lineIndex = 0;
+
 				pwn::string line;
 				while( std::getline(f, line) )
 				{
+					++lineIndex;
+					if( lineIndex > 9000 )
+					{
+						cb.perform();
+						lineIndex = 0;
+					}
 					const std::vector<pwn::string> sline = pwn::core::SplitString(pwn::core::Trim(line), pwn::core::kSpaceCharacters());
 					const std::size_t slineSize = sline.size();
 					if( slineSize == 0 ) continue; // empty line
@@ -138,25 +153,25 @@ namespace pwn
 					
 					if( command == "v" )
 					{
-						converter->addVertex(pwn::math::vec3(creal(sline[1]), creal(sline[2]), creal(sline[3])));
+						builder->addPosition(pwn::math::vec3(creal(sline[1]), creal(sline[2]), creal(sline[3])));
 					}
 					else if (command == "vt" )
 					{
-						converter->addTextureCoordinate(pwn::math::vec2(creal(sline[1]), creal(sline[2])));
+						builder->addTextCoord(pwn::math::vec2(creal(sline[1]), creal(sline[2])));
 					}
 					else if ( command == "vn" )
 					{
 						// normalize, since the input may not be unit
-						converter->addNormal(pwn::math::GetNormalized(pwn::math::vec3(creal(sline[1]), creal(sline[2]), creal(sline[3]))));
+						builder->addNormal(pwn::math::GetNormalized(pwn::math::vec3(creal(sline[1]), creal(sline[2]), creal(sline[3]))));
 					}
 					else if ( command == "f" )
 					{
-						std::vector<FaceIndex> faces;
+						std::vector<mesh::Triangle::Vertex> faces;
 						for(std::size_t i = 1; i<slineSize; ++i)
 						{
 							faces.push_back(cFaceIndex(sline[i]));
 						}
-						converter->addFace(materials[currentMaterial],faces);
+						AddFace(builder->mesh(), materials[currentMaterial],faces);
 					}
 					else if ( command == "usemtl" )
 					{
@@ -164,9 +179,11 @@ namespace pwn
 					}
 					else if ( command == "mtllib" )
 					{
-						LoadMaterialLibrary(converter, &materials, file, sline[1]);
+						LoadMaterialLibrary(builder->mesh(), &materials, file, sline[1]);
 					}
 				}
+
+				builder->done();
 			}
 		}
 	}

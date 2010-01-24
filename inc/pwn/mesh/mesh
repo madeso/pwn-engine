@@ -18,19 +18,21 @@ namespace pwn
 		class Mesh
 		{
 		public:
+			typedef std::vector<Triangle> TriangleList;
+			typedef boost::shared_ptr<Material> MaterialPtr;
+
 			Mesh();
-			~Mesh();
 
 			void clear();
 
 			Triangle::index addPosition(const math::vec3& pos);
 			Triangle::index addNormal(const math::vec3& norm);
 			Triangle::index addTextCoord(const math::vec2& tc);
+
 			void addTriangle(const Triangle& tri);
+			Triangle::index addMaterial(MaterialPtr m);
 
-			typedef std::vector<Triangle> TriangleList;
-			typedef boost::shared_ptr<Material> MaterialPtr;
-
+			// todo: make private and add accessors instead...
 			std::vector<math::vec3> positions;
 			std::vector<math::vec3> normals;
 			std::vector<math::vec2> texcoords;

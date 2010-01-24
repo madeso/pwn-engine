@@ -7,11 +7,14 @@ namespace pwn
 {
 	namespace convert
 	{
-		class Converter;
-
+		class OptimizedMeshBuilder;
 		namespace obj
 		{
-			void read(Converter* converter, const std::string& file);
+			struct VoidVoidCallback
+			{
+				virtual void perform() = 0;
+			};
+			void read(OptimizedMeshBuilder* builder, const std::string& file, VoidVoidCallback& cb);
 		}
 	}
 }

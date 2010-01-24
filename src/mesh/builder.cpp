@@ -117,5 +117,18 @@ namespace pwn
 
 			return mesh;
 		}
+
+		void AddFace(Mesh* mesh, pwn::uint32 material, const std::vector<Triangle::Vertex>& vertices)
+		{
+			// we currently doesnt support ton-triangular faces so - triangulate it
+			const std::vector<Triangle::Vertex>::size_type size = vertices.size();
+			bool added = false;
+			for(std::vector<Triangle::Vertex>::size_type i=2; i<size; ++i)
+			{
+				mesh->addTriangle(Triangle(material, vertices[0], vertices[1], vertices[i]));
+				added = true;
+			}
+			if( false == added ) throw "Unable to triangulate face";
+		}
 	}
 }

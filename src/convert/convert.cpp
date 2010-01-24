@@ -134,8 +134,16 @@ void main(int argc, char* argv[])
 
 		if( verbose ) cout << endl << "done." << endl;
 	}
+	catch(const pwn::string& str)
+	{
+		cerr << endl << str << endl;
+	}
+	catch(const char* str)
+	{
+		cerr << endl << str << endl;
+	}
 	catch(...)
 	{
-		cerr << endl << "failed." << endl;
+		cerr << endl << "general failue." << endl;
 	}
 }

@@ -126,6 +126,13 @@ namespace pwn
 				}
 			}
 
+			pwn::string Read(std::ifstream& f)
+			{
+				pwn::string s;
+				f >> s;
+				return s;
+			}
+
 			void read(OptimizedMeshBuilder* builder, const std::string& file, VoidVoidCallback& cb)
 			{
 				std::ifstream f(file.c_str());
@@ -136,8 +143,8 @@ namespace pwn
 
 				int lineIndex = 0;
 
-				pwn::string line;
-				while( std::getline(f, line) )
+				pwn::string command;
+				while( f >> command )
 				{
 					++lineIndex;
 					if( lineIndex > 9000 )
@@ -145,41 +152,63 @@ namespace pwn
 						cb.perform();
 						lineIndex = 0;
 					}
-					const std::vector<pwn::string> sline = pwn::core::SplitString(pwn::core::Trim(line), pwn::core::kSpaceCharacters());
-					const std::size_t slineSize = sline.size();
-					if( slineSize == 0 ) continue; // empty line
-					if( sline[0][0] == '#' ) continue; // comment
-					const pwn::string command = sline[0];
+					if( command[0] == '#' )
+					{
+						while( f.get() != '\n' );
+						continue;
+					}
 					
 					if( command == "v" )
 					{
-						builder->addPosition(pwn::math::vec3(creal(sline[1]), creal(sline[2]), creal(sline[3])));
+						pwn::string x = Read(f);
+						pwn::string y = Read(f);
+						pwn::string z = Read(f);
+						builder->addPosition(pwn::math::vec3(creal(x), creal(y), creal(z)));
 					}
 					else if (command == "vt" )
 					{
-						builder->addTextCoord(pwn::math::vec2(creal(sline[1]), creal(sline[2])));
+						pwn::string x = Read(f);
+						pwn::string y = Read(f);
+						builder->addTextCoord(pwn::math::vec2(creal(x), creal(y)));
 					}
 					else if ( command == "vn" )
 					{
 						// normalize, since the input may not be unit
-						builder->addNormal(pwn::math::GetNormalized(pwn::math::vec3(creal(sline[1]), creal(sline[2]), creal(sline[3]))));
+						pwn::string x = Read(f);
+						pwn::string y = Read(f);
+						pwn::string z = Read(f);
+						builder->addNormal(pwn::math::GetNormalized(pwn::math::vec3(creal(x), creal(y), creal(z))));
 					}
 					else if ( command == "f" )
 					{
 						std::vector<mesh::Triangle::Vertex> faces;
-						for(std::size_t i = 1; i<slineSize; ++i)
+						while( pwn::string(" 0123456789/").find(f.peek()) != pwn::string::npos )
 						{
-							faces.push_back(cFaceIndex(sline[i]));
+							faces.push_back(cFaceIndex(Read(f)));
 						}
 						AddFace(builder->mesh(), materials[currentMaterial],faces);
 					}
 					else if ( command == "usemtl" )
 					{
-						currentMaterial = sline[1];
+						currentMaterial = Read(f);
 					}
 					else if ( command == "mtllib" )
 					{
-						LoadMaterialLibrary(builder->mesh(), &materials, file, sline[1]);
+						LoadMaterialLibrary(builder->mesh(), &materials, file, Read(f));
+					}
+					else if( command == "g" )
+					{
+						Read(f); // group-name
+					}
+					else if( command == "s" )
+					{
+						Read(f); // on/off?
+					}
+					else
+					{
+						pwn::string e = "unknown command: ";
+						e+= command;
+						throw e;
 					}
 				}
 

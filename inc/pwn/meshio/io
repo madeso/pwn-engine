@@ -1,5 +1,5 @@
-#ifndef PWN_CONVERT_WRITER_HPP
-#define PWN_CONVERT_WRITER_HPP
+#ifndef PWN_MESHIO_IO
+#define PWN_MESHIO_IO
 
 #include <pwn/string>
 
@@ -9,11 +9,8 @@ namespace pwn
 	{
 		class Mesh;
 	}
-}
 
-namespace pwn
-{
-	namespace convert
+	namespace meshio
 	{
 		struct Compress
 		{
@@ -24,8 +21,8 @@ namespace pwn
 			bool normals;
 			bool texcoords;
 		};
-		void Write(mesh::Mesh& data, const pwn::string& file, const Compress compress);
-		void Test(mesh::Mesh& data);
+
+		void Write(const mesh::Mesh& mesh, const pwn::string& file, const Compress compress);
 	}
 }
 

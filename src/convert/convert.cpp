@@ -4,9 +4,9 @@
 #include <iostream>
 
 #include <pwn/mesh/Mesh>
+#include <pwn/meshio/io>
 
 #include "Converter.hpp"
-#include "Writer.hpp"
 #include "WavefrontObj.hpp"
 
 std::ostream& operator<<(std::ostream& os, const ::pwn::convert::Stat& s)
@@ -43,7 +43,7 @@ void main(int argc, char* argv[])
 	bool verbose = false;
 	bool meshInfo = false;
 
-	pwn::convert::Compress compress(false);
+	pwn::meshio::Compress compress(false);
 	
 	po::options_description desc("Allowed options");
 	desc.add_options()
@@ -117,7 +117,7 @@ void main(int argc, char* argv[])
 		}
 
 		if( verbose ) cout << "writing.." << endl;
-		if( writeResult ) pwn::convert::Write(mesh, (boost::filesystem::path(outdir) / boost::filesystem::path(inputfile).filename()).replace_extension("mesh").string(), compress);
+		if( writeResult ) pwn::meshio::Write(mesh, (boost::filesystem::path(outdir) / boost::filesystem::path(inputfile).filename()).replace_extension("mesh").string(), compress);
 
 		if( runStatistics )
 		{

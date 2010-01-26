@@ -1,16 +1,15 @@
-#include "Writer.hpp"
+#include <pwn/meshio/io>
 
 #include <fstream>
+#include <iostream>
+
+#include <pwn/mesh/mesh>
 #include <pwn/math/operations>
 #include <pwn/mesh/material>
 
-#include <iostream>
-
-#include <pwn/mesh/Mesh>
-
 namespace pwn
 {
-	namespace convert
+	namespace meshio
 	{
 		Compress::Compress(bool all)
 			: materials(all)
@@ -32,35 +31,35 @@ namespace pwn
 			{
 				f->write(reinterpret_cast<const Byte*>(&i), sizeof(pwn::uint32));
 			}
-			void Write(std::ofstream* f, const pwn::real& r, bool optimize)
+			void Write(std::ofstream* f, const pwn::real& r, bool compress)
 			{
-				if( optimize )
+				if( compress )
 				{
 					Write(f, pwn::math::FloatToHalf(r));
 				}
 				else f->write(reinterpret_cast<const Byte*>(&r), sizeof(pwn::real));
 			}
-			void Write(std::ofstream* f, const pwn::math::Rgba& c, bool optimize)
+			void Write(std::ofstream* f, const pwn::math::Rgba& c, bool compress)
 			{
-				Write(f, c.red(), optimize);
-				Write(f, c.green(), optimize);
-				Write(f, c.blue(), optimize);
-				Write(f, c.alpha(), optimize);
+				Write(f, c.red(), compress);
+				Write(f, c.green(), compress);
+				Write(f, c.blue(), compress);
+				Write(f, c.alpha(), compress);
 			}
-			void Write(std::ofstream* f, const pwn::math::vec3& v, bool optimize)
+			void Write(std::ofstream* f, const pwn::math::vec3& v, bool compress)
 			{
-				Write(f, v.x, optimize);
-				Write(f, v.y, optimize);
-				Write(f, v.z, optimize);
+				Write(f, v.x, compress);
+				Write(f, v.y, compress);
+				Write(f, v.z, compress);
 			}
-			void Write(std::ofstream* f, const pwn::math::vec2& v, bool optimize)
+			void Write(std::ofstream* f, const pwn::math::vec2& v, bool compress)
 			{
-				Write(f, v.x, optimize);
-				Write(f, v.y, optimize);
+				Write(f, v.x, compress);
+				Write(f, v.y, compress);
 			}
 		}
 
-		void Write(mesh::Mesh& mesh, const pwn::string& file, const Compress compress)
+		void Write(const mesh::Mesh& mesh, const pwn::string& file, const Compress compress)
 		{
 			std::ofstream f(file.c_str(), std::ios::out | std::ios::binary);
 			if( !f.good() ) throw "failed to open file for writing";
@@ -69,7 +68,7 @@ namespace pwn
 			/* header */ {
 				pwn::uint16 version = 0;
 				f.write( reinterpret_cast<const Byte*>(&version), sizeof(pwn::uint16));
-				//pwn::uint16 flags = optimize? 1 : 0;
+				//pwn::uint16 flags = compress? 1 : 0;
 				//f.write( reinterpret_cast<const Byte*>(&flags), sizeof(pwn::uint16));
 			}
 
@@ -126,10 +125,10 @@ namespace pwn
 				f.write(reinterpret_cast<const Byte*>(&fc), sizeof(std::size_t));
 				for(std::size_t i=0; i<fc; ++i)
 				{
-					::pwn::mesh::Triangle& t = mesh.triangles[i];
+					const ::pwn::mesh::Triangle& t = mesh.triangles[i];
 					for(int faceIndex=0; faceIndex<3; ++faceIndex)
 					{
-						::pwn::mesh::Triangle::Vertex& v = t[faceIndex];
+						const ::pwn::mesh::Triangle::Vertex& v = t[faceIndex];
 						Write(&f, v.location);
 						Write(&f, v.normal);
 						Write(&f, v.texcoord);

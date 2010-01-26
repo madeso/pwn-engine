@@ -3,9 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pwn-convert", "projects\pwn-convert.vcproj", "{ACAD9D83-0C02-40BC-9BEB-575A33007961}"
 	ProjectSection(ProjectDependencies) = postProject
-		{51313010-54F3-4338-AFC5-9FF92790EF1D} = {51313010-54F3-4338-AFC5-9FF92790EF1D}
 		{9DD3F329-9640-4A62-A02F-29698B69B71C} = {9DD3F329-9640-4A62-A02F-29698B69B71C}
 		{415CB211-FDB2-4497-910A-539D4E96B3F6} = {415CB211-FDB2-4497-910A-539D4E96B3F6}
+		{C699594D-3480-4786-BCDD-8B52E9EC7F9C} = {C699594D-3480-4786-BCDD-8B52E9EC7F9C}
+		{51313010-54F3-4338-AFC5-9FF92790EF1D} = {51313010-54F3-4338-AFC5-9FF92790EF1D}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pwn-core", "projects\pwn-core.vcproj", "{415CB211-FDB2-4497-910A-539D4E96B3F6}"
@@ -65,6 +66,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pwn-render-test", "projects
 		{415CB211-FDB2-4497-910A-539D4E96B3F6} = {415CB211-FDB2-4497-910A-539D4E96B3F6}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pwn-meshio", "projects\pwn-meshio.vcproj", "{C699594D-3480-4786-BCDD-8B52E9EC7F9C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9DD3F329-9640-4A62-A02F-29698B69B71C} = {9DD3F329-9640-4A62-A02F-29698B69B71C}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -115,6 +121,10 @@ Global
 		{22EE5619-A659-490E-B137-EEE1CA873059}.Debug|Win32.Build.0 = Debug|Win32
 		{22EE5619-A659-490E-B137-EEE1CA873059}.Release|Win32.ActiveCfg = Release|Win32
 		{22EE5619-A659-490E-B137-EEE1CA873059}.Release|Win32.Build.0 = Release|Win32
+		{C699594D-3480-4786-BCDD-8B52E9EC7F9C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C699594D-3480-4786-BCDD-8B52E9EC7F9C}.Debug|Win32.Build.0 = Debug|Win32
+		{C699594D-3480-4786-BCDD-8B52E9EC7F9C}.Release|Win32.ActiveCfg = Release|Win32
+		{C699594D-3480-4786-BCDD-8B52E9EC7F9C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

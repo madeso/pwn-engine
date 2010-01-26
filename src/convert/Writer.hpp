@@ -15,7 +15,16 @@ namespace pwn
 {
 	namespace convert
 	{
-		void Write(mesh::Mesh& data, const pwn::string& file, bool optimize);
+		struct Compress
+		{
+			explicit Compress(bool all);
+
+			bool materials;
+			bool positions;
+			bool normals;
+			bool texcoords;
+		};
+		void Write(mesh::Mesh& data, const pwn::string& file, const Compress compress);
 		void Test(mesh::Mesh& data);
 	}
 }

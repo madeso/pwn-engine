@@ -12,6 +12,14 @@ namespace pwn
 {
 	namespace convert
 	{
+		Compress::Compress(bool all)
+			: materials(all)
+			, positions(all)
+			, normals(all)
+			, texcoords(all)
+		{
+		}
+
 		namespace // local
 		{
 			typedef char Byte;
@@ -52,7 +60,7 @@ namespace pwn
 			}
 		}
 
-		void Write(mesh::Mesh& mesh, const pwn::string& file, bool optimize)
+		void Write(mesh::Mesh& mesh, const pwn::string& file, const Compress compress)
 		{
 			std::ofstream f(file.c_str(), std::ios::out | std::ios::binary);
 			if( !f.good() ) throw "failed to open file for writing";
@@ -61,8 +69,8 @@ namespace pwn
 			/* header */ {
 				pwn::uint16 version = 0;
 				f.write( reinterpret_cast<const Byte*>(&version), sizeof(pwn::uint16));
-				pwn::uint16 flags = optimize? 1 : 0;
-				f.write( reinterpret_cast<const Byte*>(&flags), sizeof(pwn::uint16));
+				//pwn::uint16 flags = optimize? 1 : 0;
+				//f.write( reinterpret_cast<const Byte*>(&flags), sizeof(pwn::uint16));
 			}
 
 			/* vertices */ {
@@ -70,7 +78,7 @@ namespace pwn
 				f.write( reinterpret_cast<const Byte*>(&vc), sizeof(std::size_t));
 				for(std::size_t i=0; i<vc; ++i)
 				{
-					Write(&f, mesh.positions[i], optimize);
+					Write(&f, mesh.positions[i], compress.positions);
 				}
 			}
 
@@ -79,7 +87,7 @@ namespace pwn
 				f.write(reinterpret_cast<const Byte*>(&tc), sizeof(std::size_t));
 				for(std::size_t i=0; i<tc; ++i)
 				{
-					Write(&f, mesh.texcoords[i], optimize);
+					Write(&f, mesh.texcoords[i], compress.texcoords);
 				}
 			}
 
@@ -88,7 +96,15 @@ namespace pwn
 				f.write(reinterpret_cast<const Byte*>(&nc), sizeof(std::size_t));
 				for(std::size_t i=0; i<nc; ++i)
 				{
-					Write(&f, pwn::math::UnitVectorToCompressed(mesh.normals[i]));
+					const pwn::math::vec3& n = mesh.normals[i];
+					if( compress.normals )
+					{
+						Write(&f, pwn::math::UnitVectorToCompressed(n));
+					}
+					else
+					{
+						Write(&f, n, false);
+					}
 				}
 			}
 
@@ -97,11 +113,11 @@ namespace pwn
 				f.write(reinterpret_cast<const Byte*>(&mc), sizeof(std::size_t));
 				for(std::size_t i=0; i<mc; ++i)
 				{
-					Write(&f, mesh.materials[i]->ambient, optimize);
-					Write(&f, mesh.materials[i]->diffuse, optimize);
-					Write(&f, mesh.materials[i]->specular, optimize);
-					Write(&f, mesh.materials[i]->emission, optimize);
-					Write(&f, mesh.materials[i]->shininess, optimize);
+					Write(&f, mesh.materials[i]->ambient, compress.materials);
+					Write(&f, mesh.materials[i]->diffuse, compress.materials);
+					Write(&f, mesh.materials[i]->specular, compress.materials);
+					Write(&f, mesh.materials[i]->emission, compress.materials);
+					Write(&f, mesh.materials[i]->shininess, compress.materials);
 				}
 			}
 

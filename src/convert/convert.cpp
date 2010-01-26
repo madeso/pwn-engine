@@ -37,22 +37,28 @@ void main(int argc, char* argv[])
 	std::string inputfile;
 	std::string outdir;
 
-	bool optimizeNormals = false;
+	bool optimize = false;
 	bool runStatistics = false;
 	bool writeResult = true;
 	bool verbose = false;
 	bool meshInfo = false;
+
+	pwn::convert::Compress compress(false);
 	
 	po::options_description desc("Allowed options");
 	desc.add_options()
 		("help,?", "produce help message")
 		("input,i", po::value<std::string>(&inputfile), "the input file")
 		("output,o", po::value<std::string>(&outdir), "the output directory")
-		("compress-normals,N", po::value<bool>(&optimizeNormals)->default_value(false), "1=compress normals, 0=not")
 		("stats,s", po::value<bool>(&runStatistics)->default_value(false), "1=statistics on input, 0=not")
 		("mesh-info,m", po::value<bool>(&meshInfo)->default_value(false), "1=info on input, 0=not")
 		("verbose,v", po::value<bool>(&verbose)->default_value(false), "1=detailed information, 0=not")
-		("write,w", po::value<bool>(&writeResult)->default_value(true), "1=save, 0=don't")
+		("optimize,O", po::value<bool>(&optimize)->default_value(false), "1=optimize mesh, 0=not")
+		("compress-materials,M", po::value<bool>(&compress.materials)->default_value(false), "1=write compressed materials, 0=not")
+		("compress-normals,N", po::value<bool>(&compress.normals)->default_value(false), "1=write compressed normals, 0=not")
+		("compress-positions,P", po::value<bool>(&compress.positions)->default_value(false), "1=write compressed positions, 0=not")
+		("compress-texcoords,T", po::value<bool>(&compress.texcoords)->default_value(false), "1=write compressed texture coordinates, 0=not")
+		("write,w", po::value<bool>(&writeResult)->default_value(true), "1=write out file, 0=don't")
 		;
 
 	po::variables_map vm;
@@ -86,6 +92,7 @@ void main(int argc, char* argv[])
 	
 	try
 	{
+		const bool optimizeNormals = optimize && compress.normals;
 		pwn::mesh::Mesh mesh;
 		if( verbose && optimizeNormals ) cout << "optimizing normals ACTIVE.." << endl;
 		pwn::convert::OptimizedMeshBuilder builder(&mesh, optimizeNormals);
@@ -110,7 +117,7 @@ void main(int argc, char* argv[])
 		}
 
 		if( verbose ) cout << "writing.." << endl;
-		if( writeResult ) pwn::convert::Write(mesh, (boost::filesystem::path(outdir) / boost::filesystem::path(inputfile).filename()).replace_extension("mesh").string(), optimizeNormals);
+		if( writeResult ) pwn::convert::Write(mesh, (boost::filesystem::path(outdir) / boost::filesystem::path(inputfile).filename()).replace_extension("mesh").string(), compress);
 
 		if( runStatistics )
 		{

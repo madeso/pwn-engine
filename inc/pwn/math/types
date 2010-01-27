@@ -35,6 +35,10 @@ namespace pwn
 			*/
 			vec2(const real x, const real y);
 
+			/** constructor.
+			*/
+			vec2();
+
 			/** a data-pointer.
 			@returns a 2-dimensional pointer to the member-variables
 			*/
@@ -91,6 +95,10 @@ namespace pwn
 			/** constructor.
 			*/
 			vec3(const real x, const real y, const real z);
+
+			/** constructor.
+			*/
+			vec3();
 
 			/** a data-pointer.
 			@returns a 2-dimensional pointer to the member-variables

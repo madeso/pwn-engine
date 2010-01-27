@@ -18,6 +18,7 @@ namespace pwn
 				index texcoord;
 
 				Vertex(index location, index normal, index texcoord);
+				Vertex();
 			};
 			Vertex v0;
 			Vertex v1;
@@ -26,6 +27,7 @@ namespace pwn
 
 			Triangle(pwn::uint32 material, Vertex v0, Vertex v1, Vertex v2);
 			Triangle(pwn::uint32 material, Vertex v[3]);
+			Triangle();
 
 			Vertex& operator[](pwn::uint32 index);
 			const Vertex& operator[](pwn::uint32 index) const;

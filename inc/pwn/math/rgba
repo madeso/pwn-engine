@@ -175,6 +175,9 @@ namespace pwn
 			void blue(const real v);
 			void alpha(const real v);
 
+			real& operator[](int index);
+			const real& operator[](int index) const;
+
 			void rgba(const real r, const real g, const real b, const real a);
 			void rgb(const real r, const real g, const real b);
 			void rgb(int rgb);

@@ -19,121 +19,171 @@ namespace pwn
 		{
 		}
 
-		namespace // local
+		class File
 		{
-			typedef char Byte;
+		public:
+			explicit File(const string& file)
+				: f (file.c_str(), std::ios::out | std::ios::binary)
+			{
+				if( !f.good() ) throw "failed to open file for writing";
+				f.exceptions ( std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit );
+			}
 
-			void Write(std::ofstream* f, const pwn::uint16 i)
+			typedef char Byte;
+			void handle(pwn::uint16& i)
 			{
-				f->write(reinterpret_cast<const Byte*>(&i), sizeof(pwn::uint16));
+				f.write(reinterpret_cast<const Byte*>(&i), sizeof(pwn::uint16));
 			}
-			void Write(std::ofstream* f, const pwn::uint32 i)
+			void handle(pwn::uint32& i)
 			{
-				f->write(reinterpret_cast<const Byte*>(&i), sizeof(pwn::uint32));
+				f.write(reinterpret_cast<const Byte*>(&i), sizeof(pwn::uint32));
 			}
-			void Write(std::ofstream* f, const pwn::real& r, bool compress)
+			void handle(pwn::real& r)
 			{
-				if( compress )
+				f.write(reinterpret_cast<const Byte*>(&r), sizeof(pwn::real));
+			}
+			void write_sizet(std::size_t& s)
+			{
+				handle(static_cast<pwn::uint32>(s));
+			}
+
+			bool isLoading() const
+			{
+				return false;
+			}
+		private:
+			std::ofstream f;
+		};
+
+		void Handle(File& f, pwn::real& r, bool compress)
+		{
+			if( compress )
+			{
+				pwn::uint16 half = pwn::math::FloatToHalf(r);
+				f.handle(half);
+				if( f.isLoading() )
 				{
-					Write(f, pwn::math::FloatToHalf(r));
+					r = pwn::math::HalfToFloat(half);
 				}
-				else f->write(reinterpret_cast<const Byte*>(&r), sizeof(pwn::real));
 			}
-			void Write(std::ofstream* f, const pwn::math::Rgba& c, bool compress)
+			else
 			{
-				Write(f, c.red(), compress);
-				Write(f, c.green(), compress);
-				Write(f, c.blue(), compress);
-				Write(f, c.alpha(), compress);
-			}
-			void Write(std::ofstream* f, const pwn::math::vec3& v, bool compress)
-			{
-				Write(f, v.x, compress);
-				Write(f, v.y, compress);
-				Write(f, v.z, compress);
-			}
-			void Write(std::ofstream* f, const pwn::math::vec2& v, bool compress)
-			{
-				Write(f, v.x, compress);
-				Write(f, v.y, compress);
+				f.handle(r);
 			}
 		}
-
-		void Write(const mesh::Mesh& mesh, const pwn::string& file, const Compress compress)
+		void Handle(File& f, pwn::math::Rgba& c, bool compress)
 		{
-			std::ofstream f(file.c_str(), std::ios::out | std::ios::binary);
-			if( !f.good() ) throw "failed to open file for writing";
-			f.exceptions ( std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit );
+			for(int i = 0; i<4; ++i)
+			{
+				Handle(f, c[i], compress);
+			}
+		}
+		void Handle(File& f, pwn::math::vec3& v)
+		{
+			f.handle(v.x);
+			f.handle(v.y);
+			f.handle(v.z);
+		}
+		void WriteLocation(File& f, pwn::math::vec3& v, bool compress)
+		{
+			Handle(f, v.x, compress);
+			Handle(f, v.y, compress);
+			Handle(f, v.z, compress);
+		}
+		void WriteNormal(File& f, pwn::math::vec3& n, bool compress)
+		{
+			if( compress )
+			{
+				pwn::uint16 uv = pwn::math::UnitVectorToCompressed(n);
+				f.handle(uv);
+				if( f.isLoading() )
+				{
+					n = pwn::math::CompressedToUnitVector(uv);
+				}
+			}
+			else
+			{
+				Handle(f, n);
+			}
+		}
+		void Handle(File& f, pwn::math::vec2& v, bool compress)
+		{
+			Handle(f, v.x, compress);
+			Handle(f, v.y, compress);
+		}
+		template<typename T>
+		std::size_t HandleSize(File& f, std::vector<T>& vec)
+		{
+			std::size_t vc = vec.size();
+			f.write_sizet(vc);
+			if( f.isLoading() )
+			{
+				vec.resize(vc);
+			}
+			return vc;
+		}
+
+		void Write(mesh::Mesh& mesh, const pwn::string& file, const Compress compress)
+		{
+			File f(file);
 
 			/* header */ {
 				pwn::uint16 version = 0;
-				f.write( reinterpret_cast<const Byte*>(&version), sizeof(pwn::uint16));
+				f.handle(version);
 				//pwn::uint16 flags = compress? 1 : 0;
-				//f.write( reinterpret_cast<const Byte*>(&flags), sizeof(pwn::uint16));
+				//f.handle( reinterpret_cast<const Byte*>(&flags), sizeof(pwn::uint16));
 			}
 
 			/* vertices */ {
-				const std::size_t vc = mesh.positions.size();
-				f.write( reinterpret_cast<const Byte*>(&vc), sizeof(std::size_t));
+				const std::size_t vc = HandleSize(f, mesh.positions);
 				for(std::size_t i=0; i<vc; ++i)
 				{
-					Write(&f, mesh.positions[i], compress.positions);
+					WriteLocation(f, mesh.positions[i], compress.positions);
 				}
 			}
 
 			/* texture coordinates */ {
-				const std::size_t tc = mesh.texcoords.size();
-				f.write(reinterpret_cast<const Byte*>(&tc), sizeof(std::size_t));
+				const std::size_t tc = HandleSize(f, mesh.texcoords);
 				for(std::size_t i=0; i<tc; ++i)
 				{
-					Write(&f, mesh.texcoords[i], compress.texcoords);
+					Handle(f, mesh.texcoords[i], compress.texcoords);
 				}
 			}
 
 			/* normals */ {
-				const std::size_t nc = mesh.normals.size();
-				f.write(reinterpret_cast<const Byte*>(&nc), sizeof(std::size_t));
+				const std::size_t nc = HandleSize(f, mesh.normals);
 				for(std::size_t i=0; i<nc; ++i)
 				{
-					const pwn::math::vec3& n = mesh.normals[i];
-					if( compress.normals )
-					{
-						Write(&f, pwn::math::UnitVectorToCompressed(n));
-					}
-					else
-					{
-						Write(&f, n, false);
-					}
+					pwn::math::vec3& n = mesh.normals[i];
+					WriteNormal(f, n, compress.normals);
 				}
 			}
 
 			/* materials */ {
-				const std::size_t mc = mesh.materials.size();
-				f.write(reinterpret_cast<const Byte*>(&mc), sizeof(std::size_t));
+				const std::size_t mc = HandleSize(f, mesh.materials);
 				for(std::size_t i=0; i<mc; ++i)
 				{
-					Write(&f, mesh.materials[i]->ambient, compress.materials);
-					Write(&f, mesh.materials[i]->diffuse, compress.materials);
-					Write(&f, mesh.materials[i]->specular, compress.materials);
-					Write(&f, mesh.materials[i]->emission, compress.materials);
-					Write(&f, mesh.materials[i]->shininess, compress.materials);
+					Handle(f, mesh.materials[i]->ambient, compress.materials);
+					Handle(f, mesh.materials[i]->diffuse, compress.materials);
+					Handle(f, mesh.materials[i]->specular, compress.materials);
+					Handle(f, mesh.materials[i]->emission, compress.materials);
+					Handle(f, mesh.materials[i]->shininess, compress.materials);
 				}
 			}
 
 			/* faces */ {
-				const std::size_t fc = mesh.triangles.size();
-				f.write(reinterpret_cast<const Byte*>(&fc), sizeof(std::size_t));
+				const std::size_t fc = HandleSize(f, mesh.triangles);
 				for(std::size_t i=0; i<fc; ++i)
 				{
-					const ::pwn::mesh::Triangle& t = mesh.triangles[i];
+					::pwn::mesh::Triangle& t = mesh.triangles[i];
 					for(int faceIndex=0; faceIndex<3; ++faceIndex)
 					{
-						const ::pwn::mesh::Triangle::Vertex& v = t[faceIndex];
-						Write(&f, v.location);
-						Write(&f, v.normal);
-						Write(&f, v.texcoord);
+						::pwn::mesh::Triangle::Vertex& v = t[faceIndex];
+						f.handle(v.location);
+						f.handle(v.normal);
+						f.handle(v.texcoord);
 					}
-					f.write(reinterpret_cast<const Byte*>(&t.material), sizeof(std::size_t));
+					f.handle(t.material);
 				}
 			}
 		}

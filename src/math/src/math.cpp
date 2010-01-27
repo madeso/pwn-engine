@@ -539,6 +539,12 @@ namespace pwn
 		{
 		}
 
+		vec2::vec2()
+			: x(0)
+			, y(0)
+		{
+		}
+
 		real* vec2::data()
 		{
 			return &x;
@@ -680,6 +686,13 @@ namespace pwn
 			: x(ax)
 			, y(ay)
 			, z(az)
+		{
+		}
+
+		vec3::vec3()
+			: x(0)
+			, y(0)
+			, z(0)
 		{
 		}
 

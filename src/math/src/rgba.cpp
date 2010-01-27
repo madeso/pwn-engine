@@ -59,6 +59,16 @@ namespace pwn
 			mdata.component.alpha = v;
 		}
 
+		real& Rgba::operator[](int index)
+		{
+			return mdata.array[index];
+		}
+
+		const real& Rgba::operator[](int index) const
+		{
+			return mdata.array[index];
+		}
+
 		void Rgba::rgba(const real r, const real g, const real b, const real a)
 		{
 			mdata.component.red = r;

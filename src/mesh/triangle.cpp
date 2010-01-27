@@ -11,6 +11,13 @@ namespace pwn
 		{
 		}
 
+		Triangle::Vertex::Vertex()
+			: location(0)
+			, normal(0)
+			, texcoord(0)
+		{
+		}
+
 		Triangle::Triangle(pwn::uint32 material, Vertex v0, Vertex v1, Vertex v2)
 			: v0(v0)
 			, v1(v1)
@@ -24,6 +31,11 @@ namespace pwn
 			, v1(v[1])
 			, v2(v[2])
 			, material(material)
+		{
+		}
+
+		Triangle::Triangle()
+			: material(0)
 		{
 		}
 

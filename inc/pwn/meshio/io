@@ -22,8 +22,8 @@ namespace pwn
 			bool texcoords;
 		};
 
-		// it sucks that the mesh is non-const but that's a implementation detail...
-		void Write(mesh::Mesh& mesh, const pwn::string& file, const Compress compress);
+		void Write(const mesh::Mesh& mesh, const pwn::string& filename, const pwn::meshio::Compress compress);
+		void Read(mesh::Mesh* mesh, const pwn::string& filename, pwn::meshio::Compress* compress);
 	}
 }
 

@@ -76,8 +76,7 @@ namespace pwn
 			template<typename T>
 			struct vectora
 			{
-				typedef typename std::vector<T> Vec;
-				typedef typename Argument<IsLoading, Vec>::Arg Type;
+				ARG(std::vector<T>) Type;
 			};
 #undef ARG
 
@@ -156,13 +155,13 @@ namespace pwn
 				handle(v.y);
 				handle(v.z);
 			}
-			void WriteLocation(vec3a v, bool compress)
+			void handleLocation(vec3a v, bool compress)
 			{
 				handle(v.x, compress);
 				handle(v.y, compress);
 				handle(v.z, compress);
 			}
-			void WriteNormal(vec3a n, bool compress)
+			void handleNormal(vec3a n, bool compress)
 			{
 				if( compress )
 				{
@@ -199,7 +198,7 @@ namespace pwn
 					const std::size_t vc = handleSize<pwn::math::vec3>(mesh.positions);
 					for(std::size_t i=0; i<vc; ++i)
 					{
-						WriteLocation(mesh.positions[i], compress.positions);
+						handleLocation(mesh.positions[i], compress.positions);
 					}
 				}
 
@@ -216,7 +215,7 @@ namespace pwn
 					for(std::size_t i=0; i<nc; ++i)
 					{
 						vec3a n = mesh.normals[i];
-						WriteNormal(n, compress.normals);
+						handleNormal(n, compress.normals);
 					}
 				}
 
@@ -250,39 +249,42 @@ namespace pwn
 			}
 		};
 
-		namespace offsets
+		namespace // local
 		{
-			enum 
+			namespace offsets
 			{
-				materials,
-				positions,
-				normals,
-				texcoords
-			};
-		}
+				enum 
+				{
+					materials,
+					positions,
+					normals,
+					texcoords
+				};
+			}
 
-		pwn::uint8 CompressArgsToUint8(const Compress& c)
-		{
-			uint8 res = 0;
+			pwn::uint8 CompressArgsToUint8(const Compress& c)
+			{
+				uint8 res = 0;
 #define WRITE(n) res |= (c.n?1:0) << offsets::n
-			WRITE(materials);
-			WRITE(positions);
-			WRITE(normals);
-			WRITE(texcoords);
+				WRITE(materials);
+				WRITE(positions);
+				WRITE(normals);
+				WRITE(texcoords);
 #undef WRITE
-			return res;
-		}
+				return res;
+			}
 
-		Compress Uint8ToCompressArgs(pwn::uint8 u)
-		{
-			Compress c(false);
+			Compress Uint8ToCompressArgs(pwn::uint8 u)
+			{
+				Compress c(false);
 #define READ(n) c.n = (u&offsets::n) != 0
-			READ(materials);
-			READ(positions);
-			READ(normals);
-			READ(texcoords);
+				READ(materials);
+				READ(positions);
+				READ(normals);
+				READ(texcoords);
 #undef READ
-			return c;
+				return c;
+			}
 		}
 
 		const pwn::uint8 kVersion = 0;
@@ -294,11 +296,11 @@ namespace pwn
 			fa.handle(mesh, compress, version);
 		}
 
-		void Read(mesh::Mesh* mesh, const pwn::string& filename, pwn::meshio::Compress* compress)
+		/*void Read(mesh::Mesh* mesh, const pwn::string& filename, pwn::meshio::Compress* compress)
 		{
 			pwn::uint8 version = kVersion;
 			FileArchiver<true> fa(filename);
 			fa.handle(*mesh, *compress, version);
-		}
+		}*/
 	}
 }

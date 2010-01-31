@@ -5,9 +5,12 @@
 
 #include <pwn/mesh/Mesh>
 #include <pwn/meshio/io>
+#include <pwn/mesh/builder>
 
 #include "Converter.hpp"
 #include "WavefrontObj.hpp"
+
+#pragma comment (lib, "physfs.lib")
 
 std::ostream& operator<<(std::ostream& os, const ::pwn::convert::Stat& s)
 {
@@ -29,36 +32,71 @@ struct WriteDotCallback : public pwn::convert::obj::VoidVoidCallback
 	}
 };
 
+struct Cmd
+{
+	Cmd(const pwn::string& aLongCmd, const pwn::tchar aShortCmd)
+		: longCmd(aLongCmd)
+		, shortCmd(aShortCmd)
+		, combined(aLongCmd+ "," + aShortCmd)
+	{
+	}
+
+	operator const char*() const
+	{
+		return combined.c_str();
+	}
+
+	bool eval(const boost::program_options::variables_map& vm) const
+	{
+		const std::size_t c = vm.count(longCmd.c_str());
+		const bool r = c != 0;
+		//std::cout << longCmd << ": " << c << "/" << r << std::endl;
+		return r;
+	}
+
+	pwn::string longCmd;
+	pwn::tchar shortCmd;
+	pwn::string combined;
+};
+
 void main(int argc, char* argv[])
 {
 	namespace po = boost::program_options;
 	using namespace std;
 
-	std::string inputfile;
-	std::string outdir;
+	pwn::string inputfile;
+	pwn::string outdir;
+	pwn::string texturedir;
 
-	bool optimize = false;
-	bool runStatistics = false;
-	bool writeResult = true;
-	bool verbose = false;
-	bool meshInfo = false;
-
-	pwn::meshio::Compress compress(false);
+	const Cmd Help					("help",				'?');
+	const Cmd Input					("input",				'i');
+	const Cmd Output				("output",				'o');
+	const Cmd Stats					("stats",				's');
+	const Cmd MeshInfo				("show-mesh-info",		'm');
+	const Cmd NotVerbose			("not-verbose",			'v');
+	const Cmd Optimize				("optimize",			'O');
+	const Cmd CompressMaterials		("compress-materials",	'M');
+	const Cmd CompressNormals		("compress-normals",	'N');
+	const Cmd CompressPositions		("compress-positions",	'P');
+	const Cmd CompressTexcoords		("compress-texcoords",	'T');
+	const Cmd DontWrite				("dont-write",			'w');
+	const Cmd MoveTextures			("move-textures",		't');
 	
 	po::options_description desc("Allowed options");
 	desc.add_options()
-		("help,?", "produce help message")
-		("input,i", po::value<std::string>(&inputfile), "the input file")
-		("output,o", po::value<std::string>(&outdir), "the output directory")
-		("stats,s", po::value<bool>(&runStatistics)->default_value(false), "1=statistics on input, 0=not")
-		("mesh-info,m", po::value<bool>(&meshInfo)->default_value(false), "1=info on input, 0=not")
-		("verbose,v", po::value<bool>(&verbose)->default_value(false), "1=detailed information, 0=not")
-		("optimize,O", po::value<bool>(&optimize)->default_value(false), "1=optimize mesh, 0=not")
-		("compress-materials,M", po::value<bool>(&compress.materials)->default_value(false), "1=write compressed materials, 0=not")
-		("compress-normals,N", po::value<bool>(&compress.normals)->default_value(false), "1=write compressed normals, 0=not")
-		("compress-positions,P", po::value<bool>(&compress.positions)->default_value(false), "1=write compressed positions, 0=not")
-		("compress-texcoords,T", po::value<bool>(&compress.texcoords)->default_value(false), "1=write compressed texture coordinates, 0=not")
-		("write,w", po::value<bool>(&writeResult)->default_value(true), "1=write out file, 0=don't")
+		(Help, "produce help message")
+		(Input, po::value<pwn::string>(&inputfile), "the input file")
+		(Output, po::value<pwn::string>(&outdir), "the output directory")
+		(MoveTextures, po::value<pwn::string>(&texturedir),	"Move the textures")
+		(Stats,					"Write optimization statistics")
+		(MeshInfo,				"Write information about mesh")
+		(NotVerbose,			"Silent/not verbose output")
+		(Optimize,				"Optimize mesh")
+		(CompressMaterials,		"Write compressed materials")
+		(CompressNormals,		"Write compressed normals")
+		(CompressPositions,		"Write compressed positions")
+		(CompressTexcoords,		"Write compressed texture coordinates")
+		(DontWrite,				"Don't write out file")
 		;
 
 	po::variables_map vm;
@@ -72,7 +110,19 @@ void main(int argc, char* argv[])
 		return;
 	}
 
-	if (vm.count("help"))
+	bool optimize = Optimize.eval(vm);
+	bool runStatistics = Stats.eval(vm);
+	bool writeResult = !DontWrite.eval(vm);
+	bool verbose = !NotVerbose.eval(vm);
+	bool meshInfo = MeshInfo.eval(vm);
+
+	pwn::meshio::Compress compress(false);
+	compress.materials = CompressMaterials.eval(vm);
+	compress.normals = CompressNormals.eval(vm);
+	compress.positions = CompressPositions.eval(vm);
+	compress.texcoords = CompressTexcoords.eval(vm);
+
+	if (Help.eval(vm))
 	{
 		cerr << desc << endl;
 		return;
@@ -105,6 +155,8 @@ void main(int argc, char* argv[])
 
 		if( verbose ) cout << endl;
 
+		pwn::mesh::MoveTextures(&mesh, texturedir);
+
 		if( meshInfo )
 		{
 			cout
@@ -116,8 +168,12 @@ void main(int argc, char* argv[])
 				<< endl;
 		}
 
-		if( verbose ) cout << "writing.." << endl;
-		if( writeResult ) pwn::meshio::Write(mesh, (boost::filesystem::path(outdir) / boost::filesystem::path(inputfile).filename()).replace_extension("mesh").string(), compress);
+		if( writeResult )
+		{
+			if( verbose ) cout << "writing.." << endl;
+			pwn::meshio::WriteTarget wt(outdir);
+			pwn::meshio::Write(mesh, boost::filesystem::path(inputfile).replace_extension("mesh").filename(), compress);
+		}
 
 		if( runStatistics )
 		{

@@ -7,6 +7,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <vector>
+#include <pwn/string>
 
 namespace pwn
 {
@@ -23,6 +24,8 @@ namespace pwn
 		Mesh* InvertNormals(Mesh* mesh);
 
 		void AddFace(Mesh* mesh, pwn::uint32 material, const std::vector<Triangle::Vertex>& vertices);
+
+		void MoveTextures(Mesh* mesh, const pwn::string& newFolder);
 	}
 }
 

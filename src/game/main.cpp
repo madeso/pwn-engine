@@ -13,6 +13,7 @@
 #include <pwn/engine/democamera>
 #include <pwn/engine/vfstexturepool2>
 #include <pwn/mesh/material>
+#include <pwn/meshio/io>
 
 using namespace pwn;
 using namespace pwn::engine;
@@ -32,6 +33,13 @@ boost::shared_ptr<ActorDef> CreateCube(real size, const string& texture, Texture
 	return Compile(mesh, tpool);
 }
 
+boost::shared_ptr<ActorDef> LoadMesh(const string& file, TexturePool2* tpool)
+{
+	Mesh mesh;
+	pwn::meshio::Read(&mesh, file);
+	return Compile(mesh, tpool);
+}
+
 class EasyLoop : public Loop
 {
 public:
@@ -41,6 +49,11 @@ public:
 	{
 		const rect res = FromUpperLeftAndSize(Origo2(), direction2(world2.getWidth(), world2.getHeight()));
 
+		boost::shared_ptr<World3> world( World3::Create() );
+		boost::shared_ptr<ActorDef> rome = LoadMesh("rome.mesh", &tpool);
+		world->actor_add( Actor::Create(point3(0,0,0), qIdentity(), rome) );
+
+		/*
 		boost::shared_ptr<ActorDef> crate = CreateCube(1.5f, "crate01a.jpg", &tpool, 1, true);
 		boost::shared_ptr<ActorDef> glass = CreateCube(1.5f, "glass.png", &tpool, 0.5f, true);
 		boost::shared_ptr<ActorDef> pattern = CreateCube(1.5f, "pattern1.png", &tpool, 1, true);
@@ -65,7 +78,7 @@ public:
 			Actor::Create(Origo3(), qIdentity(),
 				CreateCube(400, "_stars-texture.jpg", &tpool, 1, false)
 				)
-			);
+			);*/
 
 		boost::shared_ptr<World3Widget > wid( new World3Widget( FromAspectAndContainingInCenter(res, 14.0f/9.0f), world ) ); // http://en.wikipedia.org/wiki/14:9
 

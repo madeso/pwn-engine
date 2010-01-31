@@ -4,6 +4,7 @@
 #include <pwn/mesh/mesh>
 #include <boost/foreach.hpp>
 #include <pwn/math/operations>
+#include <pwn/mesh/material>
 
 namespace pwn
 {
@@ -129,6 +130,38 @@ namespace pwn
 				added = true;
 			}
 			if( false == added ) throw "Unable to triangulate face";
+		}
+
+		void KeepLast(pwn::string& t, const char c)
+		{
+			std::size_t i = t.find_last_of(c);
+			if( i != pwn::string::npos )
+			{
+				t = t.substr(i+1);
+			}
+		}
+
+		pwn::string MoveTexture(const pwn::string& texture, const pwn::string& newFolder)
+		{
+			pwn::string t = texture;
+			KeepLast(t, '\\');
+			KeepLast(t, '/');
+			KeepLast(t, '|');
+			if( newFolder.empty() ) return t;
+			else return newFolder + "\\" + t;
+		}
+
+		void MoveTextures(Mesh::MaterialPtr mat, const pwn::string& newFolder)
+		{
+			mat->texture_diffuse = MoveTexture(mat->texture_diffuse, newFolder);
+		}
+
+		void MoveTextures(Mesh* mesh, const pwn::string& newFolder)
+		{
+			for(std::vector<Mesh::MaterialPtr>::iterator i = mesh->materials.begin(); i != mesh->materials.end(); ++i)
+			{
+				MoveTextures(*i, newFolder);
+			}
 		}
 	}
 }

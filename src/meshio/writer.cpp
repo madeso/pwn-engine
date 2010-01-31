@@ -7,6 +7,8 @@
 #include <pwn/math/operations>
 #include <pwn/mesh/material>
 
+#include <physfs.h>
+
 namespace pwn
 {
 	namespace meshio
@@ -18,6 +20,98 @@ namespace pwn
 			, texcoords(all)
 		{
 		}
+
+		static void Error(const pwn::string& message)
+		{
+			const pwn::string vfsError = PHYSFS_getLastError();
+			throw "Unable to " + message + ": " + vfsError;
+		}
+
+		WriteTarget::WriteTarget(const pwn::string& target)
+		{
+			if( 0 == PHYSFS_init(NULL) ) Error("init");
+			set(target);
+		}
+
+		WriteTarget::~WriteTarget()
+		{
+			PHYSFS_deinit();
+		}
+
+		void WriteTarget::set(const pwn::string& target)
+		{
+			if( 0 == PHYSFS_setWriteDir(target.c_str()) ) Error("change write dir");
+		}
+
+		class VirtualFile
+		{
+		public:
+			VirtualFile(const pwn::string& path, bool isLoading)
+				: file(isLoading?PHYSFS_openRead(path.c_str()):PHYSFS_openWrite(path.c_str()))
+			{
+				if( file != 0 ) return;
+				const pwn::string action = isLoading?"read":"write";
+				Error(action + " " + path);
+			}
+
+			~VirtualFile()
+			{
+				if( file ) PHYSFS_close(file);
+			}
+
+			void handle8(const pwn::uint8& j)
+			{
+				const pwn::uint16 i = j;
+				if( 0 == PHYSFS_writeULE16(file, i) ) Error("write uint8");
+			}
+			void handle8(pwn::uint8& j)
+			{
+				pwn::uint16 i=0;
+				if( 0 == PHYSFS_readULE16(file, &i) ) Error("read uint8");
+				j = static_cast<pwn::uint8>(i);
+			}
+
+			void handle16(const pwn::uint16& i)
+			{
+				if( 0 == PHYSFS_writeULE16(file, i) ) Error("write uint16");
+			}
+			void handle16(pwn::uint16& i)
+			{
+				if( 0 == PHYSFS_readULE16(file, &i) ) Error("read uint16");
+			}
+
+			void handle32(const pwn::uint32& i)
+			{
+				if( 0 == PHYSFS_writeULE32(file, i) ) Error("write uint32");
+			}
+			void handle32(pwn::uint32& i)
+			{
+				if( 0 == PHYSFS_readULE32(file, &i) ) Error("read uint32");
+			}
+
+			void handleReal(const pwn::real& r)
+			{
+				if( PHYSFS_write(file, &r, 1, sizeof(pwn::real)) != sizeof(pwn::real) ) Error("write real");
+			}
+			void handleReal(pwn::real& r)
+			{
+				if( PHYSFS_read(file, &r, 1, sizeof(pwn::real)) != sizeof(pwn::real) ) Error("write real");
+			}
+
+			/*void handle32(const pwn::real r)
+			{
+				const pwn::uint32 i = (pwn::uint32) r;
+				handle32(i);
+			}
+			void handle32(pwn::real& r)
+			{
+				pwn::uint32 i = (pwn::uint32) r;
+				handle32(i);
+				r = i;
+			}*/
+
+			PHYSFS_file* file;
+		};
 
 		template<bool CanModify, typename T>
 		struct Argument {};
@@ -52,6 +146,14 @@ namespace pwn
 			}
 		};
 
+		void Reset(const pwn::mesh::Mesh::MaterialPtr&)
+		{
+		}
+		void Reset(pwn::mesh::Mesh::MaterialPtr& m)
+		{
+			m.reset( new mesh::Material() );
+		}
+
 		template <bool IsLoading>
 		class FileArchiver
 		{
@@ -81,35 +183,33 @@ namespace pwn
 #undef ARG
 
 			FileArchiver(const pwn::string& filename)
-				: f (filename.c_str(), std::ios::out | std::ios::binary)
+				: vf( filename, IsLoading )
 			{
-				if( !f.good() ) throw "failed to open file for writing";
-				f.exceptions ( std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit );
 			}
 		private:
+			VirtualFile vf;
 			// util function
 			typedef char Byte;
 			void handle(uint8a i)
 			{
-				f.write(reinterpret_cast<const Byte*>(&i), sizeof(pwn::uint8));
+				vf.handle8(i);
 			}
 			void handle(uint16a i)
 			{
-				f.write(reinterpret_cast<const Byte*>(&i), sizeof(pwn::uint16));
+				vf.handle16(i);
 			}
 			void handle(uint32a i)
 			{
-				f.write(reinterpret_cast<const Byte*>(&i), sizeof(pwn::uint32));
+				vf.handle32(i);
 			}
 			void handle(reala r)
 			{
-				f.write(reinterpret_cast<const Byte*>(&r), sizeof(pwn::real));
+				vf.handleReal(r);
 			}
 			void write_sizet(sizeta s)
 			{
-				handle(static_cast<pwn::uint32>(s));
+				vf.handle32(s);
 			}
-			std::ofstream f;
 
 			/*template<typename T>
 			void handleSize(std::vector<T>& vec, std::size_t vc)
@@ -223,6 +323,7 @@ namespace pwn
 					const std::size_t mc = handleSize<pwn::mesh::Mesh::MaterialPtr>(mesh.materials);
 					for(std::size_t i=0; i<mc; ++i)
 					{
+						Reset(mesh.materials[i]);
 						handle(mesh.materials[i]->ambient, compress.materials);
 						handle(mesh.materials[i]->diffuse, compress.materials);
 						handle(mesh.materials[i]->specular, compress.materials);
@@ -296,11 +397,12 @@ namespace pwn
 			fa.handle(mesh, compress, version);
 		}
 
-		/*void Read(mesh::Mesh* mesh, const pwn::string& filename, pwn::meshio::Compress* compress)
+		void Read(mesh::Mesh* mesh, const pwn::string& filename)
 		{
+			pwn::meshio::Compress compress(false);
 			pwn::uint8 version = kVersion;
 			FileArchiver<true> fa(filename);
-			fa.handle(*mesh, *compress, version);
-		}*/
+			fa.handle(*mesh, compress, version);
+		}
 	}
 }

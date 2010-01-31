@@ -133,6 +133,11 @@ namespace pwn
 				return s;
 			}
 
+			void SkipWhitespace(std::ifstream& f)
+			{
+				while( f.peek() == ' ') f.ignore();
+			}
+
 			void read(OptimizedMeshBuilder* builder, const std::string& file, VoidVoidCallback& cb)
 			{
 				std::ifstream f(file.c_str());
@@ -142,11 +147,13 @@ namespace pwn
 				pwn::string currentMaterial = "";
 
 				int lineIndex = 0;
+				pwn::uint64 commandLine = 0;
 
 				pwn::string command;
 				while( f >> command )
 				{
 					++lineIndex;
+					++commandLine;
 					if( lineIndex > 9000 )
 					{
 						cb.perform();
@@ -170,6 +177,14 @@ namespace pwn
 						pwn::string x = Read(f);
 						pwn::string y = Read(f);
 						builder->addTextCoord(pwn::math::vec2(creal(x), creal(y)));
+
+						
+						SkipWhitespace(f);
+						char p = f.peek();
+						if( pwn::string("0123456789").find_first_of(p) != pwn::string::npos )
+						{
+							Read(f); // optional w element ignored...
+						}
 					}
 					else if ( command == "vn" )
 					{
@@ -182,9 +197,11 @@ namespace pwn
 					else if ( command == "f" )
 					{
 						std::vector<mesh::Triangle::Vertex> faces;
-						while( pwn::string(" 0123456789/").find(f.peek()) != pwn::string::npos )
+						SkipWhitespace(f);
+						while( pwn::string("0123456789/").find(f.peek()) != pwn::string::npos )
 						{
 							faces.push_back(cFaceIndex(Read(f)));
+							SkipWhitespace(f);
 						}
 						AddFace(builder->mesh(), materials[currentMaterial],faces);
 					}

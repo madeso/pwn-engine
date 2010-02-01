@@ -30,8 +30,7 @@ namespace pwn
 
 				if( normalMap.find(c) == normalMap.end() )
 				{
-					mMesh->addNormal(n);
-					normalMap[c] = normalConvertions.size() +1;
+					normalMap[c] = mMesh->addNormal(n);
 				}
 
 				normalConvertions.push_back(normalMap[c]);

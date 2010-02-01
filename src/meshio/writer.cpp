@@ -211,6 +211,19 @@ namespace pwn
 				vf.handle32(s);
 			}
 
+			void handleCompressedNormal(const pwn::math::vec3& n)
+			{
+				const pwn::uint16 uv = pwn::math::UnitVectorToCompressed(n);
+				handle(uv);
+			}
+
+			void handleCompressedNormal(pwn::math::vec3& n)
+			{
+				pwn::uint16 uv = 0;
+				handle(uv);
+				n = pwn::math::CompressedToUnitVector(uv);
+			}
+
 			/*template<typename T>
 			void handleSize(std::vector<T>& vec, std::size_t vc)
 			{
@@ -265,9 +278,7 @@ namespace pwn
 			{
 				if( compress )
 				{
-					pwn::uint16 uv = pwn::math::UnitVectorToCompressed(n);
-					handle(uv);
-					Argument<IsLoading, pwn::math::vec3>::Assign(n, pwn::math::CompressedToUnitVector(uv) );
+					handleCompressedNormal(n);
 				}
 				else
 				{
@@ -378,7 +389,7 @@ namespace pwn
 			Compress Uint8ToCompressArgs(pwn::uint8 u)
 			{
 				Compress c(false);
-#define READ(n) c.n = (u&offsets::n) != 0
+#define READ(n) c.n = (u&(1<<offsets::n)) != 0
 				READ(materials);
 				READ(positions);
 				READ(normals);

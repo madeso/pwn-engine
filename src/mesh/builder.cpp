@@ -5,6 +5,7 @@
 #include <boost/foreach.hpp>
 #include <pwn/math/operations>
 #include <pwn/mesh/material>
+#include <pwn/core/StringUtils>
 
 namespace pwn
 {
@@ -147,6 +148,7 @@ namespace pwn
 			KeepLast(t, '\\');
 			KeepLast(t, '/');
 			KeepLast(t, '|');
+			if( pwn::core::EndsWith(t, ".tif") ) t = pwn::core::StringReplace(t, ".tif", ".png");
 			if( newFolder.empty() ) return t;
 			else return newFolder + "/" + t;
 		}

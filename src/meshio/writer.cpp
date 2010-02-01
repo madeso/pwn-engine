@@ -6,6 +6,7 @@
 #include <pwn/mesh/mesh>
 #include <pwn/math/operations>
 #include <pwn/mesh/material>
+#include <boost/scoped_array.hpp>
 
 #include <physfs.h>
 
@@ -80,13 +81,23 @@ namespace pwn
 				if( 0 == PHYSFS_readULE16(file, &i) ) Error("read uint16");
 			}
 
-			void handle32(const pwn::uint32& i)
+			void write32(const pwn::uint32& i)
 			{
 				if( 0 == PHYSFS_writeULE32(file, i) ) Error("write uint32");
 			}
-			void handle32(pwn::uint32& i)
+
+			void read32(pwn::uint32& i)
 			{
 				if( 0 == PHYSFS_readULE32(file, &i) ) Error("read uint32");
+			}
+
+			void handle32(const pwn::uint32& i)
+			{
+				write32(i);
+			}
+			void handle32(pwn::uint32& i)
+			{
+				read32(i);
 			}
 
 			void handleReal(const pwn::real& r)
@@ -95,7 +106,30 @@ namespace pwn
 			}
 			void handleReal(pwn::real& r)
 			{
-				if( PHYSFS_read(file, &r, 1, sizeof(pwn::real)) != sizeof(pwn::real) ) Error("write real");
+				if( PHYSFS_read(file, &r, 1, sizeof(pwn::real)) != sizeof(pwn::real) ) Error("reading real");
+			}
+
+			void handleString(const pwn::string& r)
+			{
+				const uint32 length = r.length();
+				write32(length);
+				if( PHYSFS_write(file, r.c_str(), 1, length*sizeof(pwn::tchar)) != length*sizeof(pwn::tchar) ) Error("write string");
+			}
+			void handleString(pwn::string& r)
+			{
+				uint32 length = 0;
+				read32(length);
+				if( length == 0 )
+				{
+					r = "";
+				}
+				else
+				{
+					boost::scoped_array<pwn::tchar> arr( new tchar[length+1] );
+					if( PHYSFS_read(file, arr.get(), 1, length * sizeof(pwn::tchar)) != length*sizeof(pwn::tchar) ) Error("reading string");
+					arr[length] = 0;
+					r = arr.get();
+				}
 			}
 
 			/*void handle32(const pwn::real r)
@@ -174,6 +208,7 @@ namespace pwn
 
 			ARG(pwn::mesh::Triangle) Trianglea;
 			ARG(pwn::mesh::Triangle::Vertex) Vertexa;
+			ARG(pwn::mesh::Material) Materiala;
 
 			template<typename T>
 			struct vectora
@@ -222,6 +257,16 @@ namespace pwn
 				pwn::uint16 uv = 0;
 				handle(uv);
 				n = pwn::math::CompressedToUnitVector(uv);
+			}
+
+			void handleString(const pwn::string& n)
+			{
+				vf.handleString(n);
+			}
+
+			void handleString(pwn::string& n)
+			{
+				vf.handleString(n);
 			}
 
 			/*template<typename T>
@@ -335,11 +380,13 @@ namespace pwn
 					for(std::size_t i=0; i<mc; ++i)
 					{
 						Reset(mesh.materials[i]);
-						handle(mesh.materials[i]->ambient, compress.materials);
-						handle(mesh.materials[i]->diffuse, compress.materials);
-						handle(mesh.materials[i]->specular, compress.materials);
-						handle(mesh.materials[i]->emission, compress.materials);
-						handle(mesh.materials[i]->shininess, compress.materials);
+						Materiala m = *mesh.materials[i].get();
+						handle(m.ambient, compress.materials);
+						handle(m.diffuse, compress.materials);
+						handle(m.specular, compress.materials);
+						handle(m.emission, compress.materials);
+						handle(m.shininess, compress.materials);
+						handleString(m.texture_diffuse);
 					}
 				}
 

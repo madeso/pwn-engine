@@ -126,7 +126,7 @@ namespace pwn
 			bool added = false;
 			for(std::vector<Triangle::Vertex>::size_type i=2; i<size; ++i)
 			{
-				mesh->addTriangle(Triangle(material, vertices[0], vertices[1], vertices[i]));
+				mesh->addTriangle(Triangle(material, vertices[0], vertices[i-1], vertices[i]));
 				added = true;
 			}
 			if( false == added ) throw "Unable to triangulate face";
@@ -148,7 +148,7 @@ namespace pwn
 			KeepLast(t, '/');
 			KeepLast(t, '|');
 			if( newFolder.empty() ) return t;
-			else return newFolder + "\\" + t;
+			else return newFolder + "/" + t;
 		}
 
 		void MoveTextures(Mesh::MaterialPtr mat, const pwn::string& newFolder)

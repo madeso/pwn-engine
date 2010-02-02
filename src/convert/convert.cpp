@@ -9,6 +9,7 @@
 
 #include "Converter.hpp"
 #include "WavefrontObj.hpp"
+#include "3ds.hpp"
 
 #pragma comment (lib, "physfs.lib")
 
@@ -59,6 +60,16 @@ struct Cmd
 	pwn::string combined;
 };
 
+const pwn::string SuggestFormat(const pwn::string& inputfile, const pwn::string& formatOveride)
+{
+	if( formatOveride != "" ) return formatOveride;
+	const pwn::string ext = boost::filesystem::path(inputfile).extension();
+
+	if( ext == ".obj" ) return "obj";
+	else if( ext == ".3ds" ) return "3ds";
+	else return "";
+}
+
 void main(int argc, char* argv[])
 {
 	namespace po = boost::program_options;
@@ -67,6 +78,7 @@ void main(int argc, char* argv[])
 	pwn::string inputfile;
 	pwn::string outdir;
 	pwn::string texturedir;
+	pwn::string formatOveride;
 
 	const Cmd Help					("help",				'?');
 	const Cmd Input					("input",				'i');
@@ -81,6 +93,7 @@ void main(int argc, char* argv[])
 	const Cmd CompressTexcoords		("compress-texcoords",	'T');
 	const Cmd DontWrite				("dont-write",			'w');
 	const Cmd MoveTextures			("move-textures",		't');
+	const Cmd OverideFormat			("overide-format",		'f');
 	
 	po::options_description desc("Allowed options");
 	desc.add_options()
@@ -88,6 +101,7 @@ void main(int argc, char* argv[])
 		(Input, po::value<pwn::string>(&inputfile), "the input file")
 		(Output, po::value<pwn::string>(&outdir), "the output directory")
 		(MoveTextures, po::value<pwn::string>(&texturedir),	"Move the textures")
+		(OverideFormat, po::value<pwn::string>(&formatOveride), "Ignore any detection done on inputfile and provide your own")
 		(Stats,					"Write optimization statistics")
 		(MeshInfo,				"Write information about mesh")
 		(NotVerbose,			"Silent/not verbose output")
@@ -146,11 +160,30 @@ void main(int argc, char* argv[])
 		pwn::mesh::Mesh mesh;
 		if( verbose && optimizeNormals ) cout << "optimizing normals ACTIVE.." << endl;
 		pwn::convert::OptimizedMeshBuilder builder(&mesh, optimizeNormals);
-		if( verbose ) cout << "reading..";
 
-		/* scope */ {
+		const pwn::string fileFormat = SuggestFormat(inputfile, formatOveride);
+
+		if( fileFormat == "" )
+		{
+			std::cerr << "Unable to determine the kind of reader to use with " << inputfile << ", please use -" << OverideFormat.longCmd << std::endl;
+			return;
+		}
+
+		if( verbose ) cout << "reading " << fileFormat << ".." << std::endl;
+
+		if( fileFormat == "obj" )
+		{
 			WriteDotCallback wdc(verbose);
 			pwn::convert::obj::read(&builder, inputfile, wdc);
+		}
+		else if( fileFormat == "3ds" )
+		{
+			pwn::convert::studio3ds::read(&builder, inputfile);
+		}
+		else
+		{
+			std::cerr << fileFormat << " is not a recognzied format... " << endl;
+			return;
 		}
 
 		if( verbose ) cout << endl;

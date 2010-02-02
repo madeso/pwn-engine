@@ -4,7 +4,6 @@ transperency & sorting test
 - sorting respects camera near/far
 -investigate/improve gl texture filters?
 load mesh
--rewrite mesh-compiler
 -test uv-coordinates
 -actor def files, share mesh between actordefs
 animated objects

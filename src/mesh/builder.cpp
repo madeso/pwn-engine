@@ -144,6 +144,7 @@ namespace pwn
 
 		pwn::string MoveTexture(const pwn::string& texture, const pwn::string& newFolder)
 		{
+			if( pwn::core::Trim(texture) == "" ) return "";
 			pwn::string t = texture;
 			KeepLast(t, '\\');
 			KeepLast(t, '/');

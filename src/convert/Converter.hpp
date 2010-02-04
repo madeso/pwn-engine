@@ -31,6 +31,10 @@ namespace pwn
 
 			::pwn::mesh::Mesh* mesh();
 
+			uint32 getMaterial(const pwn::string& name) const;
+
+			uint32 validate() const;
+
 			// stat functions
 			pwn::real removedNormals() const;
 			std::size_t numberOfRemovedNormals() const;

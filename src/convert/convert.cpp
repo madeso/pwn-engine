@@ -188,6 +188,13 @@ void main(int argc, char* argv[])
 
 		if( verbose ) cout << endl;
 
+		const pwn::uint32 validationErrors = builder.validate();
+
+		if( validationErrors != 0)
+		{
+			return;
+		}
+
 		pwn::mesh::MoveTextures(&mesh, texturedir);
 
 		if( meshInfo )

@@ -21,6 +21,16 @@ namespace pwn
 			return mesh;
 		}
 
+		Mesh* Scale(Mesh* mesh, pwn::real scale)
+		{
+			BOOST_FOREACH(math::vec3& v, mesh->positions)
+			{
+				v *= scale;
+			}
+
+			return mesh;
+		}
+
 		namespace // local
 		{
 			Triangle::Vertex v(Triangle::index p, Triangle::index t)

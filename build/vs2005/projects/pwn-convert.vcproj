@@ -194,6 +194,30 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\src\convert\MilkshapeAscii.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\convert\MilkshapeAscii.hpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\convert\MilkshapeBinary.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\convert\MilkshapeBinary.hpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\convert\MilkshapeCommon.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\convert\MilkshapeCommon.hpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\convert\WavefrontObj.cpp"
 			>
 		</File>

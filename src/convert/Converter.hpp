@@ -8,14 +8,10 @@
 #include <pwn/math/rgba>
 #include <pwn/string>
 #include <pwn/mesh/Triangle>
+#include <pwn/mesh/Mesh>
 
 namespace pwn
 {
-	namespace mesh
-	{
-		class Mesh;
-	};
-
 	namespace convert
 	{
 		class OptimizedMeshBuilder
@@ -26,6 +22,10 @@ namespace pwn
 			mesh::Triangle::index addPosition(const math::vec3& pos);
 			mesh::Triangle::index addNormal(const math::vec3& norm);
 			mesh::Triangle::index addTextCoord(const math::vec2& tc);
+
+			// util functions, simply call theese on the mesh
+			void addTriangle(const mesh::Triangle& tri);
+			mesh::Triangle::index addMaterial(mesh::Mesh::MaterialPtr m);
 
 			void done();
 

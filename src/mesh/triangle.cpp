@@ -11,6 +11,13 @@ namespace pwn
 		{
 		}
 
+		Triangle::Vertex::Vertex(index location_textcoord, index normal)
+			: location(location_textcoord)
+			, normal(normal)
+			, texcoord(location_textcoord)
+		{
+		}
+
 		Triangle::Vertex::Vertex()
 			: location(0)
 			, normal(0)

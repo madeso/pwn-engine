@@ -11,6 +11,8 @@
 #include "WavefrontObj.hpp"
 #include "3ds.hpp"
 
+#include "MilkshapeAscii.hpp"
+
 #pragma comment (lib, "physfs.lib")
 
 std::ostream& operator<<(std::ostream& os, const ::pwn::convert::Stat& s)
@@ -67,6 +69,8 @@ const pwn::string SuggestFormat(const pwn::string& inputfile, const pwn::string&
 
 	if( ext == ".obj" ) return "obj";
 	else if( ext == ".3ds" ) return "3ds";
+	else if( ext == ".txt" ) return "ms3d-ascii";
+	else if( ext == ".ms3d" ) return "ms3d-binary";
 	else return "";
 }
 
@@ -79,6 +83,7 @@ void main(int argc, char* argv[])
 	pwn::string outdir;
 	pwn::string texturedir;
 	pwn::string formatOveride;
+	pwn::real modelScale;
 
 	const Cmd Help					("help",				'?');
 	const Cmd Input					("input",				'i');
@@ -94,6 +99,8 @@ void main(int argc, char* argv[])
 	const Cmd DontWrite				("dont-write",			'w');
 	const Cmd MoveTextures			("move-textures",		't');
 	const Cmd OverideFormat			("overide-format",		'f');
+	const Cmd ModelScale			("model-scale",			'X');
+
 	
 	po::options_description desc("Allowed options");
 	desc.add_options()
@@ -102,6 +109,7 @@ void main(int argc, char* argv[])
 		(Output, po::value<pwn::string>(&outdir), "the output directory")
 		(MoveTextures, po::value<pwn::string>(&texturedir),	"Move the textures")
 		(OverideFormat, po::value<pwn::string>(&formatOveride), "Ignore any detection done on inputfile and provide your own")
+		(ModelScale, po::value<pwn::real>(&modelScale)->default_value(1), "rescale the model")
 		(Stats,					"Write optimization statistics")
 		(MeshInfo,				"Write information about mesh")
 		(NotVerbose,			"Silent/not verbose output")
@@ -180,10 +188,20 @@ void main(int argc, char* argv[])
 		{
 			pwn::convert::studio3ds::read(&builder, inputfile);
 		}
+		else if (fileFormat == "ms3d-ascii" )
+		{
+			pwn::convert::milkshape::ascii::Read(&builder, inputfile);
+		}
 		else
 		{
 			std::cerr << fileFormat << " is not a recognzied format... " << endl;
 			return;
+		}
+
+		if( ModelScale.eval(vm) )
+		{
+			if( verbose ) cout << "scaling " << modelScale << ".." << std::endl;
+			pwn::mesh::Scale(&mesh, modelScale);
 		}
 
 		if( verbose ) cout << endl;

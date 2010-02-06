@@ -18,6 +18,7 @@ namespace pwn
 				index texcoord;
 
 				Vertex(index location, index normal, index texcoord);
+				Vertex(index location_textcoord, index normal);
 				Vertex();
 			};
 			Vertex v0;

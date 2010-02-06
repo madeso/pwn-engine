@@ -50,7 +50,7 @@ public:
 		const rect res = FromUpperLeftAndSize(Origo2(), direction2(world2.getWidth(), world2.getHeight()));
 
 		boost::shared_ptr<World3> world( World3::Create() );
-		boost::shared_ptr<ActorDef> rome = LoadMesh("barrel01.mesh", &tpool);
+		boost::shared_ptr<ActorDef> rome = LoadMesh("turtle1.mesh", &tpool);
 		world->actor_add( Actor::Create(point3(0,0,0), qIdentity(), rome) );
 
 		/*

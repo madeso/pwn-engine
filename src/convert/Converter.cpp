@@ -106,6 +106,16 @@ namespace pwn
 			return mMesh;
 		}
 
+		void OptimizedMeshBuilder::addTriangle(const mesh::Triangle& tri)
+		{
+			mMesh->addTriangle(tri);
+		}
+
+		mesh::Triangle::index OptimizedMeshBuilder::addMaterial(mesh::Mesh::MaterialPtr m)
+		{
+			return mMesh->addMaterial(m);
+		}
+
 		void OptimizedMeshBuilder::done()
 		{
 			if( isBuilding == false ) throw "done has been called...";

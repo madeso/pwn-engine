@@ -71,7 +71,7 @@ namespace pwn
 						if( tc != 0 )
 						{
 							const math::vec2 t = smesh->texcoords[tri[i].texcoord];
-							glTexCoord2f(t.x, t.y);
+							glTexCoord2f(t.x, 1-t.y);
 						}
 						const math::vec3 p = smesh->positions[tri[i].location];
 						glVertex3f(p.x, p.y, p.z);

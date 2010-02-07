@@ -1,10 +1,8 @@
-#if 0
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.IO;
+#include <pwn/string>
+#include <fstream>
+#include <boost/scoped_array.hpp>
+#include <boost/foreach.hpp>
+#include "MilkshapeCommon.hpp"
 
 namespace pwn
 {
@@ -14,64 +12,139 @@ namespace pwn
 		{
 			namespace binary
 			{
-				  object RawDeserializeEx(byte[] rawdatas, Type anytype)
+				using namespace milkshape::common;
+
+				typedef unsigned char byte;
+
+				class MeshGroup
 				{
-					int rawsize = Marshal.SizeOf(anytype);
-					if (rawsize > rawdatas.Length)
-						return null;
-					GCHandle handle = GCHandle.Alloc(rawdatas, GCHandleType.Pinned);
-					IntPtr buffer = handle.AddrOfPinnedObject();
-					object retobj = Marshal.PtrToStructure(buffer, anytype);
-					handle.Free();
-					return retobj;
+				public:
+					string name;
+					int material;
+					std::vector<int> tri;
+				};
+
+				#include <pshpack1.h>
+				struct MS3DHeader
+				{
+					char ID[10];
+					int version;
+				};
+				struct MS3DVertex
+				{
+					byte flags;
+					float vertex[3];
+					char boneID;
+					byte refCount;
+				};
+
+				struct MS3DTriangle
+				{
+					unsigned short flags;
+					unsigned short vertexIndices[3];
+					float vertexNormals[3][3]; //[3],[3] 
+					float s[3];
+					float t[3];
+					byte smoothingGroup;
+					byte groupIndex;
+				};
+				struct MS3DMaterial
+				{
+					char name[32]; //
+					float ambient[4]; //
+					float diffuse[4]; //
+					float specular[4]; //
+					float emissive[4]; //
+					float shininess; // 0.0f - 128.0f
+					float transparency; // 0.0f - 1.0f
+					char mode; // 0, 1, 2 is unused now
+					char texture[128];
+					char alphamap[128];
+	/*
+					char name[32];
+					float ambient;
+					float diffuse[4];
+					float specular[4];
+					float emissive[4];
+					float shininess; // 0.0f - 128.0f 
+					float transparency; // 0.0f - 1.0f 
+					char mode; // 0, 1, 2 is unused now 
+					char texture[128];
+					char alphamap[128];
+					*/
+				};
+				struct MS3DJoint
+				{
+					byte flags;
+					char name[32];
+					char parentName[32];
+					float rotation[3];
+					float translation[3];
+					unsigned short numRotationKeyframes;
+					unsigned short numTranslationKeyframes;
+				};
+				struct MS3DKeyframe
+				{
+					float time;
+					float parameter[3];
+				};
+				#include <poppack.h>
+
+				void copyToColor(Color& color,float* p)
+				{
+					color.r = p[0];
+					color.g = p[1];
+					color.b = p[2];
+					color.a = p[3];
+				}
+				void copyToColor(Color& color,float p)
+				{
+					color.r = p;
+					color.g = p;
+					color.b = p;
+					color.a = p;
 				}
 
-				  string CropNull(string input)
+				class Joint
 				{
-					input = input.Trim();
-					if (input.EndsWith(((char)13).ToString())
-						&& input.IndexOf('\0') == -1)
-					{
-						return input.Substring(0, input.Length - 1);
-					}
-					if (input.IndexOf('\0') == -1)
-						return input;
-					return input.Substring(0, input.IndexOf('\0'));
-				}
-				  string AsString(char[] c)
+				public:
+					MS3DJoint joint;
+					std::vector<MS3DKeyframe> rotations;
+					std::vector<MS3DKeyframe> translations;
+				};
+
+				class Runner
 				{
-					return CropNull( string(c));
-				}
+					std::ifstream fs;
 
-				 class Runner
-				{
-					Stream fs;
-
-					 T Read<T>()
+				public:
+					template<typename T>
+					T Read()
 					{
-						byte[] b =  byte[Marshal.SizeOf(typeof(T))];
-						fs.Read(b, 0, b.Length);
-						return (T)RawDeserializeEx(b, typeof(T));
+						T t;
+						fs.read( reinterpret_cast<char*>(&t), sizeof(T));
+						if( fs.eof() ) throw "end of file...";
+						return t;
 					}
 
-					 int ReadCount()
+					int ReadCount()
 					{
-						return Read<short>();
+						return Read<unsigned short>();
 					}
 
-					 string ReadString(int count)
+					string ReadString(int count)
 					{
-						byte[] b =  byte[count];
-						fs.Read(b, 0, b.Length);
-						return System.Text.Encoding.UTF8.GetString(b);
+						boost::scoped_array<char> str( new char[count] );
+						fs.read(str.get(), count);
+						return str.get();
 					}
 
-					public Runner(Stream s)
+					Runner(const std::string& path)
+						: fs(path.c_str(), std::ios::binary)
 					{
-						this.fs = s;
 					}
 
-					public void run()
+					void run()
 					{
 						MS3DHeader header = Read<MS3DHeader>();
 						readVertices();
@@ -84,154 +157,141 @@ namespace pwn
 						readJoints();
 					}
 
-					 void readJoints()
+					void readJoints()
 					{
 						int jointcount = ReadCount();
 
 						for (int ji = 0; ji < jointcount; ++ji)
 						{
-							Joint joint =  Joint();
+							Joint joint;
 							joint.joint = Read<MS3DJoint>();
 							for (int ki = 0; ki < joint.joint.numRotationKeyframes; ++ki)
 							{
 								MS3DKeyframe kf = Read<MS3DKeyframe>();
-								joint.rotations.Add(kf);
+								joint.rotations.push_back(kf);
 							}
 							for (int ki = 0; ki < joint.joint.numTranslationKeyframes; ++ki)
 							{
 								MS3DKeyframe kf = Read<MS3DKeyframe>();
-								joint.translations.Add(kf);
+								joint.translations.push_back(kf);
 							}
 
-							joints.Add(joint);
+							joints.push_back(joint);
 						}
 					}
 
-					 void readMaterials()
+					void readMaterials()
 					{
 						int matcount = ReadCount();
 						for (int m = 0; m < matcount; ++m)
 						{
 							MS3DMaterial mat = Read<MS3DMaterial>();
-							materials.Add(mat);
+							materials.push_back(mat);
 						}
 					}
 
-					 void readMeshGroups()
+					void readMeshGroups()
 					{
 						int meshgroups = ReadCount();
 						for (int m = 0; m < meshgroups; ++m)
 						{
-							MeshGroup group =  MeshGroup();
+							MeshGroup group;
 							byte flags = Read<byte>();
-							group.name = CropNull(ReadString(32));
+							group.name = ReadString(32);
 							int mtricount = ReadCount();
 							for (int t = 0; t < mtricount; ++t)
 							{
 								int tr = Read<short>();
-								group.tri.Add(tr);
+								group.tri.push_back(tr);
 							}
 							group.material = Read<char>();
-							groups.Add(group);
+							groups.push_back(group);
 						}
 					}
 
-					 void readTriangles()
+					void readTriangles()
 					{
 						int tricount = ReadCount();
 						for (int t = 0; t < tricount; ++t)
 						{
 							MS3DTriangle tri = Read<MS3DTriangle>();
-							triangles.Add(tri);
+							triangles.push_back(tri);
 						}
 					}
 
-					 void readVertices()
+					void readVertices()
 					{
 						int vertcount = ReadCount();
 						for (int v = 0; v < vertcount; ++v)
 						{
 							MS3DVertex vt = Read<MS3DVertex>();
-							vertices.Add(vt);
+							vertices.push_back(vt);
 						}
 					}
 
 					// result
-					public int framecount;
-					public float current;
-					public float animfps;
-					public std::vector<MS3DVertex> vertices =  std::vector<MS3DVertex>();
-					public std::vector<MS3DTriangle> triangles =  std::vector<MS3DTriangle>();
-					public std::vector<MS3DMaterial> materials =  std::vector<MS3DMaterial>();
-					public std::vector<MeshGroup> groups =  std::vector<MeshGroup>();
-					public std::vector<Joint> joints =  std::vector<Joint>();
-				}
+					int framecount;
+					float current;
+					float animfps;
 
-				public  void Load(FileSystem fs,string meshpath,out MeshDef def,out Animation animation)
+					std::vector<MS3DVertex> vertices;
+					std::vector<MS3DTriangle> triangles;
+					std::vector<MS3DMaterial> materials;
+					std::vector<MeshGroup> groups;
+					std::vector<Joint> joints;
+				};
+
+				Model ExtractModel(Runner& run)
 				{
 					Model model;
-					using(Stream s = fs.open(meshpath) )
-					{
-						Runner run =  Runner(s);
-						run.run();
-						model = ExtractModel(run);
-					}
-
-					def = MilkshapeCommon.ExtractMeshDefinition(model);
-					animation = MilkshapeCommon.ExtractAnimation(model);
-				}
-
-				  Model ExtractModel(Runner run)
-				{
-					Model model =  Model();
 					model.framecount = run.framecount;
 					model.currentFrame = run.current;
 
-					foreach (MS3DMaterial s in run.materials)
+					BOOST_FOREACH(MS3DMaterial s, run.materials)
 					{
-						Material mat = model.newMaterial();
-						mat.name = AsString(s.name);
+						Material& mat = model.newMaterial();
+						mat.name = s.name;
 						copyToColor(mat.ambient, s.ambient);
 						copyToColor(mat.diffuse, s.diffuse);
 						copyToColor(mat.specular, s.specular);
 						copyToColor(mat.emissive, s.emissive);
 						mat.shininess = s.shininess;
 						mat.transperency = s.transparency;
-						mat.diffuseTexture = AsString(s.texture);
-						mat.alphatexture = AsString(s.alphamap);
+						mat.diffuseTexture = s.texture;
+						mat.alphatexture = s.alphamap;
 					}
 
-					foreach (MeshGroup g in run.groups)
+					BOOST_FOREACH(MeshGroup g, run.groups)
 					{
-						Mesh m = model.newMesh();
+						Mesh& m = model.newMesh();
 						m.materialId = g.material;
-						foreach (int tr in g.tri)
+						BOOST_FOREACH(int tr, g.tri)
 						{
-							MS3DTriangle tri = run.triangles[tr];
-							int[] vid =  int[3];
-							int[] nid =  int[3];
+							MS3DTriangle& tri = run.triangles[tr];
+							int vid[3];
+							int nid[3];
 
 							for (int i = 0; i < 3; ++i)
 							{
-								vid[i] = m.vertices.Count;
-								nid[i] = m.normals.Count;
+								vid[i] = m.vertices.size();
+								nid[i] = m.normals.size();
 
-								Normal norm = m.newNormal();
-								norm.x = tri.vertexNormals[i + 0];
-								norm.y = tri.vertexNormals[i + 1];
-								norm.z = tri.vertexNormals[i + 2];
+								Normal& norm = m.newNormal();
+								norm.norm.x = tri.vertexNormals[i][0];
+								norm.norm.y = tri.vertexNormals[i][1];
+								norm.norm.z = tri.vertexNormals[i][2];
 
 								MS3DVertex v = run.vertices[ tri.vertexIndices[i] ];
-								Vertex ver = m.newVertex();
-								ver.u = tri.s[i];
-								ver.v = tri.t[i];
+								Vertex& ver = m.newVertex();
+								ver.uv.x = tri.s[i];
+								ver.uv.y = tri.t[i];
 								ver.bone = v.boneID;
-								ver.x = v.vertex[0];
-								ver.y = v.vertex[1];
-								ver.z = v.vertex[2];
+								ver.pos.x = v.vertex[0];
+								ver.pos.y = v.vertex[1];
+								ver.pos.z = v.vertex[2];
 							}
 
-							Tri t = m.newTri();
+							Tri& t = m.newTri();
 							t.n1 = nid[0];
 							t.n2 = nid[1];
 							t.n3 = nid[2];
@@ -241,11 +301,11 @@ namespace pwn
 						}
 					}
 
-					foreach (Joint j in run.joints)
+					BOOST_FOREACH(Joint j, run.joints)
 					{
-						Bone b = model.newBone();
-						b.parentName = AsString(j.joint.parentName);
-						b.name = AsString(j.joint.name);
+						Bone& b = model.newBone();
+						b.parentName = j.joint.parentName;
+						b.name = j.joint.name;
 						b.rx = j.joint.rotation[0];
 						b.ry = j.joint.rotation[1];
 						b.rz = j.joint.rotation[2];
@@ -253,18 +313,18 @@ namespace pwn
 						b.y = j.joint.translation[1];
 						b.z = j.joint.translation[2];
 
-						foreach (MS3DKeyframe r in j.rotations)
+						BOOST_FOREACH(MS3DKeyframe r, j.rotations)
 						{
-							RotatonKey k = b.newRotationKey();
+							RotationKey& k = b.newRotationKey();
 							k.time = r.time * run.animfps;
 							k.x = r.parameter[0];
 							k.y = r.parameter[1];
 							k.z = r.parameter[2];
 						}
 
-						foreach (MS3DKeyframe t in j.translations)
+						BOOST_FOREACH(MS3DKeyframe t, j.translations)
 						{
-							PositionKey k = b.newPositionKey();
+							PositionKey& k = b.newPositionKey();
 							k.time = t.time * run.animfps;
 							k.x = t.parameter[0];
 							k.y = t.parameter[1];
@@ -276,118 +336,18 @@ namespace pwn
 					return model;
 				}
 
-				  void copyToColor(Color color,float[] p)
+				void Read(OptimizedMeshBuilder* builder, const string& meshpath)
 				{
-					color.r = p[0];
-					color.g = p[1];
-					color.b = p[2];
-					color.a = p[3];
-				}
+					Model model;
+					
+					Runner run(meshpath);
+					run.run();
+					model = ExtractModel(run);
 
-				[StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Ansi)]
-				 struct MS3DHeader
-				{
-					[MarshalAs(UnmanagedType.ByValArray, SizeConst = 10)]
-					public char[] ID;
-					public int version;
-				}
-
-				class MeshGroup
-				{
-					public string name;
-					public int material;
-					public std::vector<int> tri =  std::vector<int>();
-				}
-
-				[StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Ansi)]
-				 struct MS3DVertex
-				{
-					public byte flags;
-					[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.R4, SizeConst = 3)]
-					public float[] vertex;
-					public char boneID;
-					public byte refCount;
-
-					public  string ToString()
-					{
-						return string.Format("{0} ({1} {2} {3})", (int)boneID, vertex[0], vertex[1], vertex[2]);
-					}
-				}
-
-				[StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Ansi)]
-				 struct MS3DTriangle
-				{
-					public short flags;
-					[MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
-					public short[] vertexIndices;
-					[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.R4, SizeConst = 9)]
-					public float[] vertexNormals; //[3],[3] 
-					[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.R4, SizeConst = 3)]
-					public float[] s;
-					[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.R4, SizeConst = 3)]
-					public float[] t;
-					public byte smoothingGroup;
-					public byte groupIndex;
-				}
-
-				[StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Ansi)]
-				 struct MS3DMaterial
-				{
-					[MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
-					public char[] name;
-					[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.R4, SizeConst = 4)]
-					public float[] ambient;
-					[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.R4, SizeConst = 4)]
-					public float[] diffuse;
-					[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.R4, SizeConst = 4)]
-					public float[] specular;
-					[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.R4, SizeConst = 4)]
-					public float[] emissive;
-					[MarshalAs(UnmanagedType.R4)]
-					public float shininess; // 0.0f - 128.0f 
-					[MarshalAs(UnmanagedType.R4)]
-					public float transparency; // 0.0f - 1.0f 
-					public char mode; // 0, 1, 2 is unused now 
-					[MarshalAs(UnmanagedType.ByValArray, SizeConst = 128)]
-					public char[] texture;
-					[MarshalAs(UnmanagedType.ByValArray, SizeConst = 128)]
-					public char[] alphamap;
-				}
-
-				[StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Ansi)]
-				 struct MS3DJoint
-				{
-					public byte flags;
-					[MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
-					public char[] name;
-					[MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
-					public char[] parentName;
-					[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.R4, SizeConst = 3)]
-					public float[] rotation;
-					[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.R4, SizeConst = 3)]
-					public float[] translation;
-					public short numRotationKeyframes;
-					public short numTranslationKeyframes;
-				}
-
-				[StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Ansi)]
-				 struct MS3DKeyframe
-				{
-					[MarshalAs(UnmanagedType.R4)]
-					public float time;
-					[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.R4, SizeConst = 3)]
-					public float[] parameter;
-				}
-
-				 class Joint
-				{
-					public MS3DJoint joint;
-					public std::vector<MS3DKeyframe> rotations =  std::vector<MS3DKeyframe>();
-					public std::vector<MS3DKeyframe> translations =  std::vector<MS3DKeyframe>();
+					MilkshapeCommon::ExtractMeshDefinition(model, builder);
+					//animation = MilkshapeCommon::ExtractAnimation(model);
 				}
 			}
 		}
 	}
 }
-
-#endif

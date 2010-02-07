@@ -12,6 +12,7 @@
 #include "3ds.hpp"
 
 #include "MilkshapeAscii.hpp"
+#include "MilkshapeBinary.hpp"
 
 #pragma comment (lib, "physfs.lib")
 
@@ -191,6 +192,11 @@ void main(int argc, char* argv[])
 		else if (fileFormat == "ms3d-ascii" )
 		{
 			pwn::convert::milkshape::ascii::Read(&builder, inputfile);
+		}
+		else if ( fileFormat == "ms3d-binary" )
+		{
+			pwn::convert::milkshape::binary::Read(&builder, inputfile);
+
 		}
 		else
 		{

@@ -143,7 +143,7 @@ namespace pwn
 							return SelectChunk(id, s);
 						}
 
-						static BinaryChunkPtr SelectChunk(int id, std::vector<BinaryChunkPtr> s)
+						static BinaryChunkPtr SelectChunk(int id, std::vector<BinaryChunkPtr>& s)
 						{
 							BinaryChunkPtr c = SelectChunkOrNull(id, s);
 							if (c.get() == 0) throw "Missing required chunk";
@@ -153,7 +153,7 @@ namespace pwn
 						static std::vector<BinaryChunkPtr> IterateChunks(int id, std::vector<BinaryChunkPtr> s)
 						{
 							std::vector<BinaryChunkPtr> res;
-							BOOST_FOREACH(BinaryChunkPtr c, s)
+							BOOST_FOREACH(BinaryChunkPtr& c, s)
 							{
 								if (c->id == id)
 								{
@@ -163,9 +163,9 @@ namespace pwn
 							return res;
 						}
 
-						static BinaryChunkPtr SelectChunkOrNull(int id, std::vector<BinaryChunkPtr> s)
+						static BinaryChunkPtr SelectChunkOrNull(int id, std::vector<BinaryChunkPtr>& s)
 						{
-							BOOST_FOREACH(BinaryChunkPtr c, s)
+							BOOST_FOREACH(BinaryChunkPtr& c, s)
 							{
 								if (c->id == id) return c;
 							}
@@ -359,7 +359,7 @@ namespace pwn
 							mapping = ParseMapping(BinaryChunk::SelectChunk(ChunkId::MAPPING_COORDINATES_LIST, chunks));
 							std::vector<BinaryChunkPtr> facechunks;
 							faces = ParseFaces(BinaryChunk::SelectChunk(ChunkId::FACES_DESCRIPTION, chunks), facechunks);
-							BOOST_FOREACH (BinaryChunkPtr bc, BinaryChunk::IterateChunks(ChunkId::FACES_MATERIAL, facechunks))
+							BOOST_FOREACH(const BinaryChunkPtr& bc, BinaryChunk::IterateChunks(ChunkId::FACES_MATERIAL, facechunks))
 							{
 								facematerials.push_back( FaceMaterialChunk().load(bc) );
 							}
@@ -518,11 +518,11 @@ namespace pwn
 							if (c->id != ChunkId::EDITOR_3D_CHUNK) throw "Not a 3d editor chunk";
 							std::vector<BinaryChunkPtr> chunks = c->SubChunks();
 
-							BOOST_FOREACH (BinaryChunkPtr oc , BinaryChunk::IterateChunks(ChunkId::OBJECT_BLOCK, chunks))
+							BOOST_FOREACH(const BinaryChunkPtr& oc , BinaryChunk::IterateChunks(ChunkId::OBJECT_BLOCK, chunks))
 							{
 								objects.push_back( ObjectChunk().load(oc) );
 							}
-							BOOST_FOREACH (BinaryChunkPtr mc , BinaryChunk::IterateChunks(ChunkId::MATERIAL_BLOCK, chunks))
+							BOOST_FOREACH (const BinaryChunkPtr& mc , BinaryChunk::IterateChunks(ChunkId::MATERIAL_BLOCK, chunks))
 							{
 								materials.push_back( MaterialChunk().load(mc));
 							}
@@ -548,7 +548,7 @@ namespace pwn
 
 					static void ParseChunk(OptimizedMeshBuilder* builder, MainChunk& main)
 					{
-						BOOST_FOREACH (MaterialChunk chunk, main.editor.materials)
+						BOOST_FOREACH(MaterialChunk& chunk, main.editor.materials)
 						{
 							pwn::mesh::Mesh::MaterialPtr mat( new pwn::mesh::Material() );
 							builder->mesh()->addMaterial(mat);

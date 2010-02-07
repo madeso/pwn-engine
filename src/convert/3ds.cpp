@@ -82,6 +82,13 @@ namespace pwn
 							return s.str();
 						}
 
+						int int1()
+						{
+							uint8 i;
+							Read<>(i);
+							return i;
+						}
+
 						int int2()
 						{
 							uint16 i;
@@ -224,6 +231,10 @@ namespace pwn
 						const int SCALE_TRACK = 0xB022;
 						const int HIERARCHY_POSITION = 0xB030;
 
+						const int COLOR_RGB = 0x0010;
+						const int COLOR_TRU = 0x0011;
+						const int COLOR_TRUG = 0x0012;
+
 						const string ToString(int id)
 						{
 							switch(id)
@@ -281,26 +292,38 @@ namespace pwn
 
 						mat44 mat;
 
+						static mat44 GetMatrix(BinaryChunkPtr c)
+						{
+							if( c.get() )
+							{
+								if (c->id != ChunkId::LOCAL_COORDINATES_SYSTEM) throw "not a coordsys";
+
+								Binary b = c->getBinary();
+								real lmat[4*4];
+
+								for (int j = 0; j < 4; j++)
+								{
+									for (int i = 0; i < 3; i++)
+									{
+										RefMat(lmat, i, j) = b.rfloat();
+									}
+								}
+								RefMat(lmat, 3, 0) = 0;
+								RefMat(lmat, 3, 1) = 0;
+								RefMat(lmat, 3, 2) = 0;
+								RefMat(lmat, 3, 3) = 1;
+
+								return mat44_FromRowMajor(lmat);
+							}
+							else
+							{
+								return mat44Identity();
+							}
+						}
+
 						void load(BinaryChunkPtr c)
 						{
-							if (c->id != ChunkId::LOCAL_COORDINATES_SYSTEM) throw "not a coordsys";
-
-							Binary b = c->getBinary();
-							real lmat[4*4];
-
-							for (int j = 0; j < 4; j++)
-							{
-								for (int i = 0; i < 3; i++)
-								{
-									RefMat(lmat, i, j) = b.rfloat();
-								}
-							}
-							RefMat(lmat, 3, 0) = 0;
-							RefMat(lmat, 3, 1) = 0;
-							RefMat(lmat, 3, 2) = 0;
-							RefMat(lmat, 3, 3) = 1;
-
-							mat = mat44_FromRowMajor(lmat);
+							mat = GetMatrix(c);
 						}
 
 						vec3 translate(vec3 p) const
@@ -363,7 +386,7 @@ namespace pwn
 							{
 								facematerials.push_back( FaceMaterialChunk().load(bc) );
 							}
-							coordsys.load(BinaryChunk::SelectChunk(ChunkId::LOCAL_COORDINATES_SYSTEM, chunks));
+							coordsys.load(BinaryChunk::SelectChunkOrNull(ChunkId::LOCAL_COORDINATES_SYSTEM, chunks));
 						}
 
 						std::vector<Poly> ParseFaces(BinaryChunkPtr c, std::vector<BinaryChunkPtr>& chunks)
@@ -441,9 +464,20 @@ namespace pwn
 							if (c.get() != 0)
 							{
 								Binary b = c->getBinary();
-								red = b.rfloat();
-								green = b.rfloat();
-								blue = b.rfloat();
+								const int type = b.int2();
+								const int size = b.int4();
+								switch(type)
+								{
+								case ChunkId::COLOR_RGB:
+								case ChunkId::COLOR_TRU:
+								case ChunkId::COLOR_TRUG:
+									red = b.int1() / 255.0f;
+									green = b.int1() / 255.0f;
+									blue = b.int1() / 255.0f;
+									break;
+								default:
+									throw "Unknown color...";
+								}
 							}
 							else
 							{

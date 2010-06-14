@@ -13,6 +13,8 @@ namespace pwn
 		class RenderList;
 		class CompiledCamera;
 
+		/** A animated mesh instance in the World3.
+		 */
 		class Actor
 		{
 		public:

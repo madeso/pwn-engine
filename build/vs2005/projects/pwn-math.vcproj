@@ -156,6 +156,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\inc\pwn\math\rgb"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\src\rgb.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\inc\pwn\math\rgba"
 			>
 		</File>

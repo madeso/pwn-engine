@@ -16,6 +16,8 @@ namespace pwn
 		class Part;
 		class TexturePool2;
 
+		/** A mesh definition ready for rendering.
+		 */
 		class ActorDef
 		{
 		public:

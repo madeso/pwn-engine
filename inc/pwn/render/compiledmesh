@@ -7,6 +7,8 @@ namespace pwn
 {
 	namespace render
 	{
+		/** Optimized version of a mesh used for fast rendering.
+		 */
 		class CompiledMesh
 			: boost::noncopyable
 		{

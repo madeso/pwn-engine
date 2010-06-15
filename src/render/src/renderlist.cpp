@@ -168,7 +168,7 @@ namespace pwn
 		{
 			if( useGlCommands )
 			{
-				glColor4fv( material->diffuse.data() );
+				glColor4f( material->diffuse.red(), material->diffuse.green(), material->diffuse.blue(), material->diffuse.alpha() );
 				Assert( glGetError() == GL_NO_ERROR);
 				if( material->texture.get() )
 				{

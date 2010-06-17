@@ -19,7 +19,13 @@ namespace pwn
 		Rgba::Rgba(const real gray)
 			: Rgb(gray)
 		{
-			alpha(gray);
+			alpha(1);
+		}
+
+		Rgba::Rgba(const int rgb)
+			: Rgb(rgb)
+		{
+			alpha(1);
 		}
 
 		const real Rgba::alpha() const

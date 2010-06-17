@@ -181,7 +181,7 @@ namespace pwn
 			void rgba(const real r, const real g, const real b, const real a);
 			void rgb(const real r, const real g, const real b);
 			void rgb(int rgb);
-		private:
+		public:
 			real r;
 			real g;
 			real b;

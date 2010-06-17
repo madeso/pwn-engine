@@ -302,10 +302,10 @@ namespace pwn
 			}
 			void handle(Rgbaa c, bool compress)
 			{
-				for(int i = 0; i<4; ++i)
-				{
-					handle(c[i], compress);
-				}
+				handle(c.r, compress);
+				handle(c.g, compress);
+				handle(c.b, compress);
+				handle(c.a, compress);
 			}
 			void handle(vec3a v)
 			{

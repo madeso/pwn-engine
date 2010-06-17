@@ -27,7 +27,7 @@ namespace pwn
 			void rgb(const real r, const real g, const real b);
 			void rgb(int rgb);
 			void rgb(Color::Type color);
-		private:
+		public:
 			real a;
 		};
 	}

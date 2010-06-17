@@ -4,6 +4,7 @@
 #include <vector>
 #include <pwn/string>
 #include <pwn/math/types>
+#include <boost/utility.hpp>
 
 namespace pwn
 {

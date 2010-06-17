@@ -33,7 +33,7 @@ namespace pwn
 				{
 					return p.substr(1, p.size()-2);
 				}
-				class Runner
+				class Runner : boost::noncopyable
 				{
 				public:
 					Model model;

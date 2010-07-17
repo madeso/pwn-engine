@@ -37,10 +37,11 @@ namespace pwn
 			bool deinitInDestructor;
 
 			PhysFsStarter(const pwn::string& argv0)
-				: deinitInDestructor(true)
+				: deinitInDestructor(false)
 			{
 				Assert(gPhysFsCreated()==false);
 				const int result = PHYSFS_init(argv0.c_str());
+				deinitInDestructor = true;
 				if( result == 0) ThrowPhysFsError();
 			}
 

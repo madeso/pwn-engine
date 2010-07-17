@@ -149,15 +149,11 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\number"
+			RelativePath="..\..\..\inc\pwn\number.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\math\operations"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\inc\pwn\math\rgb"
+			RelativePath="..\..\..\inc\pwn\math\operations.h"
 			>
 		</File>
 		<File
@@ -165,7 +161,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\math\rgba"
+			RelativePath="..\..\..\inc\pwn\math\rgb.h"
 			>
 		</File>
 		<File
@@ -173,7 +169,11 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\math\types"
+			RelativePath="..\..\..\inc\pwn\math\rgba.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\math\types.h"
 			>
 		</File>
 	</Files>

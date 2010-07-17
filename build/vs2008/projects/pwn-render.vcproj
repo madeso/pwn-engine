@@ -145,15 +145,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\inc\pwn\render\actor"
-			>
-		</File>
-		<File
 			RelativePath="..\..\..\src\render\src\actor.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\render\actordef"
+			RelativePath="..\..\..\inc\pwn\render\actor.h"
 			>
 		</File>
 		<File
@@ -161,7 +157,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\render\camera"
+			RelativePath="..\..\..\inc\pwn\render\actordef.h"
 			>
 		</File>
 		<File
@@ -169,7 +165,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\render\compiledcamera"
+			RelativePath="..\..\..\inc\pwn\render\camera.h"
 			>
 		</File>
 		<File
@@ -177,7 +173,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\render\compiledmesh"
+			RelativePath="..\..\..\inc\pwn\render\compiledcamera.h"
 			>
 		</File>
 		<File
@@ -185,7 +181,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\render\material"
+			RelativePath="..\..\..\inc\pwn\render\compiledmesh.h"
 			>
 		</File>
 		<File
@@ -193,7 +189,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\render\part"
+			RelativePath="..\..\..\inc\pwn\render\material.h"
 			>
 		</File>
 		<File
@@ -201,7 +197,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\render\renderlist"
+			RelativePath="..\..\..\inc\pwn\render\part.h"
 			>
 		</File>
 		<File
@@ -209,7 +205,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\render\texture2"
+			RelativePath="..\..\..\inc\pwn\render\renderlist.h"
 			>
 		</File>
 		<File
@@ -217,7 +213,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\render\texturepool2"
+			RelativePath="..\..\..\inc\pwn\render\texture2.h"
 			>
 		</File>
 		<File
@@ -225,7 +221,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\render\widget"
+			RelativePath="..\..\..\inc\pwn\render\texturepool2.h"
 			>
 		</File>
 		<File
@@ -233,7 +229,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\render\world2"
+			RelativePath="..\..\..\inc\pwn\render\widget.h"
 			>
 		</File>
 		<File
@@ -241,7 +237,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\render\world3"
+			RelativePath="..\..\..\inc\pwn\render\world2.h"
 			>
 		</File>
 		<File
@@ -249,11 +245,15 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\render\world3widget"
+			RelativePath="..\..\..\inc\pwn\render\world3.h"
 			>
 		</File>
 		<File
 			RelativePath="..\..\..\src\render\src\world3widget.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\world3widget.h"
 			>
 		</File>
 	</Files>

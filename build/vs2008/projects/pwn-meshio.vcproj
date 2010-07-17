@@ -145,7 +145,7 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\inc\pwn\meshio\io"
+			RelativePath="..\..\..\inc\pwn\meshio\io.h"
 			>
 		</File>
 		<File

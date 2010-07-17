@@ -145,15 +145,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\inc\pwn\mesh\builder"
-			>
-		</File>
-		<File
 			RelativePath="..\..\..\src\mesh\builder.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\mesh\material"
+			RelativePath="..\..\..\inc\pwn\mesh\builder.h"
 			>
 		</File>
 		<File
@@ -161,7 +157,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\mesh\mesh"
+			RelativePath="..\..\..\inc\pwn\mesh\material.h"
 			>
 		</File>
 		<File
@@ -169,15 +165,19 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\mesh\predefinedmaterials"
+			RelativePath="..\..\..\inc\pwn\mesh\mesh.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\mesh\triangle"
+			RelativePath="..\..\..\inc\pwn\mesh\predefinedmaterials.h"
 			>
 		</File>
 		<File
 			RelativePath="..\..\..\src\mesh\triangle.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\mesh\triangle.h"
 			>
 		</File>
 	</Files>

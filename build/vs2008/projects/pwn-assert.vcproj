@@ -145,11 +145,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\inc\pwn\assert"
+			RelativePath="..\..\..\src\assert\assert.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\assert\assert.cpp"
+			RelativePath="..\..\..\inc\pwn\assert.h"
 			>
 		</File>
 	</Files>

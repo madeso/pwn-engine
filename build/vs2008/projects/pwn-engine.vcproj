@@ -191,11 +191,11 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\..\..\inc\pwn\engine\democamera"
+			RelativePath="..\..\..\src\engine\democamera.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\engine\democamera.cpp"
+			RelativePath="..\..\..\inc\pwn\engine\democamera.h"
 			>
 		</File>
 		<File
@@ -207,11 +207,11 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\engine\game"
+			RelativePath="..\..\..\src\engine\game.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\engine\game.cpp"
+			RelativePath="..\..\..\inc\pwn\engine\game.h"
 			>
 		</File>
 		<File
@@ -227,19 +227,19 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\engine\key"
-			>
-		</File>
-		<File
 			RelativePath="..\..\..\src\engine\key.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\engine\loop"
+			RelativePath="..\..\..\inc\pwn\engine\key.h"
 			>
 		</File>
 		<File
 			RelativePath="..\..\..\src\engine\loop.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\engine\loop.h"
 			>
 		</File>
 		<File
@@ -279,11 +279,11 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\engine\vfstexturepool2"
+			RelativePath="..\..\..\src\engine\vfstexturepool2.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\engine\vfstexturepool2.cpp"
+			RelativePath="..\..\..\inc\pwn\engine\vfstexturepool2.h"
 			>
 		</File>
 		<File

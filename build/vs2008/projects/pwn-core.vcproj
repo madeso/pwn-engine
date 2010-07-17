@@ -145,27 +145,27 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\inc\pwn\core\idpool"
-			>
-		</File>
-		<File
 			RelativePath="..\..\..\src\core\src\idpool.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\core\stdutil"
+			RelativePath="..\..\..\inc\pwn\core\idpool.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\string"
+			RelativePath="..\..\..\inc\pwn\core\stdutil.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\core\StringUtils"
+			RelativePath="..\..\..\inc\pwn\string.h"
 			>
 		</File>
 		<File
 			RelativePath="..\..\..\src\core\src\StringUtils.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\core\StringUtils.h"
 			>
 		</File>
 	</Files>

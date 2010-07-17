@@ -1,7 +1,7 @@
 #ifndef PWN_CONVERT_3DS
 #define PWN_CONVERT_3DS
 
-#include <pwn/string>
+#include <pwn/string.h>
 
 namespace pwn
 {

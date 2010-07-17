@@ -3,9 +3,9 @@
 #include <string>
 #include <iostream>
 
-#include <pwn/mesh/Mesh>
-#include <pwn/meshio/io>
-#include <pwn/mesh/builder>
+#include <pwn/mesh/Mesh.h>
+#include <pwn/meshio/io.h>
+#include <pwn/mesh/builder.h>
 
 #include "Converter.hpp"
 #include "WavefrontObj.hpp"

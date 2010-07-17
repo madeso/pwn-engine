@@ -1,8 +1,8 @@
 #ifndef PWN_RENDER_MATERIAL
 #define PWN_RENDER_MATERIAL
 
-#include <pwn/math/rgba>
-#include <pwn/render/texture2>
+#include <pwn/math/rgba.h>
+#include <pwn/render/texture2.h>
 
 #include <boost/shared_ptr.hpp>
 

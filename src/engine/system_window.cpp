@@ -3,17 +3,17 @@
 #include "system_window.hpp"
 #include "system.hpp"
 
-#include <pwn/engine/game>
-#include <pwn/engine/key>
-#include <pwn/assert>
+#include <pwn/engine/game.h>
+#include <pwn/engine/key.h>
+#include <pwn/assert.h>
 
 #include <SFML/Window.hpp>
 #include "display.hpp"
 #include "gameimp.hpp"
-#include <pwn/render/world2>
+#include <pwn/render/world2.h>
 
-#include <pwn/math/types>
-#include <pwn/math/operations>
+#include <pwn/math/types.h>
+#include <pwn/math/operations.h>
 
 #include <SFML/OpenGl.hpp>
 

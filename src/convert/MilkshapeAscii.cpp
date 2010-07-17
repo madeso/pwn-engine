@@ -1,7 +1,7 @@
-#include <pwn/string>
+#include <pwn/string.h>
 #include "MilkshapeCommon.hpp"
 #include <vector>
-#include <pwn/core/StringUtils>
+#include <pwn/core/StringUtils.h>
 #include <boost/lexical_cast.hpp>
 #include <fstream>
 

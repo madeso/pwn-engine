@@ -1,6 +1,6 @@
-#include <pwn/engine/democamera>
-#include <pwn/math/operations>
-#include <pwn/render/world3widget>
+#include <pwn/engine/democamera.h>
+#include <pwn/math/operations.h>
+#include <pwn/render/world3widget.h>
 
 namespace pwn
 {

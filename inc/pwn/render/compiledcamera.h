@@ -1,7 +1,7 @@
 #ifndef PWN_RENDER_COMPILEDCAMERA
 #define PWN_RENDER_COMPILEDCAMERA
 
-#include <pwn/math/types>
+#include <pwn/math/types.h>
 #include <boost/noncopyable.hpp>
 
 namespace pwn

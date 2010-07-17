@@ -1,6 +1,6 @@
 #include <UnitTest++.h>
 
-#include <pwn/core/stringutils>
+#include <pwn/core/stringutils.h>
 
 #pragma comment(lib, "pwn-core.lib")
 

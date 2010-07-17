@@ -1,7 +1,7 @@
 #ifndef PWN_ENGINE_GAME
 #define PWN_ENGINE_GAME
 
-#include <pwn/string>
+#include <pwn/string.h>
 #include <memory>
 
 namespace pwn

@@ -1,4 +1,4 @@
-#include <pwn/render/widget>
+#include <pwn/render/widget.h>
 
 namespace pwn
 {

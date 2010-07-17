@@ -1,8 +1,8 @@
 #define PWN_ENGINE_NO_AUTOLINK
 
-#include <pwn/engine/key>
+#include <pwn/engine/key.h>
 #include <SFML/Window/Event.hpp>
-#include <pwn/core/StringUtils>
+#include <pwn/core/StringUtils.h>
 
 #include <map>
 

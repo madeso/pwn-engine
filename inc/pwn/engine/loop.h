@@ -1,8 +1,8 @@
 #ifndef PWN_ENGINE_LOOP
 #define PWN_ENGINE_LOOP
 
-#include <pwn/engine/key>
-#include <pwn/math/types>
+#include <pwn/engine/key.h>
+#include <pwn/math/types.h>
 
 namespace pwn
 {

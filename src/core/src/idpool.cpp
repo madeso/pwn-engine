@@ -1,4 +1,4 @@
-#include <pwn/core/idpool>
+#include <pwn/core/idpool.h>
 
 namespace pwn
 {

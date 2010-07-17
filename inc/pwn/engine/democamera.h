@@ -1,8 +1,8 @@
 #ifndef PWN_ENGINE_DEMOCAMERA
 #define PWN_ENGINE_DEMOCAMERA
 
-#include <pwn/render/camera>
-#include <pwn/engine/Key>
+#include <pwn/render/camera.h>
+#include <pwn/engine/Key.h>
 #include <boost/shared_ptr.hpp>
 
 namespace pwn

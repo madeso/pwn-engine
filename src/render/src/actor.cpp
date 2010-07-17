@@ -1,9 +1,9 @@
-#include <pwn/render/actor>
-#include <pwn/render/renderlist>
-#include <pwn/render/actordef>
-#include <pwn/render/part>
-#include <pwn/math/operations>
-#include <pwn/render/compiledcamera>
+#include <pwn/render/actor.h>
+#include <pwn/render/renderlist.h>
+#include <pwn/render/actordef.h>
+#include <pwn/render/part.h>
+#include <pwn/math/operations.h>
+#include <pwn/render/compiledcamera.h>
 
 #pragma warning (disable:4512) // boost\utility\addressof.hpp(30) : warning C4512: 'boost::detail::addr_impl_ref<T>' : assignment operator could not be generated
 #include <boost/foreach.hpp>

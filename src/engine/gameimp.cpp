@@ -4,7 +4,7 @@
 #include "system.hpp"
 #include <algorithm>
 #include "loop.hpp"
-#include <pwn/engine/loop>
+#include <pwn/engine/loop.h>
 #include "display.hpp"
 
 namespace pwn

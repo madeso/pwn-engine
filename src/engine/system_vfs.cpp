@@ -4,8 +4,8 @@
 
 #include "system.hpp"
 #include <physfs.h>
-#include <pwn/engine/game>
-#include <pwn/assert>
+#include <pwn/engine/game.h>
+#include <pwn/assert.h>
 
 #include <boost/filesystem.hpp>
 

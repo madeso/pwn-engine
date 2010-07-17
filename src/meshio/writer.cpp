@@ -1,11 +1,11 @@
-#include <pwn/meshio/io>
+#include <pwn/meshio/io.h>
 
 #include <fstream>
 #include <iostream>
 
-#include <pwn/mesh/mesh>
-#include <pwn/math/operations>
-#include <pwn/mesh/material>
+#include <pwn/mesh/mesh.h>
+#include <pwn/math/operations.h>
+#include <pwn/mesh/material.h>
 #include <boost/scoped_array.hpp>
 
 #include <physfs.h>

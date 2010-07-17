@@ -1,6 +1,6 @@
-#include <pwn/mesh/predefinedmaterials>
+#include <pwn/mesh/predefinedmaterials.h>
 
-#include <pwn/mesh/material>
+#include <pwn/mesh/material.h>
 namespace pwn
 {
 	namespace mesh

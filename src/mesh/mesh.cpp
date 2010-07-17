@@ -1,5 +1,5 @@
-#include <pwn/mesh/mesh>
-#include <pwn/mesh/triangle>
+#include <pwn/mesh/mesh.h>
+#include <pwn/mesh/triangle.h>
 
 namespace pwn
 {

@@ -1,4 +1,4 @@
-#include <pwn/render/texture2>
+#include <pwn/render/texture2.h>
 
 #include <SFML/OpenGl.hpp>
 #pragma comment(lib, "opengl32.lib")

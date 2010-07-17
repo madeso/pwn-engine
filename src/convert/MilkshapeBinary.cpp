@@ -1,4 +1,4 @@
-#include <pwn/string>
+#include <pwn/string.h>
 #include <fstream>
 #include <boost/scoped_array.hpp>
 #include <boost/foreach.hpp>

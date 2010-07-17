@@ -1,8 +1,8 @@
 #ifndef PWN_RENDER_WORLD3_WIDGET
 #define PWN_RENDER_WORLD3_WIDGET
 
-#include <pwn/render/widget>
-#include <pwn/render/camera>
+#include <pwn/render/widget.h>
+#include <pwn/render/camera.h>
 #include <boost/shared_ptr.hpp>
 
 namespace pwn

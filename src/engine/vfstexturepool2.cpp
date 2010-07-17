@@ -1,5 +1,5 @@
-#include <pwn/engine/vfstexturepool2>
-#include <pwn/render/Texture2>
+#include <pwn/engine/vfstexturepool2.h>
+#include <pwn/render/Texture2.h>
 
 #include "vfs_util.hpp"
 

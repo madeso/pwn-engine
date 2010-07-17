@@ -1,16 +1,16 @@
-#include <pwn/render/actordef>
-#include <pwn/mesh/mesh>
-#include <pwn/render/part>
+#include <pwn/render/actordef.h>
+#include <pwn/mesh/mesh.h>
+#include <pwn/render/part.h>
 #pragma warning(disable:4512) //'boost::detail::addr_impl_ref<T>' : assignment operator could not be generated
 #include <boost/foreach.hpp>
-#include <pwn/render/compiledmesh>
-#include <pwn/render/material>
-#include <pwn/mesh/material>
-#include <pwn/render/texturepool2>
+#include <pwn/render/compiledmesh.h>
+#include <pwn/render/material.h>
+#include <pwn/mesh/material.h>
+#include <pwn/render/texturepool2.h>
 
 #include <sfml/OpenGl.hpp>
 
-#include <pwn/assert>
+#include <pwn/assert.h>
 
 namespace pwn
 {

@@ -1,8 +1,8 @@
 #ifndef PWN_RENDER_TEXTUREPOOL2
 #define PWN_RENDER_TEXTUREPOOL2
 
-#include <pwn/string>
-#include <pwn/core/idpool>
+#include <pwn/string.h>
+#include <pwn/core/idpool.h>
 
 #include <map>
 

@@ -1,6 +1,6 @@
-#include <pwn/render/compiledcamera>
-#include <pwn/render/camera>
-#include <pwn/math/operations>
+#include <pwn/render/compiledcamera.h>
+#include <pwn/render/camera.h>
+#include <pwn/math/operations.h>
 
 namespace pwn
 {

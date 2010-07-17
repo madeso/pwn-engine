@@ -1,4 +1,4 @@
-#include <pwn/mesh/triangle>
+#include <pwn/mesh/triangle.h>
 
 namespace pwn
 {

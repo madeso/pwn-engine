@@ -3,7 +3,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
-#include <pwn/math/types>
+#include <pwn/math/types.h>
 #include <vector>
 
 namespace pwn

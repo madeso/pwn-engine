@@ -1,7 +1,7 @@
 #ifndef PWN_RENDER_RGB
 #define PWN_RENDER_RGB
 
-#include <pwn/number>
+#include <pwn/number.h>
 
 namespace pwn
 {

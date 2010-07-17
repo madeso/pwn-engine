@@ -1,7 +1,7 @@
 #ifndef PWN_RENDER_RGBA
 #define PWN_RENDER_RGBA
 
-#include <pwn/math/rgb>
+#include <pwn/math/rgb.h>
 
 namespace pwn
 {

@@ -4,14 +4,14 @@
 #include <boost/scoped_array.hpp>
 #include <boost/foreach.hpp>
 #include <vector>
-#include <pwn/string>
-#include <pwn/number>
+#include <pwn/string.h>
+#include <pwn/number.h>
 #include <fstream>
-#include <pwn/math/types>
-#include <pwn/math/operations>
-#include <pwn/mesh/mesh>
-#include <pwn/mesh/material>
-#include <pwn/mesh/builder>
+#include <pwn/math/types.h>
+#include <pwn/math/operations.h>
+#include <pwn/mesh/mesh.h>
+#include <pwn/mesh/material.h>
+#include <pwn/mesh/builder.h>
 
 #include "Converter.hpp"
 

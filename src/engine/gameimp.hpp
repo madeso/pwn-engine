@@ -4,10 +4,10 @@
 #include <vector>
 #include <map>
 #include <boost/shared_ptr.hpp>
-#include <pwn/math/types>
+#include <pwn/math/types.h>
 
 //#include <events/event.h>
-#include <pwn/engine/key>
+#include <pwn/engine/key.h>
 
 namespace pwn
 {

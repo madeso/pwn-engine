@@ -1,4 +1,4 @@
-#include <pwn/render/camera>
+#include <pwn/render/camera.h>
 
 namespace pwn
 {

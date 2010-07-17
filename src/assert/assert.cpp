@@ -1,4 +1,4 @@
-#include <pwn/assert>
+#include <pwn/assert.h>
 
 namespace pwn
 {

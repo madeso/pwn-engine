@@ -4,11 +4,11 @@
 #include <vector>
 #include <map>
 
-#include <pwn/math/types>
-#include <pwn/math/rgba>
-#include <pwn/string>
-#include <pwn/mesh/Triangle>
-#include <pwn/mesh/Mesh>
+#include <pwn/math/types.h>
+#include <pwn/math/rgba.h>
+#include <pwn/string.h>
+#include <pwn/mesh/Triangle.h>
+#include <pwn/mesh/Mesh.h>
 
 namespace pwn
 {

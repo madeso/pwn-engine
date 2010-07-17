@@ -1,7 +1,7 @@
 #ifndef PWN_MESH_TRIANGLE
 #define PWN_MESH_TRIANGLE
 
-#include <pwn/number>
+#include <pwn/number.h>
 
 namespace pwn
 {

@@ -1,13 +1,13 @@
 #ifndef PWN_MESH_BUILDER
 #define PWN_MESH_BUILDER
 
-#include <pwn/number>
-#include <pwn/math/types>
-#include <pwn/mesh/Triangle>
+#include <pwn/number.h>
+#include <pwn/math/types.h>
+#include <pwn/mesh/Triangle.h>
 
 #include <boost/shared_ptr.hpp>
 #include <vector>
-#include <pwn/string>
+#include <pwn/string.h>
 
 namespace pwn
 {

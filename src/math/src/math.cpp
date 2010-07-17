@@ -1,9 +1,9 @@
-#include <pwn/math/types>
-#include <pwn/math/operations>
+#include <pwn/math/types.h>
+#include <pwn/math/operations.h>
 
 #include <cmath>
 #include <memory> // memcpy
-#include <pwn/Assert>
+#include <pwn/Assert.h>
 
 namespace pwn
 {

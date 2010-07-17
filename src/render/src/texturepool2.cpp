@@ -1,6 +1,6 @@
-#include <pwn/render/texturepool2>
+#include <pwn/render/texturepool2.h>
 
-#include <pwn/render/texture2>
+#include <pwn/render/texture2.h>
 
 namespace pwn
 {

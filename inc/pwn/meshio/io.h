@@ -1,7 +1,7 @@
 #ifndef PWN_MESHIO_IO
 #define PWN_MESHIO_IO
 
-#include <pwn/string>
+#include <pwn/string.h>
 
 namespace pwn
 {

@@ -1,4 +1,4 @@
-#include <pwn/render/material>
+#include <pwn/render/material.h>
 
 namespace pwn
 {

@@ -1,11 +1,11 @@
 #include "MilkshapeCommon.hpp"
 
 #include <boost/foreach.hpp>
-#include <pwn/math/operations>
-#include <pwn/core/StringUtils>
+#include <pwn/math/operations.h>
+#include <pwn/core/StringUtils.h>
 #include <boost/filesystem.hpp>
-#include <pwn/mesh/mesh>
-#include <pwn/mesh/material>
+#include <pwn/mesh/mesh.h>
+#include <pwn/mesh/material.h>
 #include "Converter.hpp"
 #include <boost/lexical_cast.hpp>
 

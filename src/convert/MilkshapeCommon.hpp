@@ -2,8 +2,8 @@
 #define PWN_CONVERT_MILKSHAPE_COMMON_HPP
 
 #include <vector>
-#include <pwn/string>
-#include <pwn/math/types>
+#include <pwn/string.h>
+#include <pwn/math/types.h>
 #include <boost/utility.hpp>
 
 namespace pwn

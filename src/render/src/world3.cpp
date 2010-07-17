@@ -1,9 +1,9 @@
-#include <pwn/render/world3>
-#include <pwn/render/actor>
-#include <pwn/render/renderlist>
+#include <pwn/render/world3.h>
+#include <pwn/render/actor.h>
+#include <pwn/render/renderlist.h>
 #include <vector>
 #include <algorithm>
-#include <pwn/render/compiledcamera>
+#include <pwn/render/compiledcamera.h>
 #include <boost/utility.hpp>
 
 #pragma warning(disable:4512) // warning C4512: 'boost::detail::addr_impl_ref<T>' : assignment operator could not be generated

@@ -1,11 +1,11 @@
 #pragma warning(disable:4512) // boost unable to generate assignment operator
 
-#include <pwn/mesh/builder>
-#include <pwn/mesh/mesh>
+#include <pwn/mesh/builder.h>
+#include <pwn/mesh/mesh.h>
 #include <boost/foreach.hpp>
-#include <pwn/math/operations>
-#include <pwn/mesh/material>
-#include <pwn/core/StringUtils>
+#include <pwn/math/operations.h>
+#include <pwn/mesh/material.h>
+#include <pwn/core/StringUtils.h>
 
 namespace pwn
 {

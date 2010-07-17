@@ -1,7 +1,7 @@
 #ifndef PWN_CORE_IDPOOL
 #define PWN_CORE_IDPOOL
 
-#include <pwn/number>
+#include <pwn/number.h>
 #include <vector>
 #include <boost/noncopyable.hpp>
 

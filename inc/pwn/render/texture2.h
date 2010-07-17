@@ -1,8 +1,8 @@
 #ifndef PWN_RENDER_TEXTURE2
 #define PWN_RENDER_TEXTURE2
 
-#include <pwn/number>
-#include <pwn/core/idpool>
+#include <pwn/number.h>
+#include <pwn/core/idpool.h>
 
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>

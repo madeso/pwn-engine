@@ -1,8 +1,8 @@
-#include <pwn/render/renderlist>
-#include <pwn/math/operations>
-#include <pwn/render/compiledmesh>
-#include <pwn/render/material>
-#include <pwn/assert>
+#include <pwn/render/renderlist.h>
+#include <pwn/math/operations.h>
+#include <pwn/render/compiledmesh.h>
+#include <pwn/render/material.h>
+#include <pwn/assert.h>
 #include <limits>
 
 #include <SFML/OpenGl.hpp>

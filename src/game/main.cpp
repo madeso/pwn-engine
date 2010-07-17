@@ -1,19 +1,19 @@
-#include <pwn/engine/loop>
-#include <pwn/engine/game>
+#include <pwn/engine/loop.h>
+#include <pwn/engine/game.h>
 
-#include <pwn/render/world2>
-#include <pwn/render/world3>
-#include <pwn/render/world3widget>
-#include <pwn/math/operations>
-#include <pwn/render/actordef>
-#include <pwn/render/actor>
-#include <pwn/mesh/mesh>
-#include <pwn/mesh/builder>
-#include <pwn/mesh/predefinedmaterials>
-#include <pwn/engine/democamera>
-#include <pwn/engine/vfstexturepool2>
-#include <pwn/mesh/material>
-#include <pwn/meshio/io>
+#include <pwn/render/world2.h>
+#include <pwn/render/world3.h>
+#include <pwn/render/world3widget.h>
+#include <pwn/math/operations.h>
+#include <pwn/render/actordef.h>
+#include <pwn/render/actor.h>
+#include <pwn/mesh/mesh.h>
+#include <pwn/mesh/builder.h>
+#include <pwn/mesh/predefinedmaterials.h>
+#include <pwn/engine/democamera.h>
+#include <pwn/engine/vfstexturepool2.h>
+#include <pwn/mesh/material.h>
+#include <pwn/meshio/io.h>
 
 using namespace pwn;
 using namespace pwn::engine;

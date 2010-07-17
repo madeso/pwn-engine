@@ -1,6 +1,6 @@
 #include <UnitTest++.h>
 
-#include <pwn/core/idpool>
+#include <pwn/core/idpool.h>
 
 SUITE(testStdUtil)
 {

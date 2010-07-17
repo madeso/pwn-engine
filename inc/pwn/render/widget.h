@@ -1,7 +1,7 @@
 #ifndef PWN_RENDER_WIDGET
 #define PWN_RENDER_WIDGET
 
-#include <pwn/math/types>
+#include <pwn/math/types.h>
 
 namespace pwn
 {

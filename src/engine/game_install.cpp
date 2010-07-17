@@ -1,6 +1,6 @@
 #define PWN_ENGINE_NO_AUTOLINK
 
-#include <pwn/engine/game>
+#include <pwn/engine/game.h>
 #include "system_vfs.hpp"
 #include "system_window.hpp"
 namespace pwn

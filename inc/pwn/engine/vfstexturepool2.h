@@ -1,7 +1,7 @@
 #ifndef PWN_ENGINE_VFSTEXTUREPOOL2
 #define PWN_ENGINE_VFSTEXTUREPOOL2
 
-#include <pwn/render/texturepool2>
+#include <pwn/render/texturepool2.h>
 
 namespace pwn
 {

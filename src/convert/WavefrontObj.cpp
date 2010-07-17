@@ -6,13 +6,13 @@
 #include "WavefrontObj.hpp"
 #include "Converter.hpp"
 
-#include <pwn/core/StringUtils>
-#include <pwn/math/operations>
+#include <pwn/core/StringUtils.h>
+#include <pwn/math/operations.h>
 
-#include <pwn/mesh/material>
-#include <pwn/mesh/builder>
+#include <pwn/mesh/material.h>
+#include <pwn/mesh/builder.h>
 
-#include <pwn/mesh/Mesh>
+#include <pwn/mesh/Mesh.h>
 
 #include <iostream>
 

@@ -1,5 +1,5 @@
 #include <UnitTest++.h>
-#include <pwn/assert>
+#include <pwn/assert.h>
 
 int main()
 {

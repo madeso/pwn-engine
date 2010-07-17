@@ -1,7 +1,7 @@
 #define PWN_ENGINE_NO_AUTOLINK
 
-#include <pwn/engine/loop>
-#include <pwn/engine/Game>
+#include <pwn/engine/loop.h>
+#include <pwn/engine/Game.h>
 #include "GameImp.hpp"
 #include "loop.hpp"
 

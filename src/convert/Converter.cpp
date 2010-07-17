@@ -1,8 +1,8 @@
 #include "Converter.hpp"
 
-#include <pwn/math/operations>
-#include <pwn/mesh/Mesh>
-#include <pwn/mesh/material>
+#include <pwn/math/operations.h>
+#include <pwn/mesh/Mesh.h>
+#include <pwn/mesh/material.h>
 
 #include <iostream>
 

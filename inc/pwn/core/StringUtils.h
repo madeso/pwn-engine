@@ -3,7 +3,7 @@
 #ifndef PWN_STRINGUTILS
 #define PWN_STRINGUTILS
 
-#include <pwn/string>
+#include <pwn/string.h>
 #include <vector>
 
 namespace pwn

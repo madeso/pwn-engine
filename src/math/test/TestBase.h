@@ -1,8 +1,8 @@
 // include this first in each test
 
 #include <iostream>
-#include <pwn/math/types>
-#include <pwn/math/operations>
+#include <pwn/math/types.h>
+#include <pwn/math/operations.h>
 
 namespace pwn
 {

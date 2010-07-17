@@ -1,7 +1,7 @@
 #ifndef PWN_ENGINE_VFSUTIL_HPP
 #define PWN_ENGINE_VFSUTIL_HPP
 
-#include <pwn/number>
+#include <pwn/number.h>
 
 #include <physfs.h>
 #include <boost/scoped_array.hpp>

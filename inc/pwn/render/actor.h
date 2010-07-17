@@ -1,7 +1,7 @@
 #ifndef PWN_RENDER_ACTOR
 #define PWN_RENDER_ACTOR
 
-#include <pwn/math/types>
+#include <pwn/math/types.h>
 
 #include <boost/shared_ptr.hpp>
 

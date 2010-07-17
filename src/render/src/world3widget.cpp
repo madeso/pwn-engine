@@ -1,8 +1,8 @@
-#include <pwn/render/world3widget>
-#include <pwn/render/world3>
-#include <pwn/math/operations>
+#include <pwn/render/world3widget.h>
+#include <pwn/render/world3.h>
+#include <pwn/math/operations.h>
 
-#include <pwn/assert>
+#include <pwn/assert.h>
 
 #include <SFML/OpenGl.hpp>
 

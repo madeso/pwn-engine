@@ -1,7 +1,7 @@
 #ifndef PWN_CONVERT_MILKSHAPE_ASCII_HPP
 #define PWN_CONVERT_MILKSHAPE_ASCII_HPP
 
-#include <pwn/string>
+#include <pwn/string.h>
 
 namespace pwn
 {

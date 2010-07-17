@@ -1,4 +1,4 @@
-#include <pwn/math/rgb>
+#include <pwn/math/rgb.h>
 
 namespace pwn
 {

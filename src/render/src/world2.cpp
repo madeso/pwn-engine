@@ -1,5 +1,5 @@
-#include <pwn/render/world2>
-#include <pwn/render/widget>
+#include <pwn/render/world2.h>
+#include <pwn/render/widget.h>
 #pragma warning(disable:4512) // warning C4512: 'boost::detail::addr_impl_ref<T>' : assignment operator could not be generated
 #include <boost/foreach.hpp>
 

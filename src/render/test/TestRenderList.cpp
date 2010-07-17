@@ -1,11 +1,11 @@
 #include <UnitTest++.h>
 
 #include <vector>
-#include <pwn/render/renderlist>
-#include <pwn/render/compiledmesh>
-#include <pwn/render/material>
-#include <pwn/core/idpool>
-#include <pwn/math/operations>
+#include <pwn/render/renderlist.h>
+#include <pwn/render/compiledmesh.h>
+#include <pwn/render/material.h>
+#include <pwn/core/idpool.h>
+#include <pwn/math/operations.h>
 
 SUITE(testRenderList)
 {

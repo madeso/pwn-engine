@@ -1,7 +1,7 @@
 #ifndef PWN_MATH_FUNCTIONS
 #define PWN_MATH_FUNCTIONS
 
-#include <pwn/math/types>
+#include <pwn/math/types.h>
 
 namespace pwn
 {

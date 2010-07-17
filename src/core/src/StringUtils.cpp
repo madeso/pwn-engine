@@ -1,6 +1,6 @@
-#include <pwn/core/StringUtils>
+#include <pwn/core/StringUtils.h>
 
-#include <pwn/Assert>
+#include <pwn/Assert.h>
 #include <boost/tokenizer.hpp>
 #include <boost/smart_ptr.hpp>
 

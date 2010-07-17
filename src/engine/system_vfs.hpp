@@ -1,7 +1,7 @@
 #ifndef PWN_ENGINE_SYSTEM_VFS_HPP
 #define PWN_ENGINE_SYSTEM_VFS_HPP
 
-#include <pwn/string>
+#include <pwn/string.h>
 
 namespace pwn
 {

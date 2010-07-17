@@ -3,8 +3,8 @@
 
 #include <vector>
 #include <map>
-#include <pwn/math/types>
-#include <pwn/mesh/triangle>
+#include <pwn/math/types.h>
+#include <pwn/mesh/triangle.h>
 
 #include <boost/shared_ptr.hpp>
 

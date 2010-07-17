@@ -1,6 +1,6 @@
 #include <UnitTest++.h>
 
-#include <pwn/core/stdutil>
+#include <pwn/core/stdutil.h>
 
 SUITE(testStdUtil)
 {

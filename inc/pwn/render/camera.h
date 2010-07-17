@@ -1,7 +1,7 @@
 #ifndef PWN_RENDER_CAMERA
 #define PWN_RENDER_CAMERA
 
-#include <pwn/math/types>
+#include <pwn/math/types.h>
 
 namespace pwn
 {

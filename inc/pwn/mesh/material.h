@@ -1,8 +1,8 @@
 #ifndef PWN_MESH_MATERIAL
 #define PWN_MESH_MATERIAL
 
-#include <pwn/math/rgba>
-#include <pwn/string>
+#include <pwn/math/rgba.h>
+#include <pwn/string.h>
 
 namespace pwn
 {

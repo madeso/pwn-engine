@@ -79,7 +79,7 @@ namespace test
 	GTEST(testCos)
 	{
 		EXPECT_REAL_EQ(1, Cos(Angle::FromDegrees(0)));
-		EXPECT_REAL_EQ(0, Cos(Angle::FromDegrees(90)));
+		EXPECT_NEAR(0, Cos(Angle::FromDegrees(90)), kTolerance());
 		EXPECT_REAL_EQ(kOneOverSqrt2(), Cos(Angle::FromDegrees(45)));
 		EXPECT_REAL_EQ(0.5f, Cos(Angle::FromDegrees(60)));
 		EXPECT_REAL_EQ(kSqrt3Over2(), Cos(Angle::FromDegrees(30)));

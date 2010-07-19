@@ -1,6 +1,6 @@
 #include "TestBase.h"
 
-#define GTEST(x) TEST(Quat, x)
+#define GTEST(x) TEST(testQuat, x)
 
 namespace test
 {

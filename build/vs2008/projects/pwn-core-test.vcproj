@@ -190,6 +190,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\src\test-main.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\core\test\TestStdUtil.cpp"
 			>
 		</File>

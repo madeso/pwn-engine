@@ -1,8 +1,10 @@
-#include <UnitTest++.h>
+#include <gtest/gtest.h>
 
 #include <pwn/core/stdutil.h>
 
-SUITE(testStdUtil)
+#define GTEST(x) TEST(StdUtil, x)
+
+namespace test
 {
 	using namespace pwn;
 	using namespace pwn::core;
@@ -25,38 +27,38 @@ SUITE(testStdUtil)
 	{
 		const std::size_t before = vec.size();
 		SwapBackAndEraseObject(4, &vec);
-		CHECK_EQUAL(before-1, vec.size());
+		EXPECT_EQ(before-1, vec.size());
 	}
 
 	TEST_FIXTURE(fix, testSwapBackAndErase_order)
 	{
 		SwapBackAndEraseObject(4, &vec);
-		CHECK_EQUAL(1, vec[0]);
-		CHECK_EQUAL(3, vec[1]);
-		CHECK_EQUAL(2, vec[2]);
-		CHECK_EQUAL(-12, vec[3]);
-		CHECK_EQUAL(5, vec[4]);
+		EXPECT_EQ(1, vec[0]);
+		EXPECT_EQ(3, vec[1]);
+		EXPECT_EQ(2, vec[2]);
+		EXPECT_EQ(-12, vec[3]);
+		EXPECT_EQ(5, vec[4]);
 	}
 
-	TEST(stringBuilderStartsEmpty)
+	GTEST(stringBuilderStartsEmpty)
 	{
-		CHECK_EQUAL("", static_cast<pwn::string>(StringBuilder()));
+		EXPECT_EQ("", static_cast<pwn::string>(StringBuilder()));
 	}
 
-	TEST(stringBuilderEmptyResultsInEmpty)
+	GTEST(stringBuilderEmptyResultsInEmpty)
 	{
 		const pwn::string empty("");
-		CHECK_EQUAL(empty, static_cast<pwn::string>(StringBuilder() << empty));
+		EXPECT_EQ(empty, static_cast<pwn::string>(StringBuilder() << empty));
 	}
 
-	TEST(stringBuilderTextResultsInText)
+	GTEST(stringBuilderTextResultsInText)
 	{
 		const pwn::string text("abc");
-		CHECK_EQUAL(text, static_cast<pwn::string>(StringBuilder() << text));
+		EXPECT_EQ(text, static_cast<pwn::string>(StringBuilder() << text));
 	}
 
-	TEST(stringBuilderNumberResultsInText)
+	GTEST(stringBuilderNumberResultsInText)
 	{
-		CHECK_EQUAL("42", static_cast<pwn::string>(StringBuilder() << 42));
+		EXPECT_EQ("42", static_cast<pwn::string>(StringBuilder() << 42));
 	}
 }

@@ -1,31 +1,33 @@
 #include "TestBase.h"
 
-SUITE(test_mat44)
+#define GTEST(x) TEST(Mat44, x)
+
+namespace test
 {
 	using namespace pwn;
 	using namespace pwn::math;
 
-	TEST(TestTransormation)
+	GTEST(TestTransormation)
 	{
-		CHECK_EQUAL(cvec3(cmat44(vec3(1, 2, 3))), vec3(1, 2, 3));
+		EXPECT_EQ(cvec3(cmat44(vec3(1, 2, 3))), vec3(1, 2, 3));
 	}
 
 	
-	TEST(TestRight)
+	GTEST(TestRight)
 	{
-		CHECK_EQUAL(Right(mat44Identity()), Right());
+		EXPECT_EQ(Right(mat44Identity()), Right());
 	}
 
 	
-	TEST(TestUp)
+	GTEST(TestUp)
 	{
-		CHECK_EQUAL(Up(mat44Identity()), Up());
+		EXPECT_EQ(Up(mat44Identity()), Up());
 	}
 
 	
-	TEST(TestIn)
+	GTEST(TestIn)
 	{
-		CHECK_EQUAL(In(mat44Identity()), In());
+		EXPECT_EQ(In(mat44Identity()), In());
 	}
 
 	struct TestRotationFixture
@@ -49,7 +51,7 @@ SUITE(test_mat44)
 		vec3 r = mat44helper(start)
 			.rotate( aa )
 			.transform( toTransform );
-		CHECK_EQUAL( r, result);
+		EXPECT_EQ( r, result);
 	}
 
 	TEST_FIXTURE(TestRotationFixture, TestRotationQuat)
@@ -57,39 +59,39 @@ SUITE(test_mat44)
 		vec3 r = mat44helper(start)
 			.rotate( cquat(aa) )
 			.transform( toTransform );
-		CHECK_EQUAL( r, result);
+		EXPECT_EQ( r, result);
 	}
 
 	
-	TEST(TestCombined)
+	GTEST(TestCombined)
 	{
 		vec3 r = mat44helper(mat44Identity())
 			.rotate(RightHandAround(Up(), Angle::FromDegrees(-90)))
 			.translate(vec3(0, 0, 5))
 			.transform(vec3(0, 0, 0));
-		CHECK_EQUAL(r, vec3(5, 0, 0));
+		EXPECT_EQ(r, vec3(5, 0, 0));
 	}
 
 	
-	TEST(TestTranslation)
+	GTEST(TestTranslation)
 	{
 		vec3 r = mat44helper(mat44Identity())
 			.translate(vec3(1,2,3))
 			.transform(vec3(7, 8, 9));
-		CHECK_EQUAL(r, vec3(8, 10, 12));
+		EXPECT_EQ(r, vec3(8, 10, 12));
 	}
 
 	
-	TEST(TestIentityTransform)
+	GTEST(TestIentityTransform)
 	{
 		vec3 r = mat44helper(mat44Identity())
 			.transform(vec3(1, 2, 3));
-		CHECK_EQUAL(r, vec3(1, 2, 3));
+		EXPECT_EQ(r, vec3(1, 2, 3));
 	}
 
 	
-	TEST(TestIentityMultiply)
+	GTEST(TestIentityMultiply)
 	{
-		CHECK_EQUAL(mat44Identity() * mat44Identity(), mat44Identity());
+		EXPECT_EQ(mat44Identity() * mat44Identity(), mat44Identity());
 	}
 }

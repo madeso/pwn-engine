@@ -1,38 +1,40 @@
-#include <UnitTest++.h>
+#include <gtest/gtest.h>
 
 #include <pwn/core/idpool.h>
 
-SUITE(testStdUtil)
+#define GTEST(x) TEST(StdUtil, x)
+
+namespace test
 {
 	using namespace pwn;
 	using namespace pwn::core;
 
-	TEST(idpoolCreateTest)
+	GTEST(idpoolCreateTest)
 	{
 		IdPool pool;
 		IdPool::ID first = pool.generate();
 		IdPool::ID second = pool.generate();
-		CHECK(first != second );
+		EXPECT_NE(first, second );
 	}
 
-	TEST(idpoolCreateIdObjectTest)
+	GTEST(idpoolCreateIdObjectTest)
 	{
 		IdPool pool;
 		Id first(&pool);
 		Id second(&pool);
-		CHECK(first.value != second.value );
+		EXPECT_NE(first.value,second.value );
 	}
 
-	TEST(idpoolReleaseTest)
+	GTEST(idpoolReleaseTest)
 	{
 		IdPool pool;
 		IdPool::ID first = pool.generate();
 		pool.release(first);
 		IdPool::ID second = pool.generate();
-		CHECK_EQUAL(first, second );
+		EXPECT_EQ(first, second );
 	}
 
-	TEST(idpoolIdObjectTest)
+	GTEST(idpoolIdObjectTest)
 	{
 		IdPool pool;
 		IdPool::ID first;
@@ -41,6 +43,6 @@ SUITE(testStdUtil)
 			first = useless.value;
 		}
 		Id second(&pool);
-		CHECK_EQUAL(first, second.value );
+		EXPECT_EQ(first, second.value );
 	}
 }

@@ -1,4 +1,4 @@
-#include <UnitTest++.h>
+#include <gtest/gtest.h>
 
 #include <vector>
 #include <pwn/render/renderlist.h>
@@ -67,7 +67,7 @@ SUITE(testRenderList)
 
 #define TEST_VECTOR(argList, argSize, argValues)  \
 	const std::size_t expectedSize = argSize;      \
-	CHECK_EQUAL(expectedSize, argList.size() );     \
+	EXPECT_EQ(expectedSize, argList.size() );     \
 	if( argList.size() != expectedSize ) return;   \
 	int order[argSize] = { NOPAREN argValues };     \
 	CHECK_ARRAY_EQUAL(order, argList, expectedSize);

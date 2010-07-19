@@ -1,56 +1,58 @@
-#include <UnitTest++.h>
+#include <gtest/gtest.h>
 
 #include <pwn/core/stringutils.h>
 
 #pragma comment(lib, "pwn-core.lib")
 
-SUITE(testStringUtls)
+#define GTEST(x) TEST(StringUtils, x)
+
+namespace test
 {
 	using namespace pwn;
 	using namespace pwn::core;
 
-	TEST(TestSpaceCharactersShouldContainSpace)
+	GTEST(TestSpaceCharactersShouldContainSpace)
 	{
 		CHECK(string::npos != kSpaceCharacters().find(' '));
 	}
 
 	//
 
-	TEST(TestSplitStringWithSpace)
+	GTEST(TestSplitStringWithSpace)
 	{
 		std::vector<string> res = SplitString("ada c++ haskell ", " ");
-		CHECK_EQUAL(std::size_t(3), res.size());
-		CHECK_EQUAL("ada", res[0]);
-		CHECK_EQUAL("c++", res[1]);
-		CHECK_EQUAL("haskell", res[2]);
+		EXPECT_EQ(std::size_t(3), res.size());
+		EXPECT_EQ("ada", res[0]);
+		EXPECT_EQ("c++", res[1]);
+		EXPECT_EQ("haskell", res[2]);
 	}
 
-	TEST(TestSplitStringWithSpaceAndDash)
+	GTEST(TestSplitStringWithSpaceAndDash)
 	{
 		std::vector<string> res = SplitString(" - medicine-doctor?", " -");
-		CHECK_EQUAL(std::size_t(2), res.size());
-		CHECK_EQUAL("medicine", res[0]);
-		CHECK_EQUAL("doctor?", res[1]);
+		EXPECT_EQ(std::size_t(2), res.size());
+		EXPECT_EQ("medicine", res[0]);
+		EXPECT_EQ("doctor?", res[1]);
 	}
 
 	//
 
-	TEST(TestTrimSeveralCharacters)
+	GTEST(TestTrimSeveralCharacters)
 	{
-		CHECK_EQUAL("beatles", Trim("beatles, the", "the, "));
-		CHECK_EQUAL("beatles", Trim("The beatles", " ehT"));
+		EXPECT_EQ("beatles", Trim("beatles, the", "the, "));
+		EXPECT_EQ("beatles", Trim("The beatles", " ehT"));
 	}
 
-	TEST(TestBasicTrim)
+	GTEST(TestBasicTrim)
 	{
-		CHECK_EQUAL("abc ", TrimLeft(" abc ", " "));
-		CHECK_EQUAL(" abc", TrimRight(" abc ", " "));
-		CHECK_EQUAL("abc", Trim("   abc   ", " "));
+		EXPECT_EQ("abc ", TrimLeft(" abc ", " "));
+		EXPECT_EQ(" abc", TrimRight(" abc ", " "));
+		EXPECT_EQ("abc", Trim("   abc   ", " "));
 	}
 
 	//
 
-	TEST(TestStartsWith)
+	GTEST(TestStartsWith)
 	{
 		CHECK(StartsWith("abc", "a"));
 		CHECK(!StartsWith("abc", "b"));
@@ -61,7 +63,7 @@ SUITE(testStringUtls)
 
 	//
 
-	TEST(TestEndsWith)
+	GTEST(TestEndsWith)
 	{
 		CHECK(EndsWith("abc", "c"));
 		CHECK(!EndsWith("abc", "a"));
@@ -71,19 +73,19 @@ SUITE(testStringUtls)
 
 	//
 
-	TEST(TestToLower)
+	GTEST(TestToLower)
 	{
-		CHECK_EQUAL("small", ToLower("SMALL"));
-		CHECK_EQUAL("small", ToLower("small"));
-		CHECK_EQUAL("the beatles", ToLower("THe BeatLeS"));
+		EXPECT_EQ("small", ToLower("SMALL"));
+		EXPECT_EQ("small", ToLower("small"));
+		EXPECT_EQ("the beatles", ToLower("THe BeatLeS"));
 	}
 
 	//
 
-	TEST(TestReplaceObscenity)
+	GTEST(TestReplaceObscenity)
 	{
-		CHECK_EQUAL("statementist", StringReplace("expressionist", "expression", "statement"));
-		CHECK_EQUAL("picbutto", StringReplace("picasso", "ass", "butt"));
-		CHECK_EQUAL("great breasts", StringReplace("great tits", "tit", "breast"));
+		EXPECT_EQ("statementist", StringReplace("expressionist", "expression", "statement"));
+		EXPECT_EQ("picbutto", StringReplace("picasso", "ass", "butt"));
+		EXPECT_EQ("great breasts", StringReplace("great tits", "tit", "breast"));
 	}
 }

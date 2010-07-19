@@ -1,13 +1,15 @@
 #include "TestBase.h"
 
-SUITE(test_mat33)
+#define GTEST(x) TEST(Mat33, x)
+
+namespace test
 {
 	using namespace pwn;
 	using namespace pwn::math;
 
 	const real fe = 0.001f;
 
-	TEST(TestColumnMajor)
+	GTEST(TestColumnMajor)
 	{
 		const real temp[] = { 0,1,2,3,4,5,6,7,8 };
 		mat33 m(temp);
@@ -25,7 +27,7 @@ SUITE(test_mat33)
 		CHECK_CLOSE(m.at(2, 2), 8, fe);
 	}
 
-	TEST(TestRowMajor)
+	GTEST(TestRowMajor)
 	{
 		const real temp[] = { 0,1,2,3,4,5,6,7,8 };
 		mat33 m = mat33_FromRowMajor(temp);
@@ -42,8 +44,8 @@ SUITE(test_mat33)
 		CHECK_CLOSE(m.at(2, 2), 8, fe);
 	}
 
-	TEST(TestFromToMat44)
+	GTEST(TestFromToMat44)
 	{
-		CHECK_EQUAL(cmat33(cmat44(mat33Identity())), mat33Identity());
+		EXPECT_EQ(cmat33(cmat44(mat33Identity())), mat33Identity());
 	}
 }

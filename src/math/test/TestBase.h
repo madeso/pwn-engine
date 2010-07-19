@@ -4,6 +4,8 @@
 #include <pwn/math/types.h>
 #include <pwn/math/operations.h>
 
+#define EXPECT_REAL_EQ EXPECT_FLOAT_EQ
+
 namespace pwn
 {
 	namespace math
@@ -34,4 +36,4 @@ namespace pwn
 	}
 }
 
-#include <UnitTest++.h>
+#include <gtest/gtest.h>

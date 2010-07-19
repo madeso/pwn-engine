@@ -30,7 +30,7 @@ namespace test
 		EXPECT_EQ(In(mat44Identity()), In());
 	}
 
-	struct TestRotationFixture
+	struct TestRotationFixture : ::testing::Test
 	{
 		mat44 start;
 		AxisAngle aa;
@@ -46,7 +46,7 @@ namespace test
 		}
 	};
 	
-	TEST_FIXTURE(TestRotationFixture, TestRotationAxisAngle)
+	TEST_F(TestRotationFixture, TestRotationAxisAngle)
 	{
 		vec3 r = mat44helper(start)
 			.rotate( aa )
@@ -54,7 +54,7 @@ namespace test
 		EXPECT_EQ( r, result);
 	}
 
-	TEST_FIXTURE(TestRotationFixture, TestRotationQuat)
+	TEST_F(TestRotationFixture, TestRotationQuat)
 	{
 		vec3 r = mat44helper(start)
 			.rotate( cquat(aa) )

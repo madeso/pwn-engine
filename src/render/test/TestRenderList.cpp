@@ -7,7 +7,7 @@
 #include <pwn/core/idpool.h>
 #include <pwn/math/operations.h>
 
-SUITE(testRenderList)
+namespace test //SUITE(testRenderList)
 {
 	using namespace pwn;
 	using namespace pwn::math;
@@ -72,7 +72,7 @@ SUITE(testRenderList)
 	int order[argSize] = { NOPAREN argValues };     \
 	CHECK_ARRAY_EQUAL(order, argList, expectedSize);
 
-	struct CommonMeshMat
+	struct CommonMeshMat : ::testing::Test
 	{
 		CommonMeshMat()
 			: m0( CreateTranslationMatrixFromdepth(0) )
@@ -103,7 +103,7 @@ SUITE(testRenderList)
 	};
 
 	// basic tests to check that it renders it
-	TEST_FIXTURE(CommonMeshMat, testRender_Single)
+	TEST_F(CommonMeshMat, testRender_Single)
 	{
 		rl.begin();
 		rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0);
@@ -111,7 +111,7 @@ SUITE(testRenderList)
 
 		TEST_VECTOR(list, 1, (0) );
 	}
-	TEST_FIXTURE(CommonMeshMat, testRender_Several)
+	TEST_F(CommonMeshMat, testRender_Several)
 	{
 		rl.begin();
 		rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0);
@@ -125,7 +125,7 @@ SUITE(testRenderList)
 	}
 
 	// test alpha/non alpha sorting
-	TEST_FIXTURE(CommonMeshMat, testRender_Alpha_RightOrder)
+	TEST_F(CommonMeshMat, testRender_Alpha_RightOrder)
 	{
 		rl.begin();
 		rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m0);
@@ -134,7 +134,7 @@ SUITE(testRenderList)
 
 		TEST_VECTOR(list, 2, (1, 2) );
 	}
-	TEST_FIXTURE(CommonMeshMat, testRender_Alpha_WrongOrder)
+	TEST_F(CommonMeshMat, testRender_Alpha_WrongOrder)
 	{
 		rl.begin();
 		rl.add(CreateMesh(2, &list), CreateMaterial(true, tNull), m0);
@@ -145,7 +145,7 @@ SUITE(testRenderList)
 	}
 
 	// test sort distance order...
-	TEST_FIXTURE(CommonMeshMat, testRender_Distance_Solid_RightOrder)
+	TEST_F(CommonMeshMat, testRender_Distance_Solid_RightOrder)
 	{
 		rl.begin();
 		rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0);
@@ -155,7 +155,7 @@ SUITE(testRenderList)
 
 		TEST_VECTOR(list, 3, (0, 1, 2) );
 	}
-	TEST_FIXTURE(CommonMeshMat, testRender_Distance_Solid_WrongOrder)
+	TEST_F(CommonMeshMat, testRender_Distance_Solid_WrongOrder)
 	{
 		rl.begin();
 		rl.add(CreateMesh(2, &list), CreateMaterial(false, tNull), m2);
@@ -165,7 +165,7 @@ SUITE(testRenderList)
 
 		TEST_VECTOR(list, 3, (0, 1, 2) );
 	}
-	TEST_FIXTURE(CommonMeshMat, testRender_Distance_Transparent_RightOrder)
+	TEST_F(CommonMeshMat, testRender_Distance_Transparent_RightOrder)
 	{
 		rl.begin();
 		rl.add(CreateMesh(0, &list), CreateMaterial(true, tNull), m2);
@@ -175,7 +175,7 @@ SUITE(testRenderList)
 
 		TEST_VECTOR(list, 3, (0, 1, 2) );
 	}
-	TEST_FIXTURE(CommonMeshMat, testRender_Distance_Transparent_WrongOrder)
+	TEST_F(CommonMeshMat, testRender_Distance_Transparent_WrongOrder)
 	{
 		rl.begin();
 		rl.add(CreateMesh(2, &list), CreateMaterial(true, tNull), m0);
@@ -187,7 +187,7 @@ SUITE(testRenderList)
 	}
 
 	// test sort textures order...
-	TEST_FIXTURE(CommonMeshMat, testRender_Texture_RightOrder)
+	TEST_F(CommonMeshMat, testRender_Texture_RightOrder)
 	{
 		rl.begin();
 		rl.add(CreateMesh(0, &list), CreateMaterial(false, t1), m0);
@@ -197,7 +197,7 @@ SUITE(testRenderList)
 
 		TEST_VECTOR(list, 3, (0, 1, 2 ) );
 	}
-	TEST_FIXTURE(CommonMeshMat, testRender_Texture_WrongOrder)
+	TEST_F(CommonMeshMat, testRender_Texture_WrongOrder)
 	{
 		rl.begin();
 		rl.add(CreateMesh(2, &list), CreateMaterial(false, t3), m0);
@@ -209,7 +209,7 @@ SUITE(testRenderList)
 	}
 
 	// test complex sorting order
-	TEST_FIXTURE(CommonMeshMat, testRender_Complex_RightOrder)
+	TEST_F(CommonMeshMat, testRender_Complex_RightOrder)
 	{
 		rl.begin();
 		rl.add(CreateMesh(1,  &list), CreateMaterial(false, tNull), m0);
@@ -233,7 +233,7 @@ SUITE(testRenderList)
 
 		TEST_VECTOR(list, 16, (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16) );
 	}
-	TEST_FIXTURE(CommonMeshMat, testRender_Complex_WrongOrder)
+	TEST_F(CommonMeshMat, testRender_Complex_WrongOrder)
 	{
 		rl.begin();
 		rl.add(CreateMesh(7,  &list), CreateMaterial(false, t3),    m0);

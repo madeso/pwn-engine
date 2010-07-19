@@ -8,7 +8,7 @@ namespace test
 	using namespace pwn;
 	using namespace pwn::math;
 
-	struct wh : boost::noncopyable
+	struct wh  : ::testing::Test, boost::noncopyable
 	{
 		const real w;
 		const real h;
@@ -20,7 +20,7 @@ namespace test
 		}
 	};
 
-	TEST_FIXTURE(wh, TestUpperLeftAndSize)
+	TEST_F(wh, TestUpperLeftAndSize)
 	{
 		rect a = FromUpperLeftAndSize(Origo2(), direction2(w,h));
 		EXPECT_EQ(0, LeftOf(a));
@@ -29,7 +29,7 @@ namespace test
 		EXPECT_EQ(-h, BottomOf(a));
 	}
 
-	TEST_FIXTURE(wh, TestSizeAndCenter1)
+	TEST_F(wh, TestSizeAndCenter1)
 	{
 		rect c = FromSizeAndCenter(direction2(w,h), point2(0.5f, 0.5f));
 		EXPECT_EQ(-w/2, LeftOf(c));
@@ -38,7 +38,7 @@ namespace test
 		EXPECT_EQ(-h/2, BottomOf(c));
 	}
 
-	TEST_FIXTURE(wh, TestSizeAndCenter2)
+	TEST_F(wh, TestSizeAndCenter2)
 	{
 		rect c = FromSizeAndCenter(direction2(w,h), point2(0.0f, 0.0f));
 		EXPECT_EQ(0, LeftOf(c));
@@ -47,7 +47,7 @@ namespace test
 		EXPECT_EQ(0, BottomOf(c));
 	}
 
-	TEST_FIXTURE(wh, TestSizeAndCenter3)
+	TEST_F(wh, TestSizeAndCenter3)
 	{
 		rect c = FromSizeAndCenter(direction2(w,h), point2(1.0f, 1.0f));
 		EXPECT_EQ(-w, LeftOf(c));
@@ -56,14 +56,14 @@ namespace test
 		EXPECT_EQ(-h, BottomOf(c));
 	}
 
-	TEST_FIXTURE(wh, TestWidth)
+	TEST_F(wh, TestWidth)
 	{
 		EXPECT_EQ(w, WidthOf(FromLrud(-w, 0, 1, 0)) );
 		EXPECT_EQ(w, WidthOf(FromLrud(0, w, 1, 0) ) );
 		EXPECT_EQ(w*2, WidthOf(FromLrud(-w, w, 1, 0)) );
 	}
 
-	TEST_FIXTURE(wh, TestHeight)
+	TEST_F(wh, TestHeight)
 	{
 		EXPECT_EQ(h, HeightOf(FromLrud(0, 1, h, 0)) );
 		EXPECT_EQ(h, HeightOf(FromLrud(0, 1, 0, -h)) );

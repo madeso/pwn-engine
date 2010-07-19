@@ -108,7 +108,7 @@ namespace test
 		EXPECT_EQ(RightHandAround(Right(), Angle::FromDegrees(90)), cAxisAngle(cquat(RightHandAround(-Right(), Angle::FromDegrees(-90)))));
 	}
 	
-	struct Quat
+	struct Quat : ::testing::Test
 	{
 		quat qa;
 		quat qb;
@@ -120,23 +120,23 @@ namespace test
 		}
 	};
 
-	TEST_FIXTURE(Quat, testSlerp1)
+	TEST_F(Quat, testSlerp1)
 	{
 		EXPECT_EQ(qIdentity(), Slerp(qIdentity(), 0, qb));
 	}
-	TEST_FIXTURE(Quat, testSlerp2)
+	TEST_F(Quat, testSlerp2)
 	{
 		EXPECT_EQ(qb, Slerp(qIdentity(), 1, qb));
 	}
-	TEST_FIXTURE(Quat, testSlerp3)
+	TEST_F(Quat, testSlerp3)
 	{
 		EXPECT_EQ(qIdentity(), SlerpShortway(qIdentity(), 0, qb));
 	}
-	TEST_FIXTURE(Quat, testSlerp4)
+	TEST_F(Quat, testSlerp4)
 	{
 		EXPECT_EQ(qb, SlerpShortway(qIdentity(), 1, qb));
 	}
-	TEST_FIXTURE(Quat, testSlerp5)
+	TEST_F(Quat, testSlerp5)
 	{
 		EXPECT_EQ(qa, SlerpShortway(qIdentity(), 0.5f, qb));
 	}

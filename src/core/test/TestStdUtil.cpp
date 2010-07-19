@@ -9,7 +9,7 @@ namespace test
 	using namespace pwn;
 	using namespace pwn::core;
 
-	struct fix
+	struct fix : ::testing::Test
 	{
 		fix()
 		{
@@ -23,14 +23,14 @@ namespace test
 		std::vector<int> vec;
 	};
 
-	TEST_FIXTURE(fix, testSwapBackAndErase_hasRemoved)
+	TEST_F(fix, testSwapBackAndErase_hasRemoved)
 	{
 		const std::size_t before = vec.size();
 		SwapBackAndEraseObject(4, &vec);
 		EXPECT_EQ(before-1, vec.size());
 	}
 
-	TEST_FIXTURE(fix, testSwapBackAndErase_order)
+	TEST_F(fix, testSwapBackAndErase_order)
 	{
 		SwapBackAndEraseObject(4, &vec);
 		EXPECT_EQ(1, vec[0]);

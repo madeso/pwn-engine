@@ -13,7 +13,7 @@ namespace test
 
 	GTEST(TestSpaceCharactersShouldContainSpace)
 	{
-		CHECK(string::npos != kSpaceCharacters().find(' '));
+		EXPECT_NE(string::npos, kSpaceCharacters().find(' '));
 	}
 
 	//
@@ -54,21 +54,21 @@ namespace test
 
 	GTEST(TestStartsWith)
 	{
-		CHECK(StartsWith("abc", "a"));
-		CHECK(!StartsWith("abc", "b"));
-		CHECK(!StartsWith("abc", "A"));
-		CHECK(StartsWith("abc", "abc"));
-		CHECK(StartsWith("the Beatles", "the"));
+		EXPECT_TRUE(StartsWith("abc", "a"));
+		EXPECT_FALSE(StartsWith("abc", "b"));
+		EXPECT_FALSE(StartsWith("abc", "A"));
+		EXPECT_TRUE(StartsWith("abc", "abc"));
+		EXPECT_TRUE(StartsWith("the Beatles", "the"));
 	}
 
 	//
 
 	GTEST(TestEndsWith)
 	{
-		CHECK(EndsWith("abc", "c"));
-		CHECK(!EndsWith("abc", "a"));
-		CHECK(!EndsWith("abc", "C"));
-		CHECK(EndsWith("beatles, the", " the"));
+		EXPECT_TRUE(EndsWith("abc", "c"));
+		EXPECT_FALSE(EndsWith("abc", "a"));
+		EXPECT_FALSE(EndsWith("abc", "C"));
+		EXPECT_TRUE(EndsWith("beatles, the", " the"));
 	}
 
 	//

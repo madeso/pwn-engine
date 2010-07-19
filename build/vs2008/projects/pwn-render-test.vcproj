@@ -179,10 +179,6 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\src\render\test\main.cpp"
-			>
-		</File>
-		<File
 			RelativePath="..\..\..\src\test-main.cpp"
 			>
 		</File>

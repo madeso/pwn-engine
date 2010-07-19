@@ -30,7 +30,8 @@ public:
 	{
 		if( r.passed() ) return;
 		const std::string errname = r.nonfatally_failed() ? "warning" : "error";
-		::std::cout << r.file_name() << "(" << r.line_number() << ") : " << errname << " C4242: " << r.summary() << std::endl << r.message() << std::endl;
+		::std::cout << r.file_name() << "(" << r.line_number() << ") : " << errname << " C4242: " << r.summary() << std::endl;// << r.message() << std::endl;
+		// message seems to be the same as summary()
 	}
 
 	// Fired after the test ends.

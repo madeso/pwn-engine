@@ -182,10 +182,6 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\src\math\test\main.cpp"
-			>
-		</File>
-		<File
 			RelativePath="..\..\..\src\test-main.cpp"
 			>
 		</File>

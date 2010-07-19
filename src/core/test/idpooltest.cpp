@@ -22,7 +22,7 @@ namespace test
 		IdPool pool;
 		Id first(&pool);
 		Id second(&pool);
-		EXPECT_NE(first.value,second.value );
+		EXPECT_NE(first.value, second.value );
 	}
 
 	GTEST(idpoolReleaseTest)

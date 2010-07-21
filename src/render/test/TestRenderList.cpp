@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 #include <vector>
 #include <pwn/render/renderlist.h>
@@ -62,16 +63,6 @@ namespace test //SUITE(testRenderList)
 		}
 	}
 
-
-#define NOPAREN(...) __VA_ARGS__ 
-
-#define TEST_VECTOR(argList, argSize, argValues)  \
-	const std::size_t expectedSize = argSize;      \
-	EXPECT_EQ(expectedSize, argList.size() );     \
-	if( argList.size() != expectedSize ) return;   \
-	int order[argSize] = { NOPAREN argValues };     \
-	CHECK_ARRAY_EQUAL(order, argList, expectedSize);
-
 	struct CommonMeshMat : ::testing::Test
 	{
 		CommonMeshMat()
@@ -109,8 +100,9 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0);
 		rl.end();
 
-		TEST_VECTOR(list, 1, (0) );
+		ASSERT_THAT(list, testing::ElementsAre(0) );
 	}
+
 	TEST_F(CommonMeshMat, testRender_Several)
 	{
 		rl.begin();
@@ -121,7 +113,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0);
 		rl.end();
 
-		TEST_VECTOR(list, 5, (0, 0, 0, 0, 0) );
+		ASSERT_THAT(list, testing::ElementsAre(0, 0, 0, 0, 0) );
 	}
 
 	// test alpha/non alpha sorting
@@ -132,8 +124,9 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(2, &list), CreateMaterial(true, tNull), m0);
 		rl.end();
 
-		TEST_VECTOR(list, 2, (1, 2) );
+		ASSERT_THAT(list, testing::ElementsAre(1, 2) );
 	}
+
 	TEST_F(CommonMeshMat, testRender_Alpha_WrongOrder)
 	{
 		rl.begin();
@@ -141,7 +134,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m0);
 		rl.end();
 
-		TEST_VECTOR(list, 2, (1, 2) );
+		ASSERT_THAT(list, testing::ElementsAre(1, 2) );
 	}
 
 	// test sort distance order...
@@ -153,8 +146,9 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(2, &list), CreateMaterial(false, tNull), m2);
 		rl.end();
 
-		TEST_VECTOR(list, 3, (0, 1, 2) );
+		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2) );
 	}
+
 	TEST_F(CommonMeshMat, testRender_Distance_Solid_WrongOrder)
 	{
 		rl.begin();
@@ -163,8 +157,9 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m1);
 		rl.end();
 
-		TEST_VECTOR(list, 3, (0, 1, 2) );
+		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2) );
 	}
+
 	TEST_F(CommonMeshMat, testRender_Distance_Transparent_RightOrder)
 	{
 		rl.begin();
@@ -173,8 +168,9 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(2, &list), CreateMaterial(true, tNull), m0);
 		rl.end();
 
-		TEST_VECTOR(list, 3, (0, 1, 2) );
+		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2) );
 	}
+
 	TEST_F(CommonMeshMat, testRender_Distance_Transparent_WrongOrder)
 	{
 		rl.begin();
@@ -183,7 +179,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(1, &list), CreateMaterial(true, tNull), m1);
 		rl.end();
 
-		TEST_VECTOR(list, 3, (0, 1, 2) );
+		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2) );
 	}
 
 	// test sort textures order...
@@ -195,8 +191,9 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(2, &list), CreateMaterial(false, t3), m0);
 		rl.end();
 
-		TEST_VECTOR(list, 3, (0, 1, 2 ) );
+		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2 ) );
 	}
+
 	TEST_F(CommonMeshMat, testRender_Texture_WrongOrder)
 	{
 		rl.begin();
@@ -205,7 +202,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(1, &list), CreateMaterial(false, t2), m0);
 		rl.end();
 
-		TEST_VECTOR(list, 3, (0, 1, 2 ) );
+		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2 ) );
 	}
 
 	// test complex sorting order
@@ -231,8 +228,10 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(16, &list), CreateMaterial(true, t3),    m0);
 		rl.end();
 
-		TEST_VECTOR(list, 16, (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16) );
+		int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+		ASSERT_THAT(list, testing::ElementsAreArray(arr) );
 	}
+
 	TEST_F(CommonMeshMat, testRender_Complex_WrongOrder)
 	{
 		rl.begin();
@@ -255,6 +254,7 @@ namespace test //SUITE(testRenderList)
 		
 		rl.end();
 
-		TEST_VECTOR(list, 16, (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16) );
+		int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+		ASSERT_THAT(list, testing::ElementsAreArray(arr) );
 	}
 }

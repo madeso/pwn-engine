@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include <pwn/assert.h>
 
 #include <iostream>
@@ -78,6 +79,6 @@ int main(int argc, char **argv)
 {
 	pwn::assert::Init(pwn::assert::AlwaysThrow);
 	QuietConsolePrinter::Setup();
-	::testing::InitGoogleTest(&argc, argv);
+	::testing::InitGoogleMock(&argc, argv);
 	return RUN_ALL_TESTS();
 }

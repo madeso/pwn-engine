@@ -53,26 +53,6 @@ public:
 		boost::shared_ptr<ActorDef> rome = LoadMesh("fighter1.mesh", &tpool);
 		world->actor_add( Actor::Create(point3(0,0,0), qIdentity(), rome) );
 
-		/*
-		boost::shared_ptr<ActorDef> crate = CreateCube(1.5f, "crate01a.jpg", &tpool, 1, true);
-		boost::shared_ptr<ActorDef> glass = CreateCube(1.5f, "glass.png", &tpool, 0.5f, true);
-		boost::shared_ptr<ActorDef> pattern = CreateCube(1.5f, "pattern1.png", &tpool, 1, true);
-
-		boost::shared_ptr<World3> world( World3::Create() );
-		const real spacing = 3;
-		for(int i=0; i<5; ++i)
-		{
-			const real x = (i-2)*spacing;
-			for(int i=0; i<5; ++i)
-			{
-				const real z = (i-2)*spacing;
-
-				world->actor_add( Actor::Create(point3(x,-3,z), qIdentity(), crate) );
-				world->actor_add( Actor::Create(point3(x,0,z), qIdentity(), glass) );
-				world->actor_add( Actor::Create(point3(x,3,z), qIdentity(), pattern) );
-			}
-		}*/
-
 		// sky texture
 		world->actor_add(
 			Actor::Create(Origo3(), qIdentity(),

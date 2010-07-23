@@ -121,7 +121,9 @@ public:
 
 int main(int, char** argv)
 {
-	Game game;
-	InstallDefaultSystems(&game, argv[0], "entsoft", "survivors", "Survivors!");
-	EasyLoop(&game).loop();
+	{
+		Game game;
+		InstallDefaultSystems(&game, argv[0], "entsoft", "survivors", "Survivors!");
+		EasyLoop(&game).loop();
+	}
 }

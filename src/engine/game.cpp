@@ -14,6 +14,7 @@ namespace pwn
 
 		Game::~Game()
 		{
+			imp.reset();
 		}
 
 		void Game::install(System* system)

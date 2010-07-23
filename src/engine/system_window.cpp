@@ -24,8 +24,8 @@
 #endif
 
 #pragma comment(lib, "sfml-main" LIBRARY_SUFFIX ".lib" )
-#pragma comment(lib, "sfml-system" LIBRARY_SUFFIX ".lib" )
-#pragma comment(lib, "sfml-window" LIBRARY_SUFFIX ".lib" )
+#pragma comment(lib, "sfml-system-s" LIBRARY_SUFFIX ".lib" )
+#pragma comment(lib, "sfml-window-s" LIBRARY_SUFFIX ".lib" )
 
 namespace pwn
 {

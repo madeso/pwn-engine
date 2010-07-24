@@ -2,7 +2,6 @@
 #include <pwn/engine/game.h>
 #include <pwn/engine/startup.h>
 
-#include <pwn/render/virtualdisplay.h>
 #include <pwn/render/world3.h>
 #include <pwn/render/world3widget.h>
 #include <pwn/math/operations.h>
@@ -78,7 +77,7 @@ public:
 
 	void onRender()
 	{
-		renderWorld(0, display);
+		defaultRender();
 	}
 
 	void onMouse(const math::vec2 movement)

@@ -110,5 +110,10 @@ namespace pwn
 		{
 			game().getImp().display(id, world);
 		}
+
+		void Loop::defaultRender()
+		{
+			renderWorld(0, display);
+		}
 	}
 }

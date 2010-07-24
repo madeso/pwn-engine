@@ -35,6 +35,8 @@ namespace pwn
 			*/
 			virtual void onRender() = 0;
 
+			void defaultRender();
+
 			void renderWorld(int id, render::VirtualDisplay& world);
 
 			render::VirtualDisplay display;

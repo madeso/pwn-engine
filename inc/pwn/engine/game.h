@@ -15,6 +15,7 @@ namespace pwn
 	{
 		class GameImp;
 		class System;
+		class Startup;
 
 		class Game
 		{
@@ -30,7 +31,7 @@ namespace pwn
 			std::auto_ptr<GameImp> imp;
 		};
 
-		void InstallDefaultSystems(Game* game, const pwn::string& argv0, const pwn::string& company, const pwn::string& app, const pwn::string& title);
+		void InstallDefaultSystems(Game* game, const Startup& startup);
 	}
 }
 

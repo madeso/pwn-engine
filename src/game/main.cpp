@@ -1,5 +1,6 @@
 #include <pwn/engine/loop.h>
 #include <pwn/engine/game.h>
+#include <pwn/engine/startup.h>
 
 #include <pwn/render/world2.h>
 #include <pwn/render/world3.h>
@@ -103,7 +104,9 @@ int main(int, char** argv)
 {
 	{
 		Game game;
-		InstallDefaultSystems(&game, argv[0], "entsoft", "survivors", "Survivors!");
+		InstallDefaultSystems(&game,
+			Startup(argv[0], "entsoft", "survivors", "Survivors!")
+			);
 		EasyLoop(&game).loop();
 	}
 }

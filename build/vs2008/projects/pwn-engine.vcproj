@@ -247,6 +247,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\src\engine\startup.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\engine\startup.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\engine\system.cpp"
 			>
 		</File>

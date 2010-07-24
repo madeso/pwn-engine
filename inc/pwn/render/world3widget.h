@@ -14,12 +14,12 @@ namespace pwn
 		class World3Widget : public Widget
 		{
 		public:
-			World3Widget(const math::rect& rect, boost::shared_ptr<World3> world);
+			World3Widget(const Dock& dock, boost::shared_ptr<World3> world);
 			~World3Widget();
 
 			void setCamera(const Camera& camera);
 
-			void render();
+			void render(int width, int height);
 		private:
 			boost::shared_ptr<World3> world;
 			Camera camera;

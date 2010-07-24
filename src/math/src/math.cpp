@@ -1887,6 +1887,8 @@ namespace pwn
 			: upperLeft(ul)
 			, lowerRight(lr)
 		{
+			Assert(ul.x() < lr.x());
+			Assert(ul.y() > lr.y());
 		}
 
 		// -----------------------------------------------------------------------------
@@ -1958,6 +1960,8 @@ namespace pwn
 
 		const rect FromUpperLeftAndSize(const point2& point, const direction2& size)
 		{
+			Assert(size.vec.x >= 0);
+			Assert(size.vec.y >= 0);
 			return rect(point, point2(point.x() + size.vec.x, point.y()-size.vec.y) );
 		}
 

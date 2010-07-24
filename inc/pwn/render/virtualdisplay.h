@@ -13,20 +13,15 @@ namespace pwn
 		class VirtualDisplay
 		{
 		public:
-			VirtualDisplay(int width, int height);
+			VirtualDisplay();
 			~VirtualDisplay();
 
 			typedef boost::shared_ptr<Widget> WidgetPtr;
 
 			void widget_add(WidgetPtr widget);
 
-			int getWidth() const;
-			int getHeight() const;
-
 			void render(int width, int height);
 		private:
-			int width;
-			int height;
 			std::vector<WidgetPtr> widgets;
 		};
 	}

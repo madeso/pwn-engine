@@ -32,6 +32,11 @@ namespace pwn
 			Game& game();
 
 			virtual void onUpdate(real delta) = 0;
+
+			/** Rendering callback.
+			Here you tell pwn what to render. Usually you just want to render a single display,
+			however in in-game menues you may want to render the calling loops display before you render the current.
+			*/
 			virtual void onRender() = 0;
 
 			void renderWorld(int id, render::VirtualDisplay& world);

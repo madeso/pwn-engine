@@ -10,9 +10,7 @@ namespace pwn
 {
 	namespace render
 	{
-		VirtualDisplay::VirtualDisplay(int width, int height)
-			: width(width)
-			, height(height)
+		VirtualDisplay::VirtualDisplay()
 		{
 		}
 
@@ -25,16 +23,6 @@ namespace pwn
 			widgets.push_back(widget);
 		}
 
-		int VirtualDisplay::getWidth() const
-		{
-			return width;
-		}
-
-		int VirtualDisplay::getHeight() const
-		{
-			return height;
-		}
-
 		void VirtualDisplay::render(int width, int height)
 		{
 			glViewport(0,0, width, height);
@@ -42,7 +30,7 @@ namespace pwn
 
 			BOOST_FOREACH(WidgetPtr w, widgets)
 			{
-				w->render();
+				w->render(width, height);
 			}
 		}
 	}

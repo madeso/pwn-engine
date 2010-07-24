@@ -1,7 +1,7 @@
 #ifndef PWN_RENDER_WIDGET
 #define PWN_RENDER_WIDGET
 
-#include <pwn/math/types.h>
+#include <pwn/render/dock.h>
 
 namespace pwn
 {
@@ -10,12 +10,12 @@ namespace pwn
 		class Widget
 		{
 		public:
-			Widget(const math::rect& rect);
+			Widget(const Dock& dock);
 			virtual ~Widget();
 
-			virtual void render() = 0;
-
-			math::rect rect;
+			virtual void render(int width, int height) = 0;
+		protected:
+			Dock dock;
 		};
 	}
 }

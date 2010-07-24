@@ -4,8 +4,8 @@ namespace pwn
 {
 	namespace render
 	{
-		Widget::Widget(const math::rect& rect)
-			: rect(rect)
+		Widget::Widget(const Dock& adock)
+			: dock(adock)
 		{
 		}
 

@@ -185,6 +185,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\src\render\src\dock.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\dock.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\render\src\material.cpp"
 			>
 		</File>

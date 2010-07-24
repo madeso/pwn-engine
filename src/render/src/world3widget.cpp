@@ -14,8 +14,8 @@ namespace pwn
 {
 	namespace render
 	{
-		World3Widget::World3Widget(const math::rect& rect, boost::shared_ptr<World3> world)
-			: Widget(rect)
+		World3Widget::World3Widget(const Dock& dock, boost::shared_ptr<World3> world)
+			: Widget(dock)
 			, world(world)
 			, camera( math::Origo3(), math::qIdentity(), 45.0f, 0.5f, 1000.0f)
 		{
@@ -30,8 +30,9 @@ namespace pwn
 			this->camera = camera;
 		}
 
-		void World3Widget::render()
+		void World3Widget::render(int width, int height)
 		{
+			const math::rect rect = dock.getRect(width, height);
 			const int x = static_cast<GLsizei>(LeftOf(rect));
 			const int y = -static_cast<GLsizei>(TopOf(rect));
 			const int w = static_cast<GLsizei>(WidthOf(rect));

@@ -1,5 +1,6 @@
 #define PWN_ENGINE_NO_AUTOLINK
 
+#include <algorithm>
 #include "videomode.hpp"
 #include <SFML/Window.hpp>
 
@@ -19,16 +20,38 @@ namespace pwn
 		{
 		}
 
+		namespace // local
+		{
+			const sf::VideoMode ToSfml(const VideoMode& v)
+			{
+				return sf::VideoMode(v.width, v.height, v.bits);
+			}
+
+			const VideoMode ToPwn(const sf::VideoMode& v)
+			{
+				return VideoMode(v.Width, v.Height, v.BitsPerPixel, false);
+			}
+		}
+
 		bool VideoMode::isValid() const
 		{
-			sf::VideoMode vm(width, height, bits);
-			return vm.IsValid();
+			return ToSfml(*this).IsValid();
 		}
 
 		namespace VideoModes
 		{
-			const VideoMode At(index i);
-			const index Count();
+			const std::vector<VideoMode> List()
+			{
+				const std::vector<sf::VideoMode>& m = sf::VideoMode::GetFullscreenModes();
+				std::vector<VideoMode> r(m.size());
+				std::transform(m.begin(), m.end(), r.begin(), ToPwn);
+				return r;
+			}
+
+			const VideoMode Desktop()
+			{
+				return ToPwn(sf::VideoMode::GetDesktopMode());
+			}
 		}
 	}
 }

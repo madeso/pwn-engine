@@ -1,6 +1,8 @@
 #ifndef PWN_ENGINE_SYSTEM_WINDOW_HPP
 #define PWN_ENGINE_SYSTEM_WINDOW_HPP
 
+#include <vector>
+
 namespace pwn
 {
 	namespace engine
@@ -19,9 +21,8 @@ namespace pwn
 
 		namespace VideoModes
 		{
-			typedef unsigned int index;
-			const VideoMode At(index i);
-			const index Count();
+			const std::vector<VideoMode> List();
+			const VideoMode Desktop();
 		}
 	}
 }

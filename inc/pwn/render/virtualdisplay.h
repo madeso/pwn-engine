@@ -23,7 +23,7 @@ namespace pwn
 			int getWidth() const;
 			int getHeight() const;
 
-			void render();
+			void render(int width, int height);
 		private:
 			int width;
 			int height;

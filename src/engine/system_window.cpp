@@ -136,7 +136,7 @@ namespace pwn
 			void render(render::VirtualDisplay& world)
 			{
 				window.SetActive();
-				world.render();
+				world.render(window.GetWidth(), window.GetHeight());
 				window.Display();
 			}
 		private:

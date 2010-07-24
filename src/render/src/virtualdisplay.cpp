@@ -35,7 +35,7 @@ namespace pwn
 			return height;
 		}
 
-		void VirtualDisplay::render()
+		void VirtualDisplay::render(int width, int height)
 		{
 			glViewport(0,0, width, height);
 			glClear( GL_COLOR_BUFFER_BIT );

@@ -106,7 +106,7 @@ namespace pwn
 			onRender();
 		}
 
-		void Loop::renderWorld(int id, render::World2& world)
+		void Loop::renderWorld(int id, render::VirtualDisplay& world)
 		{
 			game().getImp().display(id, world);
 		}

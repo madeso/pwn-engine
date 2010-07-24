@@ -10,11 +10,11 @@ namespace pwn
 	{
 		class Widget;
 
-		class World2
+		class VirtualDisplay
 		{
 		public:
-			World2(int width, int height);
-			~World2();
+			VirtualDisplay(int width, int height);
+			~VirtualDisplay();
 
 			typedef boost::shared_ptr<Widget> WidgetPtr;
 

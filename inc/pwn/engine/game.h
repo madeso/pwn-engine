@@ -8,7 +8,7 @@ namespace pwn
 {
 	namespace render
 	{
-		class World2;
+		class VirtualDisplay;
 	}
 
 	namespace engine
@@ -26,7 +26,7 @@ namespace pwn
 			void install(System* system); // assumes ownership
 			GameImp& getImp(); // internal
 
-			void display(int id, render::World2& world);
+			void display(int id, render::VirtualDisplay& world);
 		private:
 			std::auto_ptr<GameImp> imp;
 		};

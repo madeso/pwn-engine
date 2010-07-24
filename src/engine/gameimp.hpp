@@ -13,7 +13,7 @@ namespace pwn
 {
 	namespace render
 	{
-		class World2;
+		class VirtualDisplay;
 	}
 
 	namespace engine
@@ -34,7 +34,7 @@ namespace pwn
 
 			// only associate, ownership has to be handled somewhere else
 			void display_add(int id, Display* disp);
-			void display(int id, render::World2& world);
+			void display(int id, render::VirtualDisplay& world);
 			void display_remove(int id, Display* disp);
 
 			// post events

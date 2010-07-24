@@ -11,7 +11,7 @@
 #include <SFML/Window.hpp>
 #include "display.hpp"
 #include "gameimp.hpp"
-#include <pwn/render/world2.h>
+#include <pwn/render/virtualdisplay.h>
 
 #include <pwn/math/types.h>
 #include <pwn/math/operations.h>
@@ -133,7 +133,7 @@ namespace pwn
 			{
 				window.SetCursorPosition(window.GetWidth()/2, window.GetHeight()/2);
 			}
-			void render(render::World2& world)
+			void render(render::VirtualDisplay& world)
 			{
 				window.SetActive();
 				world.render();

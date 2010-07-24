@@ -8,7 +8,7 @@ namespace pwn
 {
 	namespace render
 	{
-		class World2;
+		class VirtualDisplay;
 	}
 
 	namespace engine
@@ -34,7 +34,7 @@ namespace pwn
 			virtual void onUpdate(real delta) = 0;
 			virtual void onRender() = 0;
 
-			void renderWorld(int id, render::World2& world);
+			void renderWorld(int id, render::VirtualDisplay& world);
 		private:
 			void update(real delta);
 			void render();

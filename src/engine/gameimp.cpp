@@ -50,7 +50,7 @@ namespace pwn
 			displays[id] = disp;
 		}
 
-		void GameImp::display(int id, render::World2& world)
+		void GameImp::display(int id, render::VirtualDisplay& world)
 		{
 			const DisplayMap::iterator res = displays.find(id);
 			if( res == displays.end() )

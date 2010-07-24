@@ -225,19 +225,19 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\src\render\src\virtualdisplay.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\virtualdisplay.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\render\src\widget.cpp"
 			>
 		</File>
 		<File
 			RelativePath="..\..\..\inc\pwn\render\widget.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\render\src\world2.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\inc\pwn\render\world2.h"
 			>
 		</File>
 		<File

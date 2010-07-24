@@ -1,4 +1,4 @@
-#include <pwn/render/world2.h>
+#include <pwn/render/virtualdisplay.h>
 #include <pwn/render/widget.h>
 #pragma warning(disable:4512) // warning C4512: 'boost::detail::addr_impl_ref<T>' : assignment operator could not be generated
 #include <boost/foreach.hpp>
@@ -10,32 +10,32 @@ namespace pwn
 {
 	namespace render
 	{
-		World2::World2(int width, int height)
+		VirtualDisplay::VirtualDisplay(int width, int height)
 			: width(width)
 			, height(height)
 		{
 		}
 
-		World2::~World2()
+		VirtualDisplay::~VirtualDisplay()
 		{
 		}
 
-		void World2::widget_add(WidgetPtr widget)
+		void VirtualDisplay::widget_add(WidgetPtr widget)
 		{
 			widgets.push_back(widget);
 		}
 
-		int World2::getWidth() const
+		int VirtualDisplay::getWidth() const
 		{
 			return width;
 		}
 
-		int World2::getHeight() const
+		int VirtualDisplay::getHeight() const
 		{
 			return height;
 		}
 
-		void World2::render()
+		void VirtualDisplay::render()
 		{
 			glViewport(0,0, width, height);
 			glClear( GL_COLOR_BUFFER_BIT );

@@ -2,7 +2,7 @@
 #include <pwn/engine/game.h>
 #include <pwn/engine/startup.h>
 
-#include <pwn/render/world2.h>
+#include <pwn/render/virtualdisplay.h>
 #include <pwn/render/world3.h>
 #include <pwn/render/world3widget.h>
 #include <pwn/math/operations.h>
@@ -46,9 +46,9 @@ class EasyLoop : public Loop
 public:
 	EasyLoop(Game* game)
 		: Loop(game)
-		, world2(800, 600)
+		, widgets(800, 600)
 	{
-		const rect res = FromUpperLeftAndSize(Origo2(), direction2(world2.getWidth(), world2.getHeight()));
+		const rect res = FromUpperLeftAndSize(Origo2(), direction2(widgets.getWidth(), widgets.getHeight()));
 
 		boost::shared_ptr<World3> world( World3::Create() );
 		boost::shared_ptr<ActorDef> rome = LoadMesh("fighter1.mesh", &tpool);
@@ -65,7 +65,7 @@ public:
 
 		dcam.world = wid;
 
-		world2.widget_add( wid );
+		widgets.widget_add( wid );
 	}
 
 	void onKey(Key::Code key, bool isDown)
@@ -87,7 +87,7 @@ public:
 
 	void onRender()
 	{
-		renderWorld(0, world2);
+		renderWorld(0, widgets);
 	}
 
 	void onMouse(const math::vec2 movement)
@@ -95,7 +95,7 @@ public:
 		dcam.onMouse(movement);
 	}
 
-	World2 world2;
+	VirtualDisplay widgets;
 	DemoCamera dcam;
 	VfsTexturePool2 tpool;
 };

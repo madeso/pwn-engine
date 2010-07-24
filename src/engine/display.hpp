@@ -5,7 +5,7 @@ namespace pwn
 {
 	namespace render
 	{
-		class World2;
+		class VirtualDisplay;
 	}
 
 	namespace engine
@@ -18,7 +18,7 @@ namespace pwn
 			Display();
 			virtual ~Display();
 
-			virtual void render(render::World2& world) = 0;
+			virtual void render(render::VirtualDisplay& world) = 0;
 		};
 	}
 }

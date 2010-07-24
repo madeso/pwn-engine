@@ -46,14 +46,13 @@ class EasyLoop : public Loop
 public:
 	EasyLoop(Game* game)
 		: Loop(game)
-		, display()
 	{
 		boost::shared_ptr<World3> world( World3::Create() );
 
 		world->actor_add( Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("fighter1.mesh", &tpool)) );
 		world->actor_add( Actor::Create(Origo3(), qIdentity(), CreateCube(400, "_stars-texture.jpg", &tpool, 1, false) ) ); // sky texture
 
-		boost::shared_ptr<World3Widget > wid( new World3Widget( Dock::Fill(), world ) ); // http://en.wikipedia.org/wiki/14:9
+		boost::shared_ptr<World3Widget > wid( new World3Widget( Dock::Fill(), world ) );
 
 		dcam.world = wid;
 
@@ -87,7 +86,6 @@ public:
 		dcam.onMouse(movement);
 	}
 
-	VirtualDisplay display;
 	DemoCamera dcam;
 	VfsTexturePool2 tpool;
 };

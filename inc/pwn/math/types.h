@@ -373,7 +373,9 @@ namespace pwn
 		};
 
 		/** a 2 dimensional rect.
-		Assumes positive means right & up
+		Assumes positive means right & up.
+		This means that y value of lowerRight must be lower than upperLeft and the x value must be higher.
+		@todo: make upperLeft and lowerRight into get/set/accessor functions to add asserts
 		*/
 		struct rect
 		{

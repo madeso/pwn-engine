@@ -25,7 +25,7 @@ namespace pwn
 		{
 		}
 
-		void World3Widget::setCamera(const Camera& camera)
+		void World3Widget::updateCamera(const Camera& camera)
 		{
 			this->camera = camera;
 		}

@@ -3,14 +3,10 @@
 
 #include <pwn/engine/key.h>
 #include <pwn/math/types.h>
+#include <pwn/render/virtualdisplay.h>
 
 namespace pwn
 {
-	namespace render
-	{
-		class VirtualDisplay;
-	}
-
 	namespace engine
 	{
 		class Game;
@@ -40,6 +36,8 @@ namespace pwn
 			virtual void onRender() = 0;
 
 			void renderWorld(int id, render::VirtualDisplay& world);
+
+			render::VirtualDisplay display;
 		private:
 			void update(real delta);
 			void render();

@@ -17,7 +17,7 @@ namespace pwn
 			World3Widget(const Dock& dock, boost::shared_ptr<World3> world);
 			~World3Widget();
 
-			void setCamera(const Camera& camera);
+			void updateCamera(const Camera& camera);
 
 			void render(int width, int height);
 		private:

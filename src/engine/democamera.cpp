@@ -73,7 +73,7 @@ namespace pwn
 
 			mouse = vec2(0,0);
 
-			world->setCamera(camera);
+			world->updateCamera(camera);
 		}
 	}
 }

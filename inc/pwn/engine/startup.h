@@ -1,7 +1,8 @@
 #ifndef PWN_ENGINE_STARTUP
-#define PWN_EGNINE_STARTUP
+#define PWN_ENGINE_STARTUP
 
 #include <pwn/string.h>
+#include <pwn/engine/videomode.h>
 
 namespace pwn
 {
@@ -18,6 +19,8 @@ namespace pwn
 			pwn::string company;
 			pwn::string app;
 			pwn::string title;
+
+			VideoMode mode;
 		};
 	}
 }

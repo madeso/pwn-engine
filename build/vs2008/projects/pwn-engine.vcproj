@@ -299,7 +299,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\engine\videomode.hpp"
+			RelativePath="..\..\..\inc\pwn\engine\videomode.h"
 			>
 		</File>
 	</Files>

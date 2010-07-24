@@ -4,6 +4,7 @@
 #include "system.hpp"
 
 #include <pwn/engine/game.h>
+#include <pwn/engine/videomode.h>
 #include <pwn/engine/key.h>
 #include <pwn/assert.h>
 
@@ -54,12 +55,13 @@ namespace pwn
 		class System_Window : public System, Display
 		{
 		public:
-			System_Window(Game* game, const pwn::string& title, int id)
+			System_Window(Game* game, const VideoMode& mode, const pwn::string& title, int id)
 				: imp( game->getImp() )
 				, id(id)
 				, doRemove(false)
 			{
-				window.Create(sf::VideoMode(800, 600, 32), title.c_str());
+				const int windowstyle = mode.fullscreen ? sf::Style::Fullscreen : sf::Style::Titlebar;
+				window.Create(sf::VideoMode(mode.width, mode.height, mode.bits), title.c_str(), windowstyle);
 				imp.display_add(id, this);
 				doRemove = true;
 
@@ -144,9 +146,9 @@ namespace pwn
 			bool doRemove;
 		};
 
-		void SystemInstall_Window(Game* game, const pwn::string& title, int id)
+		void SystemInstall_Window(Game* game, const VideoMode& mode, const pwn::string& title, int id)
 		{
-			game->install(new System_Window(game, title, id));
+			game->install(new System_Window(game, mode, title, id));
 		}
 	}
 }

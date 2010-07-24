@@ -1,7 +1,7 @@
 #define PWN_ENGINE_NO_AUTOLINK
 
 #include <algorithm>
-#include "videomode.hpp"
+#include <pwn/engine/videomode.h>
 #include <SFML/Window.hpp>
 
 namespace pwn

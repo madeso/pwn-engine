@@ -9,7 +9,12 @@ namespace pwn
 			, company(acompany)
 			, app(aapp)
 			, title(atitle)
+			, mode(800, 600, 32, false)
 		{
+#ifdef NDEBUG
+			mode = VideoModes::Desktop();
+			mode.fullscreen = true;
+#endif
 		}
 	}
 }

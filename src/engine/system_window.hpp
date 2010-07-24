@@ -8,7 +8,9 @@ namespace pwn
 	namespace engine
 	{
 		class Game;
-		void SystemInstall_Window(Game* game, const pwn::string& title, int id);
+		struct VideoMode;
+
+		void SystemInstall_Window(Game* game, const VideoMode& mode, const pwn::string& title, int id);
 	}
 }
 

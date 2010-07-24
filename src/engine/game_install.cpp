@@ -12,7 +12,7 @@ namespace pwn
 		void InstallDefaultSystems(Game* game, const Startup& s)
 		{
 			SystemInstall_Vfs(game, s.argv0, s.company, s.app);
-			SystemInstall_Window(game, s.title, 0);
+			SystemInstall_Window(game, s.mode, s.title, 0);
 		}
 	}
 }

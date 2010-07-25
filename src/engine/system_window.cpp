@@ -66,6 +66,7 @@ namespace pwn
 				doRemove = true;
 
 				window.EnableKeyRepeat(false);
+				window.ShowMouseCursor(false);
 				// window.UseVerticalSync(true);
 
 				// Indicates the quality of color, texture coordinate, and fog coordinate
@@ -97,6 +98,8 @@ namespace pwn
 				{
 					imp.display_remove(id, this);
 				}
+				window.ShowMouseCursor(true);
+				window.Close();
 			}
 
 			void update()
@@ -125,8 +128,9 @@ namespace pwn
 				const sf::Input& i = window.GetInput();
 				const math::vec2 size(window.GetWidth(), window.GetHeight());
 				const math::vec2 center = size / 2;
-				const math::vec2 movement( (i.GetMouseX()-center.x)/ size.x, (center.y - i.GetMouseY())/size.y );
-				imp.handleMouse(movement);
+				const math::vec2 movement( (i.GetMouseX()-center.x)/ size.y, (center.y - i.GetMouseY())/size.y ); // divide by size.y (height) as movement is measured in ´percenteage of window height
+				/// @todo: make it so that is determined by desktop resolution and not game size
+				imp.handleMouse(movement*2);
 				resetMouse();
 			}
 			void resetMouse()

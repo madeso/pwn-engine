@@ -15,6 +15,33 @@ namespace pwn
 {
 	namespace render
 	{
+		
+		GLenum glGetError_WithString()
+		{
+			const GLenum err = glGetError();
+			switch(err)
+			{
+			case GL_NO_ERROR:
+				break;
+#define PRINT(x) OutputDebugStringA("--> Pwn detected a open gl error: " x"!\n")
+#define ERR(x) case x: PRINT(#x); break;
+			ERR(GL_INVALID_ENUM)
+			ERR(GL_INVALID_VALUE)
+			ERR(GL_INVALID_OPERATION)
+			ERR(GL_STACK_OVERFLOW)
+			ERR(GL_STACK_UNDERFLOW)
+			ERR(GL_OUT_OF_MEMORY)
+//				ERR(GL_TABLE_TOO_LARGE)
+			default:
+				PRINT("UNKNOWN");
+
+#undef PRINT
+#undef ERR
+			}
+			return err;
+		}
+		
+
 		RenderList::RenderList(bool useGlCommands)
 			: useGlCommands(useGlCommands)
 			, texture(0)
@@ -92,7 +119,7 @@ namespace pwn
 				if( useGlCommands )
 				{
 					glLoadMatrixf( c.mat.columnMajor );
-					Assert( glGetError() == GL_NO_ERROR);
+					Assert( glGetError_WithString() == GL_NO_ERROR);
 				}
 				apply(c.material);
 				c.mesh->render();
@@ -109,9 +136,9 @@ namespace pwn
 			if( useGlCommands )
 			{
 				glMatrixMode( GL_MODELVIEW );
-				Assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError_WithString() == GL_NO_ERROR);
 				glLoadIdentity();
-				Assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError_WithString() == GL_NO_ERROR);
 			}
 			
 			applied = false;
@@ -121,10 +148,10 @@ namespace pwn
 			if( useGlCommands )
 			{
 				glAlphaFunc ( GL_GREATER, 0.2f ) ;
-				Assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError_WithString() == GL_NO_ERROR);
 
 				glEnable ( GL_ALPHA_TEST ) ;
-				Assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError_WithString() == GL_NO_ERROR);
 			}
 
 			std::sort(solid.begin(), solid.end(), CommandSort);
@@ -134,16 +161,16 @@ namespace pwn
 			if( useGlCommands )
 			{
 				glDisable(GL_ALPHA_TEST);
-				Assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError_WithString() == GL_NO_ERROR);
 
 				glEnable(GL_BLEND);
-				Assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError_WithString() == GL_NO_ERROR);
 
 				glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-				Assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError_WithString() == GL_NO_ERROR);
 
 				glDepthMask(GL_FALSE); // disable depth-write
-				Assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError_WithString() == GL_NO_ERROR);
 			}
 
 			render(transparent);
@@ -151,15 +178,15 @@ namespace pwn
 			if( useGlCommands )
 			{
 				glDepthMask(GL_TRUE); // enable depth.write again
-				Assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError_WithString() == GL_NO_ERROR);
 
 				glDisable(GL_BLEND);
-				Assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError_WithString() == GL_NO_ERROR);
 
 				if( applied )
 				{
 					glDisable(GL_TEXTURE_2D);
-					Assert( glGetError() == GL_NO_ERROR);
+					Assert( glGetError_WithString() == GL_NO_ERROR);
 				}
 			}
 		}
@@ -169,7 +196,7 @@ namespace pwn
 			if( useGlCommands )
 			{
 				glColor4f( material->diffuse.red(), material->diffuse.green(), material->diffuse.blue(), material->diffuse.alpha() );
-				Assert( glGetError() == GL_NO_ERROR);
+				Assert( glGetError_WithString() == GL_NO_ERROR);
 				if( material->texture.get() )
 				{
 					if( applied == false )

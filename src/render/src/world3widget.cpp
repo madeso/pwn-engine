@@ -5,6 +5,7 @@
 #include <pwn/assert.h>
 
 #include <SFML/OpenGl.hpp>
+#include "opengl_debug.hpp"
 
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glu32.lib")
@@ -38,25 +39,25 @@ namespace pwn
 			const int w = static_cast<GLsizei>(WidthOf(rect));
 			const int h = static_cast<GLsizei>(HeightOf(rect));
 			glViewport(x, y, w, h);
-			Assert( glGetError() == GL_NO_ERROR);
+			Assert( glGetError_WithString() == GL_NO_ERROR);
 			glMatrixMode(GL_PROJECTION);
-			Assert( glGetError() == GL_NO_ERROR);
+			Assert( glGetError_WithString() == GL_NO_ERROR);
 			glLoadIdentity();
-			Assert( glGetError() == GL_NO_ERROR);
+			Assert( glGetError_WithString() == GL_NO_ERROR);
 			gluPerspective(camera.fov, AspectOf(rect), camera.znear, camera.zfar);
-			Assert( glGetError() == GL_NO_ERROR);
+			Assert( glGetError_WithString() == GL_NO_ERROR);
 			// todo: test for mask occlusion and possible render to a temporary texture
 
 			glClear(GL_DEPTH_BUFFER_BIT);
-			Assert( glGetError() == GL_NO_ERROR);
+			Assert( glGetError_WithString() == GL_NO_ERROR);
 			glEnable(GL_DEPTH_TEST);
-			Assert( glGetError() == GL_NO_ERROR);
+			Assert( glGetError_WithString() == GL_NO_ERROR);
 			glEnable(GL_CULL_FACE);
-			Assert( glGetError() == GL_NO_ERROR);
+			Assert( glGetError_WithString() == GL_NO_ERROR);
 			world->render(camera);
-			Assert( glGetError() == GL_NO_ERROR);
+			Assert( glGetError_WithString() == GL_NO_ERROR);
 			glDisable(GL_DEPTH_TEST);
-			Assert( glGetError() == GL_NO_ERROR);
+			Assert( glGetError_WithString() == GL_NO_ERROR);
 		}
 	}
 }

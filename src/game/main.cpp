@@ -14,6 +14,7 @@
 #include <pwn/engine/vfstexturepool2.h>
 #include <pwn/mesh/material.h>
 #include <pwn/meshio/io.h>
+#include <pwn/render/worldwithcameraboundobject3.h>
 
 using namespace pwn;
 using namespace pwn::engine;
@@ -46,10 +47,11 @@ public:
 	EasyLoop(Game* game)
 		: Loop(game)
 	{
-		World3::Ptr world( World3::Create() );
+		World3::Ptr world( new WorldWithCameraBoundObject3(Actor::Create(Origo3(), qIdentity(), CreateCube(10, "_stars-texture.jpg", &tpool, 1, false) ),
+			World3::Create()) );
 
 		world->actor_add( Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("fighter1.mesh", &tpool)) );
-		world->actor_add( Actor::Create(Origo3(), qIdentity(), CreateCube(400, "_stars-texture.jpg", &tpool, 1, false) ) ); // sky texture
+		//world->actor_add(  ); // sky texture
 
 		boost::shared_ptr<World3Widget > wid( new World3Widget( Dock::Fill(), world ) );
 

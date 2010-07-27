@@ -201,6 +201,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\src\render\src\opengl_debug.hpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\render\src\part.cpp"
 			>
 		</File>
@@ -262,6 +266,22 @@
 		</File>
 		<File
 			RelativePath="..\..\..\inc\pwn\render\world3widget.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\render\src\worldwith3.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\worldwith3.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\render\src\worldwithcameraboundobject3.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\worldwithcameraboundobject3.h"
 			>
 		</File>
 	</Files>

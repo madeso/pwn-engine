@@ -57,9 +57,9 @@ namespace pwn
 			ActorList actors;
 		};
 
-		World3* World3::Create()
+		World3::Ptr World3::Create()
 		{
-			return new BasicWorld();
+			return Ptr(new BasicWorld());
 		}
 	}
 }

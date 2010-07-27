@@ -23,7 +23,9 @@ namespace pwn
 
 			virtual void render(const Camera& camera) = 0;
 
-			static World3* Create();
+			typedef boost::shared_ptr<World3> Ptr;
+
+			static Ptr Create();
 		};
 	}
 }

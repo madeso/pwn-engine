@@ -17,7 +17,7 @@ namespace pwn
 		{
 		}
 
-		mesh::Triangle::index OptimizedMeshBuilder::addPosition(const math::vec3& pos)
+		mesh::Triangle::index OptimizedMeshBuilder::addPosition(const mesh::Point& pos)
 		{
 			if( isBuilding == false ) throw "done has been called...";
 			return mMesh->addPosition(pos);
@@ -197,7 +197,7 @@ namespace pwn
 				pwn::real sum = 0;
 				for(std::size_t i=0; i<vc; ++i)
 				{
-					const pwn::real d = LengthDiff(data.positions[i]);
+					const pwn::real d = LengthDiff(data.positions[i].location);
 					sum += d;
 					if( min > d ) min = d;
 					if( max < d ) max = d;

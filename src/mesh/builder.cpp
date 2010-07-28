@@ -13,9 +13,9 @@ namespace pwn
 	{
 		Mesh* Move(Mesh* mesh, const math::vec3& dir)
 		{
-			BOOST_FOREACH(math::vec3& v, mesh->positions)
+			BOOST_FOREACH(Point& p, mesh->positions)
 			{
-				v += dir;
+				p.location += dir;
 			}
 
 			return mesh;
@@ -23,9 +23,9 @@ namespace pwn
 
 		Mesh* Scale(Mesh* mesh, pwn::real scale)
 		{
-			BOOST_FOREACH(math::vec3& v, mesh->positions)
+			BOOST_FOREACH(Point& p, mesh->positions)
 			{
-				v *= scale;
+				p.location *= scale;
 			}
 
 			return mesh;
@@ -52,16 +52,16 @@ namespace pwn
 			const Triangle::index t3 = mesh->addTextCoord(vec2(1,0));
 
 			// front side
-			const Triangle::index v0 = mesh->addPosition(vec3(0, 0, 0));
-			const Triangle::index v1 = mesh->addPosition(vec3(w, 0, 0));
-			const Triangle::index v2 = mesh->addPosition(vec3(0, h, 0));
-			const Triangle::index v3 = mesh->addPosition(vec3(w, h, 0));
+			const Triangle::index v0 = mesh->addPosition(vec3(0, 0, 0), 0);
+			const Triangle::index v1 = mesh->addPosition(vec3(w, 0, 0), 0);
+			const Triangle::index v2 = mesh->addPosition(vec3(0, h, 0), 0);
+			const Triangle::index v3 = mesh->addPosition(vec3(w, h, 0), 0);
 
 			// back side
-			const Triangle::index v4 = mesh->addPosition(vec3(0, 0, d));
-			const Triangle::index v5 = mesh->addPosition(vec3(w, 0, d));
-			const Triangle::index v6 = mesh->addPosition(vec3(0, h, d));
-			const Triangle::index v7 = mesh->addPosition(vec3(w, h, d));
+			const Triangle::index v4 = mesh->addPosition(vec3(0, 0, d), 0);
+			const Triangle::index v5 = mesh->addPosition(vec3(w, 0, d), 0);
+			const Triangle::index v6 = mesh->addPosition(vec3(0, h, d), 0);
+			const Triangle::index v7 = mesh->addPosition(vec3(w, h, d), 0);
 
 			AddQuad(mesh, !faceOut, 0, v(v0,t2), v(v2,t0), v(v3,t1), v(v1,t3)); // front
 			AddQuad(mesh, !faceOut, 0, v(v1,t3), v(v3,t1), v(v7,t0), v(v5,t2)); // right
@@ -95,9 +95,9 @@ namespace pwn
 			std::vector<vec3> vertexNormalsSum(mesh->positions.size(), vec3(0,0,0));
 			BOOST_FOREACH(Triangle& t, mesh->triangles)
 			{
-				const vec3 p0 = mesh->positions[t[0].location];
-				const vec3 p1 = mesh->positions[t[1].location];
-				const vec3 p2 = mesh->positions[t[2].location];
+				const vec3 p0 = mesh->positions[t[0].location].location;
+				const vec3 p1 = mesh->positions[t[1].location].location;
+				const vec3 p2 = mesh->positions[t[2].location].location;
 
 				const vec3 d0 = math::FromTo(p1, p0);
 				const vec3 d1 = math::FromTo(p1, p2);

@@ -351,10 +351,11 @@ namespace pwn
 				}
 
 				/* vertices */ {
-					const std::size_t vc = handleSize<pwn::math::vec3>(mesh.positions);
+					const std::size_t vc = handleSize<pwn::mesh::Point>(mesh.positions);
 					for(std::size_t i=0; i<vc; ++i)
 					{
-						handleLocation(mesh.positions[i], compress.positions);
+						handleLocation(mesh.positions[i].location, compress.positions);
+						handle(mesh.positions[i].bone);
 					}
 				}
 

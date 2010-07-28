@@ -170,7 +170,7 @@ namespace pwn
 						pwn::string x = Read(f);
 						pwn::string y = Read(f);
 						pwn::string z = Read(f);
-						builder->addPosition(pwn::math::vec3(creal(x), creal(y), creal(z)));
+						builder->addPosition(pwn::mesh::Point(pwn::math::vec3(creal(x), creal(y), creal(z)), 0));
 					}
 					else if (command == "vt" )
 					{

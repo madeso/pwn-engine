@@ -247,7 +247,7 @@ namespace pwn
 							//def.selectMaterial("m" + me.materialId);
 							BOOST_FOREACH (Vertex v , me.vertices)
 							{
-								builder->addPosition(v.pos/*, v.bone*/);
+								builder->addPosition(pwn::mesh::Point(v.pos, v.bone));
 								builder->addTextCoord(math::vec2(v.uv.x, 1 - v.uv.y));
 								++vadded;
 							}

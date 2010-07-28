@@ -19,7 +19,7 @@ namespace pwn
 		public:
 			OptimizedMeshBuilder(::pwn::mesh::Mesh* mesh, bool optimzeNormals);
 			
-			mesh::Triangle::index addPosition(const math::vec3& pos);
+			mesh::Triangle::index addPosition(const mesh::Point& pos);
 			mesh::Triangle::index addNormal(const math::vec3& norm);
 			mesh::Triangle::index addTextCoord(const math::vec2& tc);
 

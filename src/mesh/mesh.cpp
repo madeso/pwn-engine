@@ -5,6 +5,18 @@ namespace pwn
 {
 	namespace mesh
 	{
+		Point::Point()
+			: location(0, 0, 0)
+			, bone(0)
+		{
+		}
+
+		Point::Point(const math::vec3& alocation, BoneIndex abone)
+			: location(alocation)
+			, bone(abone)
+		{
+		}
+
 		Mesh::Mesh()
 		{
 		}
@@ -17,10 +29,15 @@ namespace pwn
 			triangles.clear();
 		}
 
-		Triangle::index Mesh::addPosition(const math::vec3& pos)
+		Triangle::index Mesh::addPosition(const Point& pos)
 		{
 			positions.push_back(pos);
 			return static_cast<Triangle::index>(positions.size()-1);
+		}
+
+		Triangle::index Mesh::addPosition(const math::vec3& pos, BoneIndex bone)
+		{
+			return addPosition(Point(pos, bone));
 		}
 
 		Triangle::index Mesh::addNormal(const math::vec3& norm)

@@ -12,8 +12,17 @@ namespace pwn
 {
 	namespace mesh
 	{
-		class Triangle;
 		class Material;
+
+		typedef pwn::uint32 BoneIndex;
+
+		struct Point
+		{
+			Point();
+			Point(const math::vec3& location, BoneIndex bone);
+			math::vec3 location;
+			BoneIndex bone;
+		};
 
 		class Mesh
 		{
@@ -25,7 +34,8 @@ namespace pwn
 
 			void clear();
 
-			Triangle::index addPosition(const math::vec3& pos);
+			Triangle::index addPosition(const Point& pos);
+			Triangle::index addPosition(const math::vec3& pos, BoneIndex bone); // syntasx sugar
 			Triangle::index addNormal(const math::vec3& norm);
 			Triangle::index addTextCoord(const math::vec2& tc);
 
@@ -33,7 +43,7 @@ namespace pwn
 			Triangle::index addMaterial(MaterialPtr m);
 
 			// todo: make private and add accessors instead...
-			std::vector<math::vec3> positions;
+			std::vector<Point> positions;
 			std::vector<math::vec3> normals;
 			std::vector<math::vec2> texcoords;
 			TriangleList triangles; // the map key referenses the materials vector below

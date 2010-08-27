@@ -145,6 +145,14 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\..\..\src\mesh\animation.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\mesh\bone.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\mesh\builder.cpp"
 			>
 		</File>

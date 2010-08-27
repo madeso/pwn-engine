@@ -26,6 +26,7 @@ namespace pwn
 			// util functions, simply call theese on the mesh
 			void addTriangle(const mesh::Triangle& tri);
 			mesh::Triangle::index addMaterial(mesh::Mesh::MaterialPtr m);
+			void addBone(const ::pwn::mesh::Bone& b);
 
 			void done();
 

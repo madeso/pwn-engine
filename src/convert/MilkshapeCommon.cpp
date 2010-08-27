@@ -44,7 +44,7 @@ namespace pwn
 				int Model::boneId(string bone)
 				{
 					if (bone == "") return -1;
-					for (std::size_t i = 0; i < bones.size(); ++i)
+					for (int i = 0; i < bones.size(); ++i)
 					{
 						if (bones[i].name == bone) return i;
 					}
@@ -224,14 +224,15 @@ namespace pwn
 							++id;
 						}
 
-						/*BOOST_FOREACH (Bone b , model.bones)
+						BOOST_FOREACH (Bone b , model.bones)
 						{
-							MeshDef.Bone bn = def.newBone();
+							mesh::Bone bn;
 							bn.pos =  math::vec3(b.x, b.y, b.z);
 							bn.rot = makeQuat( math::vec3(b.rx, b.ry, b.rz));
 							bn.parent = b.parentId;
 							bn.name = b.name;
-						}*/
+							builder->addBone(bn);
+						}
 
 						int vadded = 0;
 						int vbase = 0;

@@ -116,6 +116,11 @@ namespace pwn
 			return mMesh->addMaterial(m);
 		}
 
+		void OptimizedMeshBuilder::addBone(const ::pwn::mesh::Bone& b)
+		{
+			mMesh->bones.push_back(b);
+		}
+
 		void OptimizedMeshBuilder::done()
 		{
 			if( isBuilding == false ) throw "done has been called...";

@@ -42,23 +42,23 @@ namespace test
 
 	GTEST(stringBuilderStartsEmpty)
 	{
-		EXPECT_EQ("", static_cast<pwn::string>(StringBuilder()));
+		EXPECT_EQ("", static_cast<pwn::string>(Str()));
 	}
 
 	GTEST(stringBuilderEmptyResultsInEmpty)
 	{
 		const pwn::string empty("");
-		EXPECT_EQ(empty, static_cast<pwn::string>(StringBuilder() << empty));
+		EXPECT_EQ(empty, static_cast<pwn::string>(Str() << empty));
 	}
 
 	GTEST(stringBuilderTextResultsInText)
 	{
 		const pwn::string text("abc");
-		EXPECT_EQ(text, static_cast<pwn::string>(StringBuilder() << text));
+		EXPECT_EQ(text, static_cast<pwn::string>(Str() << text));
 	}
 
 	GTEST(stringBuilderNumberResultsInText)
 	{
-		EXPECT_EQ("42", static_cast<pwn::string>(StringBuilder() << 42));
+		EXPECT_EQ("42", static_cast<pwn::string>(Str() << 42));
 	}
 }

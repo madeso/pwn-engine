@@ -11,6 +11,10 @@ namespace pwn
 		/// \defgroup math1 1-D math operations
 		/// @{
 
+		bool IsEqual(real lhs, real rhs);
+		bool IsZero(real r);
+		real ZeroOrValue(real r);
+
 		/** Calculates the sign as a positive or a negative int.
 		@returns 1 if r is greater than 0, -1 if not.
 		@see Abs()

@@ -23,11 +23,11 @@ namespace pwn
 			from->pop_back();
 		}
 
-		class StringBuilder
+		class Str
 		{
 		public:
 			template<typename Type>
-			StringBuilder& operator<<(const Type& t)
+			Str& operator<<(const Type& t)
 			{
 				stream << t;
 				return *this;

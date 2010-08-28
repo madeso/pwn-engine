@@ -48,15 +48,15 @@ namespace pwn
 		class Timed
 		{
 		public:
-			float getTime() const;
+			real getTime() const;
 		protected:
-			explicit Timed(float t);
+			explicit Timed(real t);
 		private:
-			float time;
+			real time;
 		};
 
 		template<typename T>
-		int Get(const core::Vector<T>& da, float current)
+		int Get(const core::Vector<T>& da, real current)
 		{
 			for (int i = 1; i < da.Count; ++i)
 			{
@@ -72,27 +72,24 @@ namespace pwn
 		class FramePosition : public Timed
 		{
 		public:
-			FramePosition(float time, math::vec3 location);
+			FramePosition(real time, const math::vec3& location);
 			string toString() const;
-			math::vec3 getLocation() const;
 
-		private:
 			math::vec3 location;
 		};
 
-		math::vec3 Interpolate(const FramePosition& from, float current, const FramePosition& to);
+		math::vec3 Interpolate(const FramePosition& from, real current, const FramePosition& to);
 
 		class FrameRotation : public Timed
 		{
-			FrameRotation(float time, math::quat rotation);
+		public:
+			FrameRotation(real time, const math::quat& rotation);
 			string toString() const;
-			math::quat getRotation() const;
 
-		private:
 			math::quat rotation;
 		};
 
-		math::quat Interpolate(const FrameRotation& from, float current, const FrameRotation& to);
+		math::quat Interpolate(const FrameRotation& from, real current, const FrameRotation& to);
 
 		class PosePerBone
 		{
@@ -108,43 +105,34 @@ namespace pwn
 		class AnimationPerBone
 		{
 		public:
+			AnimationPerBone(core::Vector<FramePosition>& afp, core::Vector<FrameRotation>& afr);
 			core::Vector<FramePosition> fp;
 			core::Vector<FrameRotation> fr;
 
-			string ToString() const;
+			string toString() const;
 
-			float getLength() const;
+			real getLength() const;
 
-			void addPositon(float time, math::vec3 vec);
-			void addPositon(FramePosition fp);
-
-			void addRotation(float time, math::quat rotation);
-			void addRotation(FrameRotation fr);
-
-			PosePerBone getBonePose(float time) const;
+			PosePerBone getBonePose(real time) const;
 
 			AnimationPerBone sub(int start, int end) const;
-			void scale(float scale);
-
-		private:
-			static math::quat Interpolate(float time, core::Vector<FrameRotation> fr);
-			static math::vec3 Interpolate(float time, core::Vector<FramePosition> fp);
+			void scale(real scale);
 		};
 
 		class Pose
 		{
 		public:
-			Pose(const core::Vector<PosePerBone>& pose);
+			explicit Pose(core::Vector<PosePerBone>& pose);
 			const core::Vector<PosePerBone> bones;
 		};
 
-		class MeshDef;
+		class Mesh;
 
 		class CompiledPose
 		{
 		public:
 			core::Vector<math::mat44> transforms;
-			CompiledPose(Pose pose, const MeshDef& def);
+			CompiledPose(const Pose& pose, const Mesh& def);
 		};
 
 		class AnimationInformation
@@ -159,16 +147,16 @@ namespace pwn
 		class Animation
 		{
 		public:
-			Animation(core::Vector<AnimationPerBone> bones);
-			Pose getPose(float time);
+			Animation(core::Vector<AnimationPerBone>& bones);
+			Pose getPose(real time) const;
 
 			core::Vector<AnimationPerBone> bones;
-			const float length;
+			const real length;
 
 			Animation subanim(int start, int end) const;
 			Animation subanim(const AnimationInformation& info) const;
 
-			void scale(float scale);
+			void scale(real scale);
 		};
 
 		//

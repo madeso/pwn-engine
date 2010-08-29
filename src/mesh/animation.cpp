@@ -4,6 +4,7 @@
 #include <pwn/math/operations.h>
 #include <pwn/core/stdutil.h>
 #include <boost/foreach.hpp>
+#include <pwn/assert.h>
 
 namespace pwn
 {
@@ -201,29 +202,19 @@ namespace pwn
 		{
 		}
 
-		void UpdateMatrix(core::Vector<math::mat44>& result, const Bone& bone, const Pose& pose, const std::vector<Bone>& list)
-		;/*{
-			mat44 parent;
-			if (bone.hasParent() == false) parent = mat44.Identity;
-			else parent = result[bone.parent];
-			vec3 loc = pose.bones[bone.index].location;
-			quat rot = pose.bones[bone.index].rotation;
-			// bone.pos Rotate(-bone.rot).
-			result[bone.index] = new MatrixHelper(parent).Rotate(bone.rot).Translate(bone.pos).Translate(loc).Rotate(-rot).mat44;
-			BOOST_FOREACH(Bone b, bone.childs)
-			{
-				updateMatrix(ref result, b, pose, list);
-			}
-		}*/
-
 		CompiledPose::CompiledPose(const Pose& pose, const Mesh& def)
 		{
 			if (pose.bones.size() != def.bones.size()) throw "Invalid animation/mesh, bone count differs";
 			core::Vector<math::mat44> result( pose.bones.size() );
 			for (std::size_t i = 0; i < pose.bones.size(); ++i) result[i] = math::mat44Identity();
-			BOOST_FOREACH(const Bone& b, def.bones)
+			BOOST_FOREACH(const Bone& bone, def.bones)
 			{
-				UpdateMatrix(result, b, pose, def.bones);
+				// either it is a parent, or it's parent has already been precoessed
+				Assert( bone.hasParent()==false || bone.index > bone.parent );
+				math::mat44 parent = bone.hasParent() ? result[bone.parent] : math::mat44Identity();
+				const math::vec3 loc = pose.bones[bone.index].location;
+				const math::quat rot = pose.bones[bone.index].rotation;
+				result[bone.index] = math::mat44helper(parent).rotate(bone.rot).translate(bone.pos).translate(loc).rotate(-rot).mat;
 			}
 			transforms.swap(result);
 		}

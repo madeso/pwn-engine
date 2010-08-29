@@ -1071,6 +1071,41 @@ namespace pwn
 		// quat GetRotation(const ArcBall& arc, const vec2 from, const vec2 to);
 
 		/// @}
+
+		template<class Stream>
+		Stream& operator<<(Stream& s, const vec2& v)
+		{
+			s << "(" << v.x << ", " << v.y << ")";
+			return s;
+		}
+
+		template<class Stream>
+		Stream& operator<<(Stream& s, const vec3& v)
+		{
+			s << "(" << v.x << ", " << v.y << ", " << v.z << ")";
+			return s;
+		}
+
+		template<class Stream>
+		Stream& operator<<(Stream& s, const quat& v)
+		{
+			s << "(" << v.x << ", " << v.y << ", " << v.z << ", " << v.w << ")";
+			return s;
+		}
+
+		template<class Stream>
+		Stream& operator<<(Stream& s, const Angle& a)
+		{
+			s << a.inDegrees() << "°";
+			return s;
+		}
+
+		template<class Stream>
+		Stream& operator<<(Stream& s, const AxisAngle& aa)
+		{
+			s << "(" << aa.angle << " around " << aa.axis << ")";
+			return s;
+		}
 	}
 }
 

@@ -28,7 +28,7 @@ namespace pwn
 			explicit Vector(Vector<T>& other)
 				: length(0)
 			{
-				swap(other)
+				swap(other);
 			}
 
 			Vector()
@@ -39,7 +39,7 @@ namespace pwn
 			explicit Vector(const std::vector<T>& v)
 			{
 				reset(v.size());
-				for(Index i=0; i<length; ++i)
+				for(SizeType i=0; i<length; ++i)
 				{
 					arr[i]  = v[i];
 				}
@@ -58,7 +58,8 @@ namespace pwn
 
 			void swap(Vector<T>& other)
 			{
-				std::swap(arr, other.arr);
+				arr.swap(other.arr);
+				//std::swap(arr, other.arr);
 				std::swap(length, other.length);
 			}
 

@@ -1484,6 +1484,10 @@ namespace pwn
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////// mat44
 
+		mat44::mat44()
+		{
+		}
+
 		mat44::mat44(const real data[sizes::mat44_matrix_size])
 		{
 			memcpy(columnMajor, data, sizeof(real) * sizes::mat44_matrix_size);

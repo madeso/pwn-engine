@@ -58,9 +58,9 @@ namespace pwn
 		template<typename T>
 		int Get(const core::Vector<T>& da, real current)
 		{
-			for (int i = 1; i < da.Count; ++i)
+			for (std::size_t i = 1; i < da.size(); ++i)
 			{
-				if (math1.IsWithin(da[i-1].time, current, da[i].time))
+				if (math::IsWithin(da[i-1].getTime(), current, da[i].getTime()))
 				{
 					return i;
 				}
@@ -72,6 +72,7 @@ namespace pwn
 		class FramePosition : public Timed
 		{
 		public:
+			FramePosition();
 			FramePosition(real time, const math::vec3& location);
 			string toString() const;
 
@@ -83,6 +84,7 @@ namespace pwn
 		class FrameRotation : public Timed
 		{
 		public:
+			FrameRotation();
 			FrameRotation(real time, const math::quat& rotation);
 			string toString() const;
 
@@ -94,6 +96,7 @@ namespace pwn
 		class PosePerBone
 		{
 		public:
+			PosePerBone();
 			PosePerBone(math::vec3 l, math::quat r);
 
 			math::vec3 location;
@@ -103,9 +106,12 @@ namespace pwn
 		};
 
 		class AnimationPerBone
+			: boost::noncopyable
 		{
 		public:
+			AnimationPerBone();
 			AnimationPerBone(core::Vector<FramePosition>& afp, core::Vector<FrameRotation>& afr);
+
 			core::Vector<FramePosition> fp;
 			core::Vector<FrameRotation> fr;
 
@@ -115,20 +121,22 @@ namespace pwn
 
 			PosePerBone getBonePose(real time) const;
 
-			AnimationPerBone sub(int start, int end) const;
+			void sub(int start, int end, AnimationPerBone* out) const;
 			void scale(real scale);
 		};
 
 		class Pose
+			: boost::noncopyable
 		{
 		public:
 			explicit Pose(core::Vector<PosePerBone>& pose);
-			const core::Vector<PosePerBone> bones;
+			core::Vector<PosePerBone> bones;
 		};
 
 		class Mesh;
 
 		class CompiledPose
+			: boost::noncopyable
 		{
 		public:
 			core::Vector<math::mat44> transforms;
@@ -145,16 +153,17 @@ namespace pwn
 		};
 
 		class Animation
+			: boost::noncopyable
 		{
 		public:
 			Animation(core::Vector<AnimationPerBone>& bones);
-			Pose getPose(real time) const;
+			void getPose(real time, Pose* out) const;
 
 			core::Vector<AnimationPerBone> bones;
 			const real length;
 
-			Animation subanim(int start, int end) const;
-			Animation subanim(const AnimationInformation& info) const;
+			void subanim(int start, int end, Animation* out) const;
+			void subanim(const AnimationInformation& info, Animation* out) const;
 
 			void scale(real scale);
 		};

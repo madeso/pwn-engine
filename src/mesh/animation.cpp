@@ -18,6 +18,12 @@ namespace pwn
 			: time(t)
 		{
 		}
+
+		FramePosition::FramePosition()
+			: Timed(0)
+			, location(math::Origo3().vec)
+		{
+		}
 	
 		FramePosition::FramePosition(real time, const math::vec3& loc)
 			: Timed(time)
@@ -37,6 +43,11 @@ namespace pwn
 			return math::Lerp(from.location, scale, to.location);
 		}
 
+		FrameRotation::FrameRotation()
+			: Timed(0)
+			, rotation(math::qIdentity())
+		{
+		}
 		
 		FrameRotation::FrameRotation(real time, const math::quat& rot)
 			: Timed(time)
@@ -54,6 +65,12 @@ namespace pwn
 			real scale = math::To01(from.getTime(), current, to.getTime());
 			if (math::IsWithin(0, scale, 1) == false) throw "invalid scale";
 			return math::SlerpShortway(from.rotation, scale, to.rotation);
+		}
+
+		PosePerBone::PosePerBone()
+			: location(math::Origo3().vec)
+			, rotation(math::qIdentity())
+		{
 		}
 
 		PosePerBone::PosePerBone(math::vec3 l, math::quat r)
@@ -83,6 +100,10 @@ namespace pwn
 			return res;
 		}
 
+		AnimationPerBone::AnimationPerBone()
+		{
+		}
+
 		AnimationPerBone::AnimationPerBone(core::Vector<FramePosition>& afp, core::Vector<FrameRotation>& afr)
 		{
 			fp.swap(afp);
@@ -108,7 +129,7 @@ namespace pwn
 			return p;
 		}
 
-		AnimationPerBone AnimationPerBone::sub(int start, int end) const
+		void AnimationPerBone::sub(int start, int end, AnimationPerBone* out) const
 		{
 			std::vector<FramePosition> abfp;
 			std::vector<FrameRotation> abfr;
@@ -116,8 +137,9 @@ namespace pwn
 			bool first = true;
 			real last = 0;
 
-			BOOST_FOREACH(const FramePosition& fp, this->fp)
+			for(std::size_t i=0; i<this->fp.size(); ++i)
 			{
+				const FramePosition& fp = this->fp[i];
 				if (math::IsWithin(start, fp.getTime(), end))
 				{
 					real mark = fp.getTime()-start;
@@ -139,8 +161,9 @@ namespace pwn
 			first = true;
 			last = 0;
 
-			BOOST_FOREACH(const FrameRotation& fr, this->fr)
+			for(std::size_t i=0; i<this->fr.size(); ++i)
 			{
+				const FrameRotation& fr = this->fr[i];
 				if (math::IsWithin(start, fr.getTime(), end))
 				{
 					real mark = fr.getTime() - start;
@@ -160,13 +183,15 @@ namespace pwn
 			}
 
 			if (abfp.size() < 2 || abfr.size() < 2) throw "Data error, need atleast 2 keyframes per animation";
-			return AnimationPerBone(core::Vector<FramePosition>(abfp), core::Vector<FrameRotation>(abfr));
+			core::Vector<FramePosition> abfpv(abfp); out->fp.swap( abfpv );
+			core::Vector<FrameRotation> abfrv(abfr); out->fr.swap( abfrv );
 		}
 
 		void AnimationPerBone::scale(real scale)
 		{
-			BOOST_FOREACH(FramePosition& f, fp)
+			for(std::size_t i=0; i<fp.size(); ++i)
 			{
+				FramePosition& f = fp[i];
 				f.location *= scale;
 			}
 		}
@@ -195,7 +220,7 @@ namespace pwn
 		{
 			if (pose.bones.size() != def.bones.size()) throw "Invalid animation/mesh, bone count differs";
 			core::Vector<math::mat44> result( pose.bones.size() );
-			for (int i = 0; i < pose.bones.size(); ++i) result[i] = math::mat44Identity();
+			for (std::size_t i = 0; i < pose.bones.size(); ++i) result[i] = math::mat44Identity();
 			BOOST_FOREACH(const Bone& b, def.bones)
 			{
 				UpdateMatrix(result, b, pose, def.bones);
@@ -213,8 +238,9 @@ namespace pwn
 		real CalculateLength(const core::Vector<AnimationPerBone>& bones)
 		{
 			real length = 0;
-			BOOST_FOREACH(const AnimationPerBone& ab, bones)
+			for(std::size_t i=0; i<bones.size(); ++i)
 			{
+				const AnimationPerBone& ab = bones[i];
 				length = math::Max(length, ab.getLength());
 			}
 			return length;
@@ -226,41 +252,40 @@ namespace pwn
 			bones.swap(abones);
 		}
 
-		Pose Animation::getPose(real time) const
+		void Animation::getPose(real time, Pose* out) const
 		{
 			core::Vector<PosePerBone> bd;
 			bd.reset(bones.size());
-			int i=0;
-			BOOST_FOREACH(const AnimationPerBone& ab, bones)
+			for(std::size_t i=0; i<bones.size(); ++i)
 			{
+				const AnimationPerBone& ab = bones[i];
 				bd[i] = ab.getBonePose(time);
-				++i;
 			}
-			return Pose(bd);
+			out->bones.swap(bd);
 		}
 
-		Animation Animation::subanim(int start, int end) const
+		void Animation::subanim(int start, int end, Animation* out) const
 		{
 			core::Vector<AnimationPerBone> bd(bones.size());
-			int index = 0;
-			BOOST_FOREACH(const AnimationPerBone& ab, bones)
+			for(std::size_t i=0; i<bones.size(); ++i)
 			{
-				bd[index] = ab.sub(start, end);
-				++index;
+				const AnimationPerBone& ab = bones[i];
+				ab.sub(start, end, &bd[i]);
 			}
-			return Animation(bd);
+			out->bones.swap(bd);
 		}
 
-		Animation Animation::subanim(const AnimationInformation& info) const
+		void Animation::subanim(const AnimationInformation& info, Animation* out) const
 		{
-			return subanim(info.start, info.end);
+			subanim(info.start, info.end, out);
 		}
 
 		void Animation::scale(real scale)
 		{
-			BOOST_FOREACH(AnimationPerBone& afb, bones)
+			for(std::size_t i=0; i<bones.size(); ++i)
 			{
-				afb.scale(scale);
+				AnimationPerBone& ab = bones[i];
+				ab.scale(scale);
 			}
 		}
 	}

@@ -247,6 +247,11 @@ namespace pwn
 		struct mat44
 		{
 			/** constructor.
+			does nothing
+			*/
+			mat44();
+
+			/** constructor.
 			copies the elements
 			*/
 			mat44(const real data[sizes::mat44_matrix_size]);

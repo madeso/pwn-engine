@@ -213,6 +213,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\src\render\src\poseable.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\poseable.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\render\src\renderlist.cpp"
 			>
 		</File>

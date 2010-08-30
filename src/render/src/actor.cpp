@@ -33,7 +33,7 @@ namespace pwn
 
 			BOOST_FOREACH(ActorDef::PartPtr p, model->parts)
 			{
-				rl->add(p->mesh, p->material, mat);
+				rl->add(p->mesh, p->material, mat, this);
 			}
 		}
 	}

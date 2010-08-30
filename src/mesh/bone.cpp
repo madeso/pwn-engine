@@ -10,12 +10,6 @@ namespace pwn
 		{
 		}
 
-		const string Bone::toString()
-		{
-			if( parentBone == 0 ) return name;
-			else return parentBone->toString() + " -> " + name;
-		}
-
 		bool Bone::hasParent() const
 		{
 			return parent != 0;

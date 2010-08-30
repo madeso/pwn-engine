@@ -5,6 +5,11 @@
 
 namespace pwn
 {
+	namespace mesh
+	{
+		class CompiledPose;
+	}
+
 	namespace render
 	{
 		/** Optimized version of a mesh used for fast rendering.
@@ -16,7 +21,7 @@ namespace pwn
 			CompiledMesh();
 			virtual ~CompiledMesh();
 
-			virtual void render() = 0;
+			virtual void render(const mesh::CompiledPose& pose) = 0;
 		};
 	}
 }

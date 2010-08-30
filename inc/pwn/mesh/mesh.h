@@ -16,29 +16,30 @@ namespace pwn
 	{
 		class Material;
 
+		/**
+		0 = no bone
+		>0 = one more than index in bone arrray
+		*/
 		typedef pwn::uint32 BoneIndex;
 
 		class Bone
 		{
 		public:
 			Bone();
-			const string toString();
 			bool hasParent() const;
+
 			BoneIndex parent;
 			string name;
 			math::vec3 pos;
 			math::quat rot;
-
-			BoneIndex index;
-			Bone* parentBone;
-
-			std::vector<Bone*> childs;
 		};
 
 		struct Point
 		{
 			Point();
 			Point(const math::vec3& location, BoneIndex bone);
+			bool hasBone() const;
+			BoneIndex getBone() const;
 			math::vec3 location;
 			BoneIndex bone;
 		};
@@ -140,6 +141,7 @@ namespace pwn
 		{
 		public:
 			core::Vector<math::mat44> transforms;
+			CompiledPose();
 			CompiledPose(const Pose& pose, const Mesh& def);
 		};
 

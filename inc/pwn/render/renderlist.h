@@ -13,6 +13,7 @@ namespace pwn
 		class CompiledMesh;
 		class Material;
 		class Texture2;
+		class Poseable;
 
 		class RenderList
 			: boost::noncopyable
@@ -29,17 +30,18 @@ namespace pwn
 			struct Command
 			{
 				Command();
-				Command(MeshPtr mesh, MaterialPtr material, const math::mat44& mat);
+				Command(MeshPtr mesh, MaterialPtr material, const math::mat44& mat, Poseable* pos);
 
 				MaterialPtr material;
 				MeshPtr mesh;
 				math::mat44 mat;
+				Poseable* poseable;
 
 				ID id;
 			};
 
 			void begin();
-			void add(MeshPtr mesh, MaterialPtr material, const math::mat44& mat);
+			void add(MeshPtr mesh, MaterialPtr material, const math::mat44& mat, Poseable* pos);
 			void end();
 
 			typedef std::vector<Command> CommandList;

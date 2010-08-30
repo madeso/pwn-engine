@@ -202,19 +202,23 @@ namespace pwn
 		{
 		}
 
+		CompiledPose::CompiledPose()
+		{
+		}
+
 		CompiledPose::CompiledPose(const Pose& pose, const Mesh& def)
 		{
 			if (pose.bones.size() != def.bones.size()) throw "Invalid animation/mesh, bone count differs";
 			core::Vector<math::mat44> result( pose.bones.size() );
-			for (std::size_t i = 0; i < pose.bones.size(); ++i) result[i] = math::mat44Identity();
-			BOOST_FOREACH(const Bone& bone, def.bones)
+			for (std::size_t boneIndex = 0; boneIndex < pose.bones.size(); ++boneIndex)
 			{
+				const Bone& bone = def.bones[boneIndex];
 				// either it is a parent, or it's parent has already been precoessed
-				Assert( bone.hasParent()==false || bone.index > bone.parent );
+				Assert( bone.hasParent()==false || boneIndex > bone.parent );
 				math::mat44 parent = bone.hasParent() ? result[bone.parent] : math::mat44Identity();
-				const math::vec3 loc = pose.bones[bone.index].location;
-				const math::quat rot = pose.bones[bone.index].rotation;
-				result[bone.index] = math::mat44helper(parent).rotate(bone.rot).translate(bone.pos).translate(loc).rotate(-rot).mat;
+				const math::vec3 poseloc = pose.bones[boneIndex].location;
+				const math::quat poserot = pose.bones[boneIndex].rotation;
+				result[boneIndex] = math::mat44helper(parent).rotate(bone.rot).translate(bone.pos).translate(poseloc).rotate(-poserot).mat;
 			}
 			transforms.swap(result);
 		}

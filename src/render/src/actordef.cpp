@@ -7,7 +7,7 @@
 #include <pwn/render/material.h>
 #include <pwn/mesh/material.h>
 #include <pwn/render/texturepool2.h>
-
+#include <pwn/math/operations.h>
 #include <sfml/OpenGl.hpp>
 
 #include <pwn/assert.h>
@@ -54,7 +54,7 @@ namespace pwn
 			{
 			}
 
-			void render()
+			void render(const mesh::CompiledPose& pose)
 			{
 				Assert( glGetError_WithString() == GL_NO_ERROR);
 				glBegin(GL_TRIANGLES);
@@ -75,7 +75,10 @@ namespace pwn
 							const math::vec2 t = smesh->texcoords[tri[i].texcoord];
 							glTexCoord2f(t.x, 1-t.y);
 						}
-						const math::vec3 p = smesh->positions[tri[i].location].location;
+						const mesh::Point& point = smesh->positions[tri[i].location];
+						const math::vec3 p = point.hasBone()
+							? pose.transforms[point.getBone()] * point.location
+							: point.location;
 						glVertex3f(p.x, p.y, p.z);
 					}
 				}

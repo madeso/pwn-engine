@@ -4,6 +4,7 @@
 #include <pwn/render/material.h>
 #include <pwn/assert.h>
 #include <limits>
+#include <pwn/render/poseable.h>
 
 #include <SFML/OpenGl.hpp>
 #pragma comment(lib, "opengl32.lib")
@@ -86,10 +87,11 @@ namespace pwn
 			}
 		}
 
-		RenderList::Command::Command(MeshPtr mesh, MaterialPtr material, const math::mat44& mat)
+		RenderList::Command::Command(MeshPtr mesh, MaterialPtr material, const math::mat44& mat, Poseable* pos)
 			: mesh(mesh)
 			, material(material)
 			, mat(mat)
+			, poseable(pos)
 			, id( CalcId(mesh, material, mat) )
 		{
 		}
@@ -100,15 +102,15 @@ namespace pwn
 			solid.resize(0);
 		}
 
-		void RenderList::add(MeshPtr mesh, MaterialPtr material, const math::mat44& mat)
+		void RenderList::add(MeshPtr mesh, MaterialPtr material, const math::mat44& mat, Poseable* pos)
 		{
 			if( material->hasTransperency )
 			{
-				transparent.push_back(Command(mesh, material, mat));
+				transparent.push_back(Command(mesh, material, mat, pos));
 			}
 			else
 			{
-				solid.push_back(Command(mesh, material, mat));
+				solid.push_back(Command(mesh, material, mat, pos));
 			}
 		}
 
@@ -122,7 +124,7 @@ namespace pwn
 					Assert( glGetError_WithString() == GL_NO_ERROR);
 				}
 				apply(c.material);
-				c.mesh->render();
+				c.mesh->render(c.poseable->pose);
 			}
 		}
 

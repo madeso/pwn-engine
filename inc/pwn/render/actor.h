@@ -2,7 +2,7 @@
 #define PWN_RENDER_ACTOR
 
 #include <pwn/math/types.h>
-
+#include <pwn/render/poseable.h>
 #include <boost/shared_ptr.hpp>
 
 namespace pwn
@@ -16,6 +16,7 @@ namespace pwn
 		/** A animated mesh instance in the World3.
 		 */
 		class Actor
+			: public Poseable
 		{
 		public:
 			Actor(const math::point3& location, const math::quat& rotation, boost::shared_ptr<ActorDef> model);

@@ -1,5 +1,6 @@
 #include <pwn/mesh/mesh.h>
 #include <pwn/mesh/triangle.h>
+#include <pwn/assert.h>
 
 namespace pwn
 {
@@ -15,6 +16,17 @@ namespace pwn
 			: location(alocation)
 			, bone(abone)
 		{
+		}
+
+		bool Point::hasBone() const
+		{
+			return bone != 0;
+		}
+
+		BoneIndex Point::getBone() const
+		{
+			Assert(bone != 0);
+			return bone -1;
 		}
 
 		Mesh::Mesh()

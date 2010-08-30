@@ -12,6 +12,23 @@ namespace pwn
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////// math1
 
+		bool IsEqual(real lhs, real rhs)
+		{
+			return IsZero(lhs-rhs);
+		}
+
+		bool IsZero(real r)
+		{
+			const real kRange = 0.0001f;
+			return IsWithin(-kRange, r, kRange);
+		}
+
+		real ZeroOrValue(real r)
+		{
+			if( IsZero(r) ) return 0;
+			else return r;
+		}
+
 		const int Sign(const real r)
 		{
 			if( r > PWN_MATH_VALUE(0.0) ) return 1;

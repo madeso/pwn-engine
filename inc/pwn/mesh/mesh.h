@@ -134,15 +134,13 @@ namespace pwn
 			core::Vector<PosePerBone> bones;
 		};
 
-		class Mesh;
-
 		class CompiledPose
 			: boost::noncopyable
 		{
 		public:
 			core::Vector<math::mat44> transforms;
 			CompiledPose();
-			CompiledPose(const Pose& pose, const Mesh& def);
+			CompiledPose(const Pose& pose, const core::Vector<Bone>& def);
 		};
 
 		class AnimationInformation

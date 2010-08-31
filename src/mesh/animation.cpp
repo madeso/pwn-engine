@@ -206,13 +206,13 @@ namespace pwn
 		{
 		}
 
-		CompiledPose::CompiledPose(const Pose& pose, const Mesh& def)
+		CompiledPose::CompiledPose(const Pose& pose, const core::Vector<Bone>& bones)
 		{
-			if (pose.bones.size() != def.bones.size()) throw "Invalid animation/mesh, bone count differs";
+			if (pose.bones.size() != bones.size()) throw "Invalid animation/mesh, bone count differs";
 			core::Vector<math::mat44> result( pose.bones.size() );
 			for (std::size_t boneIndex = 0; boneIndex < pose.bones.size(); ++boneIndex)
 			{
-				const Bone& bone = def.bones[boneIndex];
+				const Bone& bone = bones[boneIndex];
 				// either it is a parent, or it's parent has already been precoessed
 				Assert( bone.hasParent()==false || boneIndex > bone.parent );
 				math::mat44 parent = bone.hasParent() ? result[bone.parent] : math::mat44Identity();

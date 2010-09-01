@@ -51,6 +51,12 @@ namespace pwn
 				length = s;
 			}
 
+			void clear()
+			{
+				arr.reset();
+				length = 0;
+			}
+
 			SizeType size() const
 			{
 				return length;
@@ -99,8 +105,8 @@ namespace pwn
 				{
 				}
 
-			private:
-				bool equal(iter<It> const& other)
+			public:
+				bool equal(iter<It> const& other) const
 				{
 					return index == other.index;
 				}
@@ -170,25 +176,25 @@ namespace pwn
 	namespace core
 	{
 		template< class T >
-		inline T range_begin( Vector<T>& x )
+		inline typename T::iterator range_begin( Vector<T>& x )
 		{ 
 			return x.begin();
 		}
 
 		template< class T >
-		inline T range_begin( const Vector<T>& x )
+		inline typename T::const_iterator range_begin( const Vector<T>& x )
 		{ 
 			return x.begin();
 		}
 
 		template< class T >
-		inline T range_end( Vector<T>& x )
+		inline typename T::iterator range_end( Vector<T>& x )
 		{ 
 			return x.end();
 		}
 
 		template< class T >
-		inline T range_end( const Vector<T>& x )
+		inline typename T::const_iterator range_end( const Vector<T>& x )
 		{ 
 			return x.end();
 		}

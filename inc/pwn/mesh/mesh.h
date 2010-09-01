@@ -4,7 +4,6 @@
 #include <vector>
 #include <map>
 #include <pwn/math/types.h>
-#include <pwn/mesh/triangle.h>
 #include <pwn/string.h>
 #include <pwn/core/vector.h>
 
@@ -170,32 +169,53 @@ namespace pwn
 
 		//
 
+		class Triangle
+		{
+		public:
+			typedef pwn::uint32 index;
+			struct Vertex
+			{
+				index location;
+				index normal;
+				index texcoord;
+				index bone;
+
+				Vertex(index location, index normal, index texcoord);
+				Vertex(index location_textcoord, index normal);
+				Vertex();
+			};
+			Vertex v0;
+			Vertex v1;
+			Vertex v2;
+
+			Triangle(Vertex v0, Vertex v1, Vertex v2);
+			Triangle(Vertex v[3]);
+			Triangle();
+
+			Vertex& operator[](pwn::uint32 index);
+			const Vertex& operator[](pwn::uint32 index) const;
+		};
+
 		class Mesh
 		{
 		public:
-			typedef std::vector<Triangle> TriangleList;
+			typedef core::Vector<Triangle> TriList;
+			typedef boost::shared_ptr<TriList> TriListPtr;
+			typedef std::map<pwn::uint32, TriListPtr> TriangleMap;
 			typedef boost::shared_ptr<Material> MaterialPtr;
 
 			Mesh();
 
 			void clear();
 
-			Triangle::index addPosition(const Point& pos);
-			Triangle::index addPosition(const math::vec3& pos, BoneIndex bone); // syntasx sugar
-			Triangle::index addNormal(const math::vec3& norm);
-			Triangle::index addTextCoord(const math::vec2& tc);
-
-			void addTriangle(const Triangle& tri);
-			Triangle::index addMaterial(MaterialPtr m);
-
 			// todo: make private and add accessors instead...
-			std::vector<Point> positions;
-			std::vector<math::vec3> normals;
-			std::vector<math::vec2> texcoords;
-			std::vector<Bone> bones;
+			core::Vector<Point> positions;
+			core::Vector<math::vec3> normals;
+			core::Vector<math::vec2> texcoords;
+			core::Vector<Bone> bones;
 
-			TriangleList triangles; // the map key referenses the materials vector below
-			std::vector<MaterialPtr> materials; // this is done so materials could easily be swapped and overriden later on per actor
+			TriangleMap triangles; // the map key referenses the materials vector below
+			core::Vector<MaterialPtr> materials; // this is done so materials could easily be swapped and overriden later on per actor
 		};
 	}
 }

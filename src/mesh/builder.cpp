@@ -39,65 +39,63 @@ namespace pwn
 			}
 		}
 
-		Mesh* SetBox(Mesh* mesh, boost::shared_ptr<Material> material, real w, real h, real d, bool faceOut)
+		void Builder::setBox(boost::shared_ptr<Material> material, real w, real h, real d, bool faceOut)
 		{
 			using math::vec2;
 			using math::vec3;
 
-			mesh->clear();
+			clear();
 
-			const Triangle::index t0 = mesh->addTextCoord(vec2(0,1));
-			const Triangle::index t1 = mesh->addTextCoord(vec2(1,1));
-			const Triangle::index t2 = mesh->addTextCoord(vec2(0,0));
-			const Triangle::index t3 = mesh->addTextCoord(vec2(1,0));
+			const Triangle::index t0 = addTextCoord(vec2(0,1));
+			const Triangle::index t1 = addTextCoord(vec2(1,1));
+			const Triangle::index t2 = addTextCoord(vec2(0,0));
+			const Triangle::index t3 = addTextCoord(vec2(1,0));
 
 			// front side
-			const Triangle::index v0 = mesh->addPosition(vec3(0, 0, 0), 0);
-			const Triangle::index v1 = mesh->addPosition(vec3(w, 0, 0), 0);
-			const Triangle::index v2 = mesh->addPosition(vec3(0, h, 0), 0);
-			const Triangle::index v3 = mesh->addPosition(vec3(w, h, 0), 0);
+			const Triangle::index v0 = addPosition(vec3(0, 0, 0), 0);
+			const Triangle::index v1 = addPosition(vec3(w, 0, 0), 0);
+			const Triangle::index v2 = addPosition(vec3(0, h, 0), 0);
+			const Triangle::index v3 = addPosition(vec3(w, h, 0), 0);
 
 			// back side
-			const Triangle::index v4 = mesh->addPosition(vec3(0, 0, d), 0);
-			const Triangle::index v5 = mesh->addPosition(vec3(w, 0, d), 0);
-			const Triangle::index v6 = mesh->addPosition(vec3(0, h, d), 0);
-			const Triangle::index v7 = mesh->addPosition(vec3(w, h, d), 0);
+			const Triangle::index v4 = addPosition(vec3(0, 0, d), 0);
+			const Triangle::index v5 = addPosition(vec3(w, 0, d), 0);
+			const Triangle::index v6 = addPosition(vec3(0, h, d), 0);
+			const Triangle::index v7 = addPosition(vec3(w, h, d), 0);
 
-			AddQuad(mesh, !faceOut, 0, v(v0,t2), v(v2,t0), v(v3,t1), v(v1,t3)); // front
-			AddQuad(mesh, !faceOut, 0, v(v1,t3), v(v3,t1), v(v7,t0), v(v5,t2)); // right
-			AddQuad(mesh, !faceOut, 0, v(v4,t3), v(v6,t1), v(v2,t0), v(v0,t2)); // left
-			AddQuad(mesh, !faceOut, 0, v(v5,t2), v(v7,t0), v(v6,t1), v(v4,t3)); // back
-			AddQuad(mesh, !faceOut, 0, v(v3,t1), v(v2,t3), v(v6,t2), v(v7,t0)); // up
-			AddQuad(mesh, !faceOut, 0, v(v4,t0), v(v0,t1), v(v1,t3), v(v5,t2)); // bottom
+			addQuad(!faceOut, 0, v(v0,t2), v(v2,t0), v(v3,t1), v(v1,t3)); // front
+			addQuad(!faceOut, 0, v(v1,t3), v(v3,t1), v(v7,t0), v(v5,t2)); // right
+			addQuad(!faceOut, 0, v(v4,t3), v(v6,t1), v(v2,t0), v(v0,t2)); // left
+			addQuad(!faceOut, 0, v(v5,t2), v(v7,t0), v(v6,t1), v(v4,t3)); // back
+			addQuad(!faceOut, 0, v(v3,t1), v(v2,t3), v(v6,t2), v(v7,t0)); // up
+			addQuad(!faceOut, 0, v(v4,t0), v(v0,t1), v(v1,t3), v(v5,t2)); // bottom
 
-			mesh->materials.push_back(material);
-
-			return mesh;
+			materials.push_back(material);
 		}
 
-		void AddQuad(Mesh* mesh, bool reverse, pwn::uint32 material, const Triangle::Vertex& v0, const Triangle::Vertex& v1, const Triangle::Vertex& v2, const Triangle::Vertex& v3)
+		void Builder::addQuad(bool reverse, pwn::uint32 material, const Triangle::Vertex& v0, const Triangle::Vertex& v1, const Triangle::Vertex& v2, const Triangle::Vertex& v3)
 		{
 			if( reverse )
 			{
-				mesh->addTriangle(Triangle(material, v2, v1, v0) );
-				mesh->addTriangle(Triangle(material, v3, v2, v0) );
+				addTriangle(material, Triangle(v2, v1, v0) );
+				addTriangle(material, Triangle(v3, v2, v0) );
 			}
 			else
 			{
-				mesh->addTriangle(Triangle(material, v0, v1, v2) );
-				mesh->addTriangle(Triangle(material, v0, v2, v3) );
+				addTriangle(material, Triangle(v0, v1, v2) );
+				addTriangle(material, Triangle(v0, v2, v3) );
 			}
 		}
 
-		Mesh* BuildNormals(Mesh* mesh)
+		void Builder::buildNormals()
 		{
 			using math::vec3;
-			std::vector<vec3> vertexNormalsSum(mesh->positions.size(), vec3(0,0,0));
-			BOOST_FOREACH(Triangle& t, mesh->triangles)
+			std::vector<vec3> vertexNormalsSum(positions.size(), vec3(0,0,0));
+			BOOST_FOREACH(Triangle& t, triangles)
 			{
-				const vec3 p0 = mesh->positions[t[0].location].location;
-				const vec3 p1 = mesh->positions[t[1].location].location;
-				const vec3 p2 = mesh->positions[t[2].location].location;
+				const vec3 p0 = positions[t[0].location].location;
+				const vec3 p1 = positions[t[1].location].location;
+				const vec3 p2 = positions[t[2].location].location;
 
 				const vec3 d0 = math::FromTo(p1, p0);
 				const vec3 d1 = math::FromTo(p1, p2);
@@ -111,13 +109,11 @@ namespace pwn
 				for(int i=0; i<3; ++i) t[i].normal = t[i].location;
 			}
 
-			mesh->normals.clear();
+			normals.clear();
 			BOOST_FOREACH(const vec3& normalSum, vertexNormalsSum)
 			{
-				mesh->normals.push_back( math::GetNormalized(normalSum) );
+				normals.push_back( math::GetNormalized(normalSum) );
 			}
-
-			return mesh;
 		}
 
 		Mesh* InvertNormals(Mesh* mesh)
@@ -130,14 +126,14 @@ namespace pwn
 			return mesh;
 		}
 
-		void AddFace(Mesh* mesh, pwn::uint32 material, const std::vector<Triangle::Vertex>& vertices)
+		void Builder::addFace(pwn::uint32 material, const std::vector<Triangle::Vertex>& vertices)
 		{
 			// we currently doesnt support ton-triangular faces so - triangulate it
 			const std::vector<Triangle::Vertex>::size_type size = vertices.size();
 			bool added = false;
 			for(std::vector<Triangle::Vertex>::size_type i=2; i<size; ++i)
 			{
-				mesh->addTriangle(Triangle(material, vertices[0], vertices[i-1], vertices[i]));
+				addTriangle(material, Triangle(vertices[0], vertices[i-1], vertices[i]));
 				added = true;
 			}
 			if( false == added ) throw "Unable to triangulate face";
@@ -171,9 +167,9 @@ namespace pwn
 
 		void MoveTextures(Mesh* mesh, const pwn::string& newFolder)
 		{
-			for(std::vector<Mesh::MaterialPtr>::iterator i = mesh->materials.begin(); i != mesh->materials.end(); ++i)
+			for(std::size_t i = 0; i < mesh->materials.size(); ++i)
 			{
-				MoveTextures(*i, newFolder);
+				MoveTextures(mesh->materials[i], newFolder);
 			}
 		}
 	}

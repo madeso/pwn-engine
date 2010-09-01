@@ -227,6 +227,23 @@ namespace pwn
 			}
 		}
 
-		void Builder::makeMesh(Mesh& mesh) const;
+		void Builder::makeMesh(Mesh& mesh) const
+		{
+			mesh.clear();
+
+			BOOST_FOREACH(const TriMap::value_type& tr, triangles)
+			{
+				Mesh::TriListPtr ptr( new Mesh::TriList(tr.second) );
+				mesh.triangles[tr.first] = ptr;
+			}
+
+			mesh.positions = positions;
+			mesh.normals = normals;
+			mesh.texcoords = texcoords;
+			mesh.bones = bones;
+			mesh.materials = materials;
+
+			if( mesh.isValid() == false ) throw "Mesh isn't valid";
+		}
 	}
 }

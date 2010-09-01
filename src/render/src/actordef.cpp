@@ -30,21 +30,21 @@ namespace pwn
 		{
 		public:
 			explicit SharedMesh(const mesh::Mesh& mesh)
-				: positions(mesh.positions)
-				, normals(mesh.normals)
-				, texcoords(mesh.texcoords)
+				: positions(false, mesh.positions)
+				, normals(false, mesh.normals)
+				, texcoords(false, mesh.texcoords)
 			{
 			}
 
-			std::vector<mesh::Point> positions;
-			std::vector<math::vec3> normals;
-			std::vector<math::vec2> texcoords;
+			core::Vector<mesh::Point> positions;
+			core::Vector<math::vec3> normals;
+			core::Vector<math::vec2> texcoords;
 		};
 
 		class ImmediateMode : public CompiledMesh
 		{
 		public:
-			ImmediateMode(boost::shared_ptr<SharedMesh> smesh, const mesh::Mesh::TriangleList& tridata)
+			ImmediateMode(boost::shared_ptr<SharedMesh> smesh, const mesh::Mesh::TriListPtr& tridata)
 				: smesh(smesh)
 				, triangles(tridata)
 			{
@@ -59,7 +59,7 @@ namespace pwn
 				Assert( glGetError_WithString() == GL_NO_ERROR);
 				glBegin(GL_TRIANGLES);
 
-				BOOST_FOREACH(const mesh::Triangle& tri, triangles)
+				BOOST_FOREACH(const mesh::Triangle& tri, *triangles)
 				{
 					const std::size_t nc = smesh->normals.size();
 					const std::size_t tc = smesh->texcoords.size();
@@ -88,7 +88,7 @@ namespace pwn
 			}
 		private:
 			boost::shared_ptr<SharedMesh> smesh;
-			std::vector<mesh::Triangle> triangles;
+			mesh::Mesh::TriListPtr triangles;
 		};
 
 		boost::shared_ptr<render::Material> Compile(boost::shared_ptr<mesh::Material> mm, TexturePool2* pool)
@@ -117,16 +117,8 @@ namespace pwn
 			boost::shared_ptr<ActorDef> def( new ActorDef() );
 			boost::shared_ptr<SharedMesh> smesh( new SharedMesh(mesh) );
 
-			typedef std::map<pwn::uint32, mesh::Mesh::TriangleList> TriangleMap;
-			TriangleMap triangles;
-
-			BOOST_FOREACH(const mesh::Triangle& t, mesh.triangles)
-			{
-				triangles[t.material].push_back(t);
-			}
-
 			// todo: implement better rendering
-			BOOST_FOREACH(TriangleMap::const_reference r, triangles)
+			BOOST_FOREACH(mesh::Mesh::TriangleMap::const_reference r, mesh.triangles)
 			{
 				ActorDef::PartPtr part( new Part() );
 				const pwn::uint32 index = r.first;

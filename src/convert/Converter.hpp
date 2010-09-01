@@ -7,8 +7,7 @@
 #include <pwn/math/types.h>
 #include <pwn/math/rgba.h>
 #include <pwn/string.h>
-#include <pwn/mesh/Triangle.h>
-#include <pwn/mesh/Mesh.h>
+#include <pwn/mesh/builder.h>
 
 namespace pwn
 {
@@ -17,14 +16,14 @@ namespace pwn
 		class OptimizedMeshBuilder
 		{
 		public:
-			OptimizedMeshBuilder(::pwn::mesh::Mesh* mesh, bool optimzeNormals);
+			OptimizedMeshBuilder(bool optimzeNormals);
 			
 			mesh::Triangle::index addPosition(const mesh::Point& pos);
 			mesh::Triangle::index addNormal(const math::vec3& norm);
 			mesh::Triangle::index addTextCoord(const math::vec2& tc);
 
 			// util functions, simply call theese on the mesh
-			void addTriangle(const mesh::Triangle& tri);
+			void addTriangle(pwn::uint32 material, const mesh::Triangle& tri);
 			mesh::Triangle::index addMaterial(mesh::Mesh::MaterialPtr m);
 			void addBone(const ::pwn::mesh::Bone& b);
 
@@ -33,8 +32,6 @@ namespace pwn
 			::pwn::mesh::Mesh* mesh();
 
 			uint32 getMaterial(const pwn::string& name) const;
-
-			uint32 validate() const;
 
 			// stat functions
 			pwn::real removedNormals() const;
@@ -45,7 +42,7 @@ namespace pwn
 
 			bool isBuilding;
 
-			::pwn::mesh::Mesh* mMesh;
+			::pwn::mesh::Builder mBuilder;
 			bool mOptimizeNormals;
 			std::map<CompressedNormal, NormalIndex> normalMap;
 			std::vector<NormalIndex> normalConvertions;

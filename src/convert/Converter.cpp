@@ -10,9 +10,8 @@ namespace pwn
 {
 	namespace convert
 	{
-		OptimizedMeshBuilder::OptimizedMeshBuilder(::pwn::mesh::Mesh* mesh, bool optimizeNormals)
+		OptimizedMeshBuilder::OptimizedMeshBuilder(bool optimizeNormals)
 			: isBuilding(true)
-			, mMesh(mesh)
 			, mOptimizeNormals(optimizeNormals)
 		{
 		}
@@ -20,14 +19,14 @@ namespace pwn
 		mesh::Triangle::index OptimizedMeshBuilder::addPosition(const mesh::Point& pos)
 		{
 			if( isBuilding == false ) throw "done has been called...";
-			return mMesh->addPosition(pos);
+			return mBuilder.addPosition(pos);
 		}
 
 		uint32 OptimizedMeshBuilder::getMaterial(const pwn::string& name) const
 		{
-			for(uint32 id=0; id<mMesh->materials.size(); ++id)
+			for(uint32 id=0; id<mBuilder.materials.size(); ++id)
 			{
-				if( mMesh->materials[id]->name == name ) return id;
+				if( mBuilder.materials[id]->name == name ) return id;
 			}
 
 			throw "unable to find material..";
@@ -43,36 +42,6 @@ namespace pwn
 			else return 0;
 		}
 
-		uint32 OptimizedMeshBuilder::validate() const
-		{
-			uint32 errors = 0;
-
-			const std::size_t positions = mMesh->positions.size();
-			const std::size_t normals = mMesh->normals.size();
-			const std::size_t texcoords = mMesh->texcoords.size();
-			const std::size_t materials = mMesh->materials.size();
-
-			for(pwn::mesh::Triangle::index i=0; i<mMesh->triangles.size(); ++i)
-			{
-				const pwn::mesh::Triangle t = mMesh->triangles[i];
-				errors += Check("material index", t.material, materials);
-				for(int i=0; i<3; ++i)
-				{
-					errors += Check("position index", t[i].location, positions);
-					if( normals != 0 )
-					{
-						errors += Check("normal index", t[i].normal, normals);
-					}
-					if( texcoords != 0 )
-					{
-						errors += Check("texcoord index", t[i].texcoord, texcoords);
-					}
-				}
-			}
-
-			return errors;
-		}
-
 		mesh::Triangle::index OptimizedMeshBuilder::addNormal(const pwn::math::vec3& n)
 		{
 			if( isBuilding == false ) throw "done has been called...";
@@ -83,7 +52,7 @@ namespace pwn
 
 				if( normalMap.find(c) == normalMap.end() )
 				{
-					normalMap[c] = mMesh->addNormal(n);
+					normalMap[c] = mBuilder.addNormal(n);
 				}
 
 				normalConvertions.push_back(normalMap[c]);
@@ -91,34 +60,29 @@ namespace pwn
 			}
 			else
 			{
-				return mMesh->addNormal(n);
+				return mBuilder.addNormal(n);
 			}
 		}
 
 		mesh::Triangle::index OptimizedMeshBuilder::addTextCoord(const math::vec2& tc)
 		{
 			if( isBuilding == false ) throw "done has been called...";
-			return mMesh->addTextCoord(tc);
+			return mBuilder.addTextCoord(tc);
 		}
 
-		::pwn::mesh::Mesh* OptimizedMeshBuilder::mesh()
+		void OptimizedMeshBuilder::addTriangle(pwn::uint32 material, const mesh::Triangle& tri)
 		{
-			return mMesh;
-		}
-
-		void OptimizedMeshBuilder::addTriangle(const mesh::Triangle& tri)
-		{
-			mMesh->addTriangle(tri);
+			mBuilder.addTriangle(material, tri);
 		}
 
 		mesh::Triangle::index OptimizedMeshBuilder::addMaterial(mesh::Mesh::MaterialPtr m)
 		{
-			return mMesh->addMaterial(m);
+			return mBuilder.addMaterial(m);
 		}
 
 		void OptimizedMeshBuilder::addBone(const ::pwn::mesh::Bone& b)
 		{
-			mMesh->bones.push_back(b);
+			mBuilder.bones.push_back(b);
 		}
 
 		void OptimizedMeshBuilder::done()
@@ -126,19 +90,24 @@ namespace pwn
 			if( isBuilding == false ) throw "done has been called...";
 			isBuilding = false;
 
-			const bool optimizeNormals = mOptimizeNormals && mMesh->normals.size() != 0;
+			const bool optimizeNormals = mOptimizeNormals && mBuilder.normals.size() != 0;
 
 			if( optimizeNormals == false ) return;
 
-			const std::size_t fc = mMesh->triangles.size();
-			for(std::size_t i=0; i<fc; ++i)
+			
+			const std::size_t mc = mBuilder.triangles.size();
+			for(std::size_t mi=0; mi<mc; ++mi)
 			{
-				for(int faceIndex=0; faceIndex<3; ++faceIndex)
+				const std::size_t fc = mBuilder.triangles[mi].size();
+				for(std::size_t i=0; i<fc; ++i)
 				{
-					::pwn::mesh::Triangle::Vertex& v = mMesh->triangles[i][faceIndex];
-					if( optimizeNormals )
+					for(int faceIndex=0; faceIndex<3; ++faceIndex)
 					{
-						v.normal = normalConvertions[v.normal];
+						::pwn::mesh::Triangle::Vertex& v = mBuilder.triangles[mi][i][faceIndex];
+						if( optimizeNormals )
+						{
+							v.normal = normalConvertions[v.normal];
+						}
 					}
 				}
 			}
@@ -197,7 +166,7 @@ namespace pwn
 			if( positions )
 			{
 				const std::size_t vc = data.positions.size();
-				pwn::real min = 10000000000000;
+				pwn::real min = 1000000000;
 				pwn::real max = -1;
 				pwn::real sum = 0;
 				for(std::size_t i=0; i<vc; ++i)
@@ -213,7 +182,7 @@ namespace pwn
 			if( normals )
 			{
 				const std::size_t nc = data.normals.size();
-				pwn::real min = 10000000000000;
+				pwn::real min = 10000000000;
 				pwn::real max = -1;
 				pwn::real sum = 0;
 				for(std::size_t i=0; i<nc; ++i)

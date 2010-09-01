@@ -38,6 +38,11 @@ namespace pwn
 			
 			explicit Vector(const std::vector<T>& v)
 			{
+				*this = v;
+			}
+
+			explicit Vector(bool, const Vector<T>& v)
+			{
 				reset(v.size());
 				for(SizeType i=0; i<length; ++i)
 				{
@@ -60,6 +65,15 @@ namespace pwn
 			SizeType size() const
 			{
 				return length;
+			}
+
+			void operator=(const std::vector<T>& v)
+			{
+				reset(v.size());
+				for(SizeType i=0; i<length; ++i)
+				{
+					arr[i]  = v[i];
+				}
 			}
 
 			void swap(Vector<T>& other)

@@ -585,7 +585,7 @@ namespace pwn
 						BOOST_FOREACH(MaterialChunk& chunk, main.editor.materials)
 						{
 							pwn::mesh::Mesh::MaterialPtr mat( new pwn::mesh::Material() );
-							builder->mesh()->addMaterial(mat);
+							builder->mBuilder.addMaterial(mat);
 							mat->name = chunk.name.Value;
 							mat->texture_diffuse = chunk.texture.Value;
 							//mat.specular = chunk.specular.Color;
@@ -612,9 +612,8 @@ namespace pwn
 									const pwn::mesh::Triangle::index b = ibase + p.b;
 									const pwn::mesh::Triangle::index c = ibase + p.c;
 
-									builder->mesh()->addTriangle(
-										pwn::mesh::Triangle( material
-												, pwn::mesh::Triangle::Vertex(a, 0, a)
+									builder->mBuilder.addTriangle(material, pwn::mesh::Triangle( 
+												  pwn::mesh::Triangle::Vertex(a, 0, a)
 												, pwn::mesh::Triangle::Vertex(b, 0, b)
 												, pwn::mesh::Triangle::Vertex(c, 0, c)
 											)
@@ -654,7 +653,8 @@ namespace pwn
 			void read(OptimizedMeshBuilder* builder, const pwn::string& file)
 			{
 				hidden::Load(builder, file);
-				pwn::mesh::BuildNormals(builder->mesh());
+				builder->mBuilder.buildNormals();
+				//pwn::mesh::BuildNormals(builder->mesh());
 			}
 		}
 	}

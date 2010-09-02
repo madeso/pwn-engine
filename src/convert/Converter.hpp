@@ -36,13 +36,14 @@ namespace pwn
 			// stat functions
 			pwn::real removedNormals() const;
 			std::size_t numberOfRemovedNormals() const;
+
+			::pwn::mesh::Builder mBuilder;
 		private:
 			typedef mesh::Triangle::index NormalIndex;
 			typedef pwn::uint16 CompressedNormal;
 
 			bool isBuilding;
 
-			::pwn::mesh::Builder mBuilder;
 			bool mOptimizeNormals;
 			std::map<CompressedNormal, NormalIndex> normalMap;
 			std::vector<NormalIndex> normalConvertions;

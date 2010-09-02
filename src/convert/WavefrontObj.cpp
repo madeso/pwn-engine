@@ -54,14 +54,14 @@ namespace pwn
 
 			namespace // local
 			{
-				void Add(mesh::Mesh::MaterialPtr material, std::map<std::string, std::size_t>* materials, mesh::Mesh* converter)
+				void Add(mesh::Mesh::MaterialPtr material, std::map<std::string, std::size_t>* materials, mesh::Builder* converter)
 				{
 					if( material )
 					{
 						materials->insert( std::make_pair(material->name, converter->addMaterial(material)) );
 					}
 				}
-				void LoadMaterialLibrary(mesh::Mesh* converter, std::map<std::string, std::size_t>* materials, const pwn::string& sourceFile, const pwn::string& materialLibraryFileName)
+				void LoadMaterialLibrary(mesh::Builder* converter, std::map<std::string, std::size_t>* materials, const pwn::string& sourceFile, const pwn::string& materialLibraryFileName)
 				{
 					const pwn::string file = (boost::filesystem::path(sourceFile).remove_filename() / materialLibraryFileName).string();
 
@@ -203,7 +203,7 @@ namespace pwn
 							faces.push_back(cFaceIndex(Read(f)));
 							SkipWhitespace(f);
 						}
-						AddFace(builder->mesh(), materials[currentMaterial],faces);
+						builder->mBuilder.addFace(materials[currentMaterial],faces);
 					}
 					else if ( command == "usemtl" )
 					{
@@ -211,7 +211,7 @@ namespace pwn
 					}
 					else if ( command == "mtllib" )
 					{
-						LoadMaterialLibrary(builder->mesh(), &materials, file, Read(f));
+						LoadMaterialLibrary(&builder->mBuilder, &materials, file, Read(f));
 					}
 					else if( command == "g" )
 					{

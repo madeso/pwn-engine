@@ -227,7 +227,7 @@ namespace pwn
 			}
 		}
 
-		void Builder::makeMesh(Mesh& mesh) const
+		bool Builder::makeMesh(Mesh& mesh) const
 		{
 			mesh.clear();
 
@@ -243,7 +243,7 @@ namespace pwn
 			mesh.bones = bones;
 			mesh.materials = materials;
 
-			if( mesh.isValid() == false ) throw "Mesh isn't valid";
+			return mesh.validate() ==0;
 		}
 	}
 }

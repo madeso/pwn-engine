@@ -595,7 +595,7 @@ namespace pwn
 
 						BOOST_FOREACH(ObjectChunk chunk , main.editor.objects)
 						{
-							pwn::mesh::Triangle::index ibase = builder->mesh()->positions.size();
+							pwn::mesh::Triangle::index ibase = builder->mBuilder.positions.size();
 							for (std::size_t i = 0; i < chunk.trimesh.points.size(); ++i)
 							{
 								builder->addPosition( pwn::mesh::Point(chunk.trimesh.coordsys.translate(chunk.trimesh.points[i]), 0) );

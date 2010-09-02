@@ -168,9 +168,9 @@ void main(int argc, char* argv[])
 	try
 	{
 		const bool optimizeNormals = optimize && compress.normals;
-		pwn::mesh::Mesh mesh;
+		
 		if( verbose && optimizeNormals ) cout << "optimizing normals ACTIVE.." << endl;
-		pwn::convert::OptimizedMeshBuilder builder(&mesh, optimizeNormals);
+		pwn::convert::OptimizedMeshBuilder builder(optimizeNormals);
 
 		const pwn::string fileFormat = SuggestFormat(inputfile, formatOveride);
 
@@ -206,6 +206,17 @@ void main(int argc, char* argv[])
 			return;
 		}
 
+		pwn::mesh::Mesh mesh;
+
+		builder.mBuilder.makeMesh(mesh);
+
+		const pwn::uint32 validationErrors = mesh.validate();
+
+		if( validationErrors != 0)
+		{
+			return;
+		}
+
 		if( ModelScale.eval(vm) )
 		{
 			if( verbose ) cout << "scaling " << modelScale << ".." << std::endl;
@@ -213,13 +224,6 @@ void main(int argc, char* argv[])
 		}
 
 		if( verbose ) cout << endl;
-
-		const pwn::uint32 validationErrors = builder.validate();
-
-		if( validationErrors != 0)
-		{
-			return;
-		}
 
 		pwn::mesh::MoveTextures(&mesh, texturedir);
 

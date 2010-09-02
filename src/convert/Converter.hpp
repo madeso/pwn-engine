@@ -29,8 +29,6 @@ namespace pwn
 
 			void done();
 
-			::pwn::mesh::Mesh* mesh();
-
 			uint32 getMaterial(const pwn::string& name) const;
 
 			// stat functions

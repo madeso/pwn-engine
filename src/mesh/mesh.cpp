@@ -42,11 +42,12 @@ namespace pwn
 			materials.clear();
 		}
 
-		bool Mesh::isValid() const
+		pwn::uint32 Mesh::validate() const
 		{
+			pwn::uint32 errors = 0;
 			for(std::size_t i = 0; i<bones.size(); ++i)
 			{
-				if( bones[i].hasParent() && bones[i].parent >= i ) return false; // bones not sorted
+				if( bones[i].hasParent() && bones[i].parent >= i ) ++errors; // bones not sorted
 			}
 
 			/*
@@ -76,7 +77,7 @@ namespace pwn
 			}
 			*/
 
-			return false; // todo: change to true when all data have been checked
+			return errors; // todo: change to true when all data have been checked
 		}
 	}
 }

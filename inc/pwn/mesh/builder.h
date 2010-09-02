@@ -37,7 +37,7 @@ namespace pwn
 			void setBox(boost::shared_ptr<Material> material, real w, real h, real d, bool faceOut);
 			void buildNormals();
 
-			void makeMesh(Mesh& mesh) const;
+			bool makeMesh(Mesh& mesh) const;
 
 			typedef std::vector<Triangle> TriList;
 			typedef std::map<pwn::uint32, TriList> TriMap;

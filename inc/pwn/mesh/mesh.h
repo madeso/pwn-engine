@@ -207,7 +207,7 @@ namespace pwn
 			Mesh();
 
 			void clear();
-			bool isValid() const;
+			pwn::uint32 validate() const;
 
 			// todo: make private and add accessors instead...
 			core::Vector<Point> positions;

@@ -58,7 +58,7 @@ public:
 	{
 		if( unit_test.failed_test_case_count() == 0 )
 		{
-			::std::cout << "All tests PASSED." << ::std::endl;
+			::std::cout << "All " << unit_test.successful_test_count() <<  " tests PASSED." << ::std::endl;
 		}
 		else
 		{

@@ -145,15 +145,15 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\src\mesh\animation.cpp"
+			RelativePath="..\..\..\src\mesh\src\animation.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\mesh\bone.cpp"
+			RelativePath="..\..\..\src\mesh\src\bone.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\mesh\builder.cpp"
+			RelativePath="..\..\..\src\mesh\src\builder.cpp"
 			>
 		</File>
 		<File
@@ -161,7 +161,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\mesh\material.cpp"
+			RelativePath="..\..\..\src\mesh\src\material.cpp"
 			>
 		</File>
 		<File
@@ -169,7 +169,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\mesh\mesh.cpp"
+			RelativePath="..\..\..\src\mesh\src\mesh.cpp"
 			>
 		</File>
 		<File
@@ -181,11 +181,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\mesh\triangle.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\inc\pwn\mesh\triangle.h"
+			RelativePath="..\..\..\src\mesh\src\triangle.cpp"
 			>
 		</File>
 	</Files>

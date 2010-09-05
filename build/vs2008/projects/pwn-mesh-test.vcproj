@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="pwn-core-test"
-	ProjectGUID="{806198CE-50D9-4ED2-A6B7-FD7D24236AC7}"
-	RootNamespace="pwncoretest"
+	Name="pwn-mesh-test"
+	ProjectGUID="{F5A8F4B3-43BE-414F-8D85-D192E31A9996}"
+	RootNamespace="pwnmeshtest"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -66,7 +66,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="gmockd.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;"
+				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
@@ -144,7 +144,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="gmock.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;"
+				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -182,7 +182,7 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\src\core\test\idpooltest.cpp"
+			RelativePath="..\..\..\src\mesh\test\test-builder.cpp"
 			>
 		</File>
 		<File
@@ -190,15 +190,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\core\test\TestStdUtil.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\core\test\TestStringUtils.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\core\test\VectorTest.cpp"
+			RelativePath="..\..\..\src\mesh\test\test-mesh.cpp"
 			>
 		</File>
 	</Files>

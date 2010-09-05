@@ -22,7 +22,7 @@ namespace pwn
 		{
 		public:
 			template<class T>
-			static void handleVector(VirtualFile& vf, const pwn::core::Vector<T>& vector, bool compress)
+			static void handleVector(VirtualFile& vf, const pwn::std::vector<T>& vector, bool compress)
 			{
 				pwn::uint32 size = vector.size();
 				vf.write32(size);
@@ -30,7 +30,7 @@ namespace pwn
 			}
 
 			template<class T>
-			static void handleVector(VirtualFile& vf, pwn::core::Vector<T>& vector, bool compress)
+			static void handleVector(VirtualFile& vf, pwn::std::vector<T>& vector, bool compress)
 			{
 				pwn::uint32 size = vf.read32();
 				vector.reset(size);

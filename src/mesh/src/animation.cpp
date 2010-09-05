@@ -85,7 +85,7 @@ namespace pwn
 			return core::Str() << location << ": " << math::cAxisAngle(rotation);
 		}
 
-		math::quat Interpolate(real time, const core::Vector<FrameRotation>& fr)
+		math::quat Interpolate(real time, const std::vector<FrameRotation>& fr)
 		{
 			const int fri = Get(fr, time);
 			if (fri == -1) return math::qIdentity();
@@ -93,7 +93,7 @@ namespace pwn
 			return r;
 		}
 		
-		math::vec3 Interpolate(real time, const core::Vector<FramePosition>& fp)
+		math::vec3 Interpolate(real time, const std::vector<FramePosition>& fp)
 		{
 			const int fpi = Get(fp, time);
 			if (fpi == -1) return math::Origo3().vec;
@@ -105,7 +105,7 @@ namespace pwn
 		{
 		}
 
-		AnimationPerBone::AnimationPerBone(core::Vector<FramePosition>& afp, core::Vector<FrameRotation>& afr)
+		AnimationPerBone::AnimationPerBone(std::vector<FramePosition>& afp, std::vector<FrameRotation>& afr)
 		{
 			fp.swap(afp);
 			fr.swap(afr);
@@ -184,8 +184,8 @@ namespace pwn
 			}
 
 			if (abfp.size() < 2 || abfr.size() < 2) throw "Data error, need atleast 2 keyframes per animation";
-			core::Vector<FramePosition> abfpv(abfp); out->fp.swap( abfpv );
-			core::Vector<FrameRotation> abfrv(abfr); out->fr.swap( abfrv );
+			std::vector<FramePosition> abfpv(abfp); out->fp.swap( abfpv );
+			std::vector<FrameRotation> abfrv(abfr); out->fr.swap( abfrv );
 		}
 
 		void AnimationPerBone::scale(real scale)
@@ -197,7 +197,7 @@ namespace pwn
 			}
 		}
 
-		Pose::Pose(core::Vector<PosePerBone>& apose)
+		Pose::Pose(std::vector<PosePerBone>& apose)
 			: bones(apose)
 		{
 		}
@@ -206,10 +206,10 @@ namespace pwn
 		{
 		}
 
-		CompiledPose::CompiledPose(const Pose& pose, const core::Vector<Bone>& bones)
+		CompiledPose::CompiledPose(const Pose& pose, const std::vector<Bone>& bones)
 		{
 			if (pose.bones.size() != bones.size()) throw "Invalid animation/mesh, bone count differs";
-			core::Vector<math::mat44> result( pose.bones.size() );
+			std::vector<math::mat44> result( pose.bones.size() );
 			for (std::size_t boneIndex = 0; boneIndex < pose.bones.size(); ++boneIndex)
 			{
 				const Bone& bone = bones[boneIndex];
@@ -230,7 +230,7 @@ namespace pwn
 		{
 		}
 
-		real CalculateLength(const core::Vector<AnimationPerBone>& bones)
+		real CalculateLength(const std::vector<AnimationPerBone>& bones)
 		{
 			real length = 0;
 			for(std::size_t i=0; i<bones.size(); ++i)
@@ -241,7 +241,7 @@ namespace pwn
 			return length;
 		}
 
-		Animation::Animation(core::Vector<AnimationPerBone>& abones)
+		Animation::Animation(std::vector<AnimationPerBone>& abones)
 			: length( CalculateLength(abones) )
 		{
 			bones.swap(abones);
@@ -249,8 +249,8 @@ namespace pwn
 
 		void Animation::getPose(real time, Pose* out) const
 		{
-			core::Vector<PosePerBone> bd;
-			bd.reset(bones.size());
+			std::vector<PosePerBone> bd;
+			bd.resize(bones.size());
 			for(std::size_t i=0; i<bones.size(); ++i)
 			{
 				const AnimationPerBone& ab = bones[i];
@@ -261,7 +261,7 @@ namespace pwn
 
 		void Animation::subanim(int start, int end, Animation* out) const
 		{
-			core::Vector<AnimationPerBone> bd(bones.size());
+			std::vector<AnimationPerBone> bd(bones.size());
 			for(std::size_t i=0; i<bones.size(); ++i)
 			{
 				const AnimationPerBone& ab = bones[i];

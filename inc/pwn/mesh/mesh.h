@@ -5,7 +5,7 @@
 #include <map>
 #include <pwn/math/types.h>
 #include <pwn/string.h>
-#include <pwn/core/vector.h>
+#include <boost/noncopyable.hpp>
 
 #include <boost/shared_ptr.hpp>
 
@@ -67,7 +67,7 @@ namespace pwn
 		};
 
 		template<typename T>
-		int Get(const core::Vector<T>& da, real current)
+		int Get(const std::vector<T>& da, real current)
 		{
 			for (std::size_t i = 1; i < da.size(); ++i)
 			{
@@ -121,10 +121,10 @@ namespace pwn
 		{
 		public:
 			AnimationPerBone();
-			AnimationPerBone(core::Vector<FramePosition>& afp, core::Vector<FrameRotation>& afr);
+			AnimationPerBone(std::vector<FramePosition>& afp, std::vector<FrameRotation>& afr);
 
-			core::Vector<FramePosition> fp;
-			core::Vector<FrameRotation> fr;
+			std::vector<FramePosition> fp;
+			std::vector<FrameRotation> fr;
 
 			string toString() const;
 
@@ -140,17 +140,17 @@ namespace pwn
 			: boost::noncopyable
 		{
 		public:
-			explicit Pose(core::Vector<PosePerBone>& pose);
-			core::Vector<PosePerBone> bones;
+			explicit Pose(std::vector<PosePerBone>& pose);
+			std::vector<PosePerBone> bones;
 		};
 
 		class CompiledPose
 			: boost::noncopyable
 		{
 		public:
-			core::Vector<math::mat44> transforms;
+			std::vector<math::mat44> transforms;
 			CompiledPose();
-			CompiledPose(const Pose& pose, const core::Vector<Bone>& def);
+			CompiledPose(const Pose& pose, const std::vector<Bone>& def);
 		};
 
 		class AnimationInformation
@@ -166,10 +166,10 @@ namespace pwn
 			: boost::noncopyable
 		{
 		public:
-			Animation(core::Vector<AnimationPerBone>& bones);
+			Animation(std::vector<AnimationPerBone>& bones);
 			void getPose(real time, Pose* out) const;
 
-			core::Vector<AnimationPerBone> bones;
+			std::vector<AnimationPerBone> bones;
 			const real length;
 
 			void subanim(int start, int end, Animation* out) const;
@@ -210,7 +210,7 @@ namespace pwn
 		class Mesh
 		{
 		public:
-			typedef core::Vector<Triangle> TriList;
+			typedef std::vector<Triangle> TriList;
 			typedef boost::shared_ptr<TriList> TriListPtr;
 			typedef std::map<pwn::uint32, TriListPtr> TriangleMap;
 			typedef boost::shared_ptr<Material> MaterialPtr;
@@ -221,13 +221,13 @@ namespace pwn
 			pwn::uint32 validate() const;
 
 			// todo: make private and add accessors instead...
-			core::Vector<Point> positions;
-			core::Vector<math::vec3> normals;
-			core::Vector<math::vec2> texcoords;
-			core::Vector<Bone> bones;
+			std::vector<Point> positions;
+			std::vector<math::vec3> normals;
+			std::vector<math::vec2> texcoords;
+			std::vector<Bone> bones;
 
 			TriangleMap triangles; // the map key referenses the materials vector below
-			core::Vector<MaterialPtr> materials; // this is done so materials could easily be swapped and overriden later on per actor
+			std::vector<MaterialPtr> materials; // this is done so materials could easily be swapped and overriden later on per actor
 		};
 	}
 }

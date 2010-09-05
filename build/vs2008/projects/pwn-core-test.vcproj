@@ -197,10 +197,6 @@
 			RelativePath="..\..\..\src\core\test\TestStringUtils.cpp"
 			>
 		</File>
-		<File
-			RelativePath="..\..\..\src\core\test\VectorTest.cpp"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

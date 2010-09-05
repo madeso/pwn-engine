@@ -25,6 +25,16 @@ namespace pwn
 				reset(s);
 			}
 
+			T* get()
+			{
+				return arr.get();
+			}
+
+			const T* get() const
+			{
+				return arr.get();
+			}
+
 			explicit Vector(Vector<T>& other)
 				: length(0)
 			{

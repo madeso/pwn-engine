@@ -21,14 +21,25 @@ namespace pwn
 		*/
 		typedef pwn::uint32 BoneIndex;
 
+		namespace BoneNameSize
+		{
+			enum
+			{
+				Value = 100
+			};
+		}
+
 		class Bone
 		{
 		public:
 			Bone();
 			bool hasParent() const;
 
+			void setName(const string& n);
+			string getName() const;
+
 			BoneIndex parent;
-			string name;
+			tchar name[BoneNameSize::Value];
 			math::vec3 pos;
 			math::quat rot;
 		};

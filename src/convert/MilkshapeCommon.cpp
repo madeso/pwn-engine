@@ -230,7 +230,7 @@ namespace pwn
 							bn.pos =  math::vec3(b.x, b.y, b.z);
 							bn.rot = makeQuat( math::vec3(b.rx, b.ry, b.rz));
 							bn.parent = b.parentId;
-							bn.name = b.name;
+							bn.setName(b.name);
 							builder->addBone(bn);
 						}
 

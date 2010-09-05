@@ -145,14 +145,6 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\src\meshio\compress-internal.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\meshio\compress.cpp"
-			>
-		</File>
-		<File
 			RelativePath="..\..\..\inc\pwn\meshio\io.h"
 			>
 		</File>

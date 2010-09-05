@@ -4,7 +4,6 @@
 #include <pwn/mesh/mesh.h>
 #include <boost/foreach.hpp>
 #include <pwn/math/operations.h>
-#include <pwn/mesh/material.h>
 #include <pwn/core/StringUtils.h>
 
 namespace pwn
@@ -64,9 +63,9 @@ namespace pwn
 				else return newFolder + "/" + t;
 			}
 
-			void MoveTextures(Mesh::MaterialPtr mat, const pwn::string& newFolder)
+			void MoveTextures(Material& mat, const pwn::string& newFolder)
 			{
-				mat->texture_diffuse = MoveTexture(mat->texture_diffuse, newFolder);
+				mat.texture_diffuse = MoveTexture(mat.texture_diffuse, newFolder);
 			}
 		}
 
@@ -128,7 +127,7 @@ namespace pwn
 			triangles[material].push_back(t);
 		}
 
-		Triangle::index Builder::addMaterial(Mesh::MaterialPtr m)
+		Triangle::index Builder::addMaterial(Material m)
 		{
 			materials.push_back(m);
 			return static_cast<Triangle::index>(materials.size()-1);
@@ -161,7 +160,7 @@ namespace pwn
 			if( false == added ) throw "Unable to triangulate face";
 		}
 		
-		void Builder::setBox(boost::shared_ptr<Material> material, real w, real h, real d, bool faceOut)
+		void Builder::setBox(Material material, real w, real h, real d, bool faceOut)
 		{
 			using math::vec2;
 			using math::vec3;

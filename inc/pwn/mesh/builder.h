@@ -30,11 +30,11 @@ namespace pwn
 			Triangle::index addPosition(const math::vec3& pos, BoneIndex bone); // syntax sugar
 			Triangle::index addNormal(const math::vec3& norm);
 			void addTriangle(pwn::uint32 material, const Triangle& t);
-			Triangle::index addMaterial(Mesh::MaterialPtr m);
+			Triangle::index addMaterial(Material m);
 
 			void addQuad(bool reverse, pwn::uint32 material, const Triangle::Vertex& v0, const Triangle::Vertex& v1, const Triangle::Vertex& v2, const Triangle::Vertex& v3);
 			void addFace(pwn::uint32 material, const std::vector<Triangle::Vertex>& vertices);
-			void setBox(boost::shared_ptr<Material> material, real w, real h, real d, bool faceOut);
+			void setBox(Material material, real w, real h, real d, bool faceOut);
 			void buildNormals();
 
 			bool makeMesh(Mesh& mesh) const;
@@ -46,7 +46,7 @@ namespace pwn
 			std::vector<math::vec3> normals;
 			std::vector<math::vec2> texcoords;
 			std::vector<Bone> bones;
-			std::vector<boost::shared_ptr<Material> > materials;
+			std::vector<Material> materials;
 		};
 	}
 }

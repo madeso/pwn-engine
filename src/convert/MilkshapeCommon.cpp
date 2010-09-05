@@ -5,7 +5,6 @@
 #include <pwn/core/StringUtils.h>
 #include <boost/filesystem.hpp>
 #include <pwn/mesh/mesh.h>
-#include <pwn/mesh/material.h>
 #include "Converter.hpp"
 #include <boost/lexical_cast.hpp>
 
@@ -218,8 +217,8 @@ namespace pwn
 						int id = 0;
 						BOOST_FOREACH(const Material& mat, model.materials)
 						{
-							mesh::Mesh::MaterialPtr smat( new mesh::Material() );
-							smat->texture_diffuse = mat.diffuseTexture;
+							mesh::Material smat;
+							smat.texture_diffuse = mat.diffuseTexture;
 							builder->addMaterial(smat);
 							++id;
 						}

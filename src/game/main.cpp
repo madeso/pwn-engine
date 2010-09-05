@@ -12,7 +12,6 @@
 #include <pwn/mesh/predefinedmaterials.h>
 #include <pwn/engine/democamera.h>
 #include <pwn/engine/vfstexturepool2.h>
-#include <pwn/mesh/material.h>
 #include <pwn/meshio/io.h>
 #include <pwn/render/worldwithcameraboundobject3.h>
 
@@ -30,8 +29,8 @@ boost::shared_ptr<ActorDef> CreateCube(real size, const string& texture, Texture
 	Builder b;
 	b.setBox(materials::White(), halfsize*2, halfsize*2, halfsize*2, out);
 	b.makeMesh(mesh);
-	mesh.materials[0]->texture_diffuse = texture;
-	mesh.materials[0]->diffuse.alpha(alpha);
+	mesh.materials[0].texture_diffuse = texture;
+	mesh.materials[0].diffuse.alpha(alpha);
 	Move(&mesh, vec3(-halfsize, -halfsize, -halfsize));
 	return Compile(mesh, tpool);
 }

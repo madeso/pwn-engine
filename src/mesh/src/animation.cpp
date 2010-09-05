@@ -243,8 +243,8 @@ namespace pwn
 
 		Animation::Animation(std::vector<AnimationPerBone>& abones)
 			: length( CalculateLength(abones) )
+			, bones(abones)
 		{
-			bones.swap(abones);
 		}
 
 		void Animation::getPose(real time, Pose* out) const

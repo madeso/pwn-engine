@@ -2,7 +2,6 @@
 
 #include <pwn/math/operations.h>
 #include <pwn/mesh/Mesh.h>
-#include <pwn/mesh/material.h>
 
 #include <iostream>
 
@@ -26,7 +25,7 @@ namespace pwn
 		{
 			for(uint32 id=0; id<mBuilder.materials.size(); ++id)
 			{
-				if( mBuilder.materials[id]->name == name ) return id;
+				if( mBuilder.materials[id].name == name ) return id;
 			}
 
 			throw "unable to find material..";
@@ -75,7 +74,7 @@ namespace pwn
 			mBuilder.addTriangle(material, tri);
 		}
 
-		mesh::Triangle::index OptimizedMeshBuilder::addMaterial(mesh::Mesh::MaterialPtr m)
+		mesh::Triangle::index OptimizedMeshBuilder::addMaterial(mesh::Material m)
 		{
 			return mBuilder.addMaterial(m);
 		}

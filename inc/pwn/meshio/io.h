@@ -12,16 +12,6 @@ namespace pwn
 
 	namespace meshio
 	{
-		struct Compress
-		{
-			explicit Compress(bool all);
-
-			bool materials;
-			bool positions;
-			bool normals;
-			bool texcoords;
-		};
-
 		class WriteTarget
 		{	
 		public:
@@ -30,7 +20,7 @@ namespace pwn
 			~WriteTarget();
 		};
 
-		void Write(const mesh::Mesh& mesh, const pwn::string& filename, const pwn::meshio::Compress compress);
+		void Write(const mesh::Mesh& mesh, const pwn::string& filename);
 		void Read(mesh::Mesh* mesh, const pwn::string& filename);
 	}
 }

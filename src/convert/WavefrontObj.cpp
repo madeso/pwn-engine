@@ -9,7 +9,6 @@
 #include <pwn/core/StringUtils.h>
 #include <pwn/math/operations.h>
 
-#include <pwn/mesh/material.h>
 #include <pwn/mesh/builder.h>
 
 #include <pwn/mesh/Mesh.h>
@@ -54,12 +53,9 @@ namespace pwn
 
 			namespace // local
 			{
-				void Add(mesh::Mesh::MaterialPtr material, std::map<std::string, std::size_t>* materials, mesh::Builder* converter)
+				void Add(mesh::Material material, std::map<std::string, std::size_t>* materials, mesh::Builder* converter)
 				{
-					if( material )
-					{
-						materials->insert( std::make_pair(material->name, converter->addMaterial(material)) );
-					}
+					materials->insert( std::make_pair(material.name, converter->addMaterial(material)) );
 				}
 				void LoadMaterialLibrary(mesh::Builder* converter, std::map<std::string, std::size_t>* materials, const pwn::string& sourceFile, const pwn::string& materialLibraryFileName)
 				{
@@ -68,7 +64,7 @@ namespace pwn
 					std::ifstream f(file.c_str());
 					if( false == f.good() ) throw "missing file";
 
-					mesh::Mesh::MaterialPtr material;
+					mesh::Material material;
 
 					pwn::string line;
 					while( std::getline(f, line) )
@@ -83,42 +79,42 @@ namespace pwn
 						if( command == "newmtl" )
 						{
 							Add(material, materials, converter);
-							material.reset(new mesh::Material());
-							material->name = sline[1];
+							material = mesh::Material();
+							material.name = sline[1];
 						}
 						else if( command == "Ka")
 						{
 							// ambient r g b
-							material->ambient = cRgba(sline[1], sline[2], sline[3], transperency);
+							material.ambient = cRgba(sline[1], sline[2], sline[3], transperency);
 						}
 						else if( command == "Kd")
 						{
 							// diffuse r g b
-							material->diffuse = cRgba(sline[1], sline[2], sline[3], transperency);
+							material.diffuse = cRgba(sline[1], sline[2], sline[3], transperency);
 						}
 						else if( command == "Ks")
 						{
 							// specular r g b
-							material->specular = cRgba(sline[1], sline[2], sline[3], transperency);
+							material.specular = cRgba(sline[1], sline[2], sline[3], transperency);
 						}
 						else if( command == "Ke")
 						{
 							// emissive r g b
-							material->emission = cRgba(sline[1], sline[2], sline[3], transperency);
+							material.emission = cRgba(sline[1], sline[2], sline[3], transperency);
 						}
 						else if( command == "d")
 						{
 							// transparency v
 							transperency = creal(sline[1]);
-							material->ambient.alpha(transperency);
-							material->diffuse.alpha(transperency);
-							material->specular.alpha(transperency);
-							material->emission.alpha(transperency);
+							material.ambient.alpha(transperency);
+							material.diffuse.alpha(transperency);
+							material.specular.alpha(transperency);
+							material.emission.alpha(transperency);
 						}
 						else if( command == "map_Kd")
 						{
 							// texture relative
-							material->texture_diffuse = (boost::filesystem::path(sourceFile).remove_filename() / sline[1]).string();
+							material.texture_diffuse = (boost::filesystem::path(sourceFile).remove_filename() / sline[1]).string();
 						}
 					}
 

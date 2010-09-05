@@ -1,42 +1,40 @@
 #ifndef PWN_MESH_PREDEFINEDMATERIALS
 #define PWN_MESH_PREDEFINEDMATERIALS
 
-#include <boost/shared_ptr.hpp>
+#include <pwn/mesh/mesh.h>
 
 namespace pwn
 {
 	namespace mesh
 	{
-		class Material;
-
 		namespace materials
 		{
-			boost::shared_ptr<Material> Emerald();
-			boost::shared_ptr<Material> Jade();
-			boost::shared_ptr<Material> Obsidian();
-			boost::shared_ptr<Material> Pearl();
-			boost::shared_ptr<Material> Ruby();
-			boost::shared_ptr<Material> Turquoise();
-			boost::shared_ptr<Material> Brass();
-			boost::shared_ptr<Material> Bronze();
-			boost::shared_ptr<Material> Chrome();
-			boost::shared_ptr<Material> Copper();
-			boost::shared_ptr<Material> Gold();
-			boost::shared_ptr<Material> Silver();
-			boost::shared_ptr<Material> Plastic_Black();
-			boost::shared_ptr<Material> Plastic_Cyan();
-			boost::shared_ptr<Material> Plastic_Green();
-			boost::shared_ptr<Material> Plastic_Red();
-			boost::shared_ptr<Material> Plastic_White();
-			boost::shared_ptr<Material> Plastic_Yellow();
-			boost::shared_ptr<Material> Rubber_Black();
-			boost::shared_ptr<Material> Rubber_Cyan();
-			boost::shared_ptr<Material> Rubber_Green();
-			boost::shared_ptr<Material> Rubber_Red();
-			boost::shared_ptr<Material> Rubber_White();
-			boost::shared_ptr<Material> Rubber_Yellow();
+			Material Emerald();
+			Material Jade();
+			Material Obsidian();
+			Material Pearl();
+			Material Ruby();
+			Material Turquoise();
+			Material Brass();
+			Material Bronze();
+			Material Chrome();
+			Material Copper();
+			Material Gold();
+			Material Silver();
+			Material Plastic_Black();
+			Material Plastic_Cyan();
+			Material Plastic_Green();
+			Material Plastic_Red();
+			Material Plastic_White();
+			Material Plastic_Yellow();
+			Material Rubber_Black();
+			Material Rubber_Cyan();
+			Material Rubber_Green();
+			Material Rubber_Red();
+			Material Rubber_White();
+			Material Rubber_Yellow();
 
-			boost::shared_ptr<Material> White();
+			Material White();
 		}
 	}
 }

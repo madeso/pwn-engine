@@ -5,7 +5,6 @@
 #include <boost/foreach.hpp>
 #include <pwn/render/compiledmesh.h>
 #include <pwn/render/material.h>
-#include <pwn/mesh/material.h>
 #include <pwn/render/texturepool2.h>
 #include <pwn/math/operations.h>
 #include <sfml/OpenGl.hpp>
@@ -30,15 +29,15 @@ namespace pwn
 		{
 		public:
 			explicit SharedMesh(const mesh::Mesh& mesh)
-				: positions(false, mesh.positions)
-				, normals(false, mesh.normals)
-				, texcoords(false, mesh.texcoords)
+				: positions(mesh.positions)
+				, normals(mesh.normals)
+				, texcoords(mesh.texcoords)
 			{
 			}
 
-			core::Vector<mesh::Point> positions;
-			core::Vector<math::vec3> normals;
-			core::Vector<math::vec2> texcoords;
+			std::vector<mesh::Point> positions;
+			std::vector<math::vec3> normals;
+			std::vector<math::vec2> texcoords;
 		};
 
 		class ImmediateMode : public CompiledMesh
@@ -91,23 +90,23 @@ namespace pwn
 			mesh::Mesh::TriListPtr triangles;
 		};
 
-		boost::shared_ptr<render::Material> Compile(boost::shared_ptr<mesh::Material> mm, TexturePool2* pool)
+		boost::shared_ptr<render::Material> Compile(const mesh::Material mm, TexturePool2* pool)
 		{
 			boost::shared_ptr<render::Material> rm( new render::Material() );
 
 			// todo: move to the render::Material constructor..
-			rm->ambient = mm->ambient;
-			rm->diffuse = mm->diffuse;
-			rm->specular = mm->specular;
-			rm->emission = mm->emission;
-			rm->shininess = mm->shininess;
+			rm->ambient = mm.ambient;
+			rm->diffuse = mm.diffuse;
+			rm->specular = mm.specular;
+			rm->emission = mm.emission;
+			rm->shininess = mm.shininess;
 
 			// todo: check more than diffuse alpha
-			rm->hasTransperency = mm->diffuse.alpha() < 0.9f;
+			rm->hasTransperency = mm.diffuse.alpha() < 0.9f;
 
-			if( false == mm->texture_diffuse.empty() )
+			if( false == mm.texture_diffuse.empty() )
 			{
-				rm->texture = pool->get(mm->texture_diffuse);
+				rm->texture = pool->get(mm.texture_diffuse);
 			}
 			return rm;
 		}

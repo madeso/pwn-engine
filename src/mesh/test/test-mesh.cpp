@@ -2,7 +2,6 @@
 
 #include <pwn/mesh/mesh.h>
 #include <pwn/mesh/builder.h>
-#include <pwn/mesh/material.h>
 #include <pwn/mesh/predefinedmaterials.h>
 #include <pwn/math/types.h>
 
@@ -35,8 +34,8 @@ namespace test
 		Builder b;
 		b.setBox(materials::White(), halfsize*2, halfsize*2, halfsize*2, out);
 		b.makeMesh(mesh);
-		mesh.materials[0]->texture_diffuse = "hello";
-		mesh.materials[0]->diffuse.alpha(0.25f);
+		mesh.materials[0].texture_diffuse = "hello";
+		mesh.materials[0].diffuse.alpha(0.25f);
 		Move(&mesh, vec3(-halfsize, -halfsize, -halfsize));
 		//return Compile(mesh, tpool);
 	}

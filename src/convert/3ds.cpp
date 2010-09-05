@@ -10,7 +10,6 @@
 #include <pwn/math/types.h>
 #include <pwn/math/operations.h>
 #include <pwn/mesh/mesh.h>
-#include <pwn/mesh/material.h>
 #include <pwn/mesh/builder.h>
 
 #include "Converter.hpp"
@@ -584,13 +583,14 @@ namespace pwn
 					{
 						BOOST_FOREACH(MaterialChunk& chunk, main.editor.materials)
 						{
-							pwn::mesh::Mesh::MaterialPtr mat( new pwn::mesh::Material() );
-							builder->mBuilder.addMaterial(mat);
-							mat->name = chunk.name.Value;
-							mat->texture_diffuse = chunk.texture.Value;
+							pwn::mesh::Material mat;
+							
+							mat.name = chunk.name.Value;
+							mat.texture_diffuse = chunk.texture.Value;
 							//mat.specular = chunk.specular.Color;
 							//mat.ambient = chunk.ambient.Color;
 							//mat.diffuse = chunk.diffuse.Color;
+							builder->mBuilder.addMaterial(mat);
 						}
 
 						BOOST_FOREACH(ObjectChunk chunk , main.editor.objects)

@@ -95,10 +95,6 @@ void main(int argc, char* argv[])
 	const Cmd MeshInfo				("show-mesh-info",		'm');
 	const Cmd NotVerbose			("not-verbose",			'v');
 	const Cmd Optimize				("optimize",			'O');
-	const Cmd CompressMaterials		("compress-materials",	'M');
-	const Cmd CompressNormals		("compress-normals",	'N');
-	const Cmd CompressPositions		("compress-positions",	'P');
-	const Cmd CompressTexcoords		("compress-texcoords",	'T');
 	const Cmd DontWrite				("dont-write",			'w');
 	const Cmd MoveTextures			("move-textures",		't');
 	const Cmd OverideFormat			("overide-format",		'f');
@@ -117,10 +113,6 @@ void main(int argc, char* argv[])
 		(MeshInfo,				"Write information about mesh")
 		(NotVerbose,			"Silent/not verbose output")
 		(Optimize,				"Optimize mesh")
-		(CompressMaterials,		"Write compressed materials")
-		(CompressNormals,		"Write compressed normals")
-		(CompressPositions,		"Write compressed positions")
-		(CompressTexcoords,		"Write compressed texture coordinates")
 		(DontWrite,				"Don't write out file")
 		;
 
@@ -140,12 +132,6 @@ void main(int argc, char* argv[])
 	bool writeResult = !DontWrite.eval(vm);
 	bool verbose = !NotVerbose.eval(vm);
 	bool meshInfo = MeshInfo.eval(vm);
-
-	pwn::meshio::Compress compress(false);
-	compress.materials = CompressMaterials.eval(vm);
-	compress.normals = CompressNormals.eval(vm);
-	compress.positions = CompressPositions.eval(vm);
-	compress.texcoords = CompressTexcoords.eval(vm);
 
 	if (Help.eval(vm))
 	{
@@ -167,7 +153,7 @@ void main(int argc, char* argv[])
 	
 	try
 	{
-		const bool optimizeNormals = optimize && compress.normals;
+		const bool optimizeNormals = false;
 		
 		if( verbose && optimizeNormals ) cout << "optimizing normals ACTIVE.." << endl;
 		pwn::convert::OptimizedMeshBuilder builder(optimizeNormals);
@@ -242,7 +228,7 @@ void main(int argc, char* argv[])
 		{
 			if( verbose ) cout << "writing.." << endl;
 			pwn::meshio::WriteTarget wt(outdir);
-			pwn::meshio::Write(mesh, boost::filesystem::path(inputfile).replace_extension("mesh").filename(), compress);
+			pwn::meshio::Write(mesh, boost::filesystem::path(inputfile).replace_extension("mesh").filename());
 		}
 
 		if( runStatistics )

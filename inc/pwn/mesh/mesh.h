@@ -6,14 +6,28 @@
 #include <pwn/math/types.h>
 #include <pwn/string.h>
 #include <boost/noncopyable.hpp>
-
+#include <pwn/math/rgba.h>
 #include <boost/shared_ptr.hpp>
 
 namespace pwn
 {
 	namespace mesh
 	{
-		class Material;
+		class Material
+		{
+		public:
+			Material();
+
+			string name; // todo: only added as a temporary fix for converter - remove asap
+
+			math::Rgba ambient; // -1 - 1
+			math::Rgba diffuse; // -1 - 1
+			math::Rgba specular; // -1 - 1
+			math::Rgba emission; // -1 - 1
+			real shininess; // 0-1
+
+			string texture_diffuse;
+		};
 
 		/**
 		0 = no bone
@@ -117,7 +131,6 @@ namespace pwn
 		};
 
 		class AnimationPerBone
-			: boost::noncopyable
 		{
 		public:
 			AnimationPerBone();
@@ -213,8 +226,7 @@ namespace pwn
 			typedef std::vector<Triangle> TriList;
 			typedef boost::shared_ptr<TriList> TriListPtr;
 			typedef std::map<pwn::uint32, TriListPtr> TriangleMap;
-			typedef boost::shared_ptr<Material> MaterialPtr;
-
+			
 			Mesh();
 
 			void clear();
@@ -227,7 +239,7 @@ namespace pwn
 			std::vector<Bone> bones;
 
 			TriangleMap triangles; // the map key referenses the materials vector below
-			std::vector<MaterialPtr> materials; // this is done so materials could easily be swapped and overriden later on per actor
+			std::vector<Material> materials; // this is done so materials could easily be swapped and overriden later on per actor
 		};
 	}
 }

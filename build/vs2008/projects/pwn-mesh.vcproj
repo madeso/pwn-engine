@@ -165,10 +165,6 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\mesh\material.h"
-			>
-		</File>
-		<File
 			RelativePath="..\..\..\src\mesh\src\mesh.cpp"
 			>
 		</File>

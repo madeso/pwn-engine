@@ -1,5 +1,6 @@
 #include <pwn/mesh/mesh.h>
 #include <pwn/math/operations.h>
+#include <pwn/core/stringutils.h>
 
 namespace pwn
 {
@@ -18,7 +19,7 @@ namespace pwn
 
 		void Bone::setName(const string& n)
 		{
-			strncmp(name, n.c_str(), BoneNameSize::Value);
+			core::Copy(name, n, BoneNameSize::Value);
 		}
 
 		string Bone::getName() const

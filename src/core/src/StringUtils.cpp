@@ -86,5 +86,11 @@ namespace pwn
 			StringReplace(&temp, toFind, toReplace);
 			return temp;
 		}
+
+		void Copy(pwn::tchar* dst, const pwn::string& src, const pwn::string::size_type count)
+		{
+			strncpy(dst, src.c_str(), count-1);
+			dst[count-1] = 0;
+		}
 	}
 }

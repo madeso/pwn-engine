@@ -104,7 +104,7 @@ namespace pwn
 			// todo: check more than diffuse alpha
 			rm->hasTransperency = mm.diffuse.alpha() < 0.9f;
 
-			if( false == mm.texture_diffuse.empty() )
+			if( false == mm.getTexture_Diffuse().empty() )
 			{
 				rm->texture = pool->get(mm.texture_diffuse);
 			}

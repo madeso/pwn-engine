@@ -115,7 +115,7 @@ namespace pwn
 						else if( command == "map_Kd")
 						{
 							// texture relative
-							material.texture_diffuse = (boost::filesystem::path(sourceFile).remove_filename() / sline[1]).string();
+							material.setTexture_Diffuse((boost::filesystem::path(sourceFile).remove_filename() / sline[1]).string());
 						}
 					}
 

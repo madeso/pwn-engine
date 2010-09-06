@@ -1,4 +1,5 @@
 #include <pwn/mesh/predefinedmaterials.h>
+#include <pwn/core/stringutils.h>
 
 namespace pwn
 {
@@ -11,6 +12,16 @@ namespace pwn
 			, emission(0)
 			, shininess(0)
 		{
+		}
+
+		const string Material::getTexture_Diffuse() const
+		{
+			return texture_diffuse;
+		}
+
+		void Material::setTexture_Diffuse(const pwn::string& v)
+		{
+			core::Copy(texture_diffuse, v, TextureSize);
 		}
 
 		namespace materials

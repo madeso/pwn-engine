@@ -22,6 +22,8 @@ namespace pwn
 		pwn::string ToLower(const pwn::string& string);
 		void StringReplace(pwn::string* string, const pwn::string& toFind, const pwn::string& toReplace);
 		const pwn::string StringReplace(const pwn::string& string, const pwn::string& toFind, const pwn::string& toReplace);
+
+		void Copy(pwn::tchar* dst, const pwn::string& src, const pwn::string::size_type count);
 	}
 }
 

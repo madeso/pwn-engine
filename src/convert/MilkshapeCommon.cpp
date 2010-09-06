@@ -218,7 +218,7 @@ namespace pwn
 						BOOST_FOREACH(const Material& mat, model.materials)
 						{
 							mesh::Material smat;
-							smat.texture_diffuse = mat.diffuseTexture;
+							smat.setTexture_Diffuse(mat.diffuseTexture);
 							builder->addMaterial(mat.name, smat);
 							++id;
 						}

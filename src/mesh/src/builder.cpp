@@ -65,7 +65,7 @@ namespace pwn
 
 			void MoveTextures(Material& mat, const pwn::string& newFolder)
 			{
-				mat.texture_diffuse = MoveTexture(mat.texture_diffuse, newFolder);
+				mat.setTexture_Diffuse( MoveTexture(mat.texture_diffuse, newFolder) );
 			}
 		}
 

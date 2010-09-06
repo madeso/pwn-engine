@@ -630,6 +630,7 @@ namespace pwn
 						std::ifstream f;
 
 						f.open(filename.c_str(), std::ios::binary);
+						if( f.good() == false ) throw "failed to open 3ds file";
 						f.seekg(0, std::ios::end);
 						const std::streamsize length = f.tellg();
 						boost::scoped_array<byte> bytes( new byte[length] );

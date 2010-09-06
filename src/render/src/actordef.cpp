@@ -43,7 +43,7 @@ namespace pwn
 		class ImmediateMode : public CompiledMesh
 		{
 		public:
-			ImmediateMode(boost::shared_ptr<SharedMesh> smesh, const mesh::Mesh::TriListPtr& tridata)
+			ImmediateMode(boost::shared_ptr<SharedMesh> smesh, const mesh::Mesh::TriList& tridata)
 				: smesh(smesh)
 				, triangles(tridata)
 			{
@@ -58,7 +58,7 @@ namespace pwn
 				Assert( glGetError_WithString() == GL_NO_ERROR);
 				glBegin(GL_TRIANGLES);
 
-				BOOST_FOREACH(const mesh::Triangle& tri, *triangles)
+				BOOST_FOREACH(const mesh::Triangle& tri, triangles)
 				{
 					const std::size_t nc = smesh->normals.size();
 					const std::size_t tc = smesh->texcoords.size();
@@ -87,7 +87,7 @@ namespace pwn
 			}
 		private:
 			boost::shared_ptr<SharedMesh> smesh;
-			mesh::Mesh::TriListPtr triangles;
+			mesh::Mesh::TriList triangles;
 		};
 
 		boost::shared_ptr<render::Material> Compile(const mesh::Material mm, TexturePool2* pool)

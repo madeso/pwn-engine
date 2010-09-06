@@ -224,8 +224,8 @@ namespace pwn
 		{
 		public:
 			typedef std::vector<Triangle> TriList;
-			typedef boost::shared_ptr<TriList> TriListPtr;
-			typedef std::map<pwn::uint32, TriListPtr> TriangleMap;
+			//typedef boost::shared_ptr<TriList> TriListPtr;
+			typedef std::map<pwn::uint32, TriList> TriangleMap;
 			
 			Mesh();
 

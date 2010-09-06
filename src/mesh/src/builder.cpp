@@ -230,16 +230,11 @@ namespace pwn
 		{
 			mesh.clear();
 
-			BOOST_FOREACH(const TriMap::value_type& tr, triangles)
-			{
-				Mesh::TriListPtr ptr( new Mesh::TriList(tr.second) );
-				mesh.triangles[tr.first] = ptr;
-			}
-
 			mesh.positions = positions;
 			mesh.normals = normals;
 			mesh.texcoords = texcoords;
 			mesh.bones = bones;
+			mesh.triangles = triangles;
 			mesh.materials = materials;
 
 			return mesh.validate() ==0;

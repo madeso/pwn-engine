@@ -114,7 +114,7 @@ namespace pwn
 
 		pwn::real OptimizedMeshBuilder::removedNormals() const
 		{
-			if( mOptimizeNormals ) return 0;
+			if( mOptimizeNormals == false) return 0;
 			const std::size_t normals = numberOfRemovedNormals();
 			if( normals == 0 ) return 0;
 			else return static_cast<pwn::real>(normals) / normalConvertions.size();
@@ -122,7 +122,7 @@ namespace pwn
 
 		std::size_t OptimizedMeshBuilder::numberOfRemovedNormals() const
 		{
-			if( mOptimizeNormals ) return 0;
+			if( mOptimizeNormals==false ) return 0;
 			return normalConvertions.size() - normalMap.size();
 		}
 

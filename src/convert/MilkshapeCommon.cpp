@@ -219,7 +219,7 @@ namespace pwn
 						{
 							mesh::Material smat;
 							smat.texture_diffuse = mat.diffuseTexture;
-							builder->addMaterial(smat);
+							builder->addMaterial(mat.name, smat);
 							++id;
 						}
 

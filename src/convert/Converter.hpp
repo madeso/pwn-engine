@@ -24,7 +24,7 @@ namespace pwn
 
 			// util functions, simply call theese on the mesh
 			void addTriangle(pwn::uint32 material, const mesh::Triangle& tri);
-			mesh::Triangle::index addMaterial(mesh::Material m);
+			mesh::Triangle::index addMaterial(const pwn::string& name, mesh::Material m);
 			void addBone(const ::pwn::mesh::Bone& b);
 
 			void done();
@@ -45,6 +45,9 @@ namespace pwn
 			bool mOptimizeNormals;
 			std::map<CompressedNormal, NormalIndex> normalMap;
 			std::vector<NormalIndex> normalConvertions;
+
+			typedef std::map<pwn::string, uint32> MaterialNameIdMap;
+			MaterialNameIdMap materialid;
 		};
 
 		struct Stat

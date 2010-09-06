@@ -585,7 +585,6 @@ namespace pwn
 						{
 							pwn::mesh::Material mat;
 							
-							mat.name = chunk.name.Value;
 							mat.texture_diffuse = chunk.texture.Value;
 							//mat.specular = chunk.specular.Color;
 							//mat.ambient = chunk.ambient.Color;

@@ -18,7 +18,7 @@ namespace pwn
 		public:
 			Material();
 
-			string name; // todo: only added as a temporary fix for converter - remove asap
+			//string name; // todo: only added as a temporary fix for converter - remove asap
 
 			math::Rgba ambient; // -1 - 1
 			math::Rgba diffuse; // -1 - 1

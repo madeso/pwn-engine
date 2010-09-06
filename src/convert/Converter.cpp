@@ -23,12 +23,9 @@ namespace pwn
 
 		uint32 OptimizedMeshBuilder::getMaterial(const pwn::string& name) const
 		{
-			for(uint32 id=0; id<mBuilder.materials.size(); ++id)
-			{
-				if( mBuilder.materials[id].name == name ) return id;
-			}
-
-			throw "unable to find material..";
+			MaterialNameIdMap::const_iterator res = materialid.find(name);
+			if( res == materialid.end() ) throw "unable to find material..";
+			else return res->second;
 		}
 
 		uint32 Check(const pwn::string& name, std::size_t i, std::size_t max)
@@ -74,8 +71,9 @@ namespace pwn
 			mBuilder.addTriangle(material, tri);
 		}
 
-		mesh::Triangle::index OptimizedMeshBuilder::addMaterial(mesh::Material m)
+		mesh::Triangle::index OptimizedMeshBuilder::addMaterial(const pwn::string& name, mesh::Material m)
 		{
+			materialid[name] = mBuilder.materials.size();
 			return mBuilder.addMaterial(m);
 		}
 

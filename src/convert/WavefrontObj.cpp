@@ -53,9 +53,9 @@ namespace pwn
 
 			namespace // local
 			{
-				void Add(mesh::Material material, std::map<std::string, std::size_t>* materials, mesh::Builder* converter)
+				void Add(const pwn::string& name, mesh::Material material, std::map<std::string, std::size_t>* materials, mesh::Builder* converter)
 				{
-					materials->insert( std::make_pair(material.name, converter->addMaterial(material)) );
+					materials->insert( std::make_pair(name, converter->addMaterial(material)) );
 				}
 				void LoadMaterialLibrary(mesh::Builder* converter, std::map<std::string, std::size_t>* materials, const pwn::string& sourceFile, const pwn::string& materialLibraryFileName)
 				{
@@ -65,6 +65,7 @@ namespace pwn
 					if( false == f.good() ) throw "missing file";
 
 					mesh::Material material;
+					pwn::string materialname;
 
 					pwn::string line;
 					while( std::getline(f, line) )
@@ -78,9 +79,9 @@ namespace pwn
 
 						if( command == "newmtl" )
 						{
-							Add(material, materials, converter);
+							Add(materialname, material, materials, converter);
 							material = mesh::Material();
-							material.name = sline[1];
+							materialname = sline[1];
 						}
 						else if( command == "Ka")
 						{
@@ -118,7 +119,7 @@ namespace pwn
 						}
 					}
 
-					Add(material, materials, converter);
+					Add(materialname, material, materials, converter);
 				}
 			}
 

@@ -217,7 +217,8 @@ void main(int argc, char* argv[])
 				<< " positions: " << mesh.positions.size() << endl
 				<< " normals: " << mesh.normals.size() << endl
 				<< " texcoords: " << mesh.texcoords.size() << endl
-				<< " triangles: " << mesh.triangles.size() << endl
+				<< " materials: " << mesh.triangles.size() << endl
+				<< " triangles: " << pwn::mesh::NumberOfTriangles(mesh) << endl
 				<< endl;
 		}
 

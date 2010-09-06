@@ -239,5 +239,15 @@ namespace pwn
 
 			return mesh.validate() ==0;
 		}
+
+		uint32 NumberOfTriangles(const Mesh& mesh)
+		{
+			uint32 count = 0;
+			for(Mesh::TriangleMap::const_iterator i = mesh.triangles.begin(); i != mesh.triangles.end(); ++i)
+			{
+				count += i->second.size();
+			}
+			return count;
+		}
 	}
 }

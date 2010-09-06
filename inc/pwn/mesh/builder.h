@@ -21,6 +21,8 @@ namespace pwn
 		Mesh* InvertNormals(Mesh* mesh);
 		void MoveTextures(Mesh* mesh, const pwn::string& newFolder);
 
+		uint32 NumberOfTriangles(const Mesh& mesh);
+
 		class Builder
 		{
 		public:

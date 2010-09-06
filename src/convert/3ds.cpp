@@ -589,7 +589,7 @@ namespace pwn
 							//mat.specular = chunk.specular.Color;
 							//mat.ambient = chunk.ambient.Color;
 							//mat.diffuse = chunk.diffuse.Color;
-							builder->mBuilder.addMaterial(mat);
+							builder->addMaterial(chunk.name.Value, mat);
 						}
 
 						BOOST_FOREACH(ObjectChunk chunk , main.editor.objects)

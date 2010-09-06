@@ -8,7 +8,7 @@ namespace pwn
 {
 	namespace meshio
 	{
-		const pwn::uint8 kVersion = 0;
+		const pwn::uint8 kVersion = 1;
 
 		template<class MeshArg>
 		class MeshFile
@@ -19,7 +19,10 @@ namespace pwn
 			{
 				pwn::uint32 size = vector.size();
 				vf.write32(size);
-				vf.write(&vector[0], size * sizeof(T));
+				if( size > 0 )
+				{
+					vf.write(&vector[0], size * sizeof(T));
+				}
 			}
 
 			template<class T>
@@ -27,13 +30,16 @@ namespace pwn
 			{
 				pwn::uint32 size = vf.read32();
 				vector.resize(size);
-				vf.read(&vector[0], size * sizeof(T));
+				if( size > 0 )
+				{
+					vf.read(&vector[0], size * sizeof(T));
+				}
 			}
 
 			static void handle(VirtualFile& vf, MeshArg mesh, pwn::uint8& version)
 			{
-				vf.handle8(version);
-				if( version != kVersion ) throw "error";
+				//vf.handle8(version);
+				if( version != kVersion ) throw "mesh version mismatch";
 				handleVector(vf, mesh.positions);
 				handleVector(vf, mesh.normals);
 				handleVector(vf, mesh.texcoords);

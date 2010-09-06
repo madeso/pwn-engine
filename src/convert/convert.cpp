@@ -153,10 +153,7 @@ void main(int argc, char* argv[])
 	
 	try
 	{
-		const bool optimizeNormals = false;
-		
-		if( verbose && optimizeNormals ) cout << "optimizing normals ACTIVE.." << endl;
-		pwn::convert::OptimizedMeshBuilder builder(optimizeNormals);
+		pwn::convert::OptimizedMeshBuilder builder(false);
 
 		const pwn::string fileFormat = SuggestFormat(inputfile, formatOveride);
 

@@ -1,4 +1,6 @@
-#include <boost/program_options.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/xml_parser.hpp>
+
 #include <boost/filesystem.hpp>
 #include <string>
 #include <iostream>
@@ -6,6 +8,7 @@
 #include <pwn/mesh/Mesh.h>
 #include <pwn/meshio/io.h>
 #include <pwn/mesh/builder.h>
+#include <boost/foreach.hpp>
 
 #include "Converter.hpp"
 #include "WavefrontObj.hpp"
@@ -23,7 +26,7 @@ std::ostream& operator<<(std::ostream& os, const ::pwn::convert::Stat& s)
 }
 
 /** Writes a dot to std::out to display progress..
- */
+*/
 struct WriteDotCallback : public pwn::convert::obj::VoidVoidCallback
 {
 	bool verbose;
@@ -38,33 +41,6 @@ struct WriteDotCallback : public pwn::convert::obj::VoidVoidCallback
 	}
 };
 
-struct Cmd
-{
-	Cmd(const pwn::string& aLongCmd, const pwn::tchar aShortCmd)
-		: longCmd(aLongCmd)
-		, shortCmd(aShortCmd)
-		, combined(aLongCmd+ "," + aShortCmd)
-	{
-	}
-
-	operator const char*() const
-	{
-		return combined.c_str();
-	}
-
-	bool eval(const boost::program_options::variables_map& vm) const
-	{
-		const std::size_t c = vm.count(longCmd.c_str());
-		const bool r = c != 0;
-		//std::cout << longCmd << ": " << c << "/" << r << std::endl;
-		return r;
-	}
-
-	pwn::string longCmd;
-	pwn::tchar shortCmd;
-	pwn::string combined;
-};
-
 const pwn::string SuggestFormat(const pwn::string& inputfile, const pwn::string& formatOveride)
 {
 	if( formatOveride != "" ) return formatOveride;
@@ -77,190 +53,181 @@ const pwn::string SuggestFormat(const pwn::string& inputfile, const pwn::string&
 	else return "";
 }
 
-void main(int argc, char* argv[])
+struct ConvertMesh
 {
-	namespace po = boost::program_options;
-	using namespace std;
+	ConvertMesh(const pwn::string& in)
+		: inputfile(in)
+		, formatOveride("")
+		, useModelScale(false)
+		, modelScale(1)
+		, texturedir(boost::filesystem::path(in).filename())
+		, moutdir(boost::filesystem::path(in).directory_string())
+	{
+	}
 
 	pwn::string inputfile;
-	pwn::string outdir;
-	pwn::string texturedir;
 	pwn::string formatOveride;
-	pwn::real modelScale;
+	bool useModelScale;
+	float modelScale;
+	pwn::string texturedir;
+	pwn::string moutdir;
 
-	const Cmd Help					("help",				'?');
-	const Cmd Input					("input",				'i');
-	const Cmd Output				("output",				'o');
-	const Cmd Stats					("stats",				's');
-	const Cmd MeshInfo				("show-mesh-info",		'm');
-	const Cmd NotVerbose			("not-verbose",			'v');
-	const Cmd Optimize				("optimize",			'O');
-	const Cmd DontWrite				("dont-write",			'w');
-	const Cmd MoveTextures			("move-textures",		't');
-	const Cmd OverideFormat			("overide-format",		'f');
-	const Cmd ModelScale			("model-scale",			'X');
-
-	
-	po::options_description desc("Allowed options");
-	desc.add_options()
-		(Help, "produce help message")
-		(Input, po::value<pwn::string>(&inputfile), "the input file")
-		(Output, po::value<pwn::string>(&outdir), "the output directory")
-		(MoveTextures, po::value<pwn::string>(&texturedir),	"Move the textures")
-		(OverideFormat, po::value<pwn::string>(&formatOveride), "Ignore any detection done on inputfile and provide your own")
-		(ModelScale, po::value<pwn::real>(&modelScale)->default_value(1), "rescale the model")
-		(Stats,					"Write optimization statistics")
-		(MeshInfo,				"Write information about mesh")
-		(NotVerbose,			"Silent/not verbose output")
-		(Optimize,				"Optimize mesh")
-		(DontWrite,				"Don't write out file")
-		;
-
-	po::variables_map vm;
-	try {
-		po::store(po::parse_command_line(argc, argv, desc), vm);
-		po::notify(vm);
-	}
-	catch(const std::exception& e)
+	bool run(const pwn::string& aoutdir, bool runStatistics, bool verbose, bool meshInfo, bool writeResult)
 	{
-		std::cerr << "Error while parsing commandline: " << e.what() << std::endl;
-		return;
-	}
+		const pwn::string outdir = outdir.empty() ? moutdir : aoutdir;
+		using namespace std;
+		try
+		{
+			pwn::convert::OptimizedMeshBuilder builder(false);
 
-	bool optimize = Optimize.eval(vm);
-	bool runStatistics = Stats.eval(vm);
-	bool writeResult = !DontWrite.eval(vm);
-	bool verbose = !NotVerbose.eval(vm);
-	bool meshInfo = MeshInfo.eval(vm);
+			const pwn::string fileFormat = SuggestFormat(inputfile, formatOveride);
 
-	if (Help.eval(vm))
-	{
-		cerr << desc << endl;
-		return;
+			if( fileFormat == "" )
+			{
+				std::cerr << "Unable to determine the kind of reader to use with " << inputfile;
+				return false;
+			}
+
+			if( verbose ) cout << "reading " << fileFormat << ".." << std::endl;
+
+			if( fileFormat == "obj" )
+			{
+				WriteDotCallback wdc(verbose);
+				pwn::convert::obj::read(&builder, inputfile, wdc);
+			}
+			else if( fileFormat == "3ds" )
+			{
+				pwn::convert::studio3ds::read(&builder, inputfile);
+			}
+			else if (fileFormat == "ms3d-ascii" )
+			{
+				pwn::convert::milkshape::ascii::Read(&builder, inputfile);
+			}
+			else if ( fileFormat == "ms3d-binary" )
+			{
+				pwn::convert::milkshape::binary::Read(&builder, inputfile);
+
+			}
+			else
+			{
+				std::cerr << fileFormat << " is not a recognzied format... " << endl;
+				return false;
+			}
+
+			pwn::mesh::Mesh mesh;
+
+			builder.mBuilder.makeMesh(mesh);
+
+			const pwn::uint32 validationErrors = mesh.validate();
+
+			if( validationErrors != 0)
+			{
+				return false;
+			}
+
+			if( useModelScale )
+			{
+				if( verbose ) cout << "scaling " << modelScale << ".." << std::endl;
+				pwn::mesh::Scale(&mesh, modelScale);
+			}
+
+			if( verbose ) cout << endl;
+
+			pwn::mesh::MoveTextures(&mesh, texturedir);
+
+			if( meshInfo )
+			{
+				cout
+					<< "Mesh information: " << endl
+					<< " positions: " << mesh.positions.size() << endl
+					<< " normals: " << mesh.normals.size() << endl
+					<< " texcoords: " << mesh.texcoords.size() << endl
+					<< " materials: " << mesh.triangles.size() << endl
+					<< " triangles: " << pwn::mesh::NumberOfTriangles(mesh) << endl
+					<< endl;
+			}
+
+			if( writeResult )
+			{
+				if( verbose ) cout << "writing.." << endl;
+				pwn::meshio::WriteTarget wt(outdir);
+				pwn::meshio::Write(mesh, boost::filesystem::path(inputfile).replace_extension("mesh").filename());
+			}
+
+			if( runStatistics )
+			{
+				if( verbose ) cout << "testing..." << endl;
+
+				pwn::convert::Stat positions;
+				pwn::convert::Stat normals;
+
+				pwn::convert::EstimatedDataLossWhenCompressing(mesh, &positions, &normals);
+
+				cout
+					<< "Estimated loss < min | avg | max > " << endl
+					<< " for positions: " << positions << endl
+					<< " for normals: " << normals << endl
+					<< endl
+					<< "Saving was: " << endl
+					<< builder.removedNormals() * 100 << "% normals removed" << endl
+					<< " wich is " << builder.numberOfRemovedNormals() << "!" << endl;
+
+			}
+
+			if( verbose ) cout << endl << "done." << endl;
+
+			return true;
+		}
+		catch(const pwn::string& str)
+		{
+			cerr << endl << str << endl;
+			return false;
+		}
+		catch(const char* str)
+		{
+			cerr << endl << str << endl;
+			return false;
+		}
+		catch(...)
+		{
+			cerr << endl << "general failue." << endl;
+			return false;
+		}
 	}
-	if ( inputfile == "" )
-	{
-		cerr << "Error: input not set" << endl << endl;
-		cerr << desc << endl;
-		return;
-	}
-	if ( writeResult==true && outdir == "" )
-	{
-		cerr << "Error: output not set" << endl << endl;
-		cerr << desc << endl;
-		return;
-	}
-	
+};
+
+void RunXml(const pwn::string& filename)
+{
+	using boost::property_tree::ptree;
+
 	try
 	{
-		pwn::convert::OptimizedMeshBuilder builder(false);
+		ptree pt;
+		read_xml(filename, pt);
 
-		const pwn::string fileFormat = SuggestFormat(inputfile, formatOveride);
+		pwn::string outdir  = pt.get<pwn::string>("convert.outdir");
+		bool runstats = pt.get("convert.runstats", false);
+		bool verbose = pt.get("convert.verbose", false);
+		bool displayMeshInfo = pt.get("convert.displayMeshInfo", false);
+		bool writeResults = pt.get("convert.writeResults", true);
 
-		if( fileFormat == "" )
+		BOOST_FOREACH(ptree::value_type &v, pt.get_child("convert.sources"))
 		{
-			std::cerr << "Unable to determine the kind of reader to use with " << inputfile << ", please use -" << OverideFormat.longCmd << std::endl;
-			return;
+			const pwn::string inputfile = v.second.data();
+			ConvertMesh cmesh(inputfile);
+			cmesh.run(outdir, runstats, verbose, displayMeshInfo, writeResults);
 		}
-
-		if( verbose ) cout << "reading " << fileFormat << ".." << std::endl;
-
-		if( fileFormat == "obj" )
-		{
-			WriteDotCallback wdc(verbose);
-			pwn::convert::obj::read(&builder, inputfile, wdc);
-		}
-		else if( fileFormat == "3ds" )
-		{
-			pwn::convert::studio3ds::read(&builder, inputfile);
-		}
-		else if (fileFormat == "ms3d-ascii" )
-		{
-			pwn::convert::milkshape::ascii::Read(&builder, inputfile);
-		}
-		else if ( fileFormat == "ms3d-binary" )
-		{
-			pwn::convert::milkshape::binary::Read(&builder, inputfile);
-
-		}
-		else
-		{
-			std::cerr << fileFormat << " is not a recognzied format... " << endl;
-			return;
-		}
-
-		pwn::mesh::Mesh mesh;
-
-		builder.mBuilder.makeMesh(mesh);
-
-		const pwn::uint32 validationErrors = mesh.validate();
-
-		if( validationErrors != 0)
-		{
-			return;
-		}
-
-		if( ModelScale.eval(vm) )
-		{
-			if( verbose ) cout << "scaling " << modelScale << ".." << std::endl;
-			pwn::mesh::Scale(&mesh, modelScale);
-		}
-
-		if( verbose ) cout << endl;
-
-		pwn::mesh::MoveTextures(&mesh, texturedir);
-
-		if( meshInfo )
-		{
-			cout
-				<< "Mesh information: " << endl
-				<< " positions: " << mesh.positions.size() << endl
-				<< " normals: " << mesh.normals.size() << endl
-				<< " texcoords: " << mesh.texcoords.size() << endl
-				<< " materials: " << mesh.triangles.size() << endl
-				<< " triangles: " << pwn::mesh::NumberOfTriangles(mesh) << endl
-				<< endl;
-		}
-
-		if( writeResult )
-		{
-			if( verbose ) cout << "writing.." << endl;
-			pwn::meshio::WriteTarget wt(outdir);
-			pwn::meshio::Write(mesh, boost::filesystem::path(inputfile).replace_extension("mesh").filename());
-		}
-
-		if( runStatistics )
-		{
-			if( verbose ) cout << "testing..." << endl;
-
-			pwn::convert::Stat positions;
-			pwn::convert::Stat normals;
-
-			pwn::convert::EstimatedDataLossWhenCompressing(mesh, &positions, &normals);
-
-			cout
-				<< "Estimated loss < min | avg | max > " << endl
-				<< " for positions: " << positions << endl
-				<< " for normals: " << normals << endl
-				<< endl
-				<< "Saving was: " << endl
-				<< builder.removedNormals() * 100 << "% normals removed" << endl
-				<< " wich is " << builder.numberOfRemovedNormals() << "!" << endl;
-
-		}
-
-		if( verbose ) cout << endl << "done." << endl;
 	}
-	catch(const pwn::string& str)
+	catch (std::exception &e)
 	{
-		cerr << endl << str << endl;
+		std::cout << "Error: " << e.what() << "\n";
 	}
-	catch(const char* str)
-	{
-		cerr << endl << str << endl;
-	}
-	catch(...)
-	{
-		cerr << endl << "general failue." << endl;
-	}
+}
+
+void main(int argc, char* argv[])
+{
+	using namespace std;
+
+	const pwn::string filename(argv[1]);
+	RunXml(filename);
 }

@@ -6,6 +6,8 @@
 #include <boost/noncopyable.hpp>
 
 #include <physfs.h>
+#include <vector>
+#include <map>
 
 namespace pwn
 {

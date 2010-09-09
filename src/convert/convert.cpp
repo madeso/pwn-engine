@@ -129,7 +129,11 @@ struct ConvertMesh
 			pwn::mesh::Animation& animation = builder.mAnimation;
 
 			const pwn::uint32 validationErrors = mesh.validate();
-			if( validationErrors != 0) return false;
+			if( validationErrors != 0)
+			{
+				cerr << inputfile << " failed validation with " << validationErrors << " error(s)... ignoring file..." << endl;
+				return false;
+			}
 
 			if( useModelScale )
 			{
@@ -236,7 +240,7 @@ void RunXml(const pwn::string& filename)
 
 			BOOST_FOREACH(ptree::value_type &an, source.get_child("animations"))
 			{
-				ptree anida = v.second;
+				ptree anida = an.second;
 				const pwn::string name = anida.get<pwn::string>("name");
 				const pwn::uint32 start = anida.get<pwn::uint32>("start");
 				const pwn::uint32 end = anida.get<pwn::uint32>("end");

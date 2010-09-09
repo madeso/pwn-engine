@@ -145,7 +145,15 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\..\..\src\meshio\animation-writer.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\inc\pwn\meshio\io.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\meshio\mesh-writer.cpp"
 			>
 		</File>
 		<File
@@ -154,10 +162,6 @@
 		</File>
 		<File
 			RelativePath="..\..\..\src\meshio\vfs.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\src\meshio\writer.cpp"
 			>
 		</File>
 	</Files>

@@ -11,6 +11,7 @@ namespace pwn
 	namespace mesh
 	{
 		class Mesh;
+		class Animation;
 	}
 
 	namespace convert
@@ -173,7 +174,7 @@ namespace pwn
 
 				namespace MilkshapeCommon
 				{
-					/*Animation ExtractAnimation(Model model);*/
+					mesh::Animation ExtractAnimation(const Model& model);
 
 					void ExtractMeshDefinition(const Model& model, OptimizedMeshBuilder* builder);
 

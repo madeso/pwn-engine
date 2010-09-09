@@ -36,6 +36,7 @@ namespace pwn
 			std::size_t numberOfRemovedNormals() const;
 
 			::pwn::mesh::Builder mBuilder;
+			::pwn::mesh::Animation mAnimation;
 		private:
 			typedef mesh::Triangle::index NormalIndex;
 			typedef pwn::uint16 CompressedNormal;

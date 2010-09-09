@@ -111,6 +111,16 @@ namespace pwn
 			fr.swap(afr);
 		}
 
+		void AnimationPerBone::addPosition(real time, const math::vec3& pos)
+		{
+			fp.push_back(FramePosition(time, pos));
+		}
+
+		void AnimationPerBone::addRotation(real time, const math::quat& q)
+		{
+			fr.push_back(FrameRotation(time, q));
+		}
+
 		string AnimationPerBone::toString() const
 		{
 			return core::Str() << "<" << fp.size() << " " << fr.size() << ">";
@@ -197,7 +207,7 @@ namespace pwn
 			}
 		}
 
-		Pose::Pose(std::vector<PosePerBone>& apose)
+		Pose::Pose(const std::vector<PosePerBone>& apose)
 			: bones(apose)
 		{
 		}
@@ -241,7 +251,12 @@ namespace pwn
 			return length;
 		}
 
-		Animation::Animation(std::vector<AnimationPerBone>& abones)
+		Animation::Animation()
+			: length(0)
+		{
+		}
+
+		Animation::Animation(const std::vector<AnimationPerBone>& abones)
 			: length( CalculateLength(abones) )
 			, bones(abones)
 		{

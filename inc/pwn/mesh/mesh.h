@@ -145,6 +145,9 @@ namespace pwn
 			std::vector<FramePosition> fp;
 			std::vector<FrameRotation> fr;
 
+			void addPosition(real time, const math::vec3& pos);
+			void addRotation(real time, const math::quat& q);
+
 			string toString() const;
 
 			real getLength() const;
@@ -159,7 +162,7 @@ namespace pwn
 			: boost::noncopyable
 		{
 		public:
-			explicit Pose(std::vector<PosePerBone>& pose);
+			explicit Pose(const std::vector<PosePerBone>& pose);
 			std::vector<PosePerBone> bones;
 		};
 
@@ -182,14 +185,14 @@ namespace pwn
 		};
 
 		class Animation
-			: boost::noncopyable
 		{
 		public:
-			Animation(std::vector<AnimationPerBone>& bones);
+			Animation();
+			Animation(const std::vector<AnimationPerBone>& bones);
 			void getPose(real time, Pose* out) const;
 
 			std::vector<AnimationPerBone> bones;
-			const real length;
+			real length; // move to private
 
 			void subanim(int start, int end, Animation* out) const;
 			void subanim(const AnimationInformation& info, Animation* out) const;

@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 
-#include <pwn/mesh/Mesh.h>
+#include <pwn/mesh/mesh.h>
 #include <pwn/meshio/io.h>
 #include <pwn/mesh/builder.h>
 #include <boost/foreach.hpp>
@@ -18,6 +18,8 @@
 #include "MilkshapeBinary.hpp"
 
 #pragma comment (lib, "physfs.lib")
+
+using namespace std;
 
 std::ostream& operator<<(std::ostream& os, const ::pwn::convert::Stat& s)
 {
@@ -53,6 +55,46 @@ const pwn::string SuggestFormat(const pwn::string& inputfile, const pwn::string&
 	else return "";
 }
 
+bool Load(pwn::convert::OptimizedMeshBuilder& builder, const pwn::string& inputfile, const pwn::string& formatOveride, bool verbose)
+{
+	const pwn::string fileFormat = SuggestFormat(inputfile, formatOveride);
+
+	if( fileFormat == "" )
+	{
+		std::cerr << "Unable to determine the kind of reader to use with " << inputfile;
+		return false;
+	}
+
+	if( verbose ) cout << "reading " << fileFormat << ".." << std::endl;
+
+	if( fileFormat == "obj" )
+	{
+		WriteDotCallback wdc(verbose);
+		pwn::convert::obj::read(&builder, inputfile, wdc);
+		return true;
+	}
+	else if( fileFormat == "3ds" )
+	{
+		pwn::convert::studio3ds::read(&builder, inputfile);
+		return true;
+	}
+	else if (fileFormat == "ms3d-ascii" )
+	{
+		pwn::convert::milkshape::ascii::Read(&builder, inputfile);
+		return true;
+	}
+	else if ( fileFormat == "ms3d-binary" )
+	{
+		pwn::convert::milkshape::binary::Read(&builder, inputfile);
+		return true;
+	}
+	else
+	{
+		std::cerr << fileFormat << " is not a recognzied format... " << endl;
+		return false;
+	}
+}
+
 struct ConvertMesh
 {
 	ConvertMesh(const pwn::string& in)
@@ -71,59 +113,23 @@ struct ConvertMesh
 	float modelScale;
 	pwn::string texturedir;
 	pwn::string moutdir;
+	std::vector<pwn::mesh::AnimationInformation> animationsToExtract;
 
-	bool run(const pwn::string& aoutdir, bool runStatistics, bool verbose, bool meshInfo, bool writeResult)
+	bool run(const pwn::string& aoutdir, bool runStatistics, bool verbose, bool meshInfo, bool writeResult) const
 	{
 		const pwn::string outdir = outdir.empty() ? moutdir : aoutdir;
-		using namespace std;
 		try
 		{
 			pwn::convert::OptimizedMeshBuilder builder(false);
-
-			const pwn::string fileFormat = SuggestFormat(inputfile, formatOveride);
-
-			if( fileFormat == "" )
-			{
-				std::cerr << "Unable to determine the kind of reader to use with " << inputfile;
-				return false;
-			}
-
-			if( verbose ) cout << "reading " << fileFormat << ".." << std::endl;
-
-			if( fileFormat == "obj" )
-			{
-				WriteDotCallback wdc(verbose);
-				pwn::convert::obj::read(&builder, inputfile, wdc);
-			}
-			else if( fileFormat == "3ds" )
-			{
-				pwn::convert::studio3ds::read(&builder, inputfile);
-			}
-			else if (fileFormat == "ms3d-ascii" )
-			{
-				pwn::convert::milkshape::ascii::Read(&builder, inputfile);
-			}
-			else if ( fileFormat == "ms3d-binary" )
-			{
-				pwn::convert::milkshape::binary::Read(&builder, inputfile);
-
-			}
-			else
-			{
-				std::cerr << fileFormat << " is not a recognzied format... " << endl;
-				return false;
-			}
+			if( Load(builder, inputfile, formatOveride, verbose) == false ) return false;
 
 			pwn::mesh::Mesh mesh;
-
 			builder.mBuilder.makeMesh(mesh);
 
-			const pwn::uint32 validationErrors = mesh.validate();
+			pwn::mesh::Animation& animation = builder.mAnimation;
 
-			if( validationErrors != 0)
-			{
-				return false;
-			}
+			const pwn::uint32 validationErrors = mesh.validate();
+			if( validationErrors != 0) return false;
 
 			if( useModelScale )
 			{
@@ -152,6 +158,15 @@ struct ConvertMesh
 				if( verbose ) cout << "writing.." << endl;
 				pwn::meshio::WriteTarget wt(outdir);
 				pwn::meshio::Write(mesh, boost::filesystem::path(inputfile).replace_extension("mesh").filename());
+			}
+
+			BOOST_FOREACH(const pwn::mesh::AnimationInformation& ai, animationsToExtract)
+			{
+				pwn::mesh::Animation ani;
+				animation.subanim(ai, &ani);
+
+				pwn::meshio::WriteTarget wt(outdir);
+				pwn::meshio::Write(ani, boost::filesystem::path(ai.name).replace_extension("ani").filename());
 			}
 
 			if( runStatistics )
@@ -211,10 +226,28 @@ void RunXml(const pwn::string& filename)
 		bool displayMeshInfo = pt.get("convert.displayMeshInfo", false);
 		bool writeResults = pt.get("convert.writeResults", true);
 
+		std::vector<ConvertMesh> cm;
+
 		BOOST_FOREACH(ptree::value_type &v, pt.get_child("convert.sources"))
 		{
-			const pwn::string inputfile = v.second.data();
+			ptree source = v.second;
+			const pwn::string inputfile = source.get<pwn::string>("file");
 			ConvertMesh cmesh(inputfile);
+
+			BOOST_FOREACH(ptree::value_type &an, source.get_child("animations"))
+			{
+				ptree anida = v.second;
+				const pwn::string name = anida.get<pwn::string>("name");
+				const pwn::uint32 start = anida.get<pwn::uint32>("start");
+				const pwn::uint32 end = anida.get<pwn::uint32>("end");
+				cmesh.animationsToExtract.push_back(pwn::mesh::AnimationInformation(start, end, name));
+			}
+
+			cm.push_back(cmesh);
+		}
+
+		BOOST_FOREACH(const ConvertMesh& cmesh, cm)
+		{
 			cmesh.run(outdir, runstats, verbose, displayMeshInfo, writeResults);
 		}
 	}

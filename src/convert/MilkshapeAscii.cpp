@@ -4,6 +4,8 @@
 #include <pwn/core/StringUtils.h>
 #include <boost/lexical_cast.hpp>
 #include <fstream>
+#include <pwn/mesh/mesh.h>
+#include "Converter.hpp"
 
 namespace pwn
 {
@@ -268,8 +270,7 @@ namespace pwn
 					Runner runner(lines, 1.0f);
 					runner.run();
 					MilkshapeCommon::ExtractMeshDefinition(runner.model, builder);
-					/*def = MilkshapeCommon.ExtractMeshDefinition(runner.model);
-					animation = MilkshapeCommon.ExtractAnimation(runner.model);*/
+					builder->mAnimation = MilkshapeCommon::ExtractAnimation(runner.model);
 				}
 			}
 		}

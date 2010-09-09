@@ -3,6 +3,7 @@
 #include <boost/scoped_array.hpp>
 #include <boost/foreach.hpp>
 #include "MilkshapeCommon.hpp"
+#include "Converter.hpp"
 
 namespace pwn
 {
@@ -345,7 +346,7 @@ namespace pwn
 					model = ExtractModel(run);
 
 					MilkshapeCommon::ExtractMeshDefinition(model, builder);
-					//animation = MilkshapeCommon::ExtractAnimation(model);
+					builder->mAnimation = MilkshapeCommon::ExtractAnimation(model);
 				}
 			}
 		}

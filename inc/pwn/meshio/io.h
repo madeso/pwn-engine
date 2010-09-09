@@ -8,6 +8,7 @@ namespace pwn
 	namespace mesh
 	{
 		class Mesh;
+		class Animation;
 	}
 
 	namespace meshio
@@ -22,6 +23,9 @@ namespace pwn
 
 		void Write(const mesh::Mesh& mesh, const pwn::string& filename);
 		void Read(mesh::Mesh* mesh, const pwn::string& filename);
+
+		void Write(const mesh::Animation& animation, const pwn::string& filename);
+		void Read(mesh::Animation* animation, const pwn::string& filename);
 	}
 }
 

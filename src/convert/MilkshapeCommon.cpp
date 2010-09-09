@@ -184,22 +184,23 @@ namespace pwn
 
 				namespace MilkshapeCommon
 				{
-					/*Animation ExtractAnimation(Model model)
+					mesh::Animation ExtractAnimation(const Model& model)
 					{
-						std::vector<AnimationForBone> ani =  std::vector<AnimationForBone>();
+						using namespace pwn::mesh;
+						std::vector<AnimationPerBone> ani =  std::vector<AnimationPerBone>();
 
 						bool added = false;
 
-						BOOST_FOREACH (Bone b , model.bones)
+						BOOST_FOREACH(const milkshape::common::Bone& b , model.bones)
 						{
-							AnimationForBone a =  AnimationForBone();
+							AnimationPerBone a =  AnimationPerBone();
 
-							BOOST_FOREACH (PositionKey pk , b.PositionKeys)
+							BOOST_FOREACH(const PositionKey& pk , b.positions)
 							{
-								a.addPositon(pk.time,  math::vec3(pk.x, pk.y, pk.z));
+								a.addPosition(pk.time,  math::vec3(pk.x, pk.y, pk.z));
 								added = true;
 							}
-							BOOST_FOREACH (RotationKey rk , b.RotationKeys)
+							BOOST_FOREACH(const RotationKey& rk , b.rotations)
 							{
 								a.addRotation(rk.time, makeQuat( math::vec3(rk.x, rk.y, rk.z)));
 								added = true;
@@ -209,8 +210,8 @@ namespace pwn
 						}
 
 						if (added) return  Animation(ani);
-						else return null;
-					}*/
+						else throw "no animations found";
+					}
 
 					void ExtractMeshDefinition(const Model& model, OptimizedMeshBuilder* builder)
 					{

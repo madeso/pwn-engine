@@ -115,6 +115,7 @@ namespace pwn
 		const real Wrap(const real min, const real v, const real max)
 		{
 			const real diff = max - min;
+			Assert(diff > 0);
 			real value = v - min;
 			while( value < PWN_MATH_VALUE(0.0) ) value += diff;
 			while( value > diff ) value -= diff;

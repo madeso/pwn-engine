@@ -36,5 +36,10 @@ namespace pwn
 				rl->add(p->mesh, p->material, mat, this);
 			}
 		}
+
+		void Actor::setPose(const mesh::Pose& p)
+		{
+			pose = mesh::CompiledPose(p, model->bones);
+		}
 	}
 }

@@ -42,8 +42,19 @@ boost::shared_ptr<ActorDef> LoadMesh(const string& file, TexturePool2* tpool)
 	return Compile(mesh, tpool);
 }
 
+Animation LoadAnimation(const string& file)
+{
+	Animation animation;
+	pwn::meshio::Read(&animation, file);
+	return animation;
+}
+
 class EasyLoop : public Loop
 {
+private:
+	Animation walk;
+	boost::shared_ptr<Actor> turtle;
+	real pos;
 public:
 	EasyLoop(Game* game)
 		: Loop(game)
@@ -51,8 +62,11 @@ public:
 		World3::Ptr world( new WorldWithCameraBoundObject3(Actor::Create(Origo3(), qIdentity(), CreateCube(10, "_stars-texture.jpg", &tpool, 1, false) ),
 			World3::Create()) );
 
-		world->actor_add( Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("fighter1.mesh", &tpool)) );
-		//world->actor_add(  ); // sky texture
+		//world->actor_add( Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("fighter1.mesh", &tpool)) );
+
+		walk = LoadAnimation("turtle1/Walk.anim");
+		turtle = Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("turtle1.mesh", &tpool));
+		world->actor_add(turtle);
 
 		boost::shared_ptr<World3Widget > wid( new World3Widget( Dock::Fill(), world ) );
 
@@ -75,6 +89,10 @@ public:
 
 	void onUpdate(real delta)
 	{
+		Pose p;
+		pos = pwn::math::Wrap(0, pos+delta, walk.getLength());
+		walk.getPose(pos, &p);
+		turtle->setPose(p);
 		dcam.update(delta, 3.0f, 10.0f);
 	}
 

@@ -207,11 +207,6 @@ namespace pwn
 			}
 		}
 
-		Pose::Pose(const std::vector<PosePerBone>& apose)
-			: bones(apose)
-		{
-		}
-
 		CompiledPose::CompiledPose()
 		{
 		}
@@ -272,6 +267,11 @@ namespace pwn
 				bd[i] = ab.getBonePose(time);
 			}
 			out->bones.swap(bd);
+		}
+
+		real Animation::getLength() const
+		{
+			return length;
 		}
 
 		void Animation::subanim(int start, int end, Animation* out) const

@@ -165,12 +165,10 @@ namespace pwn
 			: boost::noncopyable
 		{
 		public:
-			explicit Pose(const std::vector<PosePerBone>& pose);
 			std::vector<PosePerBone> bones;
 		};
 
 		class CompiledPose
-			: boost::noncopyable
 		{
 		public:
 			std::vector<math::mat44> transforms;
@@ -193,6 +191,7 @@ namespace pwn
 			Animation();
 			Animation(const std::vector<AnimationPerBone>& bones);
 			void getPose(real time, Pose* out) const;
+			real getLength() const;
 
 			std::vector<AnimationPerBone> bones;
 			real length; // move to private

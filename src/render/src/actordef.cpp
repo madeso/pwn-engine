@@ -125,6 +125,8 @@ namespace pwn
 				part->mesh.reset( new ImmediateMode(smesh, r.second) );
 				def->parts.push_back(part);
 			}
+
+			def->bones = mesh.bones;
 			return def;
 		}
 	}

@@ -102,7 +102,7 @@ struct ConvertMesh
 		, formatOveride("")
 		, useModelScale(false)
 		, modelScale(1)
-		, texturedir(boost::filesystem::path(in).remove_filename().filename())
+		, texturedir(boost::filesystem::path(in).replace_extension().filename())
 		, animdir("")
 		, moutdir(boost::filesystem::path(in).directory_string())
 	{

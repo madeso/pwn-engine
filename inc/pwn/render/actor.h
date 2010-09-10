@@ -7,6 +7,11 @@
 
 namespace pwn
 {
+	namespace mesh
+	{
+		class Pose;
+	}
+
 	namespace render
 	{
 		class ActorDef;
@@ -24,6 +29,8 @@ namespace pwn
 			static boost::shared_ptr<Actor> Create(const math::point3& location, const math::quat& rotation, boost::shared_ptr<ActorDef> model);
 
 			void render(RenderList* rl, const CompiledCamera& camera);
+
+			void setPose(const mesh::Pose& p);
 
 			boost::shared_ptr<ActorDef> model;
 			math::point3 location;

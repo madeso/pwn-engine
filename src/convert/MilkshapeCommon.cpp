@@ -229,7 +229,14 @@ namespace pwn
 							mesh::Bone bn;
 							bn.pos =  math::vec3(b.x, b.y, b.z);
 							bn.rot = makeQuat( math::vec3(b.rx, b.ry, b.rz));
-							bn.parent = b.parentId;
+							if( b.parentId == -1 )
+							{
+								// bone defaults to no parent, dont do anything
+							}
+							else
+							{
+								bn.setParent( b.parentId);
+							}
 							bn.setName(b.name);
 							builder->addBone(bn);
 						}

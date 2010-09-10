@@ -33,7 +33,7 @@ namespace test
 
 		Builder b;
 		b.setBox(materials::White(), halfsize*2, halfsize*2, halfsize*2, out);
-		b.makeMesh(mesh);
+		b.makeMesh(mesh, 0);
 		mesh.materials[0].setTexture_Diffuse("hello");
 		mesh.materials[0].diffuse.alpha(0.25f);
 		Move(&mesh, vec3(-halfsize, -halfsize, -halfsize));

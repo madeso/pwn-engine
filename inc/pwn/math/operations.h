@@ -127,6 +127,11 @@ namespace pwn
 		*/
 		const bool IsWithin(const real min, const real c, const real max);
 
+		/** Checks wheter a value is within a range, beeing at the border is ok.
+		@see KeepWithin()
+		*/
+		const bool IsWithinInclusive(const real min, const real c, const real max);
+
 		/** Keeps a value within a range.
 		Wraps it to the others side if it gets outside.
 		@param min is the lower range

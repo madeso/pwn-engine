@@ -226,7 +226,7 @@ namespace pwn
 			}
 		}
 
-		bool Builder::makeMesh(Mesh& mesh) const
+		bool Builder::makeMesh(Mesh& mesh, Flatouter* flatouter) const
 		{
 			mesh.clear();
 
@@ -236,6 +236,12 @@ namespace pwn
 			mesh.bones = bones;
 			mesh.triangles = triangles;
 			mesh.materials = materials;
+
+			if( flatouter )
+			{
+				flatouter->load(mesh);
+				flatouter->modify(&mesh);
+			}
 
 			return mesh.validate() ==0;
 		}

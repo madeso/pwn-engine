@@ -151,7 +151,7 @@ namespace pwn
 			for(std::size_t i=0; i<this->fp.size(); ++i)
 			{
 				const FramePosition& fp = this->fp[i];
-				if (math::IsWithin(start, fp.getTime(), end))
+				if (math::IsWithinInclusive(start, fp.getTime(), end))
 				{
 					real mark = fp.getTime()-start;
 					if (first && math::IsZero(mark)==false)
@@ -175,7 +175,7 @@ namespace pwn
 			for(std::size_t i=0; i<this->fr.size(); ++i)
 			{
 				const FrameRotation& fr = this->fr[i];
-				if (math::IsWithin(start, fr.getTime(), end))
+				if (math::IsWithinInclusive(start, fr.getTime(), end))
 				{
 					real mark = fr.getTime() - start;
 					if (first && math::IsZero(mark) == false)
@@ -224,8 +224,8 @@ namespace pwn
 			{
 				const Bone& bone = bones[boneIndex];
 				// either it is a parent, or it's parent has already been precoessed
-				Assert( bone.hasParent()==false || boneIndex > bone.parent );
-				math::mat44 parent = bone.hasParent() ? result[bone.parent] : math::mat44Identity();
+				Assert( bone.hasParent()==false || boneIndex > bone.getParent() );
+				math::mat44 parent = bone.hasParent() ? result[bone.getParent()] : math::mat44Identity();
 				const math::vec3 poseloc = pose.bones[boneIndex].location;
 				const math::quat poserot = pose.bones[boneIndex].rotation;
 				result[boneIndex] = math::mat44helper(parent).rotate(bone.rot).translate(bone.pos).translate(poseloc).rotate(-poserot).mat;

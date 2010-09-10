@@ -123,10 +123,13 @@ struct ConvertMesh
 			pwn::convert::OptimizedMeshBuilder builder(false);
 			if( Load(builder, inputfile, formatOveride, verbose) == false ) return false;
 
+			pwn::mesh::Flatouter flatouter;
+
 			pwn::mesh::Mesh mesh;
-			builder.mBuilder.makeMesh(mesh);
+			builder.mBuilder.makeMesh(mesh, &flatouter);
 
 			pwn::mesh::Animation& animation = builder.mAnimation;
+			flatouter.modify(&animation);
 
 			const pwn::uint32 validationErrors = mesh.validate();
 			if( validationErrors != 0)

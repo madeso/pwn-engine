@@ -39,7 +39,7 @@ namespace pwn
 			void setBox(Material material, real w, real h, real d, bool faceOut);
 			void buildNormals();
 
-			bool makeMesh(Mesh& mesh) const;
+			bool makeMesh(Mesh& mesh, Flatouter* flatouter) const;
 
 			typedef std::vector<Triangle> TriList;
 			typedef std::map<pwn::uint32, TriList> TriMap;

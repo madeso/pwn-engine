@@ -54,14 +54,17 @@ namespace pwn
 		public:
 			Bone();
 			bool hasParent() const;
+			BoneIndex getParent() const;
+			void setParent(BoneIndex bi);
 
 			void setName(const string& n);
 			string getName() const;
 
-			BoneIndex parent;
 			tchar name[BoneNameSize::Value];
 			math::vec3 pos;
 			math::quat rot;
+		private:
+			BoneIndex parent;
 		};
 
 		struct Point

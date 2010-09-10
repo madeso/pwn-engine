@@ -107,6 +107,11 @@ namespace pwn
 			return c > min && c < max;
 		}
 
+		const bool IsWithinInclusive(const real min, const real c, const real max)
+		{
+			return c >= min && c <= max;
+		}
+
 		const real Wrap(const real min, const real v, const real max)
 		{
 			const real diff = max - min;

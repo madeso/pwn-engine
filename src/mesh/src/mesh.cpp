@@ -48,7 +48,7 @@ namespace pwn
 			pwn::uint32 errors = 0;
 			for(std::size_t i = 0; i<bones.size(); ++i)
 			{
-				if( bones[i].hasParent() && bones[i].parent >= i ) ++errors; // bones not sorted
+				if( bones[i].hasParent() && bones[i].getParent() >= i ) ++errors; // bones not sorted
 			}
 
 			/*
@@ -115,7 +115,7 @@ namespace pwn
 			{
 				if( mesh.bones[i].hasParent() )
 				{
-					bones[i].parent = &bones[mesh.bones[i].parent];
+					bones[i].parent = &bones[mesh.bones[i].getParent()];
 				}
 			}
 			for(BoneIndex i=0; i<bones.size(); ++i)
@@ -136,6 +136,7 @@ namespace pwn
 
 		void Flatouter::modify(Mesh* mesh) const
 		{
+			if( newIndices.empty() ) return;
 			BOOST_FOREACH(Point& p, mesh->positions)
 			{
 				p.bone = newIndices[p.bone];
@@ -150,6 +151,8 @@ namespace pwn
 
 		void Flatouter::modify(Animation* animation) const
 		{
+			if( newIndices.empty() ) return;
+
 			std::vector<AnimationPerBone> apb = animation->bones;
 			for(pwn::uint32 i=0; i<animation->bones.size(); ++i)
 			{

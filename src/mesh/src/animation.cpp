@@ -282,7 +282,8 @@ namespace pwn
 				const AnimationPerBone& ab = bones[i];
 				ab.sub(start, end, &bd[i]);
 			}
-			out->bones.swap(bd);
+			out->bones = bd;
+			out->length = CalculateLength(bd);
 		}
 
 		void Animation::subanim(const AnimationInformation& info, Animation* out) const

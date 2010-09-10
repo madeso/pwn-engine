@@ -1,5 +1,6 @@
 #include <pwn/mesh/mesh.h>
 #include <pwn/assert.h>
+#include <boost/foreach.hpp>
 
 namespace pwn
 {
@@ -78,6 +79,82 @@ namespace pwn
 			*/
 
 			return errors; // todo: change to true when all data have been checked
+		}
+
+		class BoneToSort
+		{
+		public:
+			BoneIndex index;
+			BoneToSort* parent;
+			std::vector<BoneToSort*> children;
+
+			void traverse(std::vector<BoneIndex>* list) const
+			{
+				list->push_back(index);
+				BOOST_FOREACH(BoneToSort* b, children)
+				{
+					b->traverse(list);
+				}
+			}
+		};
+
+		
+		void Flatouter::load(const Mesh& mesh)
+		{
+			newIndices.clear();
+			
+			std::vector<BoneToSort> bones;
+			for(BoneIndex i=0; i<mesh.bones.size(); ++i)
+			{
+				BoneToSort b;
+				b.index = i;
+				b.parent = 0;
+				bones.push_back(b);
+			}
+			for(BoneIndex i=0; i<bones.size(); ++i)
+			{
+				if( mesh.bones[i].hasParent() )
+				{
+					bones[i].parent = &bones[mesh.bones[i].parent];
+				}
+			}
+			for(BoneIndex i=0; i<bones.size(); ++i)
+			{
+				if( bones[i].parent )
+				{
+					bones[i].parent->children.push_back(&bones[i]);
+				}
+			}
+			for(BoneIndex i=0; i<mesh.bones.size(); ++i)
+			{
+				if( bones[i].parent == 0 )
+				{
+					bones[i].traverse(&newIndices);
+				}
+			}
+		}
+
+		void Flatouter::modify(Mesh* mesh) const
+		{
+			BOOST_FOREACH(Point& p, mesh->positions)
+			{
+				p.bone = newIndices[p.bone];
+			}
+
+			std::vector<Bone> bs = mesh->bones;
+			for(pwn::uint32 i=0; i<mesh->bones.size(); ++i)
+			{
+				mesh->bones[i] = bs[newIndices[i]];
+			}
+		}
+
+		void Flatouter::modify(Animation* animation) const
+		{
+			std::vector<AnimationPerBone> apb = animation->bones;
+			for(pwn::uint32 i=0; i<animation->bones.size(); ++i)
+			{
+				animation->bones[i] = apb[newIndices[i]];
+			}
 		}
 	}
 }

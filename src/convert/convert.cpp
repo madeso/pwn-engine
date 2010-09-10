@@ -102,7 +102,8 @@ struct ConvertMesh
 		, formatOveride("")
 		, useModelScale(false)
 		, modelScale(1)
-		, texturedir(boost::filesystem::path(in).filename())
+		, texturedir(boost::filesystem::path(in).remove_filename().filename())
+		, animdir("")
 		, moutdir(boost::filesystem::path(in).directory_string())
 	{
 	}
@@ -112,6 +113,7 @@ struct ConvertMesh
 	bool useModelScale;
 	float modelScale;
 	pwn::string texturedir;
+	pwn::string animdir;
 	pwn::string moutdir;
 	std::vector<pwn::mesh::AnimationInformation> animationsToExtract;
 
@@ -172,8 +174,18 @@ struct ConvertMesh
 				pwn::mesh::Animation ani;
 				animation.subanim(ai, &ani);
 
-				pwn::meshio::WriteTarget wt(outdir);
-				pwn::meshio::Write(ani, boost::filesystem::path(ai.name).replace_extension("ani").filename());
+				pwn::string adir = animdir;
+				if( adir.empty() )
+				{
+					adir = (
+							boost::filesystem::path(outdir)
+							/ boost::filesystem::path(inputfile).replace_extension().filename()
+							)
+						.directory_string();
+				};
+
+				pwn::meshio::WriteTarget wt(adir);
+				pwn::meshio::Write(ani, boost::filesystem::path(ai.name).replace_extension("anim").filename());
 			}
 
 			if( runStatistics )

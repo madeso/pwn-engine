@@ -146,6 +146,11 @@ namespace pwn
 			for(pwn::uint32 i=0; i<mesh->bones.size(); ++i)
 			{
 				mesh->bones[i] = bs[newIndices[i]];
+				Bone& b = mesh->bones[i];
+				if( b.hasParent() )
+				{
+					b.setParent(newIndices[b.getParent()]);
+				}
 			}
 		}
 

@@ -174,8 +174,8 @@ struct ConvertMesh
 				pwn::mesh::CompiledPose cp(p, mesh.bones);
 				for(int i=0; i<cp.transforms.size(); ++i)
 				{
-					dump(Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\quatpos " << i << ".txt", p.bones[i]);
-					dump(Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\global " << i << ".txt", cp.transforms[i]);
+					dump(Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\a quatpos " << i << ".txt", p.bones[i]);
+					dump(Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\e global " << i << ".txt", cp.transforms[i]);
 				}
 			}
 

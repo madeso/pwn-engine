@@ -259,7 +259,7 @@ namespace pwn
 
 				const math::mat44 anim = math::mat44helper(math::mat44Identity()).translate(poseloc).rotate(-poserot).mat;
 				const math::mat44 skel = math::mat44helper(math::mat44Identity()).translate(bone.pos).rotate(bone.rot).mat;
-				const math::mat44 local = math::mat44helper(math::mat44Identity()).mult(anim).mult(skel).mat;
+				const math::mat44 local = math::mat44helper(math::mat44Identity()).mult(skel).mult(anim).mat;
 				
 				{
 					using namespace pwn::math;

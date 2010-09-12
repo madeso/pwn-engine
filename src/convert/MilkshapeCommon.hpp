@@ -178,7 +178,7 @@ namespace pwn
 
 					void ExtractMeshDefinition(const Model& model, OptimizedMeshBuilder* builder);
 
-					math::quat makeQuat(math::vec3 angles);
+					math::quat makeQuat(const math::vec3& angles);
 
 					const string SmartTexture(const string& p);
 				}

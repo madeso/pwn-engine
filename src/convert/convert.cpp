@@ -17,6 +17,10 @@
 #include "MilkshapeAscii.hpp"
 #include "MilkshapeBinary.hpp"
 
+
+#include <pwn/core/stdutil.h>
+#include <fstream>
+
 #pragma comment (lib, "physfs.lib")
 
 using namespace std;
@@ -95,6 +99,37 @@ bool Load(pwn::convert::OptimizedMeshBuilder& builder, const pwn::string& inputf
 	}
 }
 
+using namespace pwn::math;
+using namespace pwn::mesh;
+using namespace pwn::core;
+
+void dump(const pwn::string& file, const mat44& p)
+{
+	std::ofstream of(file.c_str());
+	for(int r=0; r<4; ++r)
+	{
+		for(int c=0; c<4; ++c)
+		{
+			of << p.at(r, c) << " ";
+		}
+		of << std::endl;
+	}
+}
+
+void dump(const pwn::string& file, const PosePerBone& b)
+{
+	std::ofstream of(file.c_str());
+
+	of << b.rotation.x << " "
+		 << b.rotation.y << " "
+		 << b.rotation.z << " "
+		 << b.rotation.w << std::endl;
+
+	of << b.location.x << " "
+		 << b.location.y << " "
+		 << b.location.z << std::endl;
+}
+
 struct ConvertMesh
 {
 	ConvertMesh(const pwn::string& in)
@@ -131,7 +166,18 @@ struct ConvertMesh
 			builder.mBuilder.makeMesh(mesh, &flatouter);
 
 			pwn::mesh::Animation& animation = builder.mAnimation;
-			flatouter.modify(&animation);
+			//flatouter.modify(&animation);
+
+			{
+				pwn::mesh::Pose p;
+				animation.getPose(1, &p);
+				pwn::mesh::CompiledPose cp(p, mesh.bones);
+				for(int i=0; i<cp.transforms.size(); ++i)
+				{
+					dump(Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\quatpos " << i << ".txt", p.bones[i]);
+					dump(Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\global " << i << ".txt", cp.transforms[i]);
+				}
+			}
 
 			const pwn::uint32 validationErrors = mesh.validate();
 			if( validationErrors != 0)

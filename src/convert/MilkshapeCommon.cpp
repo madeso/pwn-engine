@@ -278,22 +278,21 @@ namespace pwn
 						builder->done();
 					}
 
-					math::quat makeQuat(math::vec3 angles)
+					math::quat makeQuat(const math::vec3& angles)
 					{
 						real ang;
-						real sr, sp, sy, cr, cp, cy;
 
 						// FIXME: rescale the inputs to 1/2 angle
-						real ascale = 0.5f;
+						const real ascale = 0.5f;
 						ang = angles[2] * ascale;
-						sy = math::Sin( math::Angle::FromRadians(ang));
-						cy = math::Cos( math::Angle::FromRadians(ang));
+						const real sy = math::Sin( math::Angle::FromRadians(ang));
+						const real cy = math::Cos( math::Angle::FromRadians(ang));
 						ang = angles[1] * ascale;
-						sp = math::Sin( math::Angle::FromRadians(ang));
-						cp = math::Cos( math::Angle::FromRadians(ang));
+						const real sp = math::Sin( math::Angle::FromRadians(ang));
+						const real cp = math::Cos( math::Angle::FromRadians(ang));
 						ang = angles[0] * ascale;
-						sr = math::Sin( math::Angle::FromRadians(ang));
-						cr = math::Cos( math::Angle::FromRadians(ang));
+						const real sr = math::Sin( math::Angle::FromRadians(ang));
+						const real cr = math::Cos( math::Angle::FromRadians(ang));
 
 						real x = sr * cp * cy - cr * sp * sy; // X
 						real y = cr * sp * cy + sr * cp * sy; // Y

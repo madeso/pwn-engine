@@ -94,7 +94,7 @@ namespace pwn
 		{
 			for (std::size_t i = 1; i < da.size(); ++i)
 			{
-				if (math::IsWithin(da[i-1].getTime(), current, da[i].getTime()))
+				if (math::IsWithinInclusive(da[i-1].getTime(), current, da[i].getTime()))
 				{
 					return i;
 				}

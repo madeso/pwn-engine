@@ -40,7 +40,7 @@ namespace pwn
 		math::vec3 Interpolate(const FramePosition& from, real current, const FramePosition& to)
 		{
 			real scale = math::To01(from.getTime(), current, to.getTime());
-			if (math::IsWithin(0, scale, 1) == false) throw "invalid scale";
+			if (math::IsWithinInclusive(0, scale, 1) == false) throw "invalid scale";
 			return math::Lerp(from.location, scale, to.location);
 		}
 
@@ -64,7 +64,7 @@ namespace pwn
 		math::quat Interpolate(const FrameRotation& from, real current, const FrameRotation& to)
 		{
 			real scale = math::To01(from.getTime(), current, to.getTime());
-			if (math::IsWithin(0, scale, 1) == false) throw "invalid scale";
+			if (math::IsWithinInclusive(0, scale, 1) == false) throw "invalid scale";
 			return math::SlerpShortway(from.rotation, scale, to.rotation);
 		}
 
@@ -107,8 +107,8 @@ namespace pwn
 
 		AnimationPerBone::AnimationPerBone(std::vector<FramePosition>& afp, std::vector<FrameRotation>& afr)
 		{
-			fp.swap(afp);
-			fr.swap(afr);
+			fp = afp;
+			fr = afr;
 		}
 
 		void AnimationPerBone::addPosition(real time, const math::vec3& pos)
@@ -194,8 +194,8 @@ namespace pwn
 			}
 
 			if (abfp.size() < 2 || abfr.size() < 2) throw "Data error, need atleast 2 keyframes per animation";
-			std::vector<FramePosition> abfpv(abfp); out->fp.swap( abfpv );
-			std::vector<FrameRotation> abfrv(abfr); out->fr.swap( abfrv );
+			out->fp = abfp;
+			out->fr = abfr;
 		}
 
 		void AnimationPerBone::scale(real scale)
@@ -225,7 +225,7 @@ namespace pwn
 				const math::quat poserot = pose.bones[boneIndex].rotation;
 				result[boneIndex] = math::mat44helper(parent).rotate(bone.rot).translate(bone.pos).translate(poseloc).rotate(-poserot).mat;
 			}
-			transforms.swap(result);
+			transforms = result;
 		}
 
 		AnimationInformation::AnimationInformation(int s, int e, const string& n)
@@ -266,7 +266,7 @@ namespace pwn
 				const AnimationPerBone& ab = bones[i];
 				bd[i] = ab.getBonePose(time);
 			}
-			out->bones.swap(bd);
+			out->bones = bd;
 		}
 
 		real Animation::getLength() const

@@ -72,8 +72,8 @@ public:
 		boost::shared_ptr<World3Widget > wid( new World3Widget( Dock::Fill(), world ) );
 
 		dcam.world = wid;
-		dcam.camera.position = point3(-20,20,-40);
-		dcam.camera.orientation = qLookAt(dcam.camera.position.vec, vec3(0,0,0), Up());
+		//dcam.camera.position = point3(-20,20,-40);
+		//dcam.camera.orientation = qLookAt(dcam.camera.position.vec, vec3(0,0,0), Up());
 
 		display.widget_add( wid );
 	}
@@ -106,7 +106,7 @@ public:
 
 	void onMouse(const math::vec2 movement)
 	{
-		//dcam.onMouse(movement);
+		dcam.onMouse(movement);
 	}
 
 	DemoCamera dcam;

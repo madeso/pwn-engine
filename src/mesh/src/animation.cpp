@@ -257,11 +257,12 @@ namespace pwn
 				const math::vec3 poseloc = pose.bones[boneIndex].location;
 				const math::quat poserot = pose.bones[boneIndex].rotation;
 
-				const math::mat44 anim = math::mat44helper(math::mat44Identity()).translate(poseloc).rotate(-poserot).mat;
+				const math::mat44 anim = math::mat44helper(math::mat44Identity()).translate(poseloc).rotate(GetConjugate(poserot)).mat;
 				const math::mat44 skel = math::mat44helper(math::mat44Identity()).translate(bone.pos).rotate(bone.rot).mat;
+
 				const math::mat44 local = math::mat44helper(math::mat44Identity()).mult(skel).mult(anim).mat;
 				
-				{
+				if(false) {
 					using namespace pwn::math;
 					using namespace pwn::mesh;
 					using namespace pwn::core;
@@ -272,7 +273,7 @@ namespace pwn
 				}
 
 				//result[boneIndex] = math::mat44helper(parent).rotate(bone.rot).translate(bone.pos).translate(poseloc).rotate(-poserot).mat;
-				result[boneIndex] = math::mat44helper(parent).mult(local).mat;
+				result[boneIndex] = math::mat44helper(parent).mult(skel).mult(anim).mat;
 			}
 			transforms = result;
 		}

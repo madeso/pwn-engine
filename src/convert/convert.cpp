@@ -20,6 +20,7 @@
 
 #include <pwn/core/stdutil.h>
 #include <fstream>
+#include <pwn/math/operations.h>
 
 #pragma comment (lib, "physfs.lib")
 
@@ -170,7 +171,7 @@ struct ConvertMesh
 
 			{
 				pwn::mesh::Pose p;
-				animation.getPose(1, &p);
+				animation.getPose(3, &p);
 				pwn::mesh::CompiledPose cp(p, mesh.bones);
 				for(int i=0; i<cp.transforms.size(); ++i)
 				{
@@ -329,3 +330,10 @@ void main(int argc, char* argv[])
 	const pwn::string filename(argv[1]);
 	RunXml(filename);
 }
+
+
+
+
+
+
+

@@ -226,6 +226,39 @@ namespace pwn
 			}
 		}
 
+		namespace // local
+		{
+			struct Data
+			{
+				pwn::math::mat44 global;
+			};
+
+			void PrepareVericesForAnimation(Mesh* mesh)
+			{
+				using namespace pwn;
+				using namespace pwn::mesh;
+				using namespace pwn::math;
+
+				std::vector<Data> bdp(mesh->bones.size());
+
+				for (int i = 0; i < mesh->bones.size(); ++i)
+				{
+					Bone& bone = mesh->bones[i];
+					mat44 local = mat44helper(mat44Identity()).translate(-bone.pos).rotate(GetConjugate(bone.rot)).mat;
+					mat44 parent = bone.hasParent() ? bdp[bone.getParent()].global : mat44Identity();
+					bdp[i].global = parent * local;
+				}
+
+				for(int i=0; i < mesh->positions.size(); ++i)
+				{
+					Point& p = mesh->positions[i];
+					if( p.hasBone() == false) continue;
+					Data& data = bdp[p.getBone()];
+					p.location = data.global * p.location;
+				}
+			}
+		}
+
 		bool Builder::makeMesh(Mesh& mesh, Flatouter* flatouter) const
 		{
 			mesh.clear();
@@ -242,6 +275,8 @@ namespace pwn
 				flatouter->load(mesh);
 				flatouter->modify(&mesh);
 			}
+
+			PrepareVericesForAnimation(&mesh);
 
 			return mesh.validate() ==0;
 		}

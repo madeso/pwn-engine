@@ -195,14 +195,15 @@ namespace pwn
 						{
 							AnimationPerBone a =  AnimationPerBone();
 
+							// -1 = milkshape animations start at 1, pwn start at 0
 							BOOST_FOREACH(const PositionKey& pk , b.positions)
 							{
-								a.addPosition(pk.time,  math::vec3(pk.x, pk.y, pk.z));
+								a.addPosition(pk.time-1,  math::vec3(pk.x, pk.y, pk.z));
 								added = true;
 							}
 							BOOST_FOREACH(const RotationKey& rk , b.rotations)
 							{
-								a.addRotation(rk.time, makeQuat( math::vec3(rk.x, rk.y, rk.z)));
+								a.addRotation(rk.time-1, makeQuat( math::vec3(rk.x, rk.y, rk.z)));
 								added = true;
 							}
 

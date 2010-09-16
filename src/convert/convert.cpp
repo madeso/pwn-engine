@@ -167,7 +167,7 @@ struct ConvertMesh
 			builder.mBuilder.makeMesh(mesh, &flatouter);
 
 			pwn::mesh::Animation& animation = builder.mAnimation;
-			//flatouter.modify(&animation);
+			flatouter.modify(&animation);
 
 			{
 				pwn::mesh::Pose p;

@@ -5,7 +5,7 @@
 #include <boost/foreach.hpp>
 #include <pwn/math/operations.h>
 #include <pwn/core/StringUtils.h>
-
+#include <fstream>
 namespace pwn
 {
 	namespace mesh
@@ -233,6 +233,19 @@ namespace pwn
 				pwn::math::mat44 global;
 			};
 
+			void dump(const pwn::string& file, const pwn::math::mat44& p)
+			{
+				std::ofstream of(file.c_str());
+				for(int r=0; r<4; ++r)
+				{
+					for(int c=0; c<4; ++c)
+					{
+						of << p.at(r, c) << " ";
+					}
+					of << std::endl;
+				}
+			}
+
 			void PrepareVericesForAnimation(Mesh* mesh)
 			{
 				using namespace pwn;
@@ -244,9 +257,12 @@ namespace pwn
 				for (int i = 0; i < mesh->bones.size(); ++i)
 				{
 					Bone& bone = mesh->bones[i];
-					mat44 local = mat44helper(mat44Identity()).translate(-bone.pos).rotate(GetConjugate(bone.rot)).mat;
+					mat44 local = mat44helper(mat44Identity()).rotate(GetConjugate(bone.rot)).translate(-bone.pos).mat;
 					mat44 parent = bone.hasParent() ? bdp[bone.getParent()].global : mat44Identity();
-					bdp[i].global = parent * local;
+					mat44 global = parent*local;
+					bdp[i].global = global;
+				//	dump(Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\a localskel " << i << ".txt", local);
+				//	dump(Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\b globalskel " << i << ".txt", global);
 				}
 
 				for(int i=0; i < mesh->positions.size(); ++i)

@@ -228,22 +228,44 @@ namespace pwn
 
 		namespace // local
 		{
+			using namespace pwn::math;
 			struct Data
 			{
-				pwn::math::mat44 global;
+				mat44 global;
+				mat44 globalskel;
 			};
 
-			void dump(const pwn::string& file, const pwn::math::mat44& p)
+			vec3 VectorIRotate(const vec3 vec, const mat44& mat)
 			{
-				std::ofstream of(file.c_str());
-				for(int r=0; r<4; ++r)
-				{
-					for(int c=0; c<4; ++c)
-					{
-						of << p.at(r, c) << " ";
-					}
-					of << std::endl;
-				}
+				return vec3(
+					vec.x*mat.at(0,0) + vec.y*mat.at(1,0) + vec.z*mat.at(2,0),
+					vec.x*mat.at(0,1) + vec.y*mat.at(1,1) + vec.z*mat.at(2,1),
+					vec.x*mat.at(0,2) + vec.y*mat.at(1,2) + vec.z*mat.at(2,2));
+			}
+
+			/*vec3 cvec3(mat44& m, int index)
+			{
+				return vec3(
+					m.at(index, 0),
+					m.at(index, 1),
+					m.at(index, 2));
+			}
+
+			void VectorTransform (const vec3 vec, const mat44 mat)
+			{
+				return vec3(
+					dot(vec, cvec3(in2, 0)) + in2.at(0,3),
+					dot(vec, cvec3(in2, 1)) + in2.at(1,3),
+					dot(vec, cvec3(in2, 2)) + in2.at(2,3));
+			}*/
+
+			vec3 VectorITransform (const vec3 vec, const mat44& mat)
+			{
+				vec3 tmp(
+					vec.x - mat.at(0,3),
+					vec.y - mat.at(1,3),
+					vec.z - mat.at(2,3));
+				return VectorIRotate(tmp, mat);
 			}
 
 			void PrepareVericesForAnimation(Mesh* mesh)
@@ -257,12 +279,23 @@ namespace pwn
 				for (int i = 0; i < mesh->bones.size(); ++i)
 				{
 					Bone& bone = mesh->bones[i];
+					{
 					mat44 local = mat44helper(mat44Identity()).rotate(GetConjugate(bone.rot)).translate(-bone.pos).mat;
 					mat44 parent = bone.hasParent() ? bdp[bone.getParent()].global : mat44Identity();
 					mat44 global = parent*local;
 					bdp[i].global = global;
 				//	dump(Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\a localskel " << i << ".txt", local);
 				//	dump(Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\b globalskel " << i << ".txt", global);
+					}
+
+					{
+					mat44 local = mat44helper(mat44Identity()).rotate(GetConjugate(bone.rot)).translate(bone.pos).mat;
+					mat44 parent = bone.hasParent() ? bdp[bone.getParent()].globalskel : mat44Identity();
+					mat44 global = parent*local;
+					bdp[i].globalskel = global;
+				//	dump(Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\a localskel " << i << ".txt", local);
+				//	dump(Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\b globalskel " << i << ".txt", global);
+					}
 				}
 
 				for(int i=0; i < mesh->positions.size(); ++i)
@@ -270,7 +303,9 @@ namespace pwn
 					Point& p = mesh->positions[i];
 					if( p.hasBone() == false) continue;
 					Data& data = bdp[p.getBone()];
-					p.location = data.global * p.location;
+					vec3 my = data.global * p.location;
+					vec3 ms3d = VectorITransform(p.location, data.globalskel);
+					p.location = ms3d;
 				}
 			}
 		}

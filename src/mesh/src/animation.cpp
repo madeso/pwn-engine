@@ -35,6 +35,11 @@ namespace pwn
 		{
 		}
 
+		math::vec3 FramePosition::value() const
+		{
+			return location;
+		}
+
 		string FramePosition::toString() const
 		{
 			return core::Str() << getTime() << " " << location;
@@ -57,6 +62,11 @@ namespace pwn
 			: Timed(time)
 			, rotation(rot)
 		{
+		}
+
+		math::quat FrameRotation::value() const
+		{
+			return rotation;
 		}
 		
 		string FrameRotation::toString() const
@@ -88,20 +98,37 @@ namespace pwn
 			return core::Str() << location << ": " << math::cAxisAngle(rotation);
 		}
 
+		
+
+		template<typename T, typename R>
+		R Get(const std::vector<T>& da, real current)
+		{
+			Assert( false == da.empty() );
+
+			if( current < da[0].getTime() )
+			{
+				return da[0].value();
+			}
+
+			for (std::size_t i = 1; i < da.size(); ++i)
+			{
+				if (math::IsWithinInclusive(da[i-1].getTime(), current, da[i].getTime()))
+				{
+					return Interpolate(da[i-1], current, da[i]);
+				}
+			}
+
+			return da.rbegin()->value();
+		};
+
 		math::quat Interpolate(real time, const std::vector<FrameRotation>& fr)
 		{
-			const int fri = Get(fr, time);
-			if (fri == -1) return math::qIdentity();
-			const math::quat r( Interpolate(fr[fri - 1], time, fr[fri]) );
-			return r;
+			return Get<FrameRotation, math::quat>(fr, time);
 		}
 		
 		math::vec3 Interpolate(real time, const std::vector<FramePosition>& fp)
 		{
-			const int fpi = Get(fp, time);
-			if (fpi == -1) return math::Origo3().vec;
-			const math::vec3 res( Interpolate(fp[fpi - 1], time, fp[fpi]) );
-			return res;
+			return Get<FramePosition, math::vec3>(fp, time);
 		}
 
 		AnimationPerBone::AnimationPerBone()

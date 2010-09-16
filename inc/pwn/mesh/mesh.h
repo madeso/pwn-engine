@@ -89,26 +89,14 @@ namespace pwn
 			real time;
 		};
 
-		template<typename T>
-		int Get(const std::vector<T>& da, real current)
-		{
-			for (std::size_t i = 1; i < da.size(); ++i)
-			{
-				if (math::IsWithinInclusive(da[i-1].getTime(), current, da[i].getTime()))
-				{
-					return i;
-				}
-			}
-
-			return -1;
-		};
-
 		class FramePosition : public Timed
 		{
 		public:
 			FramePosition();
 			FramePosition(real time, const math::vec3& location);
 			string toString() const;
+
+			math::vec3 value() const;
 
 			math::vec3 location;
 		};
@@ -121,6 +109,8 @@ namespace pwn
 			FrameRotation();
 			FrameRotation(real time, const math::quat& rotation);
 			string toString() const;
+
+			math::quat value() const;
 
 			math::quat rotation;
 		};

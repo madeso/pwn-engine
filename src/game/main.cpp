@@ -65,8 +65,8 @@ public:
 
 		//world->actor_add( Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("fighter1.mesh", &tpool)) );
 
-		walk = LoadAnimation("turtle1/Walk.anim");
-		turtle = Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("turtle1.mesh", &tpool));
+		walk = LoadAnimation("dwarf1/Walk.anim");
+		turtle = Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("dwarf1.mesh", &tpool));
 		world->actor_add(turtle);
 
 		boost::shared_ptr<World3Widget > wid( new World3Widget( Dock::Fill(), world ) );

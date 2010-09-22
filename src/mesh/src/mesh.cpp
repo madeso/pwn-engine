@@ -101,7 +101,7 @@ namespace pwn
 		
 		void Flatouter::load(const Mesh& mesh)
 		{
-			newIndices.clear();/*
+			newIndices.clear();
 			
 			std::vector<BoneToSort> bones;
 			for(BoneIndex i=0; i<mesh.bones.size(); ++i)
@@ -131,7 +131,7 @@ namespace pwn
 				{
 					bones[i].traverse(&newIndices);
 				}
-			}*/
+			}
 		}
 
 		void Flatouter::modify(Mesh* mesh) const

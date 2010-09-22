@@ -114,8 +114,8 @@ namespace pwn
 			{
 				if (math::IsWithinInclusive(da[i-1].getTime(), current, da[i].getTime()))
 				{
-					//return da[i-1].value();
-					return Interpolate(da[i-1], current, da[i]);
+					return da[i-1].value();
+					//return Interpolate(da[i-1], current, da[i]);
 				}
 			}
 
@@ -281,7 +281,7 @@ namespace pwn
 
 				const math::mat44 local = math::mat44helper(math::mat44Identity()).mult(skel).mult(anim).mat;
 				
-				if(false) {
+				if(true) {
 					using namespace pwn::math;
 					using namespace pwn::mesh;
 					using namespace pwn::core;

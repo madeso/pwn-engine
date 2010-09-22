@@ -28,7 +28,7 @@ namespace pwn
 
 		void WriteTarget::set(const pwn::string& target)
 		{
-			if( 0 == PHYSFS_setWriteDir(target.c_str()) ) Error("change write dir");
+			if( 0 == PHYSFS_setWriteDir(target.c_str()) ) Error("change write dir to " + target);
 		}
 
 		

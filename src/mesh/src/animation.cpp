@@ -171,60 +171,51 @@ namespace pwn
 			return p;
 		}
 
-		void AnimationPerBone::sub(int start, int end, AnimationPerBone* out) const
+		template<class T>
+		void FillInterpolate(const std::vector<T>& data, std::vector<T>* v, int start, int end)
 		{
-			std::vector<FramePosition> abfp;
-			std::vector<FrameRotation> abfr;
 			real length = end - start;
 			bool first = true;
-			real last = 0;
+			real last = -1;
 
-			for(std::size_t i=0; i<this->fp.size(); ++i)
+			for(std::size_t i=0; i<data.size(); ++i)
 			{
-				const FramePosition& fp = this->fp[i];
+				const T& fp = data[i];
 				if (math::IsWithinInclusive(start, fp.getTime(), end))
 				{
 					real mark = fp.getTime()-start;
 					if (first && math::IsZero(mark)==false)
 					{
-						abfp.push_back(FramePosition(0, Interpolate(start, this->fp)));
+						v->push_back(T(0, Interpolate(start, data)));
 					}
 					mark = math::ZeroOrValue(mark);
 					first = false;
-					abfp.push_back(FramePosition(mark, fp.location));
+					v->push_back(T(mark, fp.value()));
 					last = mark;
 				}
 			}
+
+			if (first)
+			{
+				v->push_back(T(0, Interpolate(start, data)));
+			}
+
 			if (math::IsEqual(length, last)==false )
 			{
-				abfp.push_back(FramePosition(length, Interpolate(end, this->fp)));
+				v->push_back(T(length, Interpolate(end, data)));
 			}
 
-			first = true;
-			last = 0;
+			if (v->size() < 2 ) throw "Data error, need atleast 2 keyframes per animation";
+		}
 
-			for(std::size_t i=0; i<this->fr.size(); ++i)
-			{
-				const FrameRotation& fr = this->fr[i];
-				if (math::IsWithinInclusive(start, fr.getTime(), end))
-				{
-					real mark = fr.getTime() - start;
-					if (first && math::IsZero(mark) == false)
-					{
-						abfr.push_back(FrameRotation(0, Interpolate(start, this->fr)));
-					}
-					mark = math::ZeroOrValue(mark);
-					first = false;
-					abfr.push_back(FrameRotation(mark, fr.rotation));
-					last = mark;
-				}
-			}
-			if (math::IsEqual(length, last) == false)
-			{
-				abfr.push_back(FrameRotation(length, Interpolate(end, this->fr)));
-			}
+		void AnimationPerBone::sub(int start, int end, AnimationPerBone* out) const
+		{
+			std::vector<FramePosition> abfp;
+			std::vector<FrameRotation> abfr;
 
-			if (abfp.size() < 2 || abfr.size() < 2) throw "Data error, need atleast 2 keyframes per animation";
+			FillInterpolate(fp, &abfp, start, end);
+			FillInterpolate(fr, &abfr, start, end);
+
 			out->fp = abfp;
 			out->fr = abfr;
 		}

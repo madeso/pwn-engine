@@ -17,11 +17,6 @@
 #include "MilkshapeAscii.hpp"
 #include "MilkshapeBinary.hpp"
 
-
-#include <pwn/core/stdutil.h>
-#include <fstream>
-#include <pwn/math/operations.h>
-
 #pragma comment (lib, "physfs.lib")
 
 using namespace std;
@@ -100,79 +95,6 @@ bool Load(pwn::convert::OptimizedMeshBuilder& builder, const pwn::string& inputf
 	}
 }
 
-using namespace pwn::math;
-using namespace pwn::mesh;
-using namespace pwn::core;
-
-void dump(const pwn::string& file, const mat44& p)
-{
-	std::ofstream of(file.c_str());
-	for(int r=0; r<4; ++r)
-	{
-		for(int c=0; c<4; ++c)
-		{
-			of << p.at(r, c) << " ";
-		}
-		of << std::endl;
-	}
-}
-
-void w(std::ofstream& f, const vec3& v)
-{
-	f << v.x << " " << v.y << " " << v.z << std::endl;
-}
-
-void dumpo(const pwn::string& file, const mat44& p)
-{
-	std::ofstream of(file.c_str());
-
-	w(of, p * vec3(0,0,0));
-	w(of, p * vec3(1,0,0));
-	w(of, p * vec3(-10,5,10));
-}
-
-void dump(const pwn::string& file, const PosePerBone& b)
-{
-	std::ofstream of(file.c_str());
-
-	of << b.rotation.x << " "
-		 << b.rotation.y << " "
-		 << b.rotation.z << " "
-		 << b.rotation.w << std::endl;
-
-	of << b.location.x << " "
-		 << b.location.y << " "
-		 << b.location.z << std::endl;
-}
-
-void dump(const pwn::string& file, const Animation& a)
-{
-	std::ofstream of(file.c_str());
-
-	for(int i=0; i<a.bones.size(); ++i)
-	{
-		const AnimationPerBone& ap = a.bones[i];
-
-		of << i << ": " << std::endl;
-
-		for(int i=0; i<ap.fp.size(); ++i)
-		{
-			const FramePosition& fp = ap.fp[i];
-			of << fp.getTime()+1 << " " << fp.location.x << " " << fp.location.y << " " << fp.location.z << std::endl;
-		}
-
-		of << std::endl << "****************************" << std::endl << std::endl;
-
-		for(int i=0; i<ap.fr.size(); ++i)
-		{
-			const FrameRotation& fr = ap.fr[i];
-			of << fr.getTime()+1 << " " << fr.rotation.x << " " << fr.rotation.y << " " << fr.rotation.z << " " << fr.rotation.w << std::endl;
-		}
-
-		of << std::endl << "---------------------------------------------" << std::endl << std::endl;
-	}
-}
-
 struct ConvertMesh
 {
 	ConvertMesh(const pwn::string& in)
@@ -215,13 +137,6 @@ struct ConvertMesh
 				pwn::mesh::Pose p;
 				animation.getPose(3.5f, &p);
 				pwn::mesh::CompiledPose cp(p, mesh.bones);
-				for(int i=0; i<cp.transforms.size(); ++i)
-				{
-					dump(Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\a quatpos " << i << ".txt", p.bones[i]);
-					dump(Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\e global " << i << ".txt", cp.transforms[i]);
-					dumpo(Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\f pos " << i << ".txt", cp.transforms[i]);
-				}
-				dump("C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\anim.txt", animation);
 			}
 
 			const pwn::uint32 validationErrors = mesh.validate();

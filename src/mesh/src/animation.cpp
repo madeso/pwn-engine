@@ -232,37 +232,7 @@ namespace pwn
 		CompiledPose::CompiledPose()
 		{
 		}
-
-		namespace 
-		{
-			void dump(const pwn::string& file, const math::mat44& p)
-			{
-				std::ofstream of(file.c_str());
-				for(int r=0; r<4; ++r)
-				{
-					for(int c=0; c<4; ++c)
-					{
-						of << p.at(r, c) << " ";
-					}
-					of << std::endl;
-				}
-			}
-
-			void dump(const pwn::string& file, const pwn::mesh::Bone& b)
-			{
-				std::ofstream of(file.c_str());
-
-				of << b.rot.x << " "
-					 << b.rot.y << " "
-					 << b.rot.z << " "
-					 << b.rot.w << std::endl;
-
-				of << b.pos.x << " "
-					 << b.pos.y << " "
-					 << b.pos.z << std::endl;
-			}
-		}
-
+		
 		CompiledPose::CompiledPose(const Pose& pose, const std::vector<Bone>& bones)
 		{
 			if (pose.bones.size() != bones.size()) throw "Invalid animation/mesh, bone count differs";
@@ -270,7 +240,7 @@ namespace pwn
 			for (std::size_t boneIndex = 0; boneIndex < pose.bones.size(); ++boneIndex)
 			{
 				const Bone& bone = bones[boneIndex];
-				// either it is a parent, or it's parent has already been precoessed
+				// either it has no parents, or it's parent has already been precoessed
 				Assert( bone.hasParent()==false || boneIndex > bone.getParent() );
 				math::mat44 parent = bone.hasParent() ? result[bone.getParent()] : math::mat44Identity();
 				const math::vec3 poseloc = pose.bones[boneIndex].location;
@@ -280,18 +250,7 @@ namespace pwn
 				const math::mat44 skel = math::mat44helper(math::mat44Identity()).translate(bone.pos).rotate(bone.rot).mat;
 
 				const math::mat44 local = math::mat44helper(math::mat44Identity()).mult(skel).mult(anim).mat;
-				
-				if(true) {
-					using namespace pwn::math;
-					using namespace pwn::mesh;
-					using namespace pwn::core;
-					dump(Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\a0 bone " << boneIndex << ".txt", bone);
-					dump(Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\b anim " << boneIndex << ".txt", anim);
-					dump(Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\c skel " << boneIndex << ".txt", skel);
-					dump(Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\d local " << boneIndex << ".txt", local);
-				}
 
-				//result[boneIndex] = math::mat44helper(parent).rotate(bone.rot).translate(bone.pos).translate(poseloc).rotate(-poserot).mat;
 				result[boneIndex] = math::mat44helper(parent).mult(skel).mult(anim).mat;
 			}
 			transforms = result;

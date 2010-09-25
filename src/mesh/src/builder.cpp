@@ -228,26 +228,6 @@ namespace pwn
 			}
 		}
 
-		namespace
-		{
-			using namespace pwn::math;
-			using namespace pwn::mesh;
-			using namespace pwn::core;
-
-			void dump(const pwn::string& file, const mat44& p)
-			{
-				std::ofstream of(file.c_str());
-				for(int r=0; r<4; ++r)
-				{
-					for(int c=0; c<4; ++c)
-					{
-						of << p.at(r, c) << " ";
-					}
-					of << std::endl;
-				}
-			}
-		}
-
 		namespace // local
 		{
 			using namespace pwn::math;
@@ -284,14 +264,11 @@ namespace pwn
 				for (unsigned int i = 0; i < mesh->bones.size(); ++i)
 				{
 					Bone& bone = mesh->bones[i];
-					{
-					mat44 local = mat44helper(mat44Identity()).rotate(GetConjugate(bone.rot)).translate(bone.pos).mat;
-					mat44 parent = bone.hasParent() ? bdp[bone.getParent()].globalskel : mat44Identity();
-					mat44 global = parent*local;
+					
+					const mat44 local = mat44helper(mat44Identity()).rotate(GetConjugate(bone.rot)).translate(bone.pos).mat;
+					const mat44 parent = bone.hasParent() ? bdp[bone.getParent()].globalskel : mat44Identity();
+					const mat44 global = parent*local;
 					bdp[i].globalskel = global;
-					dump(core::Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\a localskel " << i << ".txt", local);
-					dump(core::Str() << "C:\\Users\\Gustav\\dev\\pwn-engine\\dist\\temp\\pwn\\b globalskel " << i << ".txt", global);
-					}
 				}
 
 				for(unsigned int i=0; i < mesh->positions.size(); ++i)
@@ -299,7 +276,6 @@ namespace pwn
 					Point& p = mesh->positions[i];
 					if( p.hasBone() == false) continue;
 					Data& data = bdp[p.getBone()];
-					vec3 my = data.globalskel * p.location;
 					vec3 ms3d = VectorITransform(p.location, data.globalskel);
 					p.location = ms3d;
 				}

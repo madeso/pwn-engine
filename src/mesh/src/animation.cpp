@@ -114,8 +114,8 @@ namespace pwn
 			{
 				if (math::IsWithinInclusive(da[i-1].getTime(), current, da[i].getTime()))
 				{
-					return da[i-1].value();
-					//return Interpolate(da[i-1], current, da[i]);
+					//return da[i-1].value();
+					return Interpolate(da[i-1], current, da[i]);
 				}
 			}
 

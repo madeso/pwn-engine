@@ -150,6 +150,7 @@ struct ConvertMesh
 			{
 				if( verbose ) cout << "scaling " << modelScale << ".." << std::endl;
 				pwn::mesh::Scale(&mesh, modelScale);
+				animation.scale(modelScale);
 			}
 
 			if( verbose ) cout << endl;
@@ -258,6 +259,13 @@ void RunXml(const pwn::string& filename)
 			ptree source = v.second;
 			const pwn::string inputfile = source.get<pwn::string>("file");
 			ConvertMesh cmesh(inputfile);
+
+			boost::optional<pwn::real> scale = source.get_optional<pwn::real>("scale");
+			if( scale.is_initialized() )
+			{
+				cmesh.modelScale = scale.get();
+				cmesh.useModelScale = true;
+			}
 
 			BOOST_FOREACH(ptree::value_type &an, source.get_child("animations"))
 			{

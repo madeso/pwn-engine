@@ -29,6 +29,11 @@ namespace pwn
 				p.location *= scale;
 			}
 
+			BOOST_FOREACH(Bone& b, mesh->bones)
+			{
+				b.pos *= scale;
+			}
+
 			return mesh;
 		}
 

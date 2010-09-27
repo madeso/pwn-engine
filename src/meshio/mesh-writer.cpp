@@ -12,52 +12,67 @@ namespace pwn
 	{
 		const pwn::uint8 kVersion = 1;
 
-		template<class MeshArg>
+		namespace
+		{
+			template<class Filer>
+			struct MeshUtil {};
+
+			template<>
+			struct MeshUtil<FileReader> {
+				static mesh::Mesh::TriList& GetTriList(mesh::Mesh::TriangleMap& map, pwn::uint32 id)
+				{
+					return map[id];
+				}
+			};
+
+			template<>
+			struct MeshUtil<FileWriter> {
+				static const mesh::Mesh::TriList& GetTriList(const mesh::Mesh::TriangleMap& map, pwn::uint32 id)
+				{
+					mesh::Mesh::TriangleMap::const_iterator r = map.find(id);
+					if( r == map.end() ) throw "trilist id invalid";
+					return r->second;
+				}
+			};
+		}
+
+		template<class MeshArg, typename VersionType>
 		class MeshFile
 		{
-		private:
-			static mesh::Mesh::TriList& GetTriList(mesh::Mesh::TriangleMap& map, pwn::uint32 id)
-			{
-				return map[id];
-			}
-
-			static const mesh::Mesh::TriList& GetTriList(const mesh::Mesh::TriangleMap& map, pwn::uint32 id)
-			{
-				mesh::Mesh::TriangleMap::const_iterator r = map.find(id);
-				if( r == map.end() ) throw "trilist id invalid";
-				return r->second;
-			}
-
 		public:
-			template <typename VersionType>
-			static void handle(VirtualFile& vf, MeshArg mesh, VersionType version)
+			template <class Filer>
+			static void handle(Filer& vf, MeshArg mesh, VersionType version)
 			{
 				vf.handle8(version);
 				if( version != kVersion ) throw "mesh version mismatch";
-				HandleVector(vf, mesh.positions);
-				HandleVector(vf, mesh.normals);
-				HandleVector(vf, mesh.texcoords);
-				HandleVector(vf, mesh.bones);
-				std::vector<pwn::uint32> keys = HandleKeys(vf, mesh.triangles);
+				vf.handleVector(mesh.positions);
+				vf.handleVector(mesh.normals);
+				vf.handleVector(mesh.texcoords);
+				vf.handleVector(mesh.bones);
+				std::vector<pwn::uint32> keys = vf.handleKeys(mesh.triangles);
 				BOOST_FOREACH(pwn::uint32 id, keys)
 				{
-					HandleVector(vf, GetTriList(mesh.triangles, id));
+					vf.handleVector(MeshUtil<Filer>::GetTriList(mesh.triangles, id));
 				}
-				HandleVector(vf, mesh.materials);
+				vf.handleVector(mesh.materials);
 			}
 		};
 
 		void Write(const mesh::Mesh& mesh, const pwn::string& filename)
 		{
 			VirtualFile vf(filename, false);
-			MeshFile<const mesh::Mesh&>::handle<const pwn::uint8>(vf, mesh, kVersion);
+			FileWriter w;
+			w.file = &vf;
+			MeshFile<const mesh::Mesh&,const pwn::uint8>::handle(w, mesh, kVersion);
 		}
 
 		void Read(mesh::Mesh* mesh, const pwn::string& filename)
 		{
 			pwn::uint8 version = kVersion;
 			VirtualFile vf(filename, true);
-			MeshFile<mesh::Mesh&>::handle<pwn::uint8&>(vf, *mesh, version);
+			FileReader r;
+			r.file = &vf;
+			MeshFile<mesh::Mesh&,pwn::uint8&>::handle(r, *mesh, version);
 		}
 	}
 }

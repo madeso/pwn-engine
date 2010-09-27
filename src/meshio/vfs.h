@@ -20,96 +20,120 @@ namespace pwn
 			VirtualFile(const pwn::string& path, bool isLoading);
 			~VirtualFile();
 
-			void handle8(const pwn::uint8& j);
-			void handle8(pwn::uint8& j);
+			void write8(const pwn::uint8& j);
+			pwn::uint8 read8();
 
-			void handle16(const pwn::uint16& i);
-			void handle16(pwn::uint16& i);
+			void write16(const pwn::uint16& i);
+			pwn::uint16 read16();
 
-			void handle32(const pwn::uint32& i);
-			void handle32(pwn::uint32& i);
+			void writeReal(const pwn::real& r);
+			pwn::real readReal();
 
-			void handleReal(const pwn::real& r);
-			void handleReal(pwn::real& r);
-
-			void handleString(const pwn::string& r);
-			void handleString(pwn::string& r);
+			void writeString(const pwn::string& r);
+			pwn::string readString();
 
 			void write32(const pwn::uint32& i);
 			pwn::uint32 read32();
 
 			void read(void* data, pwn::uint32 size);
 			void write(const void* data, pwn::uint32 size);
-
 		private:
 			PHYSFS_file* file;
 		};
 
-		template<class T>
-		static void HandleVector(VirtualFile& vf, const std::vector<T>& vector)
+		class FileWriter
 		{
-			pwn::uint32 size = vector.size();
-			vf.write32(size);
-			if( size > 0 )
+		public:
+			VirtualFile* file;
+
+			void handle8(const pwn::uint8& j);
+			void handle16(const pwn::uint16& i);
+			void handle32(const pwn::uint32& i);
+			void handleReal(const pwn::real& r);
+			void handleString(const pwn::string& r);
+
+			template<class T>
+			void handleVector(const std::vector<T>& vector)
 			{
-				vf.write(&vector[0], size * sizeof(T));
+				pwn::uint32 size = vector.size();
+				file->write32(size);
+				if( size > 0 )
+				{
+					file->write(&vector[0], size * sizeof(T));
+				}
 			}
-		}
 
-		template<class T>
-		static void HandleVector(VirtualFile& vf, std::vector<T>& vector)
-		{
-			pwn::uint32 size = vf.read32();
-			vector.resize(size);
-			if( size > 0 )
+			template<class T>
+			pwn::uint32 handleVectorSize(const std::vector<T>& vector)
 			{
-				vf.read(&vector[0], size * sizeof(T));
+				pwn::uint32 size = vector.size();
+				file->write32(size);
+				return size;
 			}
-		}
 
-		template<class T>
-		static pwn::uint32 HandleVectorSize(VirtualFile& vf, const std::vector<T>& vector)
-		{
-			pwn::uint32 size = vector.size();
-			vf.write32(size);
-			return size;
-		}
-
-		template<class T>
-		static pwn::uint32 HandleVectorSize(VirtualFile& vf, std::vector<T>& vector)
-		{
-			pwn::uint32 size = vf.read32();
-			vector.resize(size);
-			return size;
-		}
-
-		template<class Value>
-		static std::vector<pwn::uint32> HandleKeys(VirtualFile& vf, const std::map<pwn::uint32, Value>& map)
-		{
-			pwn::uint32 size = map.size();
-			vf.write32(size);
-			std::vector<pwn::uint32> ret;
-			for(std::map<pwn::uint32, Value>::const_iterator i = map.begin(); i != map.end(); ++i)
+			template<class Value>
+			std::vector<pwn::uint32> handleKeys(const std::map<pwn::uint32, Value>& map)
 			{
-				const pwn::uint32 v = i->first;
-				vf.write32(v);
-				ret.push_back(v);
+				pwn::uint32 size = map.size();
+				file->write32(size);
+				std::vector<pwn::uint32> ret;
+				for(std::map<pwn::uint32, Value>::const_iterator i = map.begin(); i != map.end(); ++i)
+				{
+					const pwn::uint32 v = i->first;
+					file->write32(v);
+					ret.push_back(v);
+				}
+				return ret;
 			}
-			return ret;
-		}
+		};
 
-		template<class V>
-		static std::vector<pwn::uint32> HandleKeys(VirtualFile& vf, std::map<pwn::uint32, V>&)
+		// --------------------------------------------------------------------------------------------------------
+
+		class FileReader
 		{
-			pwn::uint32 size = vf.read32();
-			std::vector<pwn::uint32> ret;
-			ret.resize(size);
-			for(pwn::uint32 i=0; i<size; ++i)
+		public:
+			VirtualFile* file;
+
+			void handle8(pwn::uint8& j);
+			void handle16(pwn::uint16& i);
+			void handle32(pwn::uint32& i);
+			void handleReal(pwn::real& r);
+			void handleString(pwn::string& r);
+
+			template<class T>
+			void handleVector(std::vector<T>& vector)
 			{
-				ret[i] = vf.read32();
+				pwn::uint32 size = file->read32();
+				vector.resize(size);
+				if( size > 0 )
+				{
+					file->read(&vector[0], size * sizeof(T));
+				}
 			}
-			return ret;
-		}
+
+			template<class T>
+			pwn::uint32 handleVectorSize(std::vector<T>& vector)
+			{
+				pwn::uint32 size = file->read32();
+				vector.resize(size);
+				return size;
+			}
+
+			template<class V>
+			std::vector<pwn::uint32> handleKeys(std::map<pwn::uint32, V>&)
+			{
+				pwn::uint32 size = file->read32();
+				std::vector<pwn::uint32> ret;
+				ret.resize(size);
+				for(pwn::uint32 i=0; i<size; ++i)
+				{
+					ret[i] = file->read32();
+				}
+				return ret;
+			}
+
+		};
+
 	}
 }
 

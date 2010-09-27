@@ -45,81 +45,75 @@ namespace pwn
 			if( file ) PHYSFS_close(file);
 		}
 
-		void VirtualFile::handle8(const pwn::uint8& j)
+		void VirtualFile::write8(const pwn::uint8& j)
 		{
 			const pwn::uint16 i = j;
 			if( 0 == PHYSFS_writeULE16(file, i) ) Error("write uint8");
 		}
 
-		void VirtualFile::handle8(pwn::uint8& j)
+		pwn::uint8 VirtualFile::read8()
 		{
-			pwn::uint16 i=0;
-			if( 0 == PHYSFS_readULE16(file, &i) ) Error("read uint8");
-			j = static_cast<pwn::uint8>(i);
+			pwn::uint16 value=0;
+			if( 0 == PHYSFS_readULE16(file, &value) ) Error("read uint8");
+			return static_cast<pwn::uint8>(value);
 		}
 
-		void VirtualFile::handle16(const pwn::uint16& i)
+		void VirtualFile::write16(const pwn::uint16& value)
 		{
-			if( 0 == PHYSFS_writeULE16(file, i) ) Error("write uint16");
+			if( 0 == PHYSFS_writeULE16(file, value) ) Error("write uint16");
 		}
 
-		void VirtualFile::handle16(pwn::uint16& i)
+		pwn::uint16 VirtualFile::read16()
 		{
-			if( 0 == PHYSFS_readULE16(file, &i) ) Error("read uint16");
+			pwn::uint16 value;
+			if( 0 == PHYSFS_readULE16(file, &value) ) Error("read uint16");
+			return value;
 		}
 
-		void VirtualFile::write32(const pwn::uint32& i)
+		void VirtualFile::write32(const pwn::uint32& value)
 		{
-			if( 0 == PHYSFS_writeULE32(file, i) ) Error("write uint32");
+			if( 0 == PHYSFS_writeULE32(file, value) ) Error("write uint32");
 		}
 
 		pwn::uint32 VirtualFile::read32()
 		{
-			pwn::uint32 i = 0;
-			if( 0 == PHYSFS_readULE32(file, &i) ) Error("read uint32");
-			return i;
+			pwn::uint32 value = 0;
+			if( 0 == PHYSFS_readULE32(file, &value) ) Error("read uint32");
+			return value;
 		}
 
-		void VirtualFile::handle32(const pwn::uint32& i)
+		void VirtualFile::writeReal(const pwn::real& value)
 		{
-			write32(i);
+			if( PHYSFS_write(file, &value, 1, sizeof(pwn::real)) != sizeof(pwn::real) ) Error("write real");
 		}
 
-		void VirtualFile::handle32(pwn::uint32& i)
+		pwn::real VirtualFile::readReal()
 		{
-			i = read32();
+			pwn::real value;
+			if( PHYSFS_read(file, &value, 1, sizeof(pwn::real)) != sizeof(pwn::real) ) Error("reading real");
+			return value;
 		}
 
-		void VirtualFile::handleReal(const pwn::real& r)
+		void VirtualFile::writeString(const pwn::string& value)
 		{
-			if( PHYSFS_write(file, &r, 1, sizeof(pwn::real)) != sizeof(pwn::real) ) Error("write real");
-		}
-
-		void VirtualFile::handleReal(pwn::real& r)
-		{
-			if( PHYSFS_read(file, &r, 1, sizeof(pwn::real)) != sizeof(pwn::real) ) Error("reading real");
-		}
-
-		void VirtualFile::handleString(const pwn::string& r)
-		{
-			const uint32 length = r.length();
+			const uint32 length = value.length();
 			write32(length);
-			if( PHYSFS_write(file, r.c_str(), 1, length*sizeof(pwn::tchar)) != length*sizeof(pwn::tchar) ) Error("write string");
+			if( PHYSFS_write(file, value.c_str(), 1, length*sizeof(pwn::tchar)) != length*sizeof(pwn::tchar) ) Error("write string");
 		}
 
-		void VirtualFile::handleString(pwn::string& r)
+		pwn::string VirtualFile::readString()
 		{
 			uint32 length = read32();
 			if( length == 0 )
 			{
-				r = "";
+				return "";
 			}
 			else
 			{
 				boost::scoped_array<pwn::tchar> arr( new tchar[length+1] );
 				if( PHYSFS_read(file, arr.get(), 1, length * sizeof(pwn::tchar)) != length*sizeof(pwn::tchar) ) Error("reading string");
 				arr[length] = 0;
-				r = arr.get();
+				return arr.get();
 			}
 		}
 
@@ -131,6 +125,60 @@ namespace pwn
 		void VirtualFile::write(const void* data, pwn::uint32 size)
 		{
 			if( PHYSFS_write(file, data, size, 1) != 1 ) Error("writing data");
+		}
+
+		// ---------------------------------------------------------------------------------------------
+
+		void FileWriter::handle8(const pwn::uint8& value)
+		{
+			file->write8(value);
+		}
+
+		void FileWriter::handle16(const pwn::uint16& value)
+		{
+			file->write16(value);
+		}
+
+		void FileWriter::handle32(const pwn::uint32& value)
+		{
+			file->write32(value);
+		}
+
+		void FileWriter::handleReal(const pwn::real& value)	
+		{
+			file->writeReal(value);
+		}
+
+		void FileWriter::handleString(const pwn::string& value)
+		{
+			file->writeString(value);
+		}
+
+		// -----------------------------------------------------------------------------------------
+
+		void FileReader::handle8(pwn::uint8& value)
+		{
+			value = file->read8();
+		}
+
+		void FileReader::handle16(pwn::uint16& value)
+		{
+			value = file->read16();
+		}
+
+		void FileReader::handle32(pwn::uint32& value)
+		{
+			value = file->read32();
+		}
+
+		void FileReader::handleReal(pwn::real& value)
+		{
+			value = file->readReal();
+		}
+
+		void FileReader::handleString(pwn::string& value)
+		{
+			value = file->readString();
 		}
 	}
 }

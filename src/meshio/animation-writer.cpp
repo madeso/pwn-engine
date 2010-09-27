@@ -12,22 +12,22 @@ namespace pwn
 	{
 		const pwn::uint8 kVersion = 1;
 
-		template<class AnimationArg>
+		template<class AnimationArg, typename VersionType>
 		class AnimationFile
 		{
 		public:
-			template <typename VersionType>
-			static void handle(VirtualFile& vf, AnimationArg animation, VersionType version)
+			template <class Filer>
+			static void handle(Filer& vf, AnimationArg animation, VersionType version)
 			{
 				vf.handle8(version);
 				if( version != kVersion ) throw "animation version mismatch";
 				vf.handleReal(animation.length);
 
-				pwn::uint32 size = HandleVectorSize(vf, animation.bones);
+				pwn::uint32 size = vf.handleVectorSize(animation.bones);
 				for(pwn::uint32 i=0;i<size; ++i)
 				{
-					HandleVector(vf, animation.bones[i].fp);
-					HandleVector(vf, animation.bones[i].fr);
+					vf.handleVector(animation.bones[i].fp);
+					vf.handleVector(animation.bones[i].fr);
 				}
 			}
 		};
@@ -35,14 +35,18 @@ namespace pwn
 		void Write(const mesh::Animation& animation, const pwn::string& filename)
 		{
 			VirtualFile vf(filename, false);
-			AnimationFile<const mesh::Animation&>::handle<const pwn::uint8>(vf, animation, kVersion);
+			FileWriter w;
+			w.file = &vf;
+			AnimationFile<const mesh::Animation&,const pwn::uint8>::handle(w, animation, kVersion);
 		}
 
 		void Read(mesh::Animation* animation, const pwn::string& filename)
 		{
 			pwn::uint8 version = kVersion;
 			VirtualFile vf(filename, true);
-			AnimationFile<mesh::Animation&>::handle<pwn::uint8&>(vf, *animation, version);
+			FileReader r;
+			r.file = &vf;
+			AnimationFile<mesh::Animation&,pwn::uint8&>::handle<>(r, *animation, version);
 		}
 	}
 }

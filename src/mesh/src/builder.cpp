@@ -270,7 +270,7 @@ namespace pwn
 				{
 					Bone& bone = mesh->bones[i];
 					
-					const mat44 local = mat44helper(mat44Identity()).rotate(GetConjugate(bone.rot)).translate(bone.pos).mat;
+					const mat44 local = mat44helper(mat44Identity()).translate(bone.pos).rotate(GetConjugate(bone.rot)).mat;
 					const mat44 parent = bone.hasParent() ? bdp[bone.getParent()].globalskel : mat44Identity();
 					const mat44 global = parent*local;
 					bdp[i].globalskel = global;

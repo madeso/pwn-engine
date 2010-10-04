@@ -1498,7 +1498,8 @@ namespace pwn
 			const real tXZ = 2 * x * z;
 			const real tYW = 2 * y * w;
 
-			const real temp[] = { 1-tYY-tZZ,  tXY-tZW,    tXZ+tYW,
+			const real temp[] = {
+				1-tYY-tZZ,  tXY-tZW,    tXZ+tYW,
 				tXY+tZW,    1-tXX-tZZ,  tYZ-tXW,
 				tXZ-tYW,    tYZ+tXW,    1-tXX-tYY};
 			return mat33_FromRowMajor(temp);

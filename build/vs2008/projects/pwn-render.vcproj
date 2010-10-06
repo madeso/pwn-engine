@@ -144,6 +144,158 @@
 	<References>
 	</References>
 	<Files>
+		<Filter
+			Name="fse"
+			>
+			<File
+				RelativePath="..\..\..\src\render\src\fse\Binder.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\inc\pwn\render\fse\Binder.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\fse\BufferReference.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\inc\pwn\render\fse\BufferReference.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\fse\Command.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\inc\pwn\render\fse\Command.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\fse\Command_BindBufferCommand.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\inc\pwn\render\fse\Command_BindBufferCommand.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\fse\Command_Commands.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\inc\pwn\render\fse\Command_Commands.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\fse\Command_SetVec2Uniform.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\inc\pwn\render\fse\Command_SetVec2Uniform.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\fse\exceptions.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\inc\pwn\render\fse\exceptions.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\fse\Linker.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\inc\pwn\render\fse\Linker.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\fse\Pipeline.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\inc\pwn\render\fse\Pipeline.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\fse\Provider.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\inc\pwn\render\fse\Provider.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\fse\Provider_Providers.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\inc\pwn\render\fse\Provider_Providers.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\fse\Provider_RenderFullscreenProvider.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\inc\pwn\render\fse\Provider_RenderFullscreenProvider.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\fse\Provider_RenderWorldProvider.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\inc\pwn\render\fse\Provider_RenderWorldProvider.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\fse\RenderArgs.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\inc\pwn\render\fse\RenderArgs.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\fse\Target.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\inc\pwn\render\fse\Target.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\fse\Target_BufferTarget.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\inc\pwn\render\fse\Target_BufferTarget.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\fse\Target_FormTarget.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\inc\pwn\render\fse\Target_FormTarget.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\fse\Target_Targets.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\inc\pwn\render\fse\Target_Targets.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\inc\pwn\render\fse\types.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\..\..\src\render\src\actor.cpp"
 			>
@@ -193,6 +345,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\src\render\src\fbo.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\fbo.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\render\src\material.cpp"
 			>
 		</File>
@@ -229,6 +389,22 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\src\render\src\shader.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\shader.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\render\src\size.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\size.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\render\src\texture2.cpp"
 			>
 		</File>
@@ -242,6 +418,22 @@
 		</File>
 		<File
 			RelativePath="..\..\..\inc\pwn\render\texturepool2.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\render\src\uniform.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\uniform.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\render\src\utils.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\utils.h"
 			>
 		</File>
 		<File

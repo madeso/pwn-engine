@@ -22,24 +22,6 @@ namespace pwn
 			std::swap(*result, *last);
 			from->pop_back();
 		}
-
-		class Str
-		{
-		public:
-			template<typename Type>
-			Str& operator<<(const Type& t)
-			{
-				stream << t;
-				return *this;
-			}
-
-			operator pwn::string() const
-			{
-				return stream.str();
-			}
-
-			pwn::ostringstream stream;
-		};
 	}
 }
 

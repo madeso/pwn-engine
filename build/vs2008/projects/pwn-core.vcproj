@@ -145,6 +145,10 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\..\..\inc\pwn\core\config.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\core\src\idpool.cpp"
 			>
 		</File>
@@ -153,11 +157,27 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\inc\pwn\core\map.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\core\pool.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\inc\pwn\core\stdutil.h"
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\inc\pwn\core\Str.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\inc\pwn\string.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\core\StringSeperator.h"
 			>
 		</File>
 		<File

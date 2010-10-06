@@ -6,7 +6,7 @@
 #include <boost/foreach.hpp>
 #include <pwn/assert.h>
 
-#include <pwn/core/stdutil.h>
+#include <pwn/core/str.h>
 #include <fstream>
 
 namespace pwn

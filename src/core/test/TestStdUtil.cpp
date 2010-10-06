@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <pwn/core/stdutil.h>
+#include <pwn/core/str.h> // move to a another/new? test
 
 #define GTEST(x) TEST(StdUtil, x)
 

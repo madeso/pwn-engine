@@ -25,9 +25,8 @@ namespace pwn
 			return c;
 		}
 
-		void WorldWithCameraBoundObject3::render(const Camera& camera)
+		void WorldWithCameraBoundObject3::render(int x, int y, int w, int h, const CompiledCamera& cc)
 		{
-			const CompiledCamera cc(MoveToOrigo(camera));
 			RenderList list(true); // todo: move to pimpl or provide a render direct interface to the actor..?
 			list.begin();
 			actor->render(&list, cc);
@@ -37,7 +36,7 @@ namespace pwn
 			glClear(GL_DEPTH_BUFFER_BIT);
 			Assert( glGetError_WithString() == GL_NO_ERROR);
 
-			WorldWith3::render(camera);
+			WorldWith3::render(x, y, w, h, cc);
 		}
 	}
 }

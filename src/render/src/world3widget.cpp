@@ -38,8 +38,6 @@ namespace pwn
 			const int y = -static_cast<GLsizei>(TopOf(rect));
 			const int w = static_cast<GLsizei>(WidthOf(rect));
 			const int h = static_cast<GLsizei>(HeightOf(rect));
-			glViewport(x, y, w, h);
-			Assert( glGetError_WithString() == GL_NO_ERROR);
 			glMatrixMode(GL_PROJECTION);
 			Assert( glGetError_WithString() == GL_NO_ERROR);
 			glLoadIdentity();
@@ -54,7 +52,7 @@ namespace pwn
 			Assert( glGetError_WithString() == GL_NO_ERROR);
 			glEnable(GL_CULL_FACE);
 			Assert( glGetError_WithString() == GL_NO_ERROR);
-			world->render(camera);
+			world->render(x, y, w, h, camera);
 			Assert( glGetError_WithString() == GL_NO_ERROR);
 			glDisable(GL_DEPTH_TEST);
 			Assert( glGetError_WithString() == GL_NO_ERROR);

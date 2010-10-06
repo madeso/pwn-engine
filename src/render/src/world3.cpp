@@ -8,6 +8,12 @@
 
 #pragma warning(disable:4512) // warning C4512: 'boost::detail::addr_impl_ref<T>' : assignment operator could not be generated
 #include <boost/foreach.hpp>
+
+#include <pwn/assert.h>
+
+#include <SFML/OpenGl.hpp>
+#include "opengl_debug.hpp"
+
 namespace pwn
 {
 	namespace render
@@ -41,9 +47,11 @@ namespace pwn
 				actors.erase(res);
 			}
 
-			void render(const Camera& camera)
+			void render(int x, int y, int w, int h, const CompiledCamera& cc)
 			{
-				const CompiledCamera cc(camera);
+				glViewport(x, y, w, h);
+				Assert( glGetError_WithString() == GL_NO_ERROR);
+
 				list.begin();
 				BOOST_FOREACH(ActorPtr a, actors)
 				{

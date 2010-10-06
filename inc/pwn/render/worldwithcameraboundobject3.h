@@ -9,7 +9,7 @@ namespace pwn
 		{
 		public:
 			WorldWithCameraBoundObject3(ActorPtr a, World3::Ptr w);
-			virtual void render(const Camera& camera);
+			virtual void render(int x, int y, int w, int h, const CompiledCamera& camera);
 		private:
 			ActorPtr actor;
 		};

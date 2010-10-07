@@ -3,7 +3,7 @@
 
 #include <pwn/render/fse/types.h>
 #include <pwn/string.h>
-#include <pwn/render/fse/RenderArgs.h>
+#include <pwn/render/RenderArgs.h>
 #include <vector>
 #include <pwn/render/fse/Linker.h>
 
@@ -17,7 +17,7 @@ namespace pwn
 			{
 			public:
 				static PipelinePtr Create(const string& path, int width, int height);
-				void render(WorldPtr world, const RenderArgs& ra);
+				void render(World3* world, const RenderArgs& ra);
 
 			public:
 				Pipeline();

@@ -25,7 +25,7 @@ namespace pwn
 			{
 			}
 			
-			void Link::provide(WorldPtr world, RenderArgs ra)
+			void Link::provide(World3* world, RenderArgs ra)
 			{
 				prov->doProvide(world, ra);
 			}
@@ -46,7 +46,7 @@ namespace pwn
 				return id;
 			}
 			
-			void Provider::provide(WorldPtr world, const RenderArgs& ra)
+			void Provider::provide(World3* world, const RenderArgs& ra)
 			{
 				if (autocallCommands)
 				{

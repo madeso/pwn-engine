@@ -1,7 +1,7 @@
 #ifndef PWN_RENDER_FSE_PROVIDER
 #define PWN_RENDER_FSE_PROVIDER
 
-#include <pwn/render/fse/RenderArgs.h>
+#include <pwn/render/RenderArgs.h>
 #include <boost/utility.hpp>
 #include <vector>
 #include <pwn/core/config.h>
@@ -21,7 +21,7 @@ namespace pwn
 				Link(const string& name);
 				~Link();
 
-				void provide(WorldPtr world, RenderArgs ra);
+				void provide(World3* world, RenderArgs ra);
 				void sortout(LinkerPtr usr);
 				
 			private:
@@ -34,7 +34,7 @@ namespace pwn
 			public:
 				void setId(const string& id);
 				const string getId() const;
-				void provide(WorldPtr world, const RenderArgs& ra);
+				void provide(World3* world, const RenderArgs& ra);
 				std::vector<Provider*>& getProviders();
 				void link(Linker* linker);
 				void bind(Binder* bd);
@@ -59,7 +59,7 @@ namespace pwn
 				virtual void doLink(Linker* linker) = 0;
 				virtual void doBind(Binder* bd) = 0;
 			public:
-				virtual void doProvide(WorldPtr world, const RenderArgs& ra) = 0;
+				virtual void doProvide(World3* world, const RenderArgs& ra) = 0;
 				
 			private:
 				TargetPtr target;

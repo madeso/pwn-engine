@@ -9,10 +9,10 @@ namespace pwn
 {
 	namespace render
 	{
+		class RenderArgs;
+
 		namespace fse
 		{
-			class RenderArgs;
-
 			class BufferTarget
 				: public Target
 				, boost::noncopyable
@@ -21,7 +21,7 @@ namespace pwn
 				BufferTarget(const core::Ptree& el);
 				~BufferTarget();
 
-				void apply(Provider& a, WorldPtr world, const RenderArgs& ra); // Calls doProvide
+				void apply(Provider& a, World3* world, const RenderArgs& ra); // Calls doProvide
 				int getWidth();
 				int getHeight();
 				void link(Linker* usr);

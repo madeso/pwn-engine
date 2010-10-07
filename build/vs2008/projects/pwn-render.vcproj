@@ -252,14 +252,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\render\src\fse\RenderArgs.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\inc\pwn\render\fse\RenderArgs.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\render\src\fse\Target.cpp"
 				>
 			</File>
@@ -378,6 +370,14 @@
 		</File>
 		<File
 			RelativePath="..\..\..\inc\pwn\render\poseable.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\render\src\RenderArgs.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\RenderArgs.h"
 			>
 		</File>
 		<File

@@ -10,10 +10,10 @@ namespace pwn
 {
 	namespace render
 	{
+		class RenderArgs;
+
 		namespace fse
 		{
-			class RenderArgs;
-
 			class Target
 			{
 			public:
@@ -21,7 +21,7 @@ namespace pwn
 				virtual ~Target();
 
 				virtual void link(Linker* usr) = 0;
-				virtual void apply(Provider& a, WorldPtr world, const RenderArgs& ra) = 0; // calls doProvide on provider
+				virtual void apply(Provider& a, World3* world, const RenderArgs& ra) = 0; // calls doProvide on provider
 				virtual int getWidth() = 0;
 				virtual int getHeight() = 0;
 				const string& getId() const;

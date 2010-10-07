@@ -9,10 +9,10 @@ namespace pwn
 {
 	namespace render
 	{
+		class RenderArgs;
+
 		namespace fse
 		{
-			class RenderArgs;
-
 			class BufferReference
 				: boost::noncopyable
 			{
@@ -24,7 +24,7 @@ namespace pwn
 			public:
 				void setBuffer(FboPtr fbo);
 				void bindTexture(int location);
-				void updateTexture(Provider& a, WorldPtr world, const RenderArgs& ra); // calls doProvide
+				void updateTexture(Provider& a, World3* world, const RenderArgs& ra); // calls doProvide
 				int getWidth() const;
 				int getHeight() const;
 				

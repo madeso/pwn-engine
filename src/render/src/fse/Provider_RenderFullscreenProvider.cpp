@@ -18,7 +18,7 @@ namespace pwn
 			{
 			}
 
-			void RenderFullscreenProvider::doProvide(const RenderArgs& ra)
+			void RenderFullscreenProvider::doProvide(World3* world, const RenderArgs& ra)
 			{
 				if(shader.get()) Shader::Bind(shader);
 				callCommands(); // lets call the commands

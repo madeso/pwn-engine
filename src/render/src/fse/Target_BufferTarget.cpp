@@ -18,7 +18,7 @@ namespace pwn
 			{
 			}
 
-			void BufferTarget::apply(Provider& a, WorldPtr world, const RenderArgs& ra)
+			void BufferTarget::apply(Provider& a, World3* world, const RenderArgs& ra)
 			{
 				buffer->updateTexture(a, world, ra);
 			}

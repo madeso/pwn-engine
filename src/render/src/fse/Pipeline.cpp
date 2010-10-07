@@ -22,7 +22,7 @@ namespace pwn
 				return pp;
 			}
 			
-			void Pipeline::render(WorldPtr world, const RenderArgs& ra)
+			void Pipeline::render(World3* world, const RenderArgs& ra)
 			{
 				BOOST_FOREACH(Provider* p, providers)
 				{

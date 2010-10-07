@@ -17,7 +17,7 @@ namespace pwn
 			{
 			}
 
-			void FormTarget::apply(Provider& a, WorldPtr world, const RenderArgs& ra)
+			void FormTarget::apply(Provider& a, World3* world, const RenderArgs& ra)
 			{
 				a.doProvide(world, ra);
 			}

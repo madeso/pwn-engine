@@ -11,9 +11,6 @@ namespace pwn
 		class CompiledCamera;
 		class World3;
 		
-		typedef boost::shared_ptr<World3> WorldPtr;
-
-		
 		class Fbo;		typedef boost::shared_ptr<Fbo> FboPtr;
 
 		namespace fse

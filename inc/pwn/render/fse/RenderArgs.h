@@ -2,6 +2,7 @@
 #define PWN_RENDER_FSE_RENDERARGS
 
 #include <pwn/render/fse/types.h>
+#include <pwn/render/CompiledCamera.h>
 
 namespace pwn
 {
@@ -10,6 +11,7 @@ namespace pwn
 		namespace fse
 		{
 			class RenderArgs
+				: boost::noncopyable
 			{
 			public:
 				RenderArgs(WorldPtr world, const CompiledCamera& cam, int width, int height);
@@ -19,13 +21,14 @@ namespace pwn
 				int getHeight();
 				
 			public:
-				void render();
+				void render() const;
 				
 			private:
 				WorldPtr world;
 				CompiledCamera cam;
 				int width;
 				int height;
+				RenderArgs(const RenderArgs&);
 			};
 		}
 	}

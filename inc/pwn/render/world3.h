@@ -21,7 +21,7 @@ namespace pwn
 			virtual void actor_add(ActorPtr actor) = 0;
 			virtual void actor_remove(ActorPtr actor) = 0;
 
-			virtual void render(int x, int y, int w, int h, const CompiledCamera& cc) = 0;
+			virtual void render(int x, int y, int w, int h, const CompiledCamera& cc) const = 0;
 
 			typedef boost::shared_ptr<World3> Ptr;
 

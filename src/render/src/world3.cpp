@@ -47,7 +47,7 @@ namespace pwn
 				actors.erase(res);
 			}
 
-			void render(int x, int y, int w, int h, const CompiledCamera& cc)
+			void render(int x, int y, int w, int h, const CompiledCamera& cc) const
 			{
 				glViewport(x, y, w, h);
 				Assert( glGetError_WithString() == GL_NO_ERROR);

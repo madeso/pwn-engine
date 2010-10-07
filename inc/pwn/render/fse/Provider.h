@@ -59,7 +59,7 @@ namespace pwn
 				virtual void doLink(Linker* linker) = 0;
 				virtual void doBind(Binder* bd) = 0;
 			public:
-				virtual void doProvide(RenderArgs ra) = 0;
+				virtual void doProvide(const RenderArgs& ra) = 0;
 				
 			private:
 				TargetPtr target;

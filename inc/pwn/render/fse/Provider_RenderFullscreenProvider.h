@@ -17,7 +17,7 @@ namespace pwn
 				~RenderFullscreenProvider();
 
 			protected:
-				void doProvide(RenderArgs ra);
+				void doProvide(const RenderArgs& ra);
 				void doLink(Linker* user);
 				void doBind(Binder* bd);
 				

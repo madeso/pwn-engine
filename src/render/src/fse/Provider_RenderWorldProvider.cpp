@@ -16,7 +16,7 @@ namespace pwn
 			{
 			}
 			
-			void RenderWorldProvider::doProvide(RenderArgs ra)
+			void RenderWorldProvider::doProvide(const RenderArgs& ra)
 			{
 				Shader::Bind(shader);
 				ra.render();

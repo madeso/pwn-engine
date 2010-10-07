@@ -8,12 +8,10 @@ namespace pwn
 	namespace render
 	{
 		// temporary
-		class CompiledCamera {};
+		class CompiledCamera;
+		class World3;
 		
-		struct World
-		{
-			void render(int w, int h, const CompiledCamera& cc){}
-		}; typedef boost::shared_ptr<World> WorldPtr;
+		typedef boost::shared_ptr<World3> WorldPtr;
 
 		
 		class Fbo;		typedef boost::shared_ptr<Fbo> FboPtr;

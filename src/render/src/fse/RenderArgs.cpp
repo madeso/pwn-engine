@@ -1,4 +1,5 @@
 ﻿#include <pwn/render/fse/RenderArgs.h>
+#include <pwn/render/world3.h>
 
 namespace pwn
 {
@@ -34,9 +35,9 @@ namespace pwn
 				return height;
 			}
 			
-			void RenderArgs::render()
+			void RenderArgs::render() const
 			{
-				world->render(width, height, cam);
+				world->render(0, 0, width, height, cam);
 			}
 		}
 	}

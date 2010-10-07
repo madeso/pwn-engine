@@ -21,7 +21,7 @@ namespace pwn
 				BufferTarget(const core::Ptree& el);
 				~BufferTarget();
 
-				void apply(Provider& a, const RenderArgs& ra); // Calls doProvide
+				void apply(Provider& a, WorldPtr world, const RenderArgs& ra); // Calls doProvide
 				int getWidth();
 				int getHeight();
 				void link(Linker* usr);

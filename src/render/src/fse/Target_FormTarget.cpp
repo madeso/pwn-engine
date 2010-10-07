@@ -17,9 +17,9 @@ namespace pwn
 			{
 			}
 
-			void FormTarget::apply(Provider& a, const RenderArgs& ra)
+			void FormTarget::apply(Provider& a, WorldPtr world, const RenderArgs& ra)
 			{
-				a.doProvide(ra);
+				a.doProvide(world, ra);
 			}
 
 			int FormTarget::getWidth()

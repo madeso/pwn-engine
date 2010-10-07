@@ -21,7 +21,7 @@ namespace pwn
 				Link(const string& name);
 				~Link();
 
-				void provide(RenderArgs ra);
+				void provide(WorldPtr world, RenderArgs ra);
 				void sortout(LinkerPtr usr);
 				
 			private:
@@ -34,7 +34,7 @@ namespace pwn
 			public:
 				void setId(const string& id);
 				const string getId() const;
-				void provide(const RenderArgs& ra);
+				void provide(WorldPtr world, const RenderArgs& ra);
 				std::vector<Provider*>& getProviders();
 				void link(Linker* linker);
 				void bind(Binder* bd);
@@ -59,7 +59,7 @@ namespace pwn
 				virtual void doLink(Linker* linker) = 0;
 				virtual void doBind(Binder* bd) = 0;
 			public:
-				virtual void doProvide(const RenderArgs& ra) = 0;
+				virtual void doProvide(WorldPtr world, const RenderArgs& ra) = 0;
 				
 			private:
 				TargetPtr target;

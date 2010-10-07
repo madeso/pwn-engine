@@ -18,9 +18,9 @@ namespace pwn
 			{
 			}
 
-			void BufferTarget::apply(Provider& a, const RenderArgs& ra)
+			void BufferTarget::apply(Provider& a, WorldPtr world, const RenderArgs& ra)
 			{
-				buffer->updateTexture(a, ra);
+				buffer->updateTexture(a, world, ra);
 			}
 
 			int BufferTarget::getWidth()

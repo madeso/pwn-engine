@@ -7,17 +7,11 @@ namespace pwn
 	{
 		namespace fse
 		{
-			RenderArgs::RenderArgs(WorldPtr aworld, const CompiledCamera& acam, int awidth, int aheight)
-				: world(aworld)
-				, cam(acam)
+			RenderArgs::RenderArgs(const CompiledCamera& acam, int awidth, int aheight)
+				: cam(acam)
 				, width(awidth)
 				, height(aheight)
 			{
-			}
-			
-			WorldPtr RenderArgs::getWorld()
-			{
-				return world;
 			}
 			
 			const CompiledCamera& RenderArgs::getCamera() const
@@ -35,7 +29,7 @@ namespace pwn
 				return height;
 			}
 			
-			void RenderArgs::render() const
+			void RenderArgs::render(WorldPtr world) const
 			{
 				world->render(0, 0, width, height, cam);
 			}

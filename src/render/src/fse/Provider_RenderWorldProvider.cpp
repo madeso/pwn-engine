@@ -16,10 +16,10 @@ namespace pwn
 			{
 			}
 			
-			void RenderWorldProvider::doProvide(const RenderArgs& ra)
+			void RenderWorldProvider::doProvide(WorldPtr world, const RenderArgs& ra)
 			{
 				Shader::Bind(shader);
-				ra.render();
+				ra.render(world);
 				Shader::Unbind(shader);
 			}
 			

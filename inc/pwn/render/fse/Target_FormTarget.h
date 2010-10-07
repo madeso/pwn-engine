@@ -16,7 +16,7 @@ namespace pwn
 				FormTarget(int width, int height);
 				~FormTarget();
 
-				void apply(Provider& a, const RenderArgs& ra);
+				void apply(Provider& a, WorldPtr world, const RenderArgs& ra);
 				int getWidth();
 				int getHeight();
 				void link(Linker* usr);

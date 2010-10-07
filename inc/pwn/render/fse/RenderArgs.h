@@ -14,17 +14,15 @@ namespace pwn
 				: boost::noncopyable
 			{
 			public:
-				RenderArgs(WorldPtr world, const CompiledCamera& cam, int width, int height);
-				WorldPtr getWorld();
+				RenderArgs(const CompiledCamera& cam, int width, int height);
 				const CompiledCamera& getCamera() const;
 				int getWidth();
 				int getHeight();
 				
 			public:
-				void render() const;
+				void render(WorldPtr world) const;
 				
 			private:
-				WorldPtr world;
 				CompiledCamera cam;
 				int width;
 				int height;

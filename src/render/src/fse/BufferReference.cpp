@@ -33,10 +33,10 @@ namespace pwn
 				buffer->bindTexture(location);
 			}
 			
-			void BufferReference::updateTexture(Provider& a, const RenderArgs& ra)
+			void BufferReference::updateTexture(Provider& a, WorldPtr world, const RenderArgs& ra)
 			{
 				TextureUpdator up(buffer.get());
-				a.doProvide(ra);
+				a.doProvide(world, ra);
 			}
 			
 			int BufferReference::getWidth() const

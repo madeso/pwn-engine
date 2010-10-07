@@ -20,7 +20,7 @@ namespace pwn
 				const string toString() const;
 
 			protected:
-				void doProvide(const RenderArgs& ra);
+				void doProvide(WorldPtr world, const RenderArgs& ra);
 				void doLink(Linker* user);
 				void doBind(Binder* bd);
 			};

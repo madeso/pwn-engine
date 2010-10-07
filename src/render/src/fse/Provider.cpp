@@ -25,9 +25,9 @@ namespace pwn
 			{
 			}
 			
-			void Link::provide(RenderArgs ra)
+			void Link::provide(WorldPtr world, RenderArgs ra)
 			{
-				prov->doProvide(ra);
+				prov->doProvide(world, ra);
 			}
 			
 			void Link::sortout(LinkerPtr usr)
@@ -46,14 +46,14 @@ namespace pwn
 				return id;
 			}
 			
-			void Provider::provide(const RenderArgs& ra)
+			void Provider::provide(WorldPtr world, const RenderArgs& ra)
 			{
 				if (autocallCommands)
 				{
 					callCommands();
 				}
 
-				target->apply(*this, ra);
+				target->apply(*this, world, ra);
 			}
 			
 			std::vector<Provider*>& Provider::getProviders()

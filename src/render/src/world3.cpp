@@ -31,7 +31,6 @@ namespace pwn
 		{
 		public:
 			BasicWorld()
-				: list(true)
 			{
 			}
 
@@ -52,6 +51,8 @@ namespace pwn
 				glViewport(x, y, w, h);
 				Assert( glGetError_WithString() == GL_NO_ERROR);
 
+
+				static RenderList list(true);
 				list.begin();
 				BOOST_FOREACH(ActorPtr a, actors)
 				{
@@ -60,7 +61,6 @@ namespace pwn
 				list.end();
 			}
 
-			RenderList list;
 			typedef std::vector<ActorPtr> ActorList;
 			ActorList actors;
 		};

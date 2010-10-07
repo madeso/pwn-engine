@@ -15,6 +15,7 @@ namespace pwn
 		class Texture2;
 		class Poseable;
 
+		/// sorts render calls, and might utilize frame-to-frame coherence later on
 		class RenderList
 			: boost::noncopyable
 		{

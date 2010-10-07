@@ -52,7 +52,7 @@ namespace pwn
 				Assert( glGetError_WithString() == GL_NO_ERROR);
 
 
-				static RenderList list(true);
+				static RenderList list(true); // static since we want to use frame-to-frame coherence, and avoid uneccessary reallocation of its internals
 				list.begin();
 				BOOST_FOREACH(ActorPtr a, actors)
 				{

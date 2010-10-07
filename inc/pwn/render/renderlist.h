@@ -28,6 +28,7 @@ namespace pwn
 
 			typedef uint64 ID;
 
+			/// simple render command, might include other commands later on
 			struct Command
 			{
 				Command();

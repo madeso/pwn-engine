@@ -25,7 +25,7 @@ namespace pwn
 			return c;
 		}
 
-		void WorldWithCameraBoundObject3::render(int x, int y, int w, int h, const CompiledCamera& cc)
+		void WorldWithCameraBoundObject3::render(int x, int y, int w, int h, const CompiledCamera& cc) const
 		{
 			RenderList list(true); // todo: move to pimpl or provide a render direct interface to the actor..?
 			list.begin();

@@ -5,31 +5,19 @@ namespace pwn
 {
 	namespace render
 	{
-		RenderArgs::RenderArgs(const CompiledCamera& acam, int awidth, int aheight)
-			: cam(acam)
+		RenderArgs::RenderArgs(const Camera& acam, int ax, int ay, int awidth, int aheight)
+			: compiled(acam)
+			, camera(acam)
+			, x(ax)
+			, y(ay)
 			, width(awidth)
 			, height(aheight)
 		{
 		}
-
-		const CompiledCamera& RenderArgs::getCamera() const
-		{
-			return cam;
-		}
-
-		int RenderArgs::getWidth()
-		{
-			return width;
-		}
-
-		int RenderArgs::getHeight()
-		{
-			return height;
-		}
-
+		
 		void RenderArgs::render(World3* world) const
 		{
-			world->render(0, 0, width, height, cam);
+			world->render(*this);
 		}
 	}
 }

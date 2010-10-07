@@ -1,6 +1,7 @@
 #include <pwn/render/world3widget.h>
 #include <pwn/render/world3.h>
 #include <pwn/math/operations.h>
+#include <pwn/render/renderargs.h>
 #include <pwn/render/compiledcamera.h>
 
 #include <pwn/assert.h>
@@ -53,8 +54,8 @@ namespace pwn
 			Assert( glGetError_WithString() == GL_NO_ERROR);
 			glEnable(GL_CULL_FACE);
 			Assert( glGetError_WithString() == GL_NO_ERROR);
-			CompiledCamera c(camera);
-			world->render(x, y, w, h, c);
+			RenderArgs ra(camera, x, y, w, h);
+			world->render(ra);
 			Assert( glGetError_WithString() == GL_NO_ERROR);
 			glDisable(GL_DEPTH_TEST);
 			Assert( glGetError_WithString() == GL_NO_ERROR);

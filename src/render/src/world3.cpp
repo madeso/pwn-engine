@@ -1,6 +1,7 @@
 #include <pwn/render/world3.h>
 #include <pwn/render/actor.h>
 #include <pwn/render/renderlist.h>
+#include <pwn/render/renderargs.h>
 #include <vector>
 #include <algorithm>
 #include <pwn/render/compiledcamera.h>
@@ -47,16 +48,16 @@ namespace pwn
 				actors.erase(res);
 			}
 
-			void render(int x, int y, int w, int h, const CompiledCamera& cc) const
+			void render(const RenderArgs& r) const
 			{
-				glViewport(x, y, w, h);
+				glViewport(r.x, r.y, r.width, r.height);
 				Assert( glGetError_WithString() == GL_NO_ERROR);
 
 
 				list.begin();
 				BOOST_FOREACH(ActorPtr a, actors)
 				{
-					a->render(&list, cc);
+					a->render(&list, r.compiled);
 				}
 				list.end();
 			}

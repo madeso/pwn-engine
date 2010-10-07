@@ -24,9 +24,9 @@ namespace pwn
 			world->actor_remove(actor);
 		}
 
-		void WorldWith3::render(int x, int y, int w, int h, const CompiledCamera& camera) const
+		void WorldWith3::render(const RenderArgs& r) const
 		{
-			world->render(x, y, w, h, camera);
+			world->render(r);
 		}
 	}
 }

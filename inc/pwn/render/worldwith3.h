@@ -16,7 +16,7 @@ namespace pwn
 			virtual void actor_add(ActorPtr actor);
 			virtual void actor_remove(ActorPtr actor);
 
-			virtual void render(int x, int y, int w, int h, const CompiledCamera& camera) const;
+			virtual void render(const RenderArgs& r) const;
 		private:
 			World3::Ptr world;
 		};

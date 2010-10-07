@@ -1,6 +1,7 @@
 #ifndef PWN_RENDER_FSE_RENDERARGS
 #define PWN_RENDER_FSE_RENDERARGS
 
+#include <pwn/render/Camera.h>
 #include <pwn/render/CompiledCamera.h>
 
 namespace pwn
@@ -13,18 +14,18 @@ namespace pwn
 			: boost::noncopyable
 		{
 		public:
-			RenderArgs(const CompiledCamera& cam, int width, int height);
-			const CompiledCamera& getCamera() const;
-			int getWidth();
-			int getHeight();
-			
+			RenderArgs(const Camera& cam, int x, int y, int width, int height);
+
 		public:
 			void render(World3* world) const;
-			
-		private:
-			CompiledCamera cam;
+		
+			CompiledCamera compiled;
+			Camera camera;
+			int x;
+			int y;
 			int width;
 			int height;
+		private:
 			RenderArgs(const RenderArgs&);
 		};
 	}

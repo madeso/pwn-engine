@@ -3,6 +3,7 @@
 #include <pwn/render/camera.h>
 #include <pwn/render/compiledcamera.h>
 #include <pwn/render/renderlist.h>
+#include <pwn/render/renderargs.h>
 #include <pwn/math/operations.h>
 #include <SFML/OpenGl.hpp>
 #include "opengl_debug.hpp"
@@ -25,9 +26,10 @@ namespace pwn
 			return c;
 		}
 
-		void WorldWithCameraBoundObject3::render(int x, int y, int w, int h, const CompiledCamera& cc) const
+		void WorldWithCameraBoundObject3::render(const RenderArgs& r) const
 		{
 			RenderList list(true); // todo: move to pimpl or provide a render direct interface to the actor..?
+			CompiledCamera cc(MoveToOrigo(r.camera));
 			list.begin();
 			actor->render(&list, cc);
 			list.end();
@@ -36,7 +38,7 @@ namespace pwn
 			glClear(GL_DEPTH_BUFFER_BIT);
 			Assert( glGetError_WithString() == GL_NO_ERROR);
 
-			WorldWith3::render(x, y, w, h, cc);
+			WorldWith3::render(r);
 		}
 	}
 }

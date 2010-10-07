@@ -31,6 +31,7 @@ namespace pwn
 		{
 		public:
 			BasicWorld()
+				: list(true)
 			{
 			}
 
@@ -52,7 +53,6 @@ namespace pwn
 				Assert( glGetError_WithString() == GL_NO_ERROR);
 
 
-				static RenderList list(true); // static since we want to use frame-to-frame coherence, and avoid uneccessary reallocation of its internals
 				list.begin();
 				BOOST_FOREACH(ActorPtr a, actors)
 				{
@@ -60,6 +60,9 @@ namespace pwn
 				}
 				list.end();
 			}
+
+			mutable RenderList list; // mutable since we want to use frame-to-frame coherence, and avoid uneccessary reallocation of its internals
+			// cant be static, since it needs to be killed when the class is killed
 
 			typedef std::vector<ActorPtr> ActorList;
 			ActorList actors;

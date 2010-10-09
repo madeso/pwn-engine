@@ -13,6 +13,8 @@ namespace pwn
 		class Shader;
 		typedef boost::shared_ptr<render::Shader> ShaderPtr;
 
+		/** The compiled source to a shader.
+		*/
 		class ShaderSource
 		{
 		public:
@@ -28,6 +30,7 @@ namespace pwn
 			int mShader;
 		};
 
+		/// The shader
 		class Shader
 			: boost::noncopyable
 		{
@@ -37,8 +40,14 @@ namespace pwn
 
 			UniformPtr getUniform(const string& name);
 
-			// dont do anything if the shader is null
+			/** Binds a shader.
+			Doesnt do anything if the shader is null
+			*/
 			static void Bind(ShaderPtr sh);
+
+			/** Unbinds a shader.
+			Doesnt do anything if the shader is null
+			*/
 			static void Unbind(ShaderPtr sh);
 
 		private:

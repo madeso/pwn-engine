@@ -9,6 +9,8 @@ namespace pwn
 {
 	namespace render
 	{
+		/** Something that is poseable.
+		*/
 		class Poseable
 			: boost::noncopyable
 		{

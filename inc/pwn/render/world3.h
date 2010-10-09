@@ -10,6 +10,8 @@ namespace pwn
 		class Actor;
 		class RenderArgs;
 
+		/** A world is a list of actors to be rendered.
+		*/
 		class World3
 		{
 		public:

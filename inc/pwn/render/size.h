@@ -5,6 +5,9 @@ namespace pwn
 {
 	namespace render
 	{
+		/** A 2 dimensional size.
+		 for example used when stroing different fbo sizes in a map.
+		 */
 		struct Size
 		{
 			Size();

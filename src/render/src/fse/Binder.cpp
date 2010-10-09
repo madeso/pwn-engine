@@ -11,38 +11,41 @@ namespace pwn
 	{
 		namespace fse
 		{
-			struct CreateFboFunc
+			namespace
 			{
-				CreateFboFunc(int w, int h)
-					: width(w)
-					, height(h)
+				struct CreateFboFunc
 				{
-				}
+					CreateFboFunc(int w, int h)
+						: width(w)
+						, height(h)
+					{
+					}
 
-				FboPtr operator()()
+					FboPtr operator()()
+					{
+						FboPtr fbo(new Fbo(width, height, false));
+						return fbo;
+					}
+
+					int width; int height;
+				};
+
+				template<typename T>
+				struct GetFromPoolFunc
 				{
-					FboPtr fbo(new Fbo(width, height, false));
-					return fbo;
-				}
+					GetFromPoolFunc(core::Pool<T>* p)
+						: pool(p)
+					{
+					}
 
-				int width; int height;
-			};
+					core::Pool<T>* pool;
 
-			template<typename T>
-			struct GetFromPoolFunc
-			{
-				GetFromPoolFunc(core::Pool<T>* p)
-					: pool(p)
-				{
-				}
-
-				core::Pool<T>* pool;
-
-				T operator()(const string&)
-				{
-					return pool->get();
-				}
-			};
+					T operator()(const string&)
+					{
+						return pool->get();
+					}
+				};
+			}
 			
 			FboCreator::FboCreator(int width, int height)
 				: pool( CreateFboFunc(width, height) )
@@ -64,22 +67,25 @@ namespace pwn
 				pool.release(fbo);
 			}
 
-			class ShaderLoader
+			namespace 
 			{
-			public:
-				ShaderLoader(Linker* l)
-					: linker(l)
-				{}
-
-				ShaderPtr operator()(const string& id)
+				class ShaderLoader
 				{
-					ShaderPtr shader = linker->getShaderOrNull(id);
-					if( shader.get() ) return shader;
-					else return Shader::LoadFile(id);
-				}
-			private:
-				Linker* linker;
-			};
+				public:
+					ShaderLoader(Linker* l)
+						: linker(l)
+					{}
+
+					ShaderPtr operator()(const string& id)
+					{
+						ShaderPtr shader = linker->getShaderOrNull(id);
+						if( shader.get() ) return shader;
+						else return Shader::LoadFile(id);
+					}
+				private:
+					Linker* linker;
+				};
+			}
 			
 			Binder::Binder(Linker* linker)
 				: shaders( ShaderLoader(linker) )
@@ -110,26 +116,29 @@ namespace pwn
 				references.insert(br);
 			}
 			
-			class StringCounter
+			namespace
 			{
-			public:
-				typedef std::map<string, unsigned int> Map;
-
-				void add(const string& s)
+				class StringCounter
 				{
-					map[s] = countsOf(s)+1;
-				}
+				public:
+					typedef std::map<string, unsigned int> Map;
 
-				unsigned int countsOf(const string& s) const
-				{
-					const Map::const_iterator f = map.find(s);
-					return f!=map.end()
-						? f->second
-						: 0;
-				}
-			private:
-				Map map;
-			};
+					void add(const string& s)
+					{
+						map[s] = countsOf(s)+1;
+					}
+
+					unsigned int countsOf(const string& s) const
+					{
+						const Map::const_iterator f = map.find(s);
+						return f!=map.end()
+							? f->second
+							: 0;
+					}
+				private:
+					Map map;
+				};
+			}
 			
 			void Binder::createBuffers()
 			{

@@ -7,9 +7,12 @@ namespace pwn
 {
 	namespace render
 	{
+		/** determines how a Widget is displayed.
+		*/
 		class Dock
 		{
 		public:
+			/// the Widget fills up the entire VirtualDisplay.
 			static Dock Fill();
 
 			math::rect getRect(int width, int height) const;

@@ -16,6 +16,8 @@ namespace pwn
 	{
 		class Shader;
 
+		/** A shader uniform.
+		*/
 		class Uniform
 			: boost::noncopyable
 		{

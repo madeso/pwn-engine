@@ -7,6 +7,8 @@ namespace pwn
 {
 	namespace render
 	{
+		/** WorldWith3 enables a faux inheritance from an unknown subclass of world.
+		*/
 		class WorldWith3 : public World3
 		{
 		public:

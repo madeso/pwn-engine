@@ -10,6 +10,8 @@ namespace pwn
 	{
 		class World3;
 
+		/** Basic class that are sent around containing arguments for rendering.
+		*/
 		class RenderArgs
 			: boost::noncopyable
 		{

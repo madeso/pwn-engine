@@ -12,11 +12,22 @@ namespace pwn
 	{
 		/** The material class that is used when rendering.
 		 @todo remove Rgba colors and use a Rgb color, with a seperate member for alpha.
+		 @todo add support for premultiplied alpha?
 		 */
 		class Material
 		{
 		public:
 			Material();
+
+			/*
+			luminance/ambiance/incandesscence/constant self iluminating parts
+			reflectivity
+			bump/displacement
+			blinn, phong, phong-e, lambert, anistropic, velvet, glossy, constant
+			color texture - add hue variantions
+			transparency - add color to it?
+			specularity - highlight value and color, white bright, dark no highlight
+			*/
 
 			math::Rgba ambient; // -1 - 1
 			math::Rgba diffuse; // -1 - 1

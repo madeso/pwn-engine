@@ -7,6 +7,8 @@ namespace pwn
 {
 	namespace render
 	{
+		/** Something to be rendered on the VirtualDisplay, usually World3Widget.
+		*/
 		class Widget
 		{
 		public:

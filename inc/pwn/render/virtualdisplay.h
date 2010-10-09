@@ -10,6 +10,8 @@ namespace pwn
 	{
 		class Widget;
 
+		/** A virtual screen, display or window, will probably be displayed in a real window.
+		*/
 		class VirtualDisplay
 		{
 		public:

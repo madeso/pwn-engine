@@ -5,6 +5,8 @@ namespace pwn
 {
 	namespace render
 	{
+		/** A world with a single camera bound object, like a sky-sphere.
+		*/
 		class WorldWithCameraBoundObject3 : public WorldWith3
 		{
 		public:

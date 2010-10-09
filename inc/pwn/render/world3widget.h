@@ -11,6 +11,8 @@ namespace pwn
 	{
 		class World3;
 
+		/** A widget that renders a World3 through a Camera.
+		*/
 		class World3Widget : public Widget
 		{
 		public:

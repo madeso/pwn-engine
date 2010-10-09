@@ -5,7 +5,8 @@ namespace pwn
 {
 	namespace render
 	{
-
+		/** returns glGetError() and outputs the result if fatal to some debug output
+		*/
 		GLenum glGetError_WithString();
 	}
 }

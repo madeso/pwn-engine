@@ -13,18 +13,20 @@ namespace pwn
 	{
 		namespace fse
 		{
+			/** Entry point and probably the only class of interest of the fse framework.
+			*/
 			class Pipeline
 			{
 			public:
 				static PipelinePtr Create(const string& path, int width, int height);
 				void render(World3* world, const RenderArgs& ra);
+				~Pipeline();
 
 			public:
-				Pipeline();
-				~Pipeline();
 				void add(Provider* pr);
 				
 			private:
+				Pipeline();
 				void bind(Binder* binder);
 				
 			private:

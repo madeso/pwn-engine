@@ -15,6 +15,8 @@ namespace pwn
 	{
 		class Texture2;
 
+		/** A pool for textures.
+		*/
 		class TexturePool2
 		{
 		public:

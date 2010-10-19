@@ -161,7 +161,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\meshio\vfs.h"
+			RelativePath="..\..\..\src\meshio\vfs.hpp"
 			>
 		</File>
 	</Files>

@@ -2,7 +2,7 @@
 
 #include <pwn/mesh/mesh.h>
 #include <pwn/math/operations.h>
-#include "vfs.h"
+#include "vfs.hpp"
 #include <boost/foreach.hpp>
 #include <map>
 

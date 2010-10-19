@@ -13,7 +13,7 @@ namespace pwn
 	{
 		namespace fse
 		{
-			/** Entry point and probably the only class of interest of the fse framework.
+			/** Entry point and probably the only class of interest when using the fse framework.
 			*/
 			class Pipeline
 			{
@@ -23,7 +23,7 @@ namespace pwn
 				~Pipeline();
 
 			public:
-				void add(Provider* pr);
+				void add(Provider* pr); ///< internal
 				
 			private:
 				Pipeline();

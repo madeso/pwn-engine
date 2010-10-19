@@ -47,22 +47,22 @@ namespace pwn
 				};
 			}
 			
-			FboCreator::FboCreator(int width, int height)
+			FboPool::FboPool(int width, int height)
 				: pool( CreateFboFunc(width, height) )
 				, map( GetFromPoolFunc<FboPtr>(&pool) )
 			{
 			}
 
-			FboCreator::~FboCreator()
+			FboPool::~FboPool()
 			{
 			}
 			
-			FboPtr FboCreator::create(const string& name)
+			FboPtr FboPool::create(const string& name)
 			{
 				return map.get(name);
 			}
 			
-			void FboCreator::release(FboPtr fbo)
+			void FboPool::release(FboPtr fbo)
 			{
 				pool.release(fbo);
 			}
@@ -180,7 +180,7 @@ namespace pwn
 				CreatorMap::iterator result = creators.find(size);
 				if (result == creators.end())
 				{
-					FboCreatorPtr c( new FboCreator(size.width, size.height) );
+					FboCreatorPtr c( new FboPool(size.width, size.height) );
 					creators[size] = c;
 					return c;
 				}

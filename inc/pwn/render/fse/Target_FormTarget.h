@@ -9,6 +9,9 @@ namespace pwn
 	{
 		namespace fse
 		{
+			/** Render to a form/window.
+			 Usually the last one in the fse pipeline.
+			 */
 			class FormTarget
 				: public Target
 			{

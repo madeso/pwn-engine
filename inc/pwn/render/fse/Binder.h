@@ -16,11 +16,11 @@ namespace pwn
 	{
 		namespace fse
 		{
-			class FboCreator
+			class FboPool
 			{
 			public:
-				FboCreator(int width, int height);
-				~FboCreator();
+				FboPool(int width, int height);
+				~FboPool();
 
 				FboPtr create(const string& name);
 				void release(FboPtr fbo);

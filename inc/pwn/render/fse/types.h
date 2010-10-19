@@ -15,7 +15,7 @@ namespace pwn
 
 		namespace fse
 		{
-			class FboCreator;		typedef boost::shared_ptr<FboCreator> FboCreatorPtr;
+			class FboPool;		typedef boost::shared_ptr<FboPool> FboCreatorPtr;
 			class BufferReference;	typedef boost::shared_ptr<BufferReference> BufferReferencePtr;
 			class Provider;			typedef boost::shared_ptr<Provider> ProviderPtr;
 			class Target;			typedef boost::shared_ptr<Target> TargetPtr;

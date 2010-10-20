@@ -144,6 +144,58 @@
 	<References>
 	</References>
 	<Files>
+		<Filter
+			Name="external"
+			>
+			<File
+				RelativePath="..\..\..\src\meshio\external\physfs_byteorder.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\meshio\external\physfs_fstream.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\meshio\external\physfs_fstream.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\meshio\external\physfs_ifstream.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\meshio\external\physfs_ifstream.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\meshio\external\physfs_ofstream.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\meshio\external\physfs_ofstream.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\meshio\external\physfs_readfunctions.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\meshio\external\physfs_streambuf.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\meshio\external\physfs_streambuf.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\meshio\external\physfs_writefunctions.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\meshio\external\source.txt"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\..\..\src\meshio\animation-writer.cpp"
 			>

@@ -9,7 +9,7 @@
 #define PHYSFS_READFUNCTIONS_H_
 
 #include <iostream>
-#include <stdint.h>
+#include <boost/cstdint.hpp>
 
 #include "physfs_byteorder.h"
 
@@ -68,130 +68,130 @@ public:
       return value;
     }
 
-  inline int64_t
+  inline boost::int64_t
   Read64BE()
   {
-    return ReadBE<int64_t> ();
+    return ReadBE<boost::int64_t> ();
   }
-  inline int64_t
+  inline boost::int64_t
   Read64LE()
   {
-    return ReadLE<int64_t> ();
+    return ReadLE<boost::int64_t> ();
   }
-  inline int64_t
+  inline boost::int64_t
   Read64Default()
   {
-    return ReadDefault<int64_t> ();
+    return ReadDefault<boost::int64_t> ();
   }
-  inline int64_t
+  inline boost::int64_t
   Read64()
   {
-    return ReadValue<int64_t> ();
+    return ReadValue<boost::int64_t> ();
   }
 
-  inline uint64_t
+  inline boost::uint64_t
   ReadU64BE()
   {
-    return ReadBE<uint64_t> ();
+    return ReadBE<boost::uint64_t> ();
   }
-  inline uint64_t
+  inline boost::uint64_t
   ReadU64LE()
   {
-    return ReadLE<uint64_t> ();
+    return ReadLE<boost::uint64_t> ();
   }
-  inline uint64_t
+  inline boost::uint64_t
   ReadU64Default()
   {
-    return ReadDefault<uint64_t> ();
+    return ReadDefault<boost::uint64_t> ();
   }
-  inline uint64_t
+  inline boost::uint64_t
   ReadU64()
   {
-    return ReadValue<uint64_t> ();
+    return ReadValue<boost::uint64_t> ();
   }
 
-  inline int32_t
+  inline boost::int32_t
   Read32BE()
   {
-    return ReadBE<int32_t> ();
+    return ReadBE<boost::int32_t> ();
   }
-  inline int32_t
+  inline boost::int32_t
   Read32LE()
   {
-    return ReadLE<int32_t> ();
+    return ReadLE<boost::int32_t> ();
   }
-  inline int32_t
+  inline boost::int32_t
   Read32Default()
   {
-    return ReadDefault<int32_t> ();
+    return ReadDefault<boost::int32_t> ();
   }
-  inline int32_t
+  inline boost::int32_t
   Read32()
   {
-    return ReadValue<int32_t> ();
+    return ReadValue<boost::int32_t> ();
   }
 
-  inline uint32_t
+  inline boost::uint32_t
   ReadU32BE()
   {
-    return ReadBE<uint32_t> ();
+    return ReadBE<boost::uint32_t> ();
   }
-  inline uint32_t
+  inline boost::uint32_t
   ReadU32LE()
   {
-    return ReadLE<uint32_t> ();
+    return ReadLE<boost::uint32_t> ();
   }
-  inline uint32_t
+  inline boost::uint32_t
   ReadU32Default()
   {
-    return ReadDefault<uint32_t> ();
+    return ReadDefault<boost::uint32_t> ();
   }
-  inline uint32_t
+  inline boost::uint32_t
   ReadU32()
   {
-    return ReadValue<uint32_t> ();
+    return ReadValue<boost::uint32_t> ();
   }
 
-  inline int16_t
+  inline boost::int16_t
   Read16BE()
   {
-    return ReadBE<int16_t> ();
+    return ReadBE<boost::int16_t> ();
   }
-  inline int16_t
+  inline boost::int16_t
   Read16LE()
   {
-    return ReadLE<int16_t> ();
+    return ReadLE<boost::int16_t> ();
   }
-  inline int16_t
+  inline boost::int16_t
   Read16Default()
   {
-    return ReadDefault<int16_t> ();
+    return ReadDefault<boost::int16_t> ();
   }
-  inline int16_t
+  inline boost::int16_t
   Read16()
   {
-    return ReadValue<int16_t> ();
+    return ReadValue<boost::int16_t> ();
   }
 
-  inline uint16_t
+  inline boost::uint16_t
   ReadU16BE()
   {
-    return ReadBE<uint16_t> ();
+    return ReadBE<boost::uint16_t> ();
   }
-  inline uint16_t
+  inline boost::uint16_t
   ReadU16LE()
   {
-    return ReadLE<uint16_t> ();
+    return ReadLE<boost::uint16_t> ();
   }
-  inline uint16_t
+  inline boost::uint16_t
   ReadU16Default()
   {
-    return ReadDefault<uint16_t> ();
+    return ReadDefault<boost::uint16_t> ();
   }
-  inline uint16_t
+  inline boost::uint16_t
   ReadU16()
   {
-    return ReadValue<uint16_t> ();
+    return ReadValue<boost::uint16_t> ();
   }
 
 };

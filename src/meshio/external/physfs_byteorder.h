@@ -22,7 +22,7 @@ public:
     union
     {
       char bytes[4];
-      uint32_t value;
+      boost::uint32_t value;
     } testunion;
     testunion.value = 1;
     bigendian = testunion.bytes[3];
@@ -59,12 +59,12 @@ public:
   }
 
   //abstract function we
-  inline uint64_t
-  Swap(uint64_t value)
+  inline boost::uint64_t
+  Swap(boost::uint64_t value)
   {
-    uint64_t rc = 0;
-    uint8_t *src = (uint8_t*) &value;
-    uint8_t *tgt = (uint8_t*) &rc;
+    boost::uint64_t rc = 0;
+    boost::uint8_t *src = (boost::uint8_t*) &value;
+    boost::uint8_t *tgt = (boost::uint8_t*) &rc;
 
     tgt[0] = src[7];
     tgt[1] = src[6];
@@ -78,12 +78,12 @@ public:
     return rc;
   }
 
-  inline int64_t
-  Swap(int64_t value)
+  inline boost::int64_t
+  Swap(boost::int64_t value)
   {
-    int64_t rc = 0;
-    int8_t *src = (int8_t*) &value;
-    int8_t *tgt = (int8_t*) &rc;
+    boost::int64_t rc = 0;
+    boost::int8_t *src = (boost::int8_t*) &value;
+    boost::int8_t *tgt = (boost::int8_t*) &rc;
 
     tgt[0] = src[7];
     tgt[1] = src[6];
@@ -97,12 +97,12 @@ public:
     return rc;
   }
 
-  inline uint32_t
-  Swap(uint32_t value)
+  inline boost::uint32_t
+  Swap(boost::uint32_t value)
   {
-    uint32_t rc = 0;
-    uint8_t *src = (uint8_t*) &value;
-    uint8_t *tgt = (uint8_t*) &rc;
+    boost::uint32_t rc = 0;
+    boost::uint8_t *src = (boost::uint8_t*) &value;
+    boost::uint8_t *tgt = (boost::uint8_t*) &rc;
 
     tgt[0] = src[3];
     tgt[1] = src[2];
@@ -112,12 +112,12 @@ public:
     return rc;
   }
 
-  inline int32_t
-  Swap(int32_t value)
+  inline boost::int32_t
+  Swap(boost::int32_t value)
   {
-    int32_t rc = 0;
-    int8_t *src = (int8_t*) &value;
-    int8_t *tgt = (int8_t*) &rc;
+    boost::int32_t rc = 0;
+    boost::int8_t *src = (boost::int8_t*) &value;
+    boost::int8_t *tgt = (boost::int8_t*) &rc;
 
     tgt[0] = src[3];
     tgt[1] = src[2];
@@ -127,14 +127,14 @@ public:
     return rc;
   }
 
-  inline uint16_t
-  Swap(uint16_t value)
+  inline boost::uint16_t
+  Swap(boost::uint16_t value)
   {
     return ((value << 8) | (value >> 8));
   }
 
-  inline int16_t
-  Swap(int16_t value)
+  inline boost::int16_t
+  Swap(boost::int16_t value)
   {
     return ((value << 8) | (value >> 8));
   }

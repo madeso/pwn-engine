@@ -9,7 +9,7 @@
 #define PHYSFS_WRITEFUNCTIONS_H_
 
 #include <iostream>
-#include <stdint.h>
+#include <boost/cstdint.hpp>
 
 #include "physfs_byteorder.h"
 
@@ -65,129 +65,129 @@ public:
     }
 
   inline void
-  Write64BE(int64_t value)
+  Write64BE(boost::int64_t value)
   {
-    WriteBE<int64_t> (value);
+    WriteBE<boost::int64_t> (value);
   }
   inline void
-  Write64LE(int64_t value)
+  Write64LE(boost::int64_t value)
   {
-    WriteLE<int64_t> (value);
+    WriteLE<boost::int64_t> (value);
   }
   inline void
-  Write64Default(int64_t value)
+  Write64Default(boost::int64_t value)
   {
-    WriteDefault<int64_t> (value);
+    WriteDefault<boost::int64_t> (value);
   }
   inline void
-  Write64(int64_t value)
+  Write64(boost::int64_t value)
   {
-    WriteValue<int64_t> (value);
-  }
-
-  inline void
-  WriteU64BE(uint64_t value)
-  {
-    WriteBE<uint64_t> (value);
-  }
-  inline void
-  WriteU64LE(uint64_t value)
-  {
-    WriteLE<uint64_t> (value);
-  }
-  inline void
-  WriteU64Default(uint64_t value)
-  {
-    WriteDefault<uint64_t> (value);
-  }
-  inline void
-  WriteU64(uint64_t value)
-  {
-    WriteValue<uint64_t> (value);
+    WriteValue<boost::int64_t> (value);
   }
 
   inline void
-  Write32BE(int32_t value)
+  WriteU64BE(boost::uint64_t value)
   {
-    WriteBE<int32_t> (value);
+    WriteBE<boost::uint64_t> (value);
   }
   inline void
-  Write32LE(int32_t value)
+  WriteU64LE(boost::uint64_t value)
   {
-    WriteLE<int32_t> (value);
+    WriteLE<boost::uint64_t> (value);
   }
   inline void
-  Write32Default(int32_t value)
+  WriteU64Default(boost::uint64_t value)
   {
-    WriteDefault<int32_t> (value);
+    WriteDefault<boost::uint64_t> (value);
   }
   inline void
-  Write32(int32_t value)
+  WriteU64(boost::uint64_t value)
   {
-    WriteValue<int32_t> (value);
-  }
-
-  inline void
-  WriteU32BE(uint32_t value)
-  {
-    WriteBE<uint32_t> (value);
-  }
-  inline void
-  WriteU32LE(uint32_t value)
-  {
-    WriteLE<uint32_t> (value);
-  }
-  inline void
-  WriteU32Default(uint32_t value)
-  {
-    WriteDefault<uint32_t> (value);
-  }
-  inline void
-  WriteU32(uint32_t value)
-  {
-    WriteValue<uint32_t> (value);
+    WriteValue<boost::uint64_t> (value);
   }
 
   inline void
-  Write16BE(int16_t value)
+  Write32BE(boost::int32_t value)
   {
-    WriteBE<int16_t> (value);
+    WriteBE<boost::int32_t> (value);
   }
   inline void
-  Write16LE(int16_t value)
+  Write32LE(boost::int32_t value)
   {
-    WriteLE<int16_t> (value);
+    WriteLE<boost::int32_t> (value);
   }
   inline void
-  Write16Default(int16_t value)
+  Write32Default(boost::int32_t value)
   {
-    WriteDefault<int16_t> (value);
+    WriteDefault<boost::int32_t> (value);
   }
   inline void
-  Write16(int16_t value)
+  Write32(boost::int32_t value)
   {
-    WriteValue<int16_t> (value);
+    WriteValue<boost::int32_t> (value);
   }
 
   inline void
-  WriteU16BE(uint16_t value)
+  WriteU32BE(boost::uint32_t value)
   {
-    WriteBE<uint16_t> (value);
+    WriteBE<boost::uint32_t> (value);
   }
   inline void
-  WriteU16LE(uint16_t value)
+  WriteU32LE(boost::uint32_t value)
   {
-    WriteLE<uint16_t> (value);
+    WriteLE<boost::uint32_t> (value);
   }
   inline void
-  WriteU16Default(uint16_t value)
+  WriteU32Default(boost::uint32_t value)
   {
-    WriteDefault<uint16_t> (value);
+    WriteDefault<boost::uint32_t> (value);
   }
   inline void
-  WriteU16(uint16_t value)
+  WriteU32(boost::uint32_t value)
   {
-    WriteValue<uint16_t> (value);
+    WriteValue<boost::uint32_t> (value);
+  }
+
+  inline void
+  Write16BE(boost::int16_t value)
+  {
+    WriteBE<boost::int16_t> (value);
+  }
+  inline void
+  Write16LE(boost::int16_t value)
+  {
+    WriteLE<boost::int16_t> (value);
+  }
+  inline void
+  Write16Default(boost::int16_t value)
+  {
+    WriteDefault<boost::int16_t> (value);
+  }
+  inline void
+  Write16(boost::int16_t value)
+  {
+    WriteValue<boost::int16_t> (value);
+  }
+
+  inline void
+  WriteU16BE(boost::uint16_t value)
+  {
+    WriteBE<boost::uint16_t> (value);
+  }
+  inline void
+  WriteU16LE(boost::uint16_t value)
+  {
+    WriteLE<boost::uint16_t> (value);
+  }
+  inline void
+  WriteU16Default(boost::uint16_t value)
+  {
+    WriteDefault<boost::uint16_t> (value);
+  }
+  inline void
+  WriteU16(boost::uint16_t value)
+  {
+    WriteValue<boost::uint16_t> (value);
   }
 };
 

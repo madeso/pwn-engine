@@ -90,7 +90,7 @@ namespace pwn
 		pwn::real VirtualFile::readReal()
 		{
 			pwn::real value;
-			if( PHYSFS_read(file, &value, 1, sizeof(pwn::real)) != sizeof(pwn::real) ) Error("reading real");
+			if( PHYSFS_readBytes(file, &value, sizeof(pwn::real)) != sizeof(pwn::real) ) Error("reading real");
 			return value;
 		}
 
@@ -111,7 +111,7 @@ namespace pwn
 			else
 			{
 				boost::scoped_array<pwn::tchar> arr( new tchar[length+1] );
-				if( PHYSFS_read(file, arr.get(), 1, length * sizeof(pwn::tchar)) != length*sizeof(pwn::tchar) ) Error("reading string");
+				if( PHYSFS_readBytes(file, arr.get(), length * sizeof(pwn::tchar)) != length*sizeof(pwn::tchar) ) Error("reading string");
 				arr[length] = 0;
 				return arr.get();
 			}
@@ -119,7 +119,7 @@ namespace pwn
 
 		void VirtualFile::read(void* data, pwn::uint32 size)
 		{
-			if( PHYSFS_read(file, data, size, 1) != 1 ) Error("reading data");
+			if( PHYSFS_readBytes(file, data, size) != size ) Error("reading data");
 		}
 
 		void VirtualFile::write(const void* data, pwn::uint32 size)

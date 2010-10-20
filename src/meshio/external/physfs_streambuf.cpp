@@ -255,7 +255,7 @@ PHYSFS_StreamBuf::invalidatereadbuffer()
   int filllevel = egptr() - gptr();
   if (!filllevel)
     return;
-  if (doseek(ifile, ios::cur, -filllevel) == -1)
+  if (doseek(ifile, ios::cur, -filllevel) == std::streampos(-1))
     throw string("Seek error while trying to kill read buffer");
   char *endptr = &inbuffer.front() + inbuffer.capacity();
   setg(endptr, endptr, endptr);

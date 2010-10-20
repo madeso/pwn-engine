@@ -201,6 +201,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\src\meshio\config.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\meshio\config.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\inc\pwn\meshio\io.h"
 			>
 		</File>

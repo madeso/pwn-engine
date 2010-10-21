@@ -12,7 +12,7 @@
 #include <pwn/mesh/predefinedmaterials.h>
 #include <pwn/engine/democamera.h>
 #include <pwn/engine/vfstexturepool2.h>
-#include <pwn/meshio/io.h>
+#include <pwn/io/io.h>
 #include <pwn/render/worldwithcameraboundobject3.h>
 
 

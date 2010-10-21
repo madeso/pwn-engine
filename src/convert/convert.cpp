@@ -6,7 +6,7 @@
 #include <iostream>
 
 #include <pwn/mesh/mesh.h>
-#include <pwn/meshio/io.h>
+#include <pwn/io/io.h>
 #include <pwn/mesh/builder.h>
 #include <boost/foreach.hpp>
 

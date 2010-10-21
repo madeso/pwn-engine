@@ -1,4 +1,4 @@
-#include <pwn/meshio/config.h>
+#include <pwn/io/config.h>
 #include <boost/property_tree/xml_parser.hpp>
 
 #include "external/physfs_ifstream.h"

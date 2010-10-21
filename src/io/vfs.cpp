@@ -1,5 +1,5 @@
 #include "vfs.hpp"
-#include <pwn/meshio/io.h>
+#include <pwn/io/io.h>
 #include <boost/scoped_array.hpp>
 
 namespace pwn

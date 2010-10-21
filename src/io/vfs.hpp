@@ -1,5 +1,5 @@
-#ifndef PWN_MESHIO_VFS_H
-#define PWN_MESHIO_VFS_H
+#ifndef PWN_IO_VFS_H
+#define PWN_IO_VFS_H
 
 #include <pwn/string.h>
 #include <pwn/number.h>

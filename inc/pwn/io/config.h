@@ -1,5 +1,5 @@
-#ifndef PWN_MESHIO_CONFIG_HPP
-#define PWN_MESHIO_CONFIG_HPP
+#ifndef PWN_IO_CONFIG_HPP
+#define PWN_IO_CONFIG_HPP
 
 #include <pwn/core/config.h>
 #include <pwn/string.h>

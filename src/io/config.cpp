@@ -10,7 +10,7 @@ namespace pwn
 	{
 		using namespace boost::property_tree::xml_parser;
 
-		void Load(pwn::core::Ptree* tree, const pwn::string& path)
+		void Read(const pwn::string& path, pwn::core::Ptree* tree)
 		{
 			PHYSFS_ifstream file(path);
 			read_xml(file, *tree);

@@ -2,6 +2,8 @@
 #include <boost/property_tree/xml_parser.hpp>
 #include <pwn/core/str.h>
 
+#include <pwn/io/config.h>
+
 namespace pwn
 {
 	namespace render
@@ -47,7 +49,7 @@ namespace pwn
 		ShaderPtr Shader::LoadFile(const string& path)
 		{
 			core::Ptree file;
-			read_xml(path, file);
+			io::Read(path, &file);
 			return Create(file.get_child("shader"));
 		}
 

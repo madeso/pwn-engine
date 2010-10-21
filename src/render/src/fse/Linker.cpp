@@ -10,6 +10,8 @@
 #include <pwn/render/fse/Provider_Providers.h>
 #include <pwn/render/fse/Provider.h>
 
+#include <pwn/io/config.h>
+
 namespace pwn
 {
 	namespace render
@@ -98,7 +100,7 @@ namespace pwn
 			const string Linker::read(const string& path, int width, int height)
 			{
 				core::Ptree file;
-				read_xml(path, file);
+				io::Read(path, &file);
 				core::Ptree root = file.get_child("pipeline");
 				const string t = root.get<string>("target");
 				BOOST_FOREACH (const core::Ptree::value_type& shaderElement, root.get_child("shaders"))

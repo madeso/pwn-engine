@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="pwn-meshio"
+	Name="pwn-io"
 	ProjectGUID="{C699594D-3480-4786-BCDD-8B52E9EC7F9C}"
-	RootNamespace="pwnmeshio"
+	RootNamespace="pwnio"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -148,80 +148,80 @@
 			Name="external"
 			>
 			<File
-				RelativePath="..\..\..\src\meshio\external\physfs_byteorder.h"
+				RelativePath="..\..\..\src\io\external\physfs_byteorder.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\meshio\external\physfs_fstream.cpp"
+				RelativePath="..\..\..\src\io\external\physfs_fstream.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\meshio\external\physfs_fstream.h"
+				RelativePath="..\..\..\src\io\external\physfs_fstream.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\meshio\external\physfs_ifstream.cpp"
+				RelativePath="..\..\..\src\io\external\physfs_ifstream.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\meshio\external\physfs_ifstream.h"
+				RelativePath="..\..\..\src\io\external\physfs_ifstream.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\meshio\external\physfs_ofstream.cpp"
+				RelativePath="..\..\..\src\io\external\physfs_ofstream.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\meshio\external\physfs_ofstream.h"
+				RelativePath="..\..\..\src\io\external\physfs_ofstream.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\meshio\external\physfs_readfunctions.h"
+				RelativePath="..\..\..\src\io\external\physfs_readfunctions.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\meshio\external\physfs_streambuf.cpp"
+				RelativePath="..\..\..\src\io\external\physfs_streambuf.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\meshio\external\physfs_streambuf.h"
+				RelativePath="..\..\..\src\io\external\physfs_streambuf.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\meshio\external\physfs_writefunctions.h"
+				RelativePath="..\..\..\src\io\external\physfs_writefunctions.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\meshio\external\source.txt"
+				RelativePath="..\..\..\src\io\external\source.txt"
 				>
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\..\..\src\meshio\animation-writer.cpp"
+			RelativePath="..\..\..\src\io\animation-writer.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\meshio\config.cpp"
+			RelativePath="..\..\..\src\io\config.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\meshio\config.h"
+			RelativePath="..\..\..\inc\pwn\io\config.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\inc\pwn\meshio\io.h"
+			RelativePath="..\..\..\inc\pwn\io\io.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\meshio\mesh-writer.cpp"
+			RelativePath="..\..\..\src\io\mesh-writer.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\meshio\vfs.cpp"
+			RelativePath="..\..\..\src\io\vfs.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\meshio\vfs.hpp"
+			RelativePath="..\..\..\src\io\vfs.hpp"
 			>
 		</File>
 	</Files>

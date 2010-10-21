@@ -68,7 +68,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pwn-render-test", "projects
 		{DF0B35E2-CCA4-437E-8DB0-89A329BFEDFC} = {DF0B35E2-CCA4-437E-8DB0-89A329BFEDFC}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pwn-meshio", "projects\pwn-meshio.vcproj", "{C699594D-3480-4786-BCDD-8B52E9EC7F9C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pwn-io", "projects\pwn-io.vcproj", "{C699594D-3480-4786-BCDD-8B52E9EC7F9C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9DD3F329-9640-4A62-A02F-29698B69B71C} = {9DD3F329-9640-4A62-A02F-29698B69B71C}
 	EndProjectSection

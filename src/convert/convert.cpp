@@ -177,8 +177,8 @@ struct ConvertMesh
 			if( writeResult )
 			{
 				if( verbose ) cout << "writing.." << endl;
-				pwn::meshio::WriteTarget wt(outdir);
-				pwn::meshio::Write(mesh, boost::filesystem::path(inputfile).replace_extension("mesh").filename());
+				pwn::io::WriteTarget wt(outdir);
+				pwn::io::Write(mesh, boost::filesystem::path(inputfile).replace_extension("mesh").filename());
 			}
 
 			BOOST_FOREACH(const pwn::mesh::AnimationInformation& ai, animationsToExtract)
@@ -196,8 +196,8 @@ struct ConvertMesh
 						.directory_string();
 				};
 
-				pwn::meshio::WriteTarget wt(adir);
-				pwn::meshio::Write(ani, boost::filesystem::path(ai.name).replace_extension("anim").filename());
+				pwn::io::WriteTarget wt(adir);
+				pwn::io::Write(ani, boost::filesystem::path(ai.name).replace_extension("anim").filename());
 			}
 
 			if( runStatistics )

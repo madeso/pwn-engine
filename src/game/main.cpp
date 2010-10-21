@@ -39,14 +39,14 @@ boost::shared_ptr<ActorDef> CreateCube(real size, const string& texture, Texture
 boost::shared_ptr<ActorDef> LoadMesh(const string& file, TexturePool2* tpool)
 {
 	Mesh mesh;
-	pwn::meshio::Read(&mesh, file);
+	pwn::io::Read(&mesh, file);
 	return Compile(mesh, tpool);
 }
 
 Animation LoadAnimation(const string& file)
 {
 	Animation animation;
-	pwn::meshio::Read(&animation, file);
+	pwn::io::Read(&animation, file);
 	return animation;
 }
 

@@ -11,7 +11,7 @@ namespace pwn
 		class Animation;
 	}
 
-	namespace meshio
+	namespace io
 	{
 		class WriteTarget
 		{	

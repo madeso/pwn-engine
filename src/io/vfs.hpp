@@ -11,7 +11,7 @@
 
 namespace pwn
 {
-	namespace meshio
+	namespace io
 	{
 		class VirtualFile
 			: boost::noncopyable

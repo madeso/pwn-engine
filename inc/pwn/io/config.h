@@ -6,7 +6,7 @@
 
 namespace pwn
 {
-	namespace meshio
+	namespace io
 	{
 		/// loads a xml file from the global vfs to the tree
 		void Load(pwn::core::Ptree* tree, const pwn::string& path);

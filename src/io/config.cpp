@@ -6,7 +6,7 @@
 
 namespace pwn
 {
-	namespace meshio
+	namespace io
 	{
 		using namespace boost::property_tree::xml_parser;
 

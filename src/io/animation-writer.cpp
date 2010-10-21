@@ -8,7 +8,7 @@
 
 namespace pwn
 {
-	namespace meshio
+	namespace io
 	{
 		const pwn::uint8 kVersion = 1;
 

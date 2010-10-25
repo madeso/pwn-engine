@@ -14,6 +14,16 @@ namespace pwn
 			, height(aheight)
 		{
 		}
+
+		RenderArgs::RenderArgs(const RenderArgs& ra, int awidth, int aheight)
+			: compiled(ra.camera)
+			, camera(ra.camera)
+			, x(0)
+			, y(0)
+			, width(awidth)
+			, height(aheight)
+		{
+		}
 		
 		void RenderArgs::render(World3* world) const
 		{

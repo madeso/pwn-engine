@@ -23,11 +23,11 @@ namespace pwn
 				Shader::Unbind(shader);
 			}
 			
-			void RenderWorldProvider::doLink(Linker* user)
+			void RenderWorldProvider::doLink(Linker*)
 			{
 			}
 			
-			void RenderWorldProvider::doBind(Binder* bd)
+			void RenderWorldProvider::doBind(Binder*)
 			{
 			}
 			

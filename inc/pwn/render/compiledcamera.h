@@ -16,7 +16,6 @@ namespace pwn
 		{
 		public:
 			explicit CompiledCamera(const Camera& camera);
-			explicit CompiledCamera(const CompiledCamera&);
 
 			const math::mat44 mat;
 		};

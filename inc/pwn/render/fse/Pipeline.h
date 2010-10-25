@@ -18,7 +18,7 @@ namespace pwn
 			class Pipeline
 			{
 			public:
-				static PipelinePtr Create(const string& path, int width, int height);
+				static PipelinePtr Create(const string& path);
 				void render(World3* world, const RenderArgs& ra);
 				~Pipeline();
 

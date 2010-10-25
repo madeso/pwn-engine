@@ -60,7 +60,7 @@ public:
 	EasyLoop(Game* game)
 		: Loop(game)
 	{
-		pipe = fse::Pipeline::Create("fse/simple-test.xml", 800, 600);
+		pipe = fse::Pipeline::Create("fse/simple-test.xml");
 		World3::Ptr world( new WorldWithCameraBoundObject3(Actor::Create(Origo3(), qIdentity(), CreateCube(10, "_stars-texture.jpg", &tpool, 1, false) ),
 			World3::Create()) );
 

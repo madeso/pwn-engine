@@ -10,7 +10,7 @@ namespace pwn
 	{
 		namespace fse
 		{
-			TargetPtr Targets_Create(const string& name, const core::Ptree& data, int width, int height);
+			TargetPtr Targets_Create(const string& name, const core::Ptree& data);
 		}
 	}
 }

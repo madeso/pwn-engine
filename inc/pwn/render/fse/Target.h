@@ -24,8 +24,6 @@ namespace pwn
 
 				virtual void link(Linker* usr) = 0;
 				virtual void apply(Provider& a, World3* world, const RenderArgs& ra) = 0; /// < calls doProvide on the Provider
-				virtual int getWidth() = 0;
-				virtual int getHeight() = 0;
 				const string& getId() const;
 				void setId(const string& id);
 				Provider* getProvider();

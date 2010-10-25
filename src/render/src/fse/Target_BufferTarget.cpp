@@ -23,16 +23,6 @@ namespace pwn
 				buffer->updateTexture(a, world, ra);
 			}
 
-			int BufferTarget::getWidth()
-			{
-				return buffer->getWidth();
-			}
-
-			int BufferTarget::getHeight()
-			{
-				return buffer->getHeight();
-			}
-
 			void BufferTarget::link(Linker* usr)
 			{
 				buffer = createBuffer(getName(), width, height);

@@ -10,10 +10,10 @@ namespace pwn
 	{
 		namespace fse
 		{
-			PipelinePtr Pipeline::Create(const string& path, int width, int height)
+			PipelinePtr Pipeline::Create(const string& path)
 			{
 				PipelinePtr pp (new Pipeline());
-				string t = pp->linker.read(path, width, height);
+				string t = pp->linker.read(path);
 				pp->linker.link();
 				pp->linker.storePipeline(pp, pp->linker.getTarget(t) );
 				Binder bind(&pp->linker);

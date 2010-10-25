@@ -9,7 +9,7 @@ namespace pwn
 	{
 		namespace fse
 		{
-			TargetPtr Targets_Create(const string& name, const core::Ptree& data, int width, int height)
+			TargetPtr Targets_Create(const string& name, const core::Ptree& data)
 			{
 				if (name == "buffer")
 				{
@@ -17,7 +17,7 @@ namespace pwn
 				}
 				else if (name == "form")
 				{
-					return TargetPtr(new FormTarget(width, height));
+					return TargetPtr(new FormTarget());
 				}
 				else throw FseException(name + " is not a known target");
 			}

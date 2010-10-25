@@ -97,7 +97,7 @@ namespace pwn
 				return shaders.get(id);
 			}
 			
-			const string Linker::read(const string& path, int width, int height)
+			const string Linker::read(const string& path)
 			{
 				core::Ptree file;
 				io::Read(path, &file);
@@ -119,7 +119,7 @@ namespace pwn
 				{
 					const string& type = targetElement.first;
 					const core::Ptree& data = targetElement.second;
-					TargetPtr target = Targets_Create(type, data, width, height);
+					TargetPtr target = Targets_Create(type, data);
 					target->setId( data.get<string>("id") );
 					addTarget(target);
 				}

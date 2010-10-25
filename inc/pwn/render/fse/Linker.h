@@ -27,7 +27,7 @@ namespace pwn
 				
 			public:
 				/// @return the suggested target name
-				const string read(const string& path, int width, int height);
+				const string read(const string& path);
 
 			private:
 				core::Map<ProviderPtr> providers;

@@ -22,7 +22,7 @@ namespace pwn
 			{
 				if(shader.get()) Shader::Bind(shader);
 				callCommands(); // lets call the commands
-				RenderFullscreenQuad(0, getTarget()->getWidth(), getTarget()->getHeight());
+				RenderFullscreenQuad(0, ra.width, ra.height);
 				if (shader.get()) Shader::Unbind(shader);
 			}
 

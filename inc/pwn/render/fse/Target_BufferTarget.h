@@ -22,8 +22,6 @@ namespace pwn
 				~BufferTarget();
 
 				void apply(Provider& a, World3* world, const RenderArgs& ra); // Calls doProvide
-				int getWidth();
-				int getHeight();
 				void link(Linker* usr);
 				string toString() const;
 				

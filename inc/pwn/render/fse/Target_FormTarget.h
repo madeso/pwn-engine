@@ -16,18 +16,12 @@ namespace pwn
 				: public Target
 			{
 			public:
-				FormTarget(int width, int height);
+				FormTarget();
 				~FormTarget();
 
 				void apply(Provider& a, World3* world, const RenderArgs& ra);
-				int getWidth();
-				int getHeight();
 				void link(Linker* usr);
 				string toString() const;
-				
-			private:
-				int width;
-				int height;
 			};
 		}
 	}

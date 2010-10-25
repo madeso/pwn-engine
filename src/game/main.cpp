@@ -14,7 +14,7 @@
 #include <pwn/engine/vfstexturepool2.h>
 #include <pwn/io/io.h>
 #include <pwn/render/worldwithcameraboundobject3.h>
-
+#include <pwn/render/fse/pipeline.h>
 
 using namespace pwn;
 using namespace pwn::engine;
@@ -60,6 +60,7 @@ public:
 	EasyLoop(Game* game)
 		: Loop(game)
 	{
+		pipe = fse::Pipeline::Create("fse/simple-test.xml", 800, 600);
 		World3::Ptr world( new WorldWithCameraBoundObject3(Actor::Create(Origo3(), qIdentity(), CreateCube(10, "_stars-texture.jpg", &tpool, 1, false) ),
 			World3::Create()) );
 
@@ -111,6 +112,7 @@ public:
 
 	DemoCamera dcam;
 	VfsTexturePool2 tpool;
+	fse::PipelinePtr pipe;
 };
 
 int main(int, char** argv)

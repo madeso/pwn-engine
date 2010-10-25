@@ -2,3 +2,9 @@ math: add functioncalltype specifications for easy use with libraries
 math: remove quatw and quat(x,y,z,w) contructor in favor of the vec-real constructors
 general: investigate other, more liberal, licenses
 test: add more tests
+math: make easier to use, more member functions, use external? cml?
+--------------------------
+features:
+fse framework
+add anistropic texture filtering
+tranform into vbos & vertex shaders

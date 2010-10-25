@@ -148,47 +148,11 @@
 			Name="external"
 			>
 			<File
-				RelativePath="..\..\..\src\io\external\physfs_byteorder.h"
+				RelativePath="..\..\..\src\io\external\PhysFS++.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\io\external\physfs_fstream.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\io\external\physfs_fstream.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\io\external\physfs_ifstream.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\io\external\physfs_ifstream.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\io\external\physfs_ofstream.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\io\external\physfs_ofstream.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\io\external\physfs_readfunctions.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\io\external\physfs_streambuf.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\io\external\physfs_streambuf.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\io\external\physfs_writefunctions.h"
+				RelativePath="..\..\..\src\io\external\PhysFS++.h"
 				>
 			</File>
 			<File

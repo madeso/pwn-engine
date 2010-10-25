@@ -1,8 +1,7 @@
 #include <pwn/io/config.h>
 #include <boost/property_tree/xml_parser.hpp>
 
-#include "external/physfs_ifstream.h"
-#include "external/physfs_ofstream.h"
+#include "external/Physfs++.h"
 
 namespace pwn
 {
@@ -12,13 +11,13 @@ namespace pwn
 
 		void Read(const pwn::string& path, pwn::core::Ptree* tree)
 		{
-			PHYSFS_ifstream file(path);
+			PhysFS::FileStream file(path.c_str(), PhysFS::OM_READ);
 			read_xml(file, *tree);
 		}
 
 		void Write(const pwn::core::Ptree& tree, const pwn::string& path)
 		{
-			PHYSFS_ofstream file(path);
+			PhysFS::FileStream file(path.c_str(), PhysFS::OM_WRITE);
 			write_xml(file, tree);
 		}
 	}

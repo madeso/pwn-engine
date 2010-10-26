@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\..\inc\&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\..\inc\&quot;;&quot;$(SolutionDir)..\..\src\render\src\external\&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -104,7 +104,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\..\inc\&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\..\inc\&quot;;&quot;$(SolutionDir)..\..\src\render\src\external\&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -285,6 +285,26 @@
 			</File>
 			<File
 				RelativePath="..\..\..\inc\pwn\render\fse\types.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="glew"
+			>
+			<File
+				RelativePath="..\..\..\src\render\src\external\GL\glew.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\external\GL\glew.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\external\GL\glewinfo.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\render\src\external\GL\visualinfo.c"
 				>
 			</File>
 		</Filter>

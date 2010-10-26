@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\..\inc\&quot;;&quot;D:\dev\external\physfs-200&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\..\inc\&quot;;&quot;$(SolutionDir)..\..\external\physfspp\&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -104,7 +104,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\..\inc\&quot;;&quot;D:\dev\external\physfs-200&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\..\inc\&quot;;&quot;$(SolutionDir)..\..\external\physfspp\&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -148,15 +148,23 @@
 			Name="external"
 			>
 			<File
-				RelativePath="..\..\..\src\io\external\PhysFS++.cpp"
+				RelativePath="..\..\..\external\physfspp\example.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\io\external\PhysFS++.h"
+				RelativePath="..\..\..\external\physfspp\license.txt"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\io\external\source.txt"
+				RelativePath="..\..\..\external\physfspp\PhysFS++.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\external\physfspp\PhysFS++.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\external\physfspp\source.txt"
 				>
 			</File>
 		</Filter>

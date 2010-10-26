@@ -13,5 +13,5 @@ glob:build/vs2008/pwn.suo
 glob:dist/Debug/*.pdb
 glob:dist/Debug/*.ilk
 glob:dist/*
-glob:design/resolution-test/*
 glob:*.txt
+glob:code-design/resolution-test/*.png

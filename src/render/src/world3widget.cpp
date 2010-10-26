@@ -3,7 +3,7 @@
 #include <pwn/math/operations.h>
 #include <pwn/render/renderargs.h>
 #include <pwn/render/compiledcamera.h>
-
+#include <pwn/render/fse/pipeline.h>
 #include <pwn/assert.h>
 
 #include <SFML/OpenGl.hpp>
@@ -55,7 +55,8 @@ namespace pwn
 			glEnable(GL_CULL_FACE);
 			Assert( glGetError_WithString() == GL_NO_ERROR);
 			RenderArgs ra(camera, x, y, w, h);
-			world->render(ra);
+			//world->render(ra);
+			camera.pipeline->render(world.get(), ra);
 			Assert( glGetError_WithString() == GL_NO_ERROR);
 			glDisable(GL_DEPTH_TEST);
 			Assert( glGetError_WithString() == GL_NO_ERROR);

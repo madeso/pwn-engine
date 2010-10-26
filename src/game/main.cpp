@@ -60,7 +60,6 @@ public:
 	EasyLoop(Game* game)
 		: Loop(game)
 	{
-		pipe = fse::Pipeline::Create("fse/simple-test.xml");
 		World3::Ptr world( new WorldWithCameraBoundObject3(Actor::Create(Origo3(), qIdentity(), CreateCube(10, "_stars-texture.jpg", &tpool, 1, false) ),
 			World3::Create()) );
 
@@ -73,6 +72,7 @@ public:
 		boost::shared_ptr<World3Widget > wid( new World3Widget( Dock::Fill(), world ) );
 
 		dcam.world = wid;
+		dcam.camera.pipeline = fse::Pipeline::Create("fse/simple-test.xml");
 		//dcam.camera.position = point3(-20,20,-40);
 		//dcam.camera.orientation = qLookAt(dcam.camera.position.vec, vec3(0,0,0), Up());
 

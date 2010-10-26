@@ -2,7 +2,7 @@
 #define PWN_RENDER_CAMERA
 
 #include <pwn/math/types.h>
-
+#include <pwn/render/fse/types.h>
 namespace pwn
 {
 	namespace render
@@ -19,6 +19,8 @@ namespace pwn
 			real fov;
 			real znear;
 			real zfar;
+
+			fse::PipelinePtr pipeline;
 		};
 	}
 }

@@ -263,6 +263,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\src\engine\system_render.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\engine\system_render.hpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\engine\system_vfs.cpp"
 			>
 		</File>

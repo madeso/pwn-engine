@@ -50,6 +50,7 @@ namespace pwn
 			*/
 			static void Unbind(ShaderPtr sh);
 
+			static bool IsSupported();
 		private:
 			string vertex;
 			string fragment;

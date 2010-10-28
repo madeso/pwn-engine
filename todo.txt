@@ -4,7 +4,19 @@ general: investigate other, more liberal, licenses
 test: add more tests
 math: make easier to use, more member functions, use external? cml?
 --------------------------
-features:
-fse framework
-add anistropic texture filtering
-tranform into vbos & vertex shaders
+------------- features:
+* fse framework
+* add anistropic texture filtering
+* tranform into vbos & vertex shaders
+* particle engine
+* start on component framework
+* sound engine
+* character engine
+* level editor
+* add physics to component framework
+* ssao
+* dynamic lights
+* per pixel lights
+* material effects, bump/normal map
+* shadows
+* improve rendering speed with portals

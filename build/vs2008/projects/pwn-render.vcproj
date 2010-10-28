@@ -361,6 +361,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\src\render\src\engine.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\engine.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\render\src\fbo.cpp"
 			>
 		</File>

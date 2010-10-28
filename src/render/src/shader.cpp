@@ -78,5 +78,10 @@ namespace pwn
 		Shader::Shader()
 		{
 		}
+
+		bool Shader::IsSupported()
+		{
+			return false;
+		}
 	}
 }

@@ -18,6 +18,7 @@ namespace pwn
 		/** The compiled source to a shader.
 		*/
 		class ShaderSource
+			: boost::noncopyable
 		{
 		public:
 			enum Type
@@ -56,6 +57,8 @@ namespace pwn
 			int getProgram() const;
 
 			static bool IsSupported();
+
+			~Shader();
 		private:
 			int program;
 			ShaderSourcePtr vertex;

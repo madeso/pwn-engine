@@ -11,7 +11,9 @@ namespace pwn
 	namespace render
 	{
 		class Shader;
+		class ShaderSource;
 		typedef boost::shared_ptr<render::Shader> ShaderPtr;
+		typedef boost::shared_ptr<render::ShaderSource> ShaderSourcePtr;
 
 		/** The compiled source to a shader.
 		*/
@@ -20,11 +22,12 @@ namespace pwn
 		public:
 			enum Type
 			{
-				Vertex // GL_VERTEX_SHADER
-				,Fragment // GL_FRAGMENT_SHADER
+				Vertex
+				,Fragment
 			};
 
-			ShaderSource(const string& name, const string& source, Type type);
+			ShaderSource(const string& name, Type type, const string& source);
+			~ShaderSource();
 			int getShader() const;
 		private:
 			int mShader;
@@ -50,10 +53,13 @@ namespace pwn
 			*/
 			static void Unbind(ShaderPtr sh);
 
+			int getProgram() const;
+
 			static bool IsSupported();
 		private:
-			string vertex;
-			string fragment;
+			int program;
+			ShaderSourcePtr vertex;
+			ShaderSourcePtr fragment;
 			Shader();
 		};
 	}

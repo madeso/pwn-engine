@@ -2,7 +2,7 @@
 #include <pwn/math/operations.h>
 #include <pwn/render/compiledmesh.h>
 #include <pwn/render/material.h>
-#include <pwn/assert.h>
+#include "opengl_debug.hpp"
 #include <limits>
 #include <pwn/render/poseable.h>
 
@@ -121,7 +121,7 @@ namespace pwn
 				if( useGlCommands )
 				{
 					glLoadMatrixf( c.mat.columnMajor );
-					Assert( glGetError_WithString() == GL_NO_ERROR);
+					pwnAssert_NoGLError();
 				}
 				apply(c.material);
 				c.mesh->render(c.poseable->pose);
@@ -138,9 +138,9 @@ namespace pwn
 			if( useGlCommands )
 			{
 				glMatrixMode( GL_MODELVIEW );
-				Assert( glGetError_WithString() == GL_NO_ERROR);
+				pwnAssert_NoGLError();
 				glLoadIdentity();
-				Assert( glGetError_WithString() == GL_NO_ERROR);
+				pwnAssert_NoGLError();
 			}
 			
 			applied = false;
@@ -150,10 +150,10 @@ namespace pwn
 			if( useGlCommands )
 			{
 				glAlphaFunc ( GL_GREATER, 0.2f ) ;
-				Assert( glGetError_WithString() == GL_NO_ERROR);
+				pwnAssert_NoGLError();
 
 				glEnable ( GL_ALPHA_TEST ) ;
-				Assert( glGetError_WithString() == GL_NO_ERROR);
+				pwnAssert_NoGLError();
 			}
 
 			std::sort(solid.begin(), solid.end(), CommandSort);
@@ -163,16 +163,16 @@ namespace pwn
 			if( useGlCommands )
 			{
 				glDisable(GL_ALPHA_TEST);
-				Assert( glGetError_WithString() == GL_NO_ERROR);
+				pwnAssert_NoGLError();
 
 				glEnable(GL_BLEND);
-				Assert( glGetError_WithString() == GL_NO_ERROR);
+				pwnAssert_NoGLError();
 
 				glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-				Assert( glGetError_WithString() == GL_NO_ERROR);
+				pwnAssert_NoGLError();
 
 				glDepthMask(GL_FALSE); // disable depth-write
-				Assert( glGetError_WithString() == GL_NO_ERROR);
+				pwnAssert_NoGLError();
 			}
 
 			render(transparent);
@@ -180,15 +180,15 @@ namespace pwn
 			if( useGlCommands )
 			{
 				glDepthMask(GL_TRUE); // enable depth.write again
-				Assert( glGetError_WithString() == GL_NO_ERROR);
+				pwnAssert_NoGLError();
 
 				glDisable(GL_BLEND);
-				Assert( glGetError_WithString() == GL_NO_ERROR);
+				pwnAssert_NoGLError();
 
 				if( applied )
 				{
 					glDisable(GL_TEXTURE_2D);
-					Assert( glGetError_WithString() == GL_NO_ERROR);
+					pwnAssert_NoGLError();
 				}
 			}
 		}
@@ -198,7 +198,7 @@ namespace pwn
 			if( useGlCommands )
 			{
 				glColor4f( material->diffuse.red(), material->diffuse.green(), material->diffuse.blue(), material->diffuse.alpha() );
-				Assert( glGetError_WithString() == GL_NO_ERROR);
+				pwnAssert_NoGLError();
 				if( material->texture.get() )
 				{
 					if( applied == false )

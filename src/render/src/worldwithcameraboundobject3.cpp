@@ -5,9 +5,7 @@
 #include <pwn/render/renderlist.h>
 #include <pwn/render/renderargs.h>
 #include <pwn/math/operations.h>
-#include <SFML/OpenGl.hpp>
 #include "opengl_debug.hpp"
-#include <pwn/assert.h>
 
 namespace pwn
 {
@@ -34,9 +32,9 @@ namespace pwn
 			actor->render(&list, cc);
 			list.end();
 			
-			Assert( glGetError_WithString() == GL_NO_ERROR);
+			pwnAssert_NoGLError();
 			glClear(GL_DEPTH_BUFFER_BIT);
-			Assert( glGetError_WithString() == GL_NO_ERROR);
+			pwnAssert_NoGLError();
 
 			WorldWith3::render(r);
 		}

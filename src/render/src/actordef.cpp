@@ -7,7 +7,6 @@
 #include <pwn/render/material.h>
 #include <pwn/render/texturepool2.h>
 #include <pwn/math/operations.h>
-#include <sfml/OpenGl.hpp>
 
 #include <pwn/assert.h>
 
@@ -55,7 +54,7 @@ namespace pwn
 
 			void render(const mesh::CompiledPose& pose)
 			{
-				Assert( glGetError_WithString() == GL_NO_ERROR);
+				pwnAssert_NoGLError();
 				glBegin(GL_TRIANGLES);
 
 				BOOST_FOREACH(const mesh::Triangle& tri, triangles)
@@ -83,7 +82,7 @@ namespace pwn
 				}
 
 				glEnd();
-				Assert( glGetError_WithString() == GL_NO_ERROR);
+				pwnAssert_NoGLError();
 			}
 		private:
 			boost::shared_ptr<SharedMesh> smesh;

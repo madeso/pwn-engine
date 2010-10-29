@@ -10,9 +10,6 @@
 #pragma warning(disable:4512) // warning C4512: 'boost::detail::addr_impl_ref<T>' : assignment operator could not be generated
 #include <boost/foreach.hpp>
 
-#include <pwn/assert.h>
-
-#include <SFML/OpenGl.hpp>
 #include "opengl_debug.hpp"
 
 namespace pwn
@@ -51,7 +48,7 @@ namespace pwn
 			void render(const RenderArgs& r) const
 			{
 				glViewport(r.x, r.y, r.width, r.height);
-				Assert( glGetError_WithString() == GL_NO_ERROR);
+				pwnAssert_NoGLError();
 
 
 				list.begin();

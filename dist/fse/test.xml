@@ -1,0 +1,151 @@
+<pipeline>
+	<target>view</target>
+	<shaders>
+		<shader>
+			<id>fse_blurs</id>
+			<source>
+				<vertex>
+					<![CDATA[
+							void main()
+							{
+							}
+						]]>
+				</vertex>
+				<fragment>
+					<![CDATA[
+							void main()
+							{
+							}
+						]]>
+				</fragment>
+			</source>
+		</shader>
+	</shaders>
+	<targets>
+		<form>
+			<id>view</id>
+		</form>
+		<buffer>
+			<id>depth</id>
+			<width>512</width>
+			<height>512</height>
+		</buffer>
+		<buffer>
+			<id>depth_lo</id>
+			<width>512</width>
+			<height>512</height>
+		</buffer>
+		<buffer>
+			<id>depth_blur_h</id>
+			<width>256</width>
+			<height>256</height>
+		</buffer>
+		<buffer>
+			<id>depthblur</id>
+			<width>512</width>
+			<height>512</height>
+		</buffer>
+	</targets>
+	<providers>
+		<world>
+			<id>worldRenderer</id>
+			<shader>
+				<source>
+					<vertex>
+						<![CDATA[
+							void main()
+							{
+								gl_Position = ftransform();
+								gl_TexCoord[0] = gl_MultiTexCoord0;
+							}
+						]]>
+					</vertex>
+					<fragment>
+						<![CDATA[
+							uniform sampler2D tex;
+							uniform vec2 direction;
+							void main()
+							{
+								float a = 0.005;
+								vec2 dir = vec2(direction.x, direction.y)*a;
+								vec4 color = (texture2D(tex,gl_TexCoord[0].st - dir )*2 + texture2D(tex,gl_TexCoord[0].st + dir )*2 + texture2D(tex,gl_TexCoord[0].st) ) / 5.0;
+								gl_FragColor = color;
+							}
+						]]>
+					</fragment>
+				</source>
+			</shader>
+			<target>depth</target>
+			<commands/>
+		</world>
+		<fullscreen>
+			<id>renderlow</id>
+			<shader></shader>
+			<target>depth_lo</target>
+			<commands>
+				<bindbuffer>
+					<id>binder</id>
+					<buffer>depth</buffer>
+					<location>0</location>
+				</bindbuffer>
+			</commands>
+		</fullscreen>
+
+		<fullscreen>
+			<id>blurh</id>
+			<shader>fse_blurs</shader>
+			<target>depth_blur_h</target>
+			<commands>
+				<setu2>
+					<id>set_direction</id>
+					<uniform>direction</uniform>
+					<x>1</x>
+					<y>0</y>
+				</setu2>
+				<bindbuffer>
+					<id>binder</id>
+					<buffer>depth_lo</buffer>
+					<location>0</location>
+				</bindbuffer>
+			</commands>
+		</fullscreen>
+
+		<fullscreen>
+			<id>blurv</id>
+			<shader>fse_blurs</shader>
+			<target>depthblur</target>
+			<commands>
+				<setu2>
+					<id>set_direction</id>
+					<uniform>direction</uniform>
+					<x>0</x>
+					<y>1</y>
+				</setu2>
+				<bindbuffer>
+					<id>binder</id>
+					<buffer>depth_blur_h</buffer>
+					<location>0</location>
+				</bindbuffer>
+			</commands>
+		</fullscreen>
+
+		<fullscreen>
+			<id>ssao</id>
+			<shader>fse_ssao.xml</shader>
+			<target>view</target>
+			<commands>
+				<bindbuffer>
+					<id>depth</id>
+					<buffer>depth</buffer>
+					<location>0</location>
+				</bindbuffer>
+				<bindbuffer>
+					<id>deapthblurred</id>
+					<buffer>depthblur</buffer>
+					<!-- todo: specify name instead of location, lookup in shader data -->
+					<location>1</location>
+				</bindbuffer>
+			</commands>
+		</fullscreen>
+	</providers>
+</pipeline>

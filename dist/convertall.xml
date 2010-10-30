@@ -1,0 +1,118 @@
+<convert>
+	<outdir>C:\Users\Gustav\dev\pwn-engine\dist</outdir>
+	<runstats>true</runstats>
+	<!-- verbose makes obj loader print dots -->
+	<verbose>true</verbose>
+	<displayMeshInfo>true</displayMeshInfo>
+	<writeResults>true</writeResults>
+
+	<sources>
+
+		<source>
+			<scale>0.2</scale>
+			<file>C:\Users\Gustav\dev\media\finished\3d\psionic3d\dwarf\dwarf1.ms3d</file>
+			<animations>
+				<animation>
+					<start>1</start>
+					<end>13</end>
+					<name>Walk</name>
+				</animation>
+				<animation>
+					<start>15</start>
+					<end>25</end>
+					<name>Run</name>
+				</animation>
+				<animation>
+					<start>27</start>
+					<end>39</end>
+					<name>Jump</name>
+				</animation>
+				<animation>
+					<start>41</start>
+					<end>53</end>
+					<name>Jump on the spot</name>
+				</animation>
+
+				<animation>
+					<start>55</start>
+					<end>58</end>
+					<name>Crouch down</name>
+				</animation>
+				<animation>
+					<start>59</start>
+					<end>68</end>
+					<name>Stay crouched loop</name>
+				</animation>
+				<animation>
+					<start>69</start>
+					<end>73</end>
+					<name>Get up</name>
+				</animation>
+
+				<animation>
+					<start>74</start>
+					<end>87</end>
+					<name>Battle idle 1</name>
+				</animation>
+				<animation>
+					<start>89</start>
+					<end>109</end>
+					<name>Battle idle 2</name>
+				</animation>
+
+				<animation>
+					<start>111</start>
+					<end>125</end>
+					<name>Attack 1 Swipe axe</name>
+				</animation>
+				<animation>
+					<start>127</start>
+					<end>141</end>
+					<name>Attack 2 Jump and overhead whack attack</name>
+				</animation>
+				<animation>
+					<start>143</start>
+					<end>159</end>
+					<name>Attack 3 360 spin Back hander</name>
+				</animation>
+				<animation>
+					<start>161</start>
+					<end>180</end>
+					<name>Attack 4 2 Swipes left and right</name>
+				</animation>
+				<animation>
+					<start>181</start>
+					<end>191</end>
+					<name>Attack 5 Stab</name>
+				</animation>
+				<animation>
+					<start>193</start>
+					<end>209</end>
+					<name>Block</name>
+				</animation>
+
+				<animation>
+					<start>211</start>
+					<end>226</end>
+					<name>Die Forwards</name>
+				</animation>
+				<animation>
+					<start>229</start>
+					<end>250</end>
+					<name>Die Backwards</name>
+				</animation>
+
+				<animation>
+					<start>252</start>
+					<end>271</end>
+					<name>Nod YES</name>
+				</animation>
+				<animation>
+					<start>273</start>
+					<end>289</end>
+					<name>Shake head NO</name>
+				</animation>
+			</animations>
+		</source>
+	</sources>
+</convert>

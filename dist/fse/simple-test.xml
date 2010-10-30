@@ -1,0 +1,17 @@
+<pipeline>
+	<shaders/>
+	<target>main</target>
+	<targets>
+		<form>
+			<id>main</id>
+		</form>
+	</targets>
+	<providers>
+		<world>
+			<id>worldRenderer</id>
+			<target>main</target>
+			<shader/>
+			<commands/>
+		</world>
+	</providers>
+</pipeline>

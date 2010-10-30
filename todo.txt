@@ -3,15 +3,21 @@ math: remove quatw and quat(x,y,z,w) contructor in favor of the vec-real constru
 general: investigate other, more liberal, licenses
 test: add more tests
 math: make easier to use, more member functions, use external? cml?
+support more os's like linux & mac
 --------------------------
 ------------- features:
 * fse framework
 * add anistropic texture filtering
 * tranform into vbos & vertex shaders
+* font support
+* console
+* scripting support
+* 3d debugging
 * particle engine
 * start on component framework
 * sound engine
 * character engine
+* improve display framework to support huds
 * level editor
 * add physics to component framework
 * ssao
@@ -20,3 +26,5 @@ math: make easier to use, more member functions, use external? cml?
 * material effects, bump/normal map
 * shadows
 * improve rendering speed with portals
+* ai base
+* pathfinding

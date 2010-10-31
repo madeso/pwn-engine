@@ -15,7 +15,7 @@ namespace pwn
 			bind(0);
 			const GLint internalFormat = alpha ? GL_RGBA8 : GL_RGB8;
 
-			//glEnable(GL_TEXTURE_2D);
+			//glEnable(GL_TEXTURE_2D); // might help on certain gfx cards
 			
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); pwnAssert_NoGLError();
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); pwnAssert_NoGLError();
@@ -27,11 +27,6 @@ namespace pwn
 			const int gmipmap = mipmap ? GL_TRUE : GL_FALSE;
 			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, gmipmap); pwnAssert_NoGLError();
 			glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, bitmapData); pwnAssert_NoGLError();
-			/*if (mipmap)
-			{
-				glGenerateMipmap(GL_TEXTURE_2D);
-				//gluBuild2DMipmaps( GL_TEXTURE_2D, GL_RGBA, width, height, GL_RGBA, GL_UNSIGNED_BYTE, bitmapData);
-			}*/
 		}
 
 		Image::~Image()

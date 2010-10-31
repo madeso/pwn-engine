@@ -20,10 +20,10 @@ namespace pwn
 
 			void RenderFullscreenProvider::doProvide(World3* world, const RenderArgs& ra)
 			{
-				if(shader.get()) Shader::Bind(shader);
+				Shader::Bind(shader);
 				callCommands(); // lets call the commands
 				RenderFullscreenQuad(0, ra.width, ra.height);
-				if (shader.get()) Shader::Unbind(shader);
+				Shader::Unbind(shader);
 			}
 
 			void RenderFullscreenProvider::doLink(Linker* user)

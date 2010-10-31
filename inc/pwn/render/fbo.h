@@ -10,6 +10,7 @@ namespace pwn
 	namespace render
 	{
 		class RenderBuffer
+			: boost::noncopyable
 		{
 		public:
 			RenderBuffer(int internalFormat, int width, int height);

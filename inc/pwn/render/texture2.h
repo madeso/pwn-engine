@@ -14,6 +14,7 @@ namespace pwn
 	{
 		// a general open gl image
 		class Image
+			: boost::noncopyable
 		{
 		public:
 			Image(bool apha, int width, int height, const byte* bitmapData, bool mipmap, int format);

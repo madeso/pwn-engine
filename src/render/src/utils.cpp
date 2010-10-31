@@ -1,12 +1,31 @@
 #include <pwn/render/utils.h>
 #include <pwn/string.h>
 
+#include "opengl_debug.hpp"
+
 namespace pwn
 {
 	namespace render
 	{
+		void SetView2d(int width, int height)
+		{
+			glMatrixMode(GL_PROJECTION); pwnAssert_NoGLError();
+			glLoadIdentity(); pwnAssert_NoGLError();
+			glOrtho(0, width, height, 0, 0, 1); pwnAssert_NoGLError();
+			glMatrixMode(GL_MODELVIEW); pwnAssert_NoGLError();
+			glLoadIdentity(); pwnAssert_NoGLError();
+		}
+
 		void RenderFullscreenQuad(int unknown, int width, int height)
 		{
+			SetView2d(width, height);
+
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 1); glVertex2f(0, 0); // top left
+			glTexCoord2f(0, 0); glVertex2f(0, height); // bottom left
+			glTexCoord2f(1, 0); glVertex2f(width, height); // bottom right
+			glTexCoord2f(1, 1); glVertex2f(width, 0); // top right
+			glEnd(); pwnAssert_NoGLError();
 		}
 	}
 

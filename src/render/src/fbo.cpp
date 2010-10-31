@@ -9,19 +9,19 @@ namespace pwn
 		RenderBuffer::RenderBuffer(int internalFormat, int width, int height)
 			: buffer(0)
 		{
-			glGenRenderbuffers(1, &buffer);
+			glGenRenderbuffers(1, &buffer); pwnAssert_NoGLError();
 			bind();
-			glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, width, height);
+			glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, width, height); pwnAssert_NoGLError();
 		}
 
 		RenderBuffer::~RenderBuffer()
 		{
-			glDeleteRenderbuffers(1, &buffer);
+			glDeleteRenderbuffers(1, &buffer); pwnAssert_NoGLError();
 		}
 
 		void RenderBuffer::bind()
 		{
-			glBindRenderbuffer(GL_RENDERBUFFER, buffer);
+			glBindRenderbuffer(GL_RENDERBUFFER, buffer); pwnAssert_NoGLError();
 		}
 
 		unsigned int RenderBuffer::getBuffer() const	
@@ -34,7 +34,7 @@ namespace pwn
 			void Bind(const Fbo* const fbo)
 			{
 				unsigned int ifbo = fbo ? fbo->getId() : 0;
-				glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, ifbo);
+				glBindFramebuffer(GL_FRAMEBUFFER, ifbo); pwnAssert_NoGLError();
 			}
 		}
 
@@ -43,19 +43,19 @@ namespace pwn
 			, width(w)
 			, height(h)
 		{
-			glGenFramebuffers(1, &fbo);
+			glGenFramebuffers(1, &fbo); pwnAssert_NoGLError();
 			Bind(this);
 
 			depth.reset( new RenderBuffer(GL_DEPTH_COMPONENT, width, height));
-			glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depth->getBuffer());
+			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth->getBuffer()); pwnAssert_NoGLError();
 
 			texture.reset( new Image(true, width, height, 0, mipmap, GL_RGBA) );
 			const int mipmaplevel = 0;
-			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, texture->getId(), mipmaplevel);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->getId(), mipmaplevel); pwnAssert_NoGLError();
 
 
-			const int status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-			if (status != GL_FRAMEBUFFER_COMPLETE_EXT) throw static_cast<string>(
+			const int status = glCheckFramebufferStatus(GL_FRAMEBUFFER); pwnAssert_NoGLError();
+			if (status != GL_FRAMEBUFFER_COMPLETE) throw static_cast<string>(
 				core::Str() << "Error when creating framebuffer: " << status);
 
 			Bind(0);
@@ -83,19 +83,20 @@ namespace pwn
 
 		bool Fbo::IsSupported()
 		{
-			return GLEW_ARB_framebuffer_object == GL_TRUE;
+			// return GLEW_ARB_framebuffer_object == GL_TRUE;
+			return GLEW_VERSION_3_0 == GL_TRUE;
 		}
 
 		TextureUpdator::TextureUpdator(Fbo* fbo)
 		{
 			Bind(fbo);
-			glPushAttrib(GL_VIEWPORT_BIT);
-			glViewport(0, 0, fbo->getWidth(), fbo->getHeight());
+			glPushAttrib(GL_VIEWPORT_BIT); pwnAssert_NoGLError();
+			glViewport(0, 0, fbo->getWidth(), fbo->getHeight()); pwnAssert_NoGLError();
 		}
 
 		TextureUpdator::~TextureUpdator()
 		{
-			glPopAttrib();
+			glPopAttrib(); pwnAssert_NoGLError();
 			Bind(0);
 		}
 	}

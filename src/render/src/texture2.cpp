@@ -36,6 +36,7 @@ namespace pwn
 
 		void Image::bind(int location) const
 		{
+			Assert(location >= 0);
 			glActiveTexture(GL_TEXTURE0 + location); pwnAssert_NoGLError();
 			glBindTexture(GL_TEXTURE_2D, text); pwnAssert_NoGLError();
 		}

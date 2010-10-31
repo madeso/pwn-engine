@@ -1,0 +1,59 @@
+<pipeline>
+	<shaders>
+		<shader>
+			<id>shader</id>
+			<source>
+				<vertex>
+					<![CDATA[
+							void main()
+							{
+								gl_Position = ftransform();
+								gl_TexCoord[0] = gl_MultiTexCoord0;
+							}
+						]]>
+				</vertex>
+				<fragment>
+					<![CDATA[
+							uniform sampler2D tex;
+							void main()
+							{
+								vec4 color = 1 - texture2D(tex,gl_TexCoord[0].st;
+								gl_FragColor = color;
+							}
+						]]>
+				</fragment>
+			</source>
+		</shader>
+	</shaders>
+	<target>main</target>
+	<targets>
+		<form>
+			<id>main</id>
+		</form>
+		<buffer>
+			<id>buffer</id>
+			<width>512</width>
+			<height>512</height>
+		</buffer>
+	</targets>
+	<providers>
+		<world>
+			<id>worldRenderer</id>
+			<target>buffer</target>
+			<shader/>
+			<commands/>
+		</world>
+		<fullscreen>
+			<id>shader-provider</id>
+			<shader>shader</shader>
+			<target>main</target>
+			<commands>
+				<bindbuffer>
+					<id>binder</id>
+					<buffer>buffer</buffer>
+					<location>tex</location>
+				</bindbuffer>
+			</commands>
+		</fullscreen>
+	</providers>
+</pipeline>

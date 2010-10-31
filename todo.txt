@@ -17,6 +17,7 @@ support more os's like linux & mac
 * start on component framework
 * sound engine
 * character engine
+* gui editor for components & fse
 * improve display framework to support huds
 * level editor
 * add physics to component framework

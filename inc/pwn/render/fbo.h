@@ -2,20 +2,43 @@
 #define PWN_RENDER_FBO
 
 #include <boost/utility.hpp>
+#include <pwn/render/texture2.h>
+#include <memory>
 
 namespace pwn
 {
 	namespace render
 	{
-		// update this class...
+		class RenderBuffer
+		{
+		public:
+			RenderBuffer(int internalFormat, int width, int height);
+			~RenderBuffer();
+			void bind();
+			unsigned int getBuffer() const;
+		private:
+			unsigned int buffer;
+		};
+
 		class Fbo
 			: boost::noncopyable
 		{
 		public:
-			Fbo(int w, int h, bool arg);
+			Fbo(int w, int h, bool mipmap);
 			void bindTexture(int location);
 			int getWidth() const;
 			int getHeight() const;
+			int getId() const;
+
+			static bool IsSupported();
+		protected:
+			void attach(RenderBuffer* buffer, int point);
+		private:
+			unsigned int fbo;
+			int width;
+			int height;
+			std::auto_ptr<RenderBuffer> depth;
+			std::auto_ptr<Image> texture;
 		};
 
 		// raii

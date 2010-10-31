@@ -207,7 +207,7 @@ namespace pwn
 					}
 					if( material->texture.get() != texture )
 					{
-						glBindTexture(GL_TEXTURE_2D, material->texture->tid());
+						material->texture->bind(0);
 					}
 					applied = true;
 					texture = material->texture.get();

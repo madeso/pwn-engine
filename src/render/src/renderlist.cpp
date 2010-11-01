@@ -120,8 +120,7 @@ namespace pwn
 			{
 				if( useGlCommands )
 				{
-					glLoadMatrixf( c.mat.columnMajor );
-					pwnAssert_NoGLError();
+					glLoadMatrixf( c.mat.columnMajor ); pwnAssert_NoGLError();
 				}
 				apply(c.material);
 				c.mesh->render(c.poseable->pose);
@@ -137,10 +136,8 @@ namespace pwn
 		{
 			if( useGlCommands )
 			{
-				glMatrixMode( GL_MODELVIEW );
-				pwnAssert_NoGLError();
-				glLoadIdentity();
-				pwnAssert_NoGLError();
+				glMatrixMode( GL_MODELVIEW ); pwnAssert_NoGLError();
+				glLoadIdentity(); pwnAssert_NoGLError();
 			}
 			
 			applied = false;
@@ -149,11 +146,9 @@ namespace pwn
 			// todo: send correct commands to gl
 			if( useGlCommands )
 			{
-				glAlphaFunc ( GL_GREATER, 0.2f ) ;
-				pwnAssert_NoGLError();
+				glAlphaFunc ( GL_GREATER, 0.2f ); pwnAssert_NoGLError();
 
-				glEnable ( GL_ALPHA_TEST ) ;
-				pwnAssert_NoGLError();
+				glEnable ( GL_ALPHA_TEST ); pwnAssert_NoGLError();
 			}
 
 			std::sort(solid.begin(), solid.end(), CommandSort);
@@ -162,33 +157,28 @@ namespace pwn
 
 			if( useGlCommands )
 			{
-				glDisable(GL_ALPHA_TEST);
-				pwnAssert_NoGLError();
+				glDisable(GL_ALPHA_TEST); pwnAssert_NoGLError();
 
-				glEnable(GL_BLEND);
-				pwnAssert_NoGLError();
+				glEnable(GL_BLEND); pwnAssert_NoGLError();
 
-				glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-				pwnAssert_NoGLError();
+				glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA); pwnAssert_NoGLError();
 
-				glDepthMask(GL_FALSE); // disable depth-write
-				pwnAssert_NoGLError();
+				// disable depth-write
+				glDepthMask(GL_FALSE); pwnAssert_NoGLError();
 			}
 
 			render(transparent);
 
 			if( useGlCommands )
 			{
-				glDepthMask(GL_TRUE); // enable depth.write again
-				pwnAssert_NoGLError();
+				// enable depth.write again
+				glDepthMask(GL_TRUE); pwnAssert_NoGLError();
 
-				glDisable(GL_BLEND);
-				pwnAssert_NoGLError();
+				glDisable(GL_BLEND); pwnAssert_NoGLError();
 
 				if( applied )
 				{
-					glDisable(GL_TEXTURE_2D);
-					pwnAssert_NoGLError();
+					glDisable(GL_TEXTURE_2D); pwnAssert_NoGLError();
 				}
 			}
 		}
@@ -203,7 +193,7 @@ namespace pwn
 				{
 					if( applied == false )
 					{
-						glEnable(GL_TEXTURE_2D);
+						glEnable(GL_TEXTURE_2D); pwnAssert_NoGLError();
 					}
 					if( material->texture.get() != texture )
 					{
@@ -216,7 +206,7 @@ namespace pwn
 				{
 					if( applied )
 					{
-						glDisable(GL_TEXTURE_2D);
+						glDisable(GL_TEXTURE_2D); pwnAssert_NoGLError();
 					}
 					applied = false;
 				}

@@ -89,7 +89,7 @@ public:
 		{
 			stop();
 		}
-		else if( key == Key::Q )
+		else if( key == Key::LMB )
 		{
 			dcam.camera.pipeline = isDown ? normal : simple;
 		}

@@ -121,7 +121,7 @@ namespace pwn
 						imp.handleKey(ToKey(e.MouseButton.Button), true);
 						break;
 					case sf::Event::MouseButtonReleased:
-						imp.handleKey(ToKey(e.MouseButton.Button), true);
+						imp.handleKey(ToKey(e.MouseButton.Button), false);
 						break;
 					}
 				}

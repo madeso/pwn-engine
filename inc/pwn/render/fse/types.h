@@ -19,7 +19,6 @@ namespace pwn
 			class BufferReference;	typedef boost::shared_ptr<BufferReference> BufferReferencePtr;
 			class Provider;			typedef boost::shared_ptr<Provider> ProviderPtr;
 			class Target;			typedef boost::shared_ptr<Target> TargetPtr;
-			class Pipeline;			typedef boost::shared_ptr<Pipeline> PiplelinePtr;
 			class Linker;			typedef boost::shared_ptr<Linker> LinkerPtr;
 			class Binder;
 			class Command;			typedef boost::shared_ptr<Command> CommandPtr;

@@ -56,6 +56,8 @@ private:
 	Animation walk;
 	boost::shared_ptr<Actor> turtle;
 	real pos;
+	fse::PipelinePtr simple;
+	fse::PipelinePtr normal;
 public:
 	EasyLoop(Game* game)
 		: Loop(game)
@@ -72,7 +74,9 @@ public:
 		boost::shared_ptr<World3Widget > wid( new World3Widget( Dock::Fill(), world ) );
 
 		dcam.world = wid;
-		dcam.camera.pipeline = fse::Pipeline::Create("fse/simple-test.xml");
+		simple = fse::Pipeline::Create("fse/simple-test.xml");
+		normal = fse::Pipeline::Create("fse/normal.xml");
+		dcam.camera.pipeline = simple;
 		//dcam.camera.position = point3(-20,20,-40);
 		//dcam.camera.orientation = qLookAt(dcam.camera.position.vec, vec3(0,0,0), Up());
 
@@ -84,6 +88,10 @@ public:
 		if( key == Key::Escape && isDown )
 		{
 			stop();
+		}
+		else if( key == Key::Q )
+		{
+			dcam.camera.pipeline = isDown ? normal : simple;
 		}
 		else
 		{

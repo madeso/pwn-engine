@@ -6,21 +6,22 @@ math: make easier to use, more member functions, use external? cml?
 support more os's like linux & mac
 --------------------------
 ------------- features:
-* fse framework
-* add anistropic texture filtering
+* add anistropic texture filtering with settings
 * tranform into vbos & vertex shaders
 * font support
 * console
 * scripting support
-* 3d debugging
+* scripting support, settings & gui editor for fse
+* 3d debugging (wireframe, view skeleton, draw boundingbox, draw position, line etc)
 * particle engine
 * start on component framework
 * sound engine
 * character engine
-* gui editor for components & fse
-* improve display framework to support huds
+* gui editor for components
 * level editor
 * add physics to component framework
+* improve fse to support different "logical" paths
+* improve display framework to support huds
 * ssao
 * dynamic lights
 * per pixel lights

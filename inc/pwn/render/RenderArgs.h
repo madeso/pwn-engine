@@ -16,7 +16,7 @@ namespace pwn
 			: boost::noncopyable
 		{
 		public:
-			RenderArgs(const Camera& cam, int x, int y, int width, int height); ///< set all the values
+			RenderArgs(const Camera& cam, int x, int y, int width, int height, real aaspect); ///< set all the values
 			RenderArgs(const RenderArgs& ra, int width, int height); ///< get the camera from the other RenderArgs and render w/ width, height at 0,0
 
 		public:
@@ -28,6 +28,7 @@ namespace pwn
 			int y;
 			int width;
 			int height;
+			real aspect;
 		private:
 			RenderArgs(const RenderArgs&);
 		};

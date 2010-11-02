@@ -38,15 +38,9 @@ namespace pwn
 			const int y = -static_cast<GLsizei>(TopOf(rect));
 			const int w = static_cast<GLsizei>(WidthOf(rect));
 			const int h = static_cast<GLsizei>(HeightOf(rect));
-			glMatrixMode(GL_PROJECTION); pwnAssert_NoGLError();
-			glLoadIdentity(); pwnAssert_NoGLError();
-			gluPerspective(camera.fov, AspectOf(rect), camera.znear, camera.zfar); pwnAssert_NoGLError();
+			
 			// todo: test for mask occlusion and possible render to a temporary texture
-
-			glClear(GL_DEPTH_BUFFER_BIT); pwnAssert_NoGLError();
-			glEnable(GL_DEPTH_TEST); pwnAssert_NoGLError();
-			glEnable(GL_CULL_FACE); pwnAssert_NoGLError();
-			RenderArgs ra(camera, x, y, w, h);
+			RenderArgs ra(camera, x, y, w, h, AspectOf(rect));
 			//world->render(ra);
 			camera.pipeline->render(world.get(), ra);
 			glDisable(GL_DEPTH_TEST); pwnAssert_NoGLError();

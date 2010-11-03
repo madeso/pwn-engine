@@ -7,11 +7,12 @@ support more os's like linux & mac
 --------------------------
 ------------- features:
 * add anistropic texture filtering with settings
+* support shader pools
 * tranform into vbos & vertex shaders
 * font support
 * console
 * scripting support
-* scripting support, settings & gui editor for fse
+* scripting, settings & gui editor for fse
 * 3d debugging (wireframe, view skeleton, draw boundingbox, draw position, line etc)
 * particle engine
 * start on component framework

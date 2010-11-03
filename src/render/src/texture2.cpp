@@ -8,6 +8,14 @@ namespace pwn
 {
 	namespace render
 	{
+
+		real GetMaxAnistropy()
+		{
+			GLfloat anisotropy = 1;
+			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &anisotropy); pwnAssert_NoGLError();
+			return anisotropy;
+		}
+
 		Image::Image(bool alpha, int width, int height, const byte* bitmapData, bool mipmap, int format)
 			: text(0)
 		{
@@ -23,6 +31,9 @@ namespace pwn
 			const GLint minFilter = mipmap? GL_LINEAR_MIPMAP_LINEAR: GL_LINEAR;
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); pwnAssert_NoGLError();
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter); pwnAssert_NoGLError();
+
+			real ani = GetMaxAnistropy();
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, ani); pwnAssert_NoGLError();
 
 			const int gmipmap = mipmap ? GL_TRUE : GL_FALSE;
 			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, gmipmap); pwnAssert_NoGLError();

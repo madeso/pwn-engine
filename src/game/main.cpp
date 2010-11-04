@@ -76,7 +76,7 @@ public:
 		dcam.world = wid;
 		simple = fse::Pipeline::Create("fse/simple-test.xml");
 		normal = fse::Pipeline::Create("fse/normal.xml");
-		dcam.camera.pipeline = simple;
+		dcam.camera.pipeline = normal;
 		//dcam.camera.position = point3(-20,20,-40);
 		//dcam.camera.orientation = qLookAt(dcam.camera.position.vec, vec3(0,0,0), Up());
 
@@ -91,7 +91,7 @@ public:
 		}
 		else if( key == Key::LMB )
 		{
-			dcam.camera.pipeline = isDown ? normal : simple;
+			dcam.camera.pipeline = isDown ? simple : normal;
 		}
 		else
 		{

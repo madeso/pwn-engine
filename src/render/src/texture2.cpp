@@ -1,4 +1,5 @@
 #include <pwn/render/texture2.h>
+#include <pwn/render/engine.h>
 
 #include "opengl_debug.hpp"
 #pragma comment(lib, "opengl32.lib")
@@ -16,7 +17,7 @@ namespace pwn
 			return anisotropy;
 		}
 
-		Image::Image(bool alpha, int width, int height, const byte* bitmapData, bool mipmap, int format)
+		Image::Image(bool alpha, int width, int height, const byte* bitmapData, bool mipmap, int format, real anistropy)
 			: text(0)
 		{
 			glGenTextures(1, &text); pwnAssert_NoGLError();
@@ -32,8 +33,7 @@ namespace pwn
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); pwnAssert_NoGLError();
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter); pwnAssert_NoGLError();
 
-			real ani = GetMaxAnistropy();
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, ani); pwnAssert_NoGLError();
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, anistropy); pwnAssert_NoGLError();
 
 			const int gmipmap = mipmap ? GL_TRUE : GL_FALSE;
 			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, gmipmap); pwnAssert_NoGLError();
@@ -89,9 +89,10 @@ namespace pwn
 			texture.reset( img );
 		}
 
-		void Load(Texture2* tex, uint32 width, uint32 height, const byte* pixels)
+		void Load(Texture2* tex, uint32 width, uint32 height, const byte* pixels, const Engine& eng)
 		{
-			tex->setImage(new Image(true, width, height, pixels, true, GL_RGBA));
+			real anistropy = 42;
+			tex->setImage(new Image(true, width, height, pixels, true, GL_RGBA, eng.getAnistropy()));
 		}
 	}
 }

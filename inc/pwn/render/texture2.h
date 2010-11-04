@@ -12,12 +12,16 @@ namespace pwn
 {
 	namespace render
 	{
+		class Engine;
+
+		real GetMaxAnistropy();
+
 		// a general open gl image
 		class Image
 			: boost::noncopyable
 		{
 		public:
-			Image(bool apha, int width, int height, const byte* bitmapData, bool mipmap, int format);
+			Image(bool apha, int width, int height, const byte* bitmapData, bool mipmap, int format, real anistropy);
 			~Image();
 			void bind(int location) const;
 
@@ -46,7 +50,7 @@ namespace pwn
 			std::auto_ptr<Image> texture;
 		};
 
-		void Load(Texture2* tex, uint32 width, uint32 height, const byte* pixels);
+		void Load(Texture2* tex, uint32 width, uint32 height, const byte* pixels, const Engine& engine);
 	}
 }
 

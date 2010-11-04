@@ -38,6 +38,11 @@ namespace pwn
 		Engine::~Engine()
 		{
 		}
+
+		real Engine::getAnistropy() const
+		{
+			return GetMaxAnistropy();
+		}
 	}
 }
 

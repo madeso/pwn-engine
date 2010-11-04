@@ -5,6 +5,11 @@
 
 namespace pwn
 {
+	namespace render
+	{
+		class Engine;
+	};
+
 	namespace engine
 	{
 		class VfsTexturePool2
@@ -13,8 +18,11 @@ namespace pwn
 		public:
 			VfsTexturePool2();
 			~VfsTexturePool2();
+			void setEngine(render::Engine* engine);
 		protected:
 			boost::shared_ptr<render::Texture2> doLoad(core::IdPool* pool, const string&);
+		private:
+			render::Engine* engine;
 		};
 	}
 }

@@ -17,6 +17,11 @@ namespace pwn
 		{
 		}
 
+		void VfsTexturePool2::setEngine(render::Engine* e)
+		{
+			engine = e;
+		}
+
 		struct Soil
 		{
 			explicit Soil(ubyte* pixels)
@@ -46,7 +51,7 @@ namespace pwn
 			int height = -1;
 			int channels = -1;
 			Soil soil( SOIL_load_image_from_memory(reinterpret_cast<ubyte*>(memory.get()), size, &width, &height, &channels, SOIL_LOAD_RGBA) );
-			render::Load(tex.get(), width, height, reinterpret_cast<byte*>(soil.pixels));
+			render::Load(tex.get(), width, height, reinterpret_cast<byte*>(soil.pixels), *engine);
 			return tex;
 		}
 	}

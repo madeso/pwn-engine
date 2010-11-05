@@ -41,6 +41,16 @@ namespace pwn
 			const int gmipmap = mipmap ? GL_TRUE : GL_FALSE;
 			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, gmipmap); pwnAssert_NoGLError();
 			glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, bitmapData); pwnAssert_NoGLError();
+
+			if( doCompress )
+			{
+				GLint result = GL_FALSE;
+				glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_COMPRESSED, &result);  pwnAssert_NoGLError();
+				if( result != GL_TRUE )
+				{
+					throw "failed to compress image";
+				}
+			}
 		}
 
 		Image::~Image()

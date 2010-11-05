@@ -6,7 +6,6 @@ math: make easier to use, more member functions, use external? cml?
 support more os's like linux & mac
 --------------------------
 ------------- features:
-* add settings for anistropic texture
 * add s3tc support to images
 * support shader pools
 * tranform into vbos & vertex shaders

@@ -21,7 +21,7 @@ namespace pwn
 			: boost::noncopyable
 		{
 		public:
-			Image(bool apha, int width, int height, const byte* bitmapData, bool mipmap, int format, real anistropy);
+			Image(bool alpha, int width, int height, const byte* bitmapData, bool mipmap, int format, real anistropy, bool compress);
 			~Image();
 			void bind(int location) const;
 

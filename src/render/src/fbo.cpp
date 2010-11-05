@@ -50,7 +50,7 @@ namespace pwn
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth->getBuffer()); pwnAssert_NoGLError();
 
 			// todo: investigate if anistropy should be used here to...? for now we just disable it
-			texture.reset( new Image(true, width, height, 0, mipmap, GL_RGBA, 1) );
+			texture.reset( new Image(true, width, height, 0, mipmap, GL_RGBA, 1, false) );
 			const int mipmaplevel = 0;
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->getId(), mipmaplevel); pwnAssert_NoGLError();
 

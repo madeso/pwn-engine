@@ -9,7 +9,6 @@ namespace pwn
 {
 	namespace render
 	{
-
 		real GetMaxAnistropy()
 		{
 			GLfloat anisotropy = 1;
@@ -17,12 +16,16 @@ namespace pwn
 			return anisotropy;
 		}
 
-		Image::Image(bool alpha, int width, int height, const byte* bitmapData, bool mipmap, int format, real anistropy)
+		Image::Image(bool alpha, int width, int height, const byte* bitmapData, bool mipmap, int format, real anistropy, bool compress)
 			: text(0)
 		{
 			glGenTextures(1, &text); pwnAssert_NoGLError();
 			bind(0);
-			const GLint internalFormat = alpha ? GL_RGBA8 : GL_RGB8;
+			const bool supportCompress = GLEW_ARB_texture_compression || GLEW_VERSION_1_3;
+			const bool doCompress = compress && supportCompress;
+			const GLint internalFormat_nc = alpha ? GL_RGBA8 : GL_RGB8;
+			const GLint internalFormat_c = alpha ? GL_COMPRESSED_RGBA : GL_COMPRESSED_RGB;
+			const GLint internalFormat = doCompress ? internalFormat_c : internalFormat_nc;
 
 			//glEnable(GL_TEXTURE_2D); // might help on certain gfx cards
 			
@@ -91,8 +94,7 @@ namespace pwn
 
 		void Load(Texture2* tex, uint32 width, uint32 height, const byte* pixels, const Engine& eng)
 		{
-			real anistropy = 42;
-			tex->setImage(new Image(true, width, height, pixels, true, GL_RGBA, eng.getAnistropy()));
+			tex->setImage(new Image(true, width, height, pixels, true, GL_RGBA, eng.getAnistropy(), true));
 		}
 	}
 }

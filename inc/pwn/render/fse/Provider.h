@@ -50,7 +50,7 @@ namespace pwn
 			protected:
 				void denyAutocallOfCommands();
 				void callCommands();
-				Provider(const core::Ptree& el);
+				Provider(const core::Ptree& el, const string& file);
 				virtual ~Provider();
 
 				const core::Ptree shaderdata;
@@ -65,6 +65,7 @@ namespace pwn
 				TargetPtr target;
 				const string targetname;
 				string id;
+				string file;
 				bool autocallCommands;
 				std::vector<CommandPtr> commands;
 				std::vector<Provider*> providers;

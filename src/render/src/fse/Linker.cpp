@@ -11,6 +11,7 @@
 #include <pwn/render/fse/Provider.h>
 
 #include <pwn/io/config.h>
+#include <pwn/core/str.h>
 
 namespace pwn
 {
@@ -110,7 +111,7 @@ namespace pwn
 					{
 						const core::Ptree& data = shaderElement.second;
 						const string& id = data.get<string>("id");
-						ShaderPtr shader = Shader::Create(data.get_child("source"));
+						ShaderPtr shader = Shader::Create(data.get_child("source"), core::Str() << path << ":" << id);
 						shaders.add(id, shader);
 					}
 					else throw "unknown element in shaders";
@@ -127,7 +128,7 @@ namespace pwn
 				{
 					const string& type = providerElement.first;
 					const core::Ptree& data = providerElement.second;
-					ProviderPtr provider = Providers_Create(type, data);
+					ProviderPtr provider = Providers_Create(type, data, path);
 					provider->setId(data.get<string>("id") );
 					addProvider(provider);
 				}

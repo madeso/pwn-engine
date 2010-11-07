@@ -15,7 +15,7 @@ namespace pwn
 				, boost::noncopyable
 			{
 			public:
-				RenderWorldProvider(const core::Ptree& e);
+				RenderWorldProvider(const core::Ptree& e, const string& file);
 				~RenderWorldProvider();
 				const string toString() const;
 

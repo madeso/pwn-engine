@@ -11,7 +11,7 @@ namespace pwn
 	{
 		namespace fse
 		{
-			ProviderPtr Providers_Create(const string& name, const core::Ptree& x);
+			ProviderPtr Providers_Create(const string& name, const core::Ptree& x, const string& file);
 		}
 	}
 }

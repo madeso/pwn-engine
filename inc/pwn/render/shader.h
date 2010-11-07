@@ -40,7 +40,7 @@ namespace pwn
 		{
 		public:
 			static ShaderPtr LoadFile(const string& file);
-			static ShaderPtr Create(const core::Ptree& source);
+			static ShaderPtr Create(const core::Ptree& source, const string& id);
 
 			UniformPtr getUniform(const string& name);
 

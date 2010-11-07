@@ -1,6 +1,7 @@
 #include <pwn/render/shader.h>
 #include <pwn/core/str.h>
 #include <pwn/io/config.h>
+#include <pwn/core/str.h>
 #include <boost/scoped_array.hpp>
 #include <GL/glew.h>
 #include "opengl_debug.hpp"
@@ -66,14 +67,14 @@ namespace pwn
 		{
 			core::Ptree file;
 			io::Read(path, &file);
-			return Create(file.get_child("shader"));
+			return Create(file.get_child("shader"), path);
 		}
 
-		ShaderPtr Shader::Create(const core::Ptree& source)
+		ShaderPtr Shader::Create(const core::Ptree& source, const string& id)
 		{
 			ShaderPtr sh(new Shader());
-			sh->vertex.reset( new ShaderSource("vertex", ShaderSource::Vertex, source.get<string>("vertex")));
-			sh->fragment.reset( new ShaderSource("fragment", ShaderSource::Fragment, source.get<string>("fragment")));
+			sh->vertex.reset( new ShaderSource(core::Str() << id << "#vertex", ShaderSource::Vertex, source.get<string>("vertex")));
+			sh->fragment.reset( new ShaderSource(core::Str() << id << "#fragment", ShaderSource::Fragment, source.get<string>("fragment")));
 
 			glAttachShader(sh->getProgram(), sh->vertex->getShader());
 			pwnAssert_NoGLError();

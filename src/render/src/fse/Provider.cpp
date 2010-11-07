@@ -94,7 +94,7 @@ namespace pwn
 
 					if( source )
 					{
-						shader = Shader::Create(source.get());
+						shader = Shader::Create(source.get(), core::Str() << this->file << ":" << id);
 					}
 				}
 				else
@@ -150,10 +150,11 @@ namespace pwn
 				}
 			}
 			
-			Provider::Provider(const core::Ptree& el)
+			Provider::Provider(const core::Ptree& el, const string& afile)
 				: autocallCommands(true)
 				, shaderdata(el.get_child("shader"))
 				, targetname(el.get<string>("target"))
+				, file(afile)
 			{
 				// foreach (const core::Ptree& e in Xml.Elements(el))
 				BOOST_FOREACH (const core::Ptree::value_type& e, el.get_child("commands"))

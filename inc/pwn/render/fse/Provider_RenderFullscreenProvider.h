@@ -13,7 +13,7 @@ namespace pwn
 				: public Provider
 			{
 			public:
-				RenderFullscreenProvider(const core::Ptree& el);
+				RenderFullscreenProvider(const core::Ptree& el, const string& file);
 				~RenderFullscreenProvider();
 
 			protected:

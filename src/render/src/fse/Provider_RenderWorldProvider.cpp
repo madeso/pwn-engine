@@ -7,8 +7,8 @@ namespace pwn
 	{
 		namespace fse
 		{
-			RenderWorldProvider::RenderWorldProvider(const core::Ptree& e)
-				: Provider(e)
+			RenderWorldProvider::RenderWorldProvider(const core::Ptree& e, const string& file)
+				: Provider(e, file)
 			{
 			}
 

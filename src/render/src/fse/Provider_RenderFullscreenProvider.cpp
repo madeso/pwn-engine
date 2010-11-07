@@ -9,8 +9,8 @@ namespace pwn
 	{
 		namespace fse
 		{
-			RenderFullscreenProvider::RenderFullscreenProvider(const core::Ptree& el)
-				: Provider(el)
+			RenderFullscreenProvider::RenderFullscreenProvider(const core::Ptree& el, const string& file)
+				: Provider(el, file)
 			{
 			}
 

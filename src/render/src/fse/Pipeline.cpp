@@ -16,7 +16,7 @@ namespace pwn
 				string t = pp->linker.read(path, shaders);
 				pp->linker.link();
 				pp->linker.storePipeline(pp, pp->linker.getTarget(t) );
-				Binder bind(shaders);
+				Binder bind(&pp->linker, shaders);
 				pp->bind(&bind, shaders);
 				bind.createBuffers();
 				return pp;

@@ -73,21 +73,25 @@ namespace pwn
 				class ShaderLoader
 				{
 				public:
-					ShaderLoader(ShaderPool* s)
-						: pool(s)
+					ShaderLoader(Linker* link, ShaderPool* s)
+						: linker(link),
+						pool(s)
 					{}
 
-					ShaderPtr operator()(const string& file)
+					ShaderPtr operator()(const string& id)
 					{
-						return pool->getFromFile(file);
+						ShaderPtr shader = linker->getShaderOrNull(id);
+						if( shader.get() ) return shader;
+						else pool->getFromFile(id);
 					}
 				private:
+					Linker* linker;
 					ShaderPool* pool;
 				};
 			}
 			
-			Binder::Binder(ShaderPool* pool)
-				: shaders( ShaderLoader(pool) )
+			Binder::Binder(Linker* linker, ShaderPool* pool)
+				: shaders( ShaderLoader(linker, pool) )
 			{
 			}
 

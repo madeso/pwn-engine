@@ -34,7 +34,7 @@ namespace pwn
 			class Binder
 			{
 			public:
-				Binder(ShaderPool* pool);
+				Binder(Linker* linker, ShaderPool* pool);
 				~Binder();
 
 				string toString() const;

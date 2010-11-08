@@ -429,6 +429,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\src\render\src\shaderpool.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\shaderpool.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\render\src\size.cpp"
 			>
 		</File>

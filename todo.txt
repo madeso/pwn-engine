@@ -7,7 +7,6 @@ support more os's like linux & mac
 rewrite rendering so that it doesn't use io code
 --------------------------
 ------------- features:
-* add s3tc support to images
 * support shader pools
 * tranform into vbos & vertex shaders
 * font support

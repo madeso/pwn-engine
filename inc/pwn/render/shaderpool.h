@@ -22,6 +22,7 @@ namespace pwn
 
 		private:
 			ShaderPtr get(const string& id); ///< return a loaded shader or a nullpointer if not loaded, or it went out of scope
+			ShaderPtr add(const string& id, ShaderPtr sh); ///< add a shader, associating it with it's id, and return it
 			typedef std::map<pwn::string, boost::weak_ptr<Shader> > Map;
 			Map shaders;
 		};

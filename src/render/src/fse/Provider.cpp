@@ -9,6 +9,7 @@
 #include <pwn/core/StringSeperator.h>
 #include <pwn/core/Str.h>
 #include <pwn/render/fse/Binder.h>
+#include <pwn/render/ShaderPool.h>
 
 namespace pwn
 {
@@ -85,7 +86,7 @@ namespace pwn
 				doLink(linker);
 			}
 			
-			void Provider::bind(Binder* bd)
+			void Provider::bind(Binder* bd, ShaderPool* pool)
 			{
 				const string file = shaderdata.data();
 				if( file.empty() )
@@ -94,7 +95,7 @@ namespace pwn
 
 					if( source )
 					{
-						shader = Shader::Create(source.get(), core::Str() << this->file << ":" << id);
+						shader = pool->getFromSource(source.get(), core::Str() << this->file << ":" << id);
 					}
 				}
 				else

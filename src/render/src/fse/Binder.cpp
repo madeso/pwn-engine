@@ -4,6 +4,7 @@
 #include <pwn/render/fse/exceptions.h>
 #include <boost/foreach.hpp>
 #include <pwn/render/fse/Linker.h>
+#include <pwn/render/shaderpool.h>
 
 namespace pwn
 {
@@ -72,23 +73,21 @@ namespace pwn
 				class ShaderLoader
 				{
 				public:
-					ShaderLoader(Linker* l)
-						: linker(l)
+					ShaderLoader(ShaderPool* s)
+						: pool(s)
 					{}
 
-					ShaderPtr operator()(const string& id)
+					ShaderPtr operator()(const string& file)
 					{
-						ShaderPtr shader = linker->getShaderOrNull(id);
-						if( shader.get() ) return shader;
-						else return Shader::LoadFile(id);
+						return pool->getFromFile(file);
 					}
 				private:
-					Linker* linker;
+					ShaderPool* pool;
 				};
 			}
 			
-			Binder::Binder(Linker* linker)
-				: shaders( ShaderLoader(linker) )
+			Binder::Binder(ShaderPool* pool)
+				: shaders( ShaderLoader(pool) )
 			{
 			}
 

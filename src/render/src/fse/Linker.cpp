@@ -9,6 +9,7 @@
 #include <pwn/render/fse/Target_Targets.h>
 #include <pwn/render/fse/Provider_Providers.h>
 #include <pwn/render/fse/Provider.h>
+#include <pwn/render/shaderpool.h>
 
 #include <pwn/io/config.h>
 #include <pwn/core/str.h>
@@ -98,7 +99,7 @@ namespace pwn
 				return shaders.get(id);
 			}
 			
-			const string Linker::read(const string& path)
+			const string Linker::read(const string& path, ShaderPool* pool)
 			{
 				core::Ptree file;
 				io::Read(path, &file);
@@ -111,7 +112,7 @@ namespace pwn
 					{
 						const core::Ptree& data = shaderElement.second;
 						const string& id = data.get<string>("id");
-						ShaderPtr shader = Shader::Create(data.get_child("source"), core::Str() << path << ":" << id);
+						ShaderPtr shader = pool->getFromSource(data.get_child("source"), core::Str() << path << ":" << id);
 						shaders.add(id, shader);
 					}
 					else throw "unknown element in shaders";

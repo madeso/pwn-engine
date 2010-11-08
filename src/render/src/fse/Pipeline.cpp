@@ -10,14 +10,14 @@ namespace pwn
 	{
 		namespace fse
 		{
-			PipelinePtr Pipeline::Create(const string& path)
+			PipelinePtr Pipeline::Create(const string& path, ShaderPool* shaders)
 			{
 				PipelinePtr pp (new Pipeline());
-				string t = pp->linker.read(path);
+				string t = pp->linker.read(path, shaders);
 				pp->linker.link();
 				pp->linker.storePipeline(pp, pp->linker.getTarget(t) );
-				Binder bind(&pp->linker);
-				pp->bind(&bind);
+				Binder bind(shaders);
+				pp->bind(&bind, shaders);
 				bind.createBuffers();
 				return pp;
 			}
@@ -52,11 +52,11 @@ namespace pwn
 				}
 			}
 			
-			void Pipeline::bind(Binder* binder)
+			void Pipeline::bind(Binder* binder, ShaderPool* shaders)
 			{
 				BOOST_FOREACH(Provider* p, providers)
 				{
-					p->bind(binder);
+					p->bind(binder, shaders);
 					if (p->getTarget().get() != 0) // move this to the provider?
 					{
 						p->getTarget()->bind(binder);

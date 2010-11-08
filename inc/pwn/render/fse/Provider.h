@@ -12,6 +12,8 @@ namespace pwn
 {
 	namespace render
 	{
+		class ShaderPool;
+
 		namespace fse
 		{
 			class Link
@@ -37,7 +39,7 @@ namespace pwn
 				void provide(World3* world, const RenderArgs& ra);
 				std::vector<Provider*>& getProviders();
 				void link(Linker* linker);
-				void bind(Binder* bd);
+				void bind(Binder* bd, ShaderPool* shaders);
 				string toString() const;
 				
 			public:

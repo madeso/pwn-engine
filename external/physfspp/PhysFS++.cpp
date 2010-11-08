@@ -1,7 +1,7 @@
 #include "PhysFS++.h"
 
 //#include <OgreException.h> // sirGustav: removed header since I don't have it and apperently it wasn't needed
-
+#include <sstream> // sirGustav: added better exception throwing message
 
 namespace PhysFS
 {
@@ -229,7 +229,12 @@ namespace PhysFS
     }
 
     if (file == 0)
-      throw Exception(PHYSFS_getLastError());
+	{
+		// sirGustav: better error message
+		std::ostringstream ss;
+		ss << "Unable to open file <" << path << "> for " << om << ": " << PHYSFS_getLastError();
+      throw Exception(ss.str());
+	}
   }
 
   void FileDevice::close()

@@ -17,8 +17,8 @@ namespace pwn
 		class ShaderPool
 		{
 		public:
-			ShaderPtr shaderFromFile(const string& file);
-			ShaderPtr shaderFromSource(const core::Ptree& source, const string& id);
+			ShaderPtr getFromFile(const string& file);
+			ShaderPtr getFromSource(const core::Ptree& source, const string& id);
 
 		private:
 			ShaderPtr get(const string& id); ///< return a loaded shader or a nullpointer if not loaded, or it went out of scope

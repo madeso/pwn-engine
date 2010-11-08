@@ -5,14 +5,14 @@ namespace pwn
 {
 	namespace render
 	{
-		ShaderPtr ShaderPool::shaderFromFile(const string& file)
+		ShaderPtr ShaderPool::getFromFile(const string& file)
 		{
 			ShaderPtr loaded = get(file);
 			if( loaded ) return loaded;
 			else return Shader::LoadFile(file);
 		}
 
-		ShaderPtr ShaderPool::shaderFromSource(const core::Ptree& source, const string& id)
+		ShaderPtr ShaderPool::getFromSource(const core::Ptree& source, const string& id)
 		{
 			ShaderPtr loaded = get(id);
 			if( loaded ) return loaded;

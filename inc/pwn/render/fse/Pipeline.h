@@ -11,6 +11,8 @@ namespace pwn
 {
 	namespace render
 	{
+		class ShaderPool;
+
 		namespace fse
 		{
 			/** Entry point and probably the only class of interest when using the fse framework.
@@ -18,7 +20,7 @@ namespace pwn
 			class Pipeline
 			{
 			public:
-				static PipelinePtr Create(const string& path);
+				static PipelinePtr Create(const string& path, ShaderPool* shaders);
 				void render(World3* world, const RenderArgs& ra);
 				~Pipeline();
 
@@ -27,7 +29,7 @@ namespace pwn
 				
 			private:
 				Pipeline();
-				void bind(Binder* binder);
+				void bind(Binder* binder, ShaderPool* shaders);
 				
 			private:
 				Linker linker;

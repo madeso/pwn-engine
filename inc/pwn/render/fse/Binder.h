@@ -14,6 +14,8 @@ namespace pwn
 {
 	namespace render
 	{
+		class ShaderPool;
+
 		namespace fse
 		{
 			class FboPool
@@ -32,7 +34,7 @@ namespace pwn
 			class Binder
 			{
 			public:
-				Binder(Linker* linker);
+				Binder(ShaderPool* pool);
 				~Binder();
 
 				string toString() const;

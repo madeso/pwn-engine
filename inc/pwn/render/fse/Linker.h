@@ -9,6 +9,8 @@ namespace pwn
 {
 	namespace render
 	{
+		class ShaderPool;
+
 		namespace fse
 		{
 			class Linker
@@ -27,7 +29,7 @@ namespace pwn
 				
 			public:
 				/// @return the suggested target name
-				const string read(const string& path);
+				const string read(const string& path, ShaderPool* shaders);
 
 			private:
 				core::Map<ProviderPtr> providers;

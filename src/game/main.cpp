@@ -16,6 +16,8 @@
 #include <pwn/render/worldwithcameraboundobject3.h>
 #include <pwn/render/fse/pipeline.h>
 
+#include <pwn/render/shaderpool.h>
+
 using namespace pwn;
 using namespace pwn::engine;
 using namespace pwn::render;
@@ -59,6 +61,8 @@ private:
 	fse::PipelinePtr simple;
 	fse::PipelinePtr normal;
 public:
+	pwn::render::ShaderPool tempShaderPool;
+
 	EasyLoop(Game* game)
 		: Loop(game)
 	{
@@ -74,8 +78,8 @@ public:
 		boost::shared_ptr<World3Widget > wid( new World3Widget( Dock::Fill(), world ) );
 
 		dcam.world = wid;
-		simple = fse::Pipeline::Create("fse/simple-test.xml");
-		normal = fse::Pipeline::Create("fse/normal.xml");
+		simple = fse::Pipeline::Create("fse/simple-test.xml", &tempShaderPool);
+		normal = fse::Pipeline::Create("fse/normal.xml", &tempShaderPool);
 		dcam.camera.pipeline = normal;
 		//dcam.camera.position = point3(-20,20,-40);
 		//dcam.camera.orientation = qLookAt(dcam.camera.position.vec, vec3(0,0,0), Up());

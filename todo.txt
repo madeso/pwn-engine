@@ -7,7 +7,6 @@ support more os's like linux & mac
 rewrite rendering so that it doesn't use io code
 --------------------------
 ------------- features:
-* support shader pools
 * tranform into vbos & vertex shaders
 * font support
 * console

@@ -46,8 +46,6 @@ namespace pwn
 				vf.handle8(version);
 				if( version != kVersion ) throw "mesh version mismatch";
 				vf.handleVector(mesh.positions);
-				vf.handleVector(mesh.normals);
-				vf.handleVector(mesh.texcoords);
 				vf.handleVector(mesh.bones);
 				std::vector<pwn::uint32> keys = vf.handleKeys(mesh.triangles);
 				BOOST_FOREACH(pwn::uint32 id, keys)

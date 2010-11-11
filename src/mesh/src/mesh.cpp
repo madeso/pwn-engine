@@ -18,6 +18,14 @@ namespace pwn
 		{
 		}
 
+		Point::Point(const math::vec3& alocation, math::vec3 anormal, math::vec2 atextcoord, BoneIndex abone)
+			: location(alocation)
+			, normal(anormal)
+			, textcoord(atextcoord)
+			, bone(abone)
+		{
+		}
+
 		bool Point::hasBone() const
 		{
 			return bone != 0;
@@ -33,11 +41,16 @@ namespace pwn
 		{
 		}
 
+		Triangle::VertexIndex Mesh::add(const math::vec3& pos, const math::vec2& text, const math::vec3& normal, const BoneIndex bone)
+		{
+			const Triangle::VertexIndex r = positions.size();
+			positions.push_back( Point(pos, normal, text, bone) );
+			return r;
+		}
+
 		void Mesh::clear()
 		{
 			positions.clear();
-			normals.clear();
-			texcoords.clear();
 			triangles.clear();
 			bones.clear();
 			materials.clear();

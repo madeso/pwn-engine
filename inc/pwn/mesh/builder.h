@@ -23,25 +23,49 @@ namespace pwn
 
 		uint32 NumberOfTriangles(const Mesh& mesh);
 
+		class BTriangle
+		{
+		public:
+			typedef pwn::uint32 index;
+			struct Vertex
+			{
+				index location;
+				index texture;
+				index normal;
+
+				Vertex();
+			};
+			Vertex v0;
+			Vertex v1;
+			Vertex v2;
+
+			BTriangle(Vertex v0, Vertex v1, Vertex v2);
+			//BTriangle(Vertex v[3]);
+			BTriangle();
+
+			Vertex& operator[](pwn::uint32 index);
+			const Vertex& operator[](pwn::uint32 index) const;
+		};
+
 		class Builder
 		{
 		public:
 			void clear();
-			Triangle::index addTextCoord(const math::vec2& v);
-			Triangle::index addPosition(const Point& pos);
-			Triangle::index addPosition(const math::vec3& pos, BoneIndex bone); // syntax sugar
-			Triangle::index addNormal(const math::vec3& norm);
-			void addTriangle(pwn::uint32 material, const Triangle& t);
-			Triangle::index addMaterial(Material m);
+			BTriangle::index addTextCoord(const math::vec2& v);
+			BTriangle::index addPosition(const Point& pos);
+			BTriangle::index addPosition(const math::vec3& pos, BoneIndex bone); // syntax sugar
+			BTriangle::index addNormal(const math::vec3& norm);
+			void addTriangle(pwn::uint32 material, const BTriangle& t);
+			BTriangle::index addMaterial(Material m);
 
-			void addQuad(bool reverse, pwn::uint32 material, const Triangle::Vertex& v0, const Triangle::Vertex& v1, const Triangle::Vertex& v2, const Triangle::Vertex& v3);
-			void addFace(pwn::uint32 material, const std::vector<Triangle::Vertex>& vertices);
+			void addQuad(bool reverse, pwn::uint32 material, const BTriangle::Vertex& v0, const BTriangle::Vertex& v1, const BTriangle::Vertex& v2, const BTriangle::Vertex& v3);
+			void addFace(pwn::uint32 material, const std::vector<BTriangle::Vertex>& vertices);
 			void setBox(Material material, real w, real h, real d, bool faceOut);
 			void buildNormals();
 
 			bool makeMesh(Mesh& mesh, Flatouter* flatouter) const;
 
-			typedef std::vector<Triangle> TriList;
+			typedef std::vector<BTriangle> TriList;
 			typedef std::map<pwn::uint32, TriList> TriMap;
 			TriMap triangles;
 			std::vector<Point> positions;

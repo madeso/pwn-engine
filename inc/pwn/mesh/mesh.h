@@ -71,9 +71,13 @@ namespace pwn
 		{
 			Point();
 			Point(const math::vec3& location, BoneIndex bone);
+			Point(const math::vec3& location, math::vec3 normal, math::vec2 textcoord, BoneIndex bone);
 			bool hasBone() const;
 			BoneIndex getBone() const;
+			
 			math::vec3 location;
+			math::vec3 normal;
+			math::vec2 textcoord;
 			BoneIndex bone;
 		};
 
@@ -197,28 +201,17 @@ namespace pwn
 		class Triangle
 		{
 		public:
-			typedef pwn::uint32 index;
-			struct Vertex
-			{
-				index location;
-				index normal;
-				index texcoord;
-				index bone;
+			typedef pwn::uint32 VertexIndex;
+			VertexIndex v0;
+			VertexIndex v1;
+			VertexIndex v2;
 
-				Vertex(index location, index normal, index texcoord);
-				Vertex(index location_textcoord, index normal);
-				Vertex();
-			};
-			Vertex v0;
-			Vertex v1;
-			Vertex v2;
-
-			Triangle(Vertex v0, Vertex v1, Vertex v2);
-			Triangle(Vertex v[3]);
+			Triangle(VertexIndex v0, VertexIndex v1, VertexIndex v2);
+			Triangle(VertexIndex v[3]);
 			Triangle();
 
-			Vertex& operator[](pwn::uint32 index);
-			const Vertex& operator[](pwn::uint32 index) const;
+			VertexIndex& operator[](pwn::uint32 index);
+			const VertexIndex& operator[](pwn::uint32 index) const;
 		};
 
 		class Mesh
@@ -230,13 +223,12 @@ namespace pwn
 			
 			Mesh();
 
+			Triangle::VertexIndex add(const math::vec3& pos, const math::vec2& text, const math::vec3& normal, const BoneIndex bone);
 			void clear();
 			pwn::uint32 validate() const;
 
 			// todo: make private and add accessors instead...
 			std::vector<Point> positions;
-			std::vector<math::vec3> normals;
-			std::vector<math::vec2> texcoords;
 			std::vector<Bone> bones;
 
 			TriangleMap triangles; // the map key referenses the materials vector below

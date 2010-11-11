@@ -8,6 +8,7 @@
 #include <fstream>
 
 #include <pwn/core/stdutil.h>
+#include <pwn/assert.h>
 namespace pwn
 {
 	namespace mesh
@@ -39,9 +40,9 @@ namespace pwn
 
 		Mesh* InvertNormals(Mesh* mesh)
 		{
-			BOOST_FOREACH(math::vec3& n, mesh->normals)
+			BOOST_FOREACH(Point& p, mesh->positions)
 			{
-				n = -n;
+				p.normal = -p.normal;
 			}
 
 			return mesh;
@@ -88,10 +89,46 @@ namespace pwn
 
 		namespace // local
 		{
-			Triangle::Vertex v(Triangle::index p, Triangle::index t)
+			BTriangle::Vertex v(BTriangle::index p, BTriangle::index t)
 			{
-				return Triangle::Vertex(p, 0, t);
+				BTriangle::Vertex vt;
+				vt.location = p;
+				vt.texture = t;
+				return vt;
 			}
+		}
+
+		// ==================================================================================================================================
+
+		BTriangle::Vertex::Vertex()
+			: location(0)
+			, texture(0)
+			, normal(0)
+		{
+		}
+
+		BTriangle::BTriangle(Vertex a, Vertex b, Vertex c)
+			: v0(a), v1(b), v2(c)
+		{
+		}
+
+		BTriangle::BTriangle()
+		{
+		}
+
+		namespace // local
+		{
+			BTriangle::Vertex BTriangle::* const offsets[3] = {&BTriangle::v0, &BTriangle::v1, &BTriangle::v2};
+		}
+
+		BTriangle::Vertex& BTriangle::operator[](pwn::uint32 index)
+		{
+			return this->*offsets[index];
+		}
+
+		const BTriangle::Vertex& BTriangle::operator[](pwn::uint32 index) const
+		{
+			return this->*offsets[index];
 		}
 
 		// ==================================================================================================================================
@@ -106,62 +143,62 @@ namespace pwn
 			materials.clear();
 		}
 
-		Triangle::index Builder::addTextCoord(const math::vec2& tc)
+		BTriangle::index Builder::addTextCoord(const math::vec2& tc)
 		{
 			texcoords.push_back(tc);
-			return static_cast<Triangle::index>(texcoords.size()-1);
+			return static_cast<BTriangle::index>(texcoords.size()-1);
 		}
 
-		Triangle::index Builder::addPosition(const Point& pos)
+		BTriangle::index Builder::addPosition(const Point& pos)
 		{
 			positions.push_back(pos);
-			return static_cast<Triangle::index>(positions.size()-1);
+			return static_cast<BTriangle::index>(positions.size()-1);
 		}
 
-		Triangle::index Builder::addPosition(const math::vec3& pos, BoneIndex bone)
+		BTriangle::index Builder::addPosition(const math::vec3& pos, BoneIndex bone)
 		{
 			return addPosition(Point(pos, bone));
 		}
 		
-		Triangle::index Builder::addNormal(const math::vec3& norm)
+		BTriangle::index Builder::addNormal(const math::vec3& norm)
 		{
 			normals.push_back(norm);
-			return static_cast<Triangle::index>(normals.size()-1);
+			return static_cast<BTriangle::index>(normals.size()-1);
 		}
 
-		void Builder::addTriangle(pwn::uint32 material, const Triangle& t)
+		void Builder::addTriangle(pwn::uint32 material, const BTriangle& t)
 		{
 			triangles[material].push_back(t);
 		}
 
-		Triangle::index Builder::addMaterial(Material m)
+		BTriangle::index Builder::addMaterial(Material m)
 		{
 			materials.push_back(m);
-			return static_cast<Triangle::index>(materials.size()-1);
+			return static_cast<BTriangle::index>(materials.size()-1);
 		}
 		
-		void Builder::addQuad(bool reverse, pwn::uint32 material, const Triangle::Vertex& v0, const Triangle::Vertex& v1, const Triangle::Vertex& v2, const Triangle::Vertex& v3)
+		void Builder::addQuad(bool reverse, pwn::uint32 material, const BTriangle::Vertex& v0, const BTriangle::Vertex& v1, const BTriangle::Vertex& v2, const BTriangle::Vertex& v3)
 		{
 			if( reverse )
 			{
-				addTriangle(material, Triangle(v2, v1, v0) );
-				addTriangle(material, Triangle(v3, v2, v0) );
+				addTriangle(material, BTriangle(v2, v1, v0) );
+				addTriangle(material, BTriangle(v3, v2, v0) );
 			}
 			else
 			{
-				addTriangle(material, Triangle(v0, v1, v2) );
-				addTriangle(material, Triangle(v0, v2, v3) );
+				addTriangle(material, BTriangle(v0, v1, v2) );
+				addTriangle(material, BTriangle(v0, v2, v3) );
 			}
 		}
 
-		void Builder::addFace(pwn::uint32 material, const std::vector<Triangle::Vertex>& vertices)
+		void Builder::addFace(pwn::uint32 material, const std::vector<BTriangle::Vertex>& vertices)
 		{
 			// we currently doesnt support ton-triangular faces so - triangulate it
-			const std::vector<Triangle::Vertex>::size_type size = vertices.size();
+			const std::vector<BTriangle::Vertex>::size_type size = vertices.size();
 			bool added = false;
-			for(std::vector<Triangle::Vertex>::size_type i=2; i<size; ++i)
+			for(std::vector<BTriangle::Vertex>::size_type i=2; i<size; ++i)
 			{
-				addTriangle(material, Triangle(vertices[0], vertices[i-1], vertices[i]));
+				addTriangle(material, BTriangle(vertices[0], vertices[i-1], vertices[i]));
 				added = true;
 			}
 			if( false == added ) throw "Unable to triangulate face";
@@ -174,22 +211,22 @@ namespace pwn
 
 			clear();
 
-			const Triangle::index t0 = addTextCoord(vec2(0,1));
-			const Triangle::index t1 = addTextCoord(vec2(1,1));
-			const Triangle::index t2 = addTextCoord(vec2(0,0));
-			const Triangle::index t3 = addTextCoord(vec2(1,0));
+			const BTriangle::index t0 = addTextCoord(vec2(0,1));
+			const BTriangle::index t1 = addTextCoord(vec2(1,1));
+			const BTriangle::index t2 = addTextCoord(vec2(0,0));
+			const BTriangle::index t3 = addTextCoord(vec2(1,0));
 
 			// front side
-			const Triangle::index v0 = addPosition(vec3(0, 0, 0), 0);
-			const Triangle::index v1 = addPosition(vec3(w, 0, 0), 0);
-			const Triangle::index v2 = addPosition(vec3(0, h, 0), 0);
-			const Triangle::index v3 = addPosition(vec3(w, h, 0), 0);
+			const BTriangle::index v0 = addPosition(vec3(0, 0, 0), 0);
+			const BTriangle::index v1 = addPosition(vec3(w, 0, 0), 0);
+			const BTriangle::index v2 = addPosition(vec3(0, h, 0), 0);
+			const BTriangle::index v3 = addPosition(vec3(w, h, 0), 0);
 
 			// back side
-			const Triangle::index v4 = addPosition(vec3(0, 0, d), 0);
-			const Triangle::index v5 = addPosition(vec3(w, 0, d), 0);
-			const Triangle::index v6 = addPosition(vec3(0, h, d), 0);
-			const Triangle::index v7 = addPosition(vec3(w, h, d), 0);
+			const BTriangle::index v4 = addPosition(vec3(0, 0, d), 0);
+			const BTriangle::index v5 = addPosition(vec3(w, 0, d), 0);
+			const BTriangle::index v6 = addPosition(vec3(0, h, d), 0);
+			const BTriangle::index v7 = addPosition(vec3(w, h, d), 0);
 
 			addQuad(!faceOut, 0, v(v0,t2), v(v2,t0), v(v3,t1), v(v1,t3)); // front
 			addQuad(!faceOut, 0, v(v1,t3), v(v3,t1), v(v7,t0), v(v5,t2)); // right
@@ -207,7 +244,7 @@ namespace pwn
 			std::vector<vec3> vertexNormalsSum(positions.size(), vec3(0,0,0));
 			BOOST_FOREACH(TriMap::value_type& tr, triangles)
 			{
-				BOOST_FOREACH(Triangle& t, tr.second)
+				BOOST_FOREACH(BTriangle& t, tr.second)
 				{
 					const vec3 p0 = positions[t[0].location].location;
 					const vec3 p1 = positions[t[1].location].location;
@@ -287,15 +324,80 @@ namespace pwn
 			}
 		}
 
+		struct Combo
+		{
+			Triangle::VertexIndex location;
+			Triangle::VertexIndex texture;
+			Triangle::VertexIndex normal;
+			BoneIndex boneIndex;
+
+			Combo(const BTriangle::Vertex& v, BoneIndex bi)
+				: location(v.location)
+				, texture(v.texture)
+				, normal(v.normal)
+				, boneIndex(bi)
+			{
+			}
+		};
+
+		bool operator<(const Combo& lhs, const Combo& rhs)
+		{
+#define TEST(x) if( lhs.x != rhs.x ) return lhs.x < rhs.x
+			TEST(location);
+			else TEST(texture);
+			else TEST(normal);
+			else TEST(boneIndex);
+			else 
+			{
+				// all equal
+				return false;
+			}
+#undef TEST
+		}
+
 		bool Builder::makeMesh(Mesh& mesh, Flatouter* flatouter) const
 		{
 			mesh.clear();
 
+			typedef std::map<Combo, Triangle::VertexIndex> ComboMap;
+			ComboMap combinations;
+
+			// foreach triangle
+			BOOST_FOREACH(const TriMap::value_type& triangleMaterial, triangles)
+			{
+				const pwn::uint32 material = triangleMaterial.first;
+				BOOST_FOREACH(const BTriangle& sourceTriangle, triangleMaterial.second)
+				{
+					Triangle::VertexIndex triangle[3];
+
+					// get combinations, add if not existing
+					for(int i=0; i<3; ++i)
+					{
+						const BoneIndex boneIndex = positions[sourceTriangle[i].location].bone;
+						const Combo c(sourceTriangle[i], boneIndex);
+						ComboMap::iterator result = combinations.find(c);
+						if( result != combinations.end() )
+						{
+							triangle[i] = result->second;
+						}
+						else
+						{
+							const math::vec3 pos = positions[c.location].location;
+							const math::vec2 text = texcoords[c.texture];
+							const math::vec3 normal = normals.empty() == false ? normals[c.normal] : math::vec3(0,0,0);
+							Triangle::VertexIndex ind = mesh.add(pos, text, normal, boneIndex);
+							combinations.insert( ComboMap::value_type(c, ind) );
+							triangle[i] = ind;
+						}
+					}
+
+					// add traingle to mesh
+					mesh.triangles[material].push_back(triangle);
+				}
+			}
+
 			mesh.positions = positions;
-			mesh.normals = normals;
-			mesh.texcoords = texcoords;
 			mesh.bones = bones;
-			mesh.triangles = triangles;
 			mesh.materials = materials;
 
 			if( flatouter )

@@ -8,6 +8,7 @@ rewrite rendering so that it doesn't use io code
 --------------------------
 ------------- features:
 * tranform into vbos & vertex shaders
+* investigate bug in physfs, mixing objCount & size?, move back to stable?
 * font support
 * console
 * scripting support

@@ -12,7 +12,8 @@ namespace pwn
 		{
 			void Error(const pwn::string& message)
 			{
-				const pwn::string vfsError = PHYSFS_getLastError();
+				const char * error = PHYSFS_getLastError();
+				const pwn::string vfsError = error ? error : "<null from physfs>";
 				throw "Unable to " + message + ": " + vfsError;
 			}
 		}
@@ -86,7 +87,8 @@ namespace pwn
 
 		void VirtualFile::writeReal(const pwn::real& value)
 		{
-			if( PHYSFS_write(file, &value, 1, sizeof(pwn::real)) != sizeof(pwn::real) ) Error("write real");
+			const PHYSFS_sint64 objects = PHYSFS_write(file, &value, 1, sizeof(pwn::real));
+			if( objects != 1 ) Error("write real");
 		}
 
 		pwn::real VirtualFile::readReal()
@@ -126,7 +128,8 @@ namespace pwn
 
 		void VirtualFile::write(const void* data, pwn::uint32 size)
 		{
-			if( PHYSFS_write(file, data, size, 1) != 1 ) Error("writing data");
+			const PHYSFS_sint64 objects = PHYSFS_write(file, data, size, 1);
+			if( objects != size ) Error("writing data"); // size was 1, bug in nightly physfs
 		}
 
 		// ---------------------------------------------------------------------------------------------

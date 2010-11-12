@@ -56,40 +56,56 @@ namespace pwn
 			materials.clear();
 		}
 
-		pwn::uint32 Mesh::validate() const
+		int Check(const string& reason, size_t index, size_t size)
+		{
+			if( index >= size )
+			{
+				Assert( 0 && reason.c_str());
+				return 1;
+			}
+			else return 0;
+		}
+
+		pwn::uint32 Mesh::validate(bool testSortedBones) const
 		{
 			pwn::uint32 errors = 0;
-			for(std::size_t i = 0; i<bones.size(); ++i)
+
+			// test if bones are sorted
+			if( testSortedBones )
 			{
-				if( bones[i].hasParent() && bones[i].getParent() >= i ) ++errors; // bones not sorted
-			}
-
-			/*
-			uint32 errors = 0;
-
-			const std::size_t positions = mBuilder.positions.size();
-			const std::size_t normals = mBuilder.normals.size();
-			const std::size_t texcoords = mBuilder.texcoords.size();
-			const std::size_t materials = mBuilder.materials.size();
-
-			for(pwn::mesh::Triangle::index i=0; i<mBuilder.triangles.size(); ++i)
-			{
-				const pwn::mesh::Triangle t = mBuilder.triangles[i];
-				errors += Check("material index", t.material, materials);
-				for(int i=0; i<3; ++i)
+				for(std::size_t i = 0; i<bones.size(); ++i)
 				{
-					errors += Check("position index", t[i].location, positions);
-					if( normals != 0 )
+					if( bones[i].hasParent() )
 					{
-						errors += Check("normal index", t[i].normal, normals);
-					}
-					if( texcoords != 0 )
-					{
-						errors += Check("texcoord index", t[i].texcoord, texcoords);
+						errors += Check("bone sorted", bones[i].getParent(), i );
 					}
 				}
 			}
-			*/
+
+			// test that the triangles point to valid indices
+			const std::size_t positionSize = positions.size();
+			const std::size_t materialSize = materials.size();
+			BOOST_FOREACH(const TriangleMap::value_type& mt, triangles)
+			{
+				errors += Check("material index", mt.first, materialSize);
+				BOOST_FOREACH(const pwn::mesh::Triangle& t, mt.second)
+				{
+					for(int i=0; i<3; ++i)
+					{
+						errors += Check("position index", t[i], positionSize);
+					}
+				}
+			}
+
+			// test that the points are valid
+			const std::size_t boneSize = bones.size();
+			BOOST_FOREACH(const Point& p, positions)
+			{
+				if( p.hasBone() )
+				{
+					errors += Check("bone index", p.getBone(), boneSize);
+				}
+			}
 
 			return errors;
 		}

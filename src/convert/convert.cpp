@@ -198,26 +198,6 @@ struct ConvertMesh
 				pwn::io::Write(ani, boost::filesystem::path(ai.name).replace_extension("anim").filename());
 			}
 
-			if( runStatistics )
-			{
-				if( verbose ) cout << "testing..." << endl;
-
-				pwn::convert::Stat positions;
-				pwn::convert::Stat normals;
-
-				pwn::convert::EstimatedDataLossWhenCompressing(mesh, &positions, &normals);
-
-				cout
-					<< "Estimated loss < min | avg | max > " << endl
-					<< " for positions: " << positions << endl
-					<< " for normals: " << normals << endl
-					<< endl
-					<< "Saving was: " << endl
-					<< builder.removedNormals() * 100 << "% normals removed" << endl
-					<< " wich is " << builder.numberOfRemovedNormals() << "!" << endl;
-
-			}
-
 			if( verbose ) cout << endl << "done." << endl;
 
 			return true;

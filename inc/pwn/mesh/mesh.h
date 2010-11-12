@@ -225,7 +225,7 @@ namespace pwn
 
 			Triangle::VertexIndex add(const math::vec3& pos, const math::vec2& text, const math::vec3& normal, const BoneIndex bone);
 			void clear();
-			pwn::uint32 validate() const;
+			pwn::uint32 validate(bool testSortedBones) const;
 
 			// todo: make private and add accessors instead...
 			std::vector<Point> positions;

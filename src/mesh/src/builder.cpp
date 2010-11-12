@@ -408,9 +408,10 @@ namespace pwn
 				}
 			}
 
-			mesh.positions = positions;
 			mesh.bones = bones;
 			mesh.materials = materials;
+
+			Assert(mesh.validate(false) == 0);
 
 			if( flatouter )
 			{
@@ -420,7 +421,7 @@ namespace pwn
 
 			PrepareVericesForAnimation(&mesh);
 
-			return mesh.validate() ==0;
+			return mesh.validate(true) ==0;
 		}
 
 		uint32 NumberOfTriangles(const Mesh& mesh)

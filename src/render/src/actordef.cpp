@@ -29,14 +29,10 @@ namespace pwn
 		public:
 			explicit SharedMesh(const mesh::Mesh& mesh)
 				: positions(mesh.positions)
-				, normals(mesh.normals)
-				, texcoords(mesh.texcoords)
 			{
 			}
 
 			std::vector<mesh::Point> positions;
-			std::vector<math::vec3> normals;
-			std::vector<math::vec2> texcoords;
 		};
 
 		class ImmediateMode : public CompiledMesh
@@ -59,21 +55,14 @@ namespace pwn
 
 				BOOST_FOREACH(const mesh::Triangle& tri, triangles)
 				{
-					const std::size_t nc = smesh->normals.size();
-					const std::size_t tc = smesh->texcoords.size();
 					for(int i=0; i<3; ++i)
 					{
-						if( nc != 0 )
-						{
-							const math::vec3 n = smesh->normals[tri[i].normal];
-							glNormal3f(n.x, n.y, n.z);
-						}
-						if( tc != 0 )
-						{
-							const math::vec2 t = smesh->texcoords[tri[i].texcoord];
-							glTexCoord2f(t.x, 1-t.y);
-						}
-						const mesh::Point& point = smesh->positions[tri[i].location];
+						const mesh::Point& point = smesh->positions[tri[i]];
+
+						glNormal3f(point.normal.x, point.normal.y, point.normal.z);
+
+						glTexCoord2f(point.textcoord.x, 1-point.textcoord.y);
+						
 						const math::vec3 p = point.hasBone()
 							? pose.transforms[point.getBone()] * point.location
 							: point.location;

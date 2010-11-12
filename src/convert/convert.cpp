@@ -144,7 +144,7 @@ struct ConvertMesh
 				pwn::mesh::CompiledPose cp(p, mesh.bones);
 			}
 
-			const pwn::uint32 validationErrors = mesh.validate();
+			const pwn::uint32 validationErrors = mesh.validate(true);
 			if( validationErrors != 0)
 			{
 				cerr << inputfile << " failed validation with " << validationErrors << " error(s)... ignoring file..." << endl;

@@ -5,6 +5,7 @@
 #include "vfs.hpp"
 #include <boost/foreach.hpp>
 #include <map>
+#include <pwn/assert.h>
 
 namespace pwn
 {
@@ -58,6 +59,7 @@ namespace pwn
 
 		void Write(const mesh::Mesh& mesh, const pwn::string& filename)
 		{
+			Assert(mesh.validate(true) == 0);
 			VirtualFile vf(filename, false);
 			FileWriter w;
 			w.file = &vf;
@@ -71,6 +73,7 @@ namespace pwn
 			FileReader r;
 			r.file = &vf;
 			MeshFile<mesh::Mesh&,pwn::uint8&>::handle(r, *mesh, version);
+			Assert(mesh->validate(true) == 0);
 		}
 	}
 }

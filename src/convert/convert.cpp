@@ -167,8 +167,6 @@ struct ConvertMesh
 				cout
 					<< "Mesh information: " << endl
 					<< " positions: " << mesh.positions.size() << endl
-					<< " normals: " << mesh.normals.size() << endl
-					<< " texcoords: " << mesh.texcoords.size() << endl
 					<< " materials: " << mesh.triangles.size() << endl
 					<< " triangles: " << pwn::mesh::NumberOfTriangles(mesh) << endl
 					<< endl;

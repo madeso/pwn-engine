@@ -269,10 +269,10 @@ namespace pwn
 
 							BOOST_FOREACH (Tri tr , me.tris)
 							{
-								builder->addTriangle(me.materialId, mesh::Triangle(
-									  mesh::Triangle::Vertex(vbase + tr.v1, nbase + tr.n1)
-									, mesh::Triangle::Vertex(vbase + tr.v2, nbase + tr.n2)
-									, mesh::Triangle::Vertex(vbase + tr.v3, nbase + tr.n3)
+								builder->addTriangle(me.materialId, mesh::BTriangle(
+									  mesh::BTriangle::Vertex::Create_VN_T(vbase + tr.v1, nbase + tr.n1)
+									, mesh::BTriangle::Vertex::Create_VN_T(vbase + tr.v2, nbase + tr.n2)
+									, mesh::BTriangle::Vertex::Create_VN_T(vbase + tr.v3, nbase + tr.n3)
 									));
 							}
 						}

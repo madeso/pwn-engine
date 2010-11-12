@@ -34,6 +34,9 @@ namespace pwn
 				index normal;
 
 				Vertex();
+				Vertex(index vertex, index normal, index textureCoordinate);
+
+				static Vertex Create_VN_T(index vertexAndNormal, index text);
 			};
 			Vertex v0;
 			Vertex v1;

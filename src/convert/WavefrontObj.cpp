@@ -32,7 +32,7 @@ namespace pwn
 					return boost::lexical_cast<pwn::real>(str);
 				}
 
-				const mesh::Triangle::Vertex cFaceIndex(const pwn::string& astr)
+				const mesh::BTriangle::Vertex cFaceIndex(const pwn::string& astr)
 				{
 					const pwn::string str = pwn::core::Trim(astr);
 					const pwn::string::size_type a = str.find_first_of('/');
@@ -42,7 +42,7 @@ namespace pwn
 					const std::size_t vertex = csizet(str.substr(0, a)) - 1;
 					const std::size_t textureCoordiante = csizet(str.substr(a+1, b-a-1)) -1;
 					const std::size_t normal = csizet(str.substr(b+1, str.length()-b-1)) -1;
-					return mesh::Triangle::Vertex(vertex, normal, textureCoordiante);
+					return mesh::BTriangle::Vertex(vertex, normal, textureCoordiante);
 				}
 
 				const pwn::math::Rgba cRgba(const pwn::string& r, const pwn::string& g, const pwn::string& b, const pwn::real a)
@@ -193,7 +193,7 @@ namespace pwn
 					}
 					else if ( command == "f" )
 					{
-						std::vector<mesh::Triangle::Vertex> faces;
+						std::vector<mesh::BTriangle::Vertex> faces;
 						SkipWhitespace(f);
 						while( pwn::string("0123456789/").find(f.peek()) != pwn::string::npos )
 						{

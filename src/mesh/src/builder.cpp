@@ -107,6 +107,18 @@ namespace pwn
 		{
 		}
 
+		BTriangle::Vertex::Vertex(index vertex, index anormal, index textureCoordinate)
+			: location(vertex)
+			, texture(textureCoordinate)
+			, normal(anormal)
+		{
+		}
+
+		BTriangle::Vertex BTriangle::Vertex::Create_VN_T(index vertexAndNormal, index text)
+		{
+			return Vertex(vertexAndNormal, vertexAndNormal, text);
+		}
+
 		BTriangle::BTriangle(Vertex a, Vertex b, Vertex c)
 			: v0(a), v1(b), v2(c)
 		{

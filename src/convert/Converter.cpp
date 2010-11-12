@@ -15,7 +15,7 @@ namespace pwn
 		{
 		}
 
-		mesh::Triangle::index OptimizedMeshBuilder::addPosition(const mesh::Point& pos)
+		mesh::BTriangle::index OptimizedMeshBuilder::addPosition(const mesh::Point& pos)
 		{
 			if( isBuilding == false ) throw "done has been called...";
 			return mBuilder.addPosition(pos);
@@ -38,7 +38,7 @@ namespace pwn
 			else return 0;
 		}
 
-		mesh::Triangle::index OptimizedMeshBuilder::addNormal(const pwn::math::vec3& n)
+		mesh::BTriangle::index OptimizedMeshBuilder::addNormal(const pwn::math::vec3& n)
 		{
 			if( isBuilding == false ) throw "done has been called...";
 
@@ -60,18 +60,18 @@ namespace pwn
 			}
 		}
 
-		mesh::Triangle::index OptimizedMeshBuilder::addTextCoord(const math::vec2& tc)
+		mesh::BTriangle::index OptimizedMeshBuilder::addTextCoord(const math::vec2& tc)
 		{
 			if( isBuilding == false ) throw "done has been called...";
 			return mBuilder.addTextCoord(tc);
 		}
 
-		void OptimizedMeshBuilder::addTriangle(pwn::uint32 material, const mesh::Triangle& tri)
+		void OptimizedMeshBuilder::addTriangle(pwn::uint32 material, const mesh::BTriangle& tri)
 		{
 			mBuilder.addTriangle(material, tri);
 		}
 
-		mesh::Triangle::index OptimizedMeshBuilder::addMaterial(const pwn::string& name, mesh::Material m)
+		mesh::BTriangle::index OptimizedMeshBuilder::addMaterial(const pwn::string& name, mesh::Material m)
 		{
 			materialid[name] = mBuilder.materials.size();
 			return mBuilder.addMaterial(m);
@@ -100,7 +100,7 @@ namespace pwn
 				{
 					for(int faceIndex=0; faceIndex<3; ++faceIndex)
 					{
-						::pwn::mesh::Triangle::Vertex& v = mBuilder.triangles[mi][i][faceIndex];
+						::pwn::mesh::BTriangle::Vertex& v = mBuilder.triangles[mi][i][faceIndex];
 						if( optimizeNormals )
 						{
 							v.normal = normalConvertions[v.normal];
@@ -178,13 +178,13 @@ namespace pwn
 
 			if( normals )
 			{
-				const std::size_t nc = data.normals.size();
+				const std::size_t nc = data.positions.size();
 				pwn::real min = 10000000000;
 				pwn::real max = -1;
 				pwn::real sum = 0;
 				for(std::size_t i=0; i<nc; ++i)
 				{
-					const pwn::real d = AngleDiff(data.normals[i]);
+					const pwn::real d = AngleDiff(data.positions[i].normal);
 					sum += d;
 					if( min > d ) min = d;
 					if( max < d ) max = d;

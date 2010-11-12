@@ -362,9 +362,9 @@ namespace pwn
 							{
 							}
 
-							pwn::mesh::Triangle::index a;
-							pwn::mesh::Triangle::index b;
-							pwn::mesh::Triangle::index c;
+							pwn::mesh::BTriangle::index a;
+							pwn::mesh::BTriangle::index b;
+							pwn::mesh::BTriangle::index c;
 						};
 
 						std::vector<vec3> points;
@@ -594,7 +594,7 @@ namespace pwn
 
 						BOOST_FOREACH(ObjectChunk chunk , main.editor.objects)
 						{
-							pwn::mesh::Triangle::index ibase = builder->mBuilder.positions.size();
+							pwn::mesh::BTriangle::index ibase = builder->mBuilder.positions.size();
 							for (std::size_t i = 0; i < chunk.trimesh.points.size(); ++i)
 							{
 								builder->addPosition( pwn::mesh::Point(chunk.trimesh.coordsys.translate(chunk.trimesh.points[i]), 0) );
@@ -607,14 +607,14 @@ namespace pwn
 								{
 									const TriMeshChunk::Poly p = chunk.trimesh.faces[faceindex];
 
-									const pwn::mesh::Triangle::index a = ibase + p.a;
-									const pwn::mesh::Triangle::index b = ibase + p.b;
-									const pwn::mesh::Triangle::index c = ibase + p.c;
+									const pwn::mesh::BTriangle::index a = ibase + p.a;
+									const pwn::mesh::BTriangle::index b = ibase + p.b;
+									const pwn::mesh::BTriangle::index c = ibase + p.c;
 
-									builder->mBuilder.addTriangle(material, pwn::mesh::Triangle( 
-												  pwn::mesh::Triangle::Vertex(a, 0, a)
-												, pwn::mesh::Triangle::Vertex(b, 0, b)
-												, pwn::mesh::Triangle::Vertex(c, 0, c)
+									builder->mBuilder.addTriangle(material, pwn::mesh::BTriangle( 
+												  pwn::mesh::BTriangle::Vertex(a, 0, a)
+												, pwn::mesh::BTriangle::Vertex(b, 0, b)
+												, pwn::mesh::BTriangle::Vertex(c, 0, c)
 											)
 										);
 								}

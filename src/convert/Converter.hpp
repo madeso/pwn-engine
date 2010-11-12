@@ -18,13 +18,13 @@ namespace pwn
 		public:
 			OptimizedMeshBuilder(bool optimzeNormals);
 			
-			mesh::Triangle::index addPosition(const mesh::Point& pos);
-			mesh::Triangle::index addNormal(const math::vec3& norm);
-			mesh::Triangle::index addTextCoord(const math::vec2& tc);
+			mesh::BTriangle::index addPosition(const mesh::Point& pos);
+			mesh::BTriangle::index addNormal(const math::vec3& norm);
+			mesh::BTriangle::index addTextCoord(const math::vec2& tc);
 
 			// util functions, simply call theese on the mesh
-			void addTriangle(pwn::uint32 material, const mesh::Triangle& tri);
-			mesh::Triangle::index addMaterial(const pwn::string& name, mesh::Material m);
+			void addTriangle(pwn::uint32 material, const mesh::BTriangle& tri);
+			mesh::BTriangle::index addMaterial(const pwn::string& name, mesh::Material m);
 			void addBone(const ::pwn::mesh::Bone& b);
 
 			void done();
@@ -38,7 +38,7 @@ namespace pwn
 			::pwn::mesh::Builder mBuilder;
 			::pwn::mesh::Animation mAnimation;
 		private:
-			typedef mesh::Triangle::index NormalIndex;
+			typedef mesh::BTriangle::index NormalIndex;
 			typedef pwn::uint16 CompressedNormal;
 
 			bool isBuilding;

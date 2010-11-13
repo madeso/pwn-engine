@@ -12,7 +12,7 @@ rewrite rendering so that it doesnt need special features like shaders, but uses
  - remove shaders from worldrender in fse
  - add material shaders
  - support loading vertex & fragment from different files
- - mobe boneassignemnts to a seperate vec4 array in preperations for gpu animation & multiple bone assignments
+ - make boneassignemnts to a seperate vec4 array in preperations for gpu animation & multiple bone assignments
  - transform to cpu updated vbos
  - transform to gpu updated vbos
 * investigate bug in physfs, mixing objCount & size?, move back to stable?

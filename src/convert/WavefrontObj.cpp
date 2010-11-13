@@ -14,6 +14,7 @@
 #include <pwn/mesh/Mesh.h>
 
 #include <iostream>
+#include <pwn/assert.h>
 
 namespace pwn
 {
@@ -173,6 +174,7 @@ namespace pwn
 					{
 						pwn::string x = Read(f);
 						pwn::string y = Read(f);
+						Assert(0 && "do we need to add a 1-y when adding a textcoord?");
 						builder->addTextCoord(pwn::math::vec2(creal(x), creal(y)));
 
 						

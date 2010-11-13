@@ -61,7 +61,7 @@ namespace pwn
 
 						glNormal3f(point.normal.x, point.normal.y, point.normal.z);
 
-						glTexCoord2f(point.textcoord.x, 1-point.textcoord.y);
+						glTexCoord2f(point.textcoord.x, point.textcoord.y);
 						
 						const math::vec3 p = point.hasBone()
 							? pose.transforms[point.getBone()] * point.location

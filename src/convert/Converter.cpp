@@ -15,7 +15,7 @@ namespace pwn
 		{
 		}
 
-		mesh::BTriangle::index OptimizedMeshBuilder::addPosition(const mesh::Point& pos)
+		mesh::BTriangle::index OptimizedMeshBuilder::addPosition(const mesh::BPoint& pos)
 		{
 			if( isBuilding == false ) throw "done has been called...";
 			return mBuilder.addPosition(pos);

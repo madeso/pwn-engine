@@ -98,6 +98,12 @@ namespace pwn
 			}
 		}
 
+		BPoint::BPoint(const math::vec3& alocation, BoneIndex abone)
+			: location(alocation)
+			, bone(abone)
+		{
+		}
+
 		// ==================================================================================================================================
 
 		BTriangle::Vertex::Vertex()

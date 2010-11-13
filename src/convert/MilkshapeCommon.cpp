@@ -256,7 +256,7 @@ namespace pwn
 							//def.selectMaterial("m" + me.materialId);
 							BOOST_FOREACH (Vertex v , me.vertices)
 							{
-								builder->addPosition(pwn::mesh::Point(v.pos, v.bone+1)); // +1 = milkshape bones are 0 based with -1 is no-bone, pwn uses 1 based with 0 meaning no-bone
+								builder->addPosition(pwn::mesh::BPoint(v.pos, v.bone+1)); // +1 = milkshape bones are 0 based with -1 is no-bone, pwn uses 1 based with 0 meaning no-bone
 								builder->addTextCoord(math::vec2(v.uv.x, v.uv.y));
 								++vadded;
 							}

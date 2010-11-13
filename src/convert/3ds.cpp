@@ -597,7 +597,7 @@ namespace pwn
 							pwn::mesh::BTriangle::index ibase = builder->mBuilder.positions.size();
 							for (std::size_t i = 0; i < chunk.trimesh.points.size(); ++i)
 							{
-								builder->addPosition( pwn::mesh::Point(chunk.trimesh.coordsys.translate(chunk.trimesh.points[i]), 0) );
+								builder->addPosition( pwn::mesh::BPoint(chunk.trimesh.coordsys.translate(chunk.trimesh.points[i]), 0) );
 								builder->addTextCoord(chunk.trimesh.mapping[i]);
 							}
 							BOOST_FOREACH(FaceMaterialChunk fmc , chunk.trimesh.facematerials)

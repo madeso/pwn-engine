@@ -161,7 +161,7 @@ namespace pwn
 			return static_cast<BTriangle::index>(texcoords.size()-1);
 		}
 
-		BTriangle::index Builder::addPosition(const Point& pos)
+		BTriangle::index Builder::addPosition(const BPoint& pos)
 		{
 			positions.push_back(pos);
 			return static_cast<BTriangle::index>(positions.size()-1);
@@ -169,7 +169,7 @@ namespace pwn
 
 		BTriangle::index Builder::addPosition(const math::vec3& pos, BoneIndex bone)
 		{
-			return addPosition(Point(pos, bone));
+			return addPosition(BPoint(pos, bone));
 		}
 		
 		BTriangle::index Builder::addNormal(const math::vec3& norm)

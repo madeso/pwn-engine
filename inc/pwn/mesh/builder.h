@@ -23,6 +23,15 @@ namespace pwn
 
 		uint32 NumberOfTriangles(const Mesh& mesh);
 
+		class BPoint
+		{
+		public:
+			BPoint(const math::vec3& location, BoneIndex bone);
+
+			math::vec3 location;
+			BoneIndex bone;
+		};
+
 		class BTriangle
 		{
 		public:
@@ -55,7 +64,7 @@ namespace pwn
 		public:
 			void clear();
 			BTriangle::index addTextCoord(const math::vec2& v);
-			BTriangle::index addPosition(const Point& pos);
+			BTriangle::index addPosition(const BPoint& pos);
 			BTriangle::index addPosition(const math::vec3& pos, BoneIndex bone); // syntax sugar
 			BTriangle::index addNormal(const math::vec3& norm);
 			void addTriangle(pwn::uint32 material, const BTriangle& t);
@@ -71,7 +80,7 @@ namespace pwn
 			typedef std::vector<BTriangle> TriList;
 			typedef std::map<pwn::uint32, TriList> TriMap;
 			TriMap triangles;
-			std::vector<Point> positions;
+			std::vector<BPoint> positions;
 			std::vector<math::vec3> normals;
 			std::vector<math::vec2> texcoords;
 			std::vector<Bone> bones;

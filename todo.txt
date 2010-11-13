@@ -9,7 +9,6 @@ rewrite rendering so that it doesnt need special features like shaders, but uses
 --------------------------
 ------------- features:
 * tranform into vbos & vertex shaders
- - remove shaders from worldrender in fse
  - add material shaders
  - support loading vertex & fragment from different files
  - make boneassignemnts to a seperate vec4 array in preperations for gpu animation & multiple bone assignments

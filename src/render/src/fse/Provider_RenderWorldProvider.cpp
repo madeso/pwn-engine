@@ -18,9 +18,10 @@ namespace pwn
 			
 			void RenderWorldProvider::doProvide(World3* world, const RenderArgs& ra)
 			{
-				Shader::Bind(shader);
+				// uncommented to make sure simple vertex shaders arent interfering with animation applying
+				//Shader::Bind(shader);
 				ra.render(world);
-				Shader::Unbind(shader);
+				//Shader::Unbind(shader);
 			}
 			
 			void RenderWorldProvider::doLink(Linker*)

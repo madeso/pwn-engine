@@ -8,8 +8,10 @@ rewrite rendering so that it doesn't use io code
 rewrite rendering so that it doesnt need special features like shaders, but uses them if available?
 --------------------------
 ------------- features:
+* dynamic lights
 * tranform into vbos & vertex shaders
  - add material shaders
+ - per pixel lights
  - support loading vertex & fragment from different files
  - make boneassignemnts to a seperate vec4 array in preperations for gpu animation & multiple bone assignments
  - transform to cpu updated vbos
@@ -30,9 +32,7 @@ rewrite rendering so that it doesnt need special features like shaders, but uses
 * improve fse to support different "logical" paths
 * improve display framework to support huds
 * ssao
-* dynamic lights
-* per pixel lights
-* material effects, bump/normal map
+* material effects, bump/normal map, animated textures, water
 * shadows
 * improve rendering speed with portals
 * ai base

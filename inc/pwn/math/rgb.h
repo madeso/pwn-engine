@@ -166,19 +166,16 @@ namespace pwn
 			const real red() const;
 			const real green() const;
 			const real blue() const;
-			const real alpha() const;
 
 			//const real* data() const;
 
 			void red(const real v);
 			void green(const real v);
 			void blue(const real v);
-			void alpha(const real v);
 
 			//real& operator[](int index);
 			//const real& operator[](int index) const;
 
-			void rgba(const real r, const real g, const real b, const real a);
 			void rgb(const real r, const real g, const real b);
 			void rgb(int rgb);
 		public:

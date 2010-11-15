@@ -4,69 +4,65 @@ namespace pwn
 {
 	namespace math
 	{
-		Rgba::Rgba(const real r, const real g, const real b, const real a)
-			: Rgb(r, g, b)
+		Rgba::Rgba(const real ar, const real ag, const real ab, const real aa)
+			: r(ar), g(ag), b(ab), a(aa)
 		{
-			alpha(a);
 		}
 
-		Rgba::Rgba(const real r, const real g, const real b)
-			: Rgb(r, g ,b)
+		Rgba::Rgba(const real ar, const real ag, const real ab)
+			: r(ar), g(ag), b(ab), a(1)
 		{
-			alpha(1);
 		}
 
 		Rgba::Rgba(const real gray)
-			: Rgb(gray)
+			: r(gray), g(gray), b(gray), a(1)
 		{
-			alpha(1);
 		}
 
-		Rgba::Rgba(const int rgb)
-			: Rgb(rgb)
+		const real* Rgba::data() const
 		{
-			alpha(1);
+			return &r;
 		}
-
+		
+		const real Rgba::red() const
+		{
+			return r;
+		}
+		const real Rgba::green() const
+		{
+			return g;
+		}
+		const real Rgba::blue() const
+		{
+			return b;
+		}
 		const real Rgba::alpha() const
 		{
 			return a;
 		}
 
-		/*const real* Rgba::data() const
+		void Rgba::red(const real v)
 		{
-			return mdata.array;
-		}*/
-		
+			r = v;
+		}
+		void Rgba::green(const real v)
+		{
+			g = v;
+		}
+		void Rgba::blue(const real v)
+		{
+			b = v;
+		}
 		void Rgba::alpha(const real v)
 		{
 			a = v;
 		}
 
-		/*real& Rgba::operator[](int index)
+		void Rgba::rgb(const real ar, const real ag, const real ab)
 		{
-			return mdata.array[index];
-		}
-
-		const real& Rgba::operator[](int index) const
-		{
-			return mdata.array[index];
-		}*/
-
-		void Rgba::rgba(const real r, const real g, const real b, const real a)
-		{
-			Rgb::rgb(r, g, b);
-			alpha(a);
-		}
-
-		void Rgba::rgb(const real r, const real g, const real b)
-		{
-			rgba(r, g, b, 1);
-		}
-
-		void Rgba::rgb(int rgb)
-		{
-			Rgb::rgb(rgb);
+			red(ar);
+			green(ag);
+			blue(ab);
 			alpha(1);
 		}
 	}

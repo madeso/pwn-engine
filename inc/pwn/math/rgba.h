@@ -8,26 +8,28 @@ namespace pwn
 	namespace math
 	{
 		class Rgba
-			: public Rgb
 		{
 		public:
 			Rgba(const real r, const real g, const real b, const real a);
 			Rgba(const real r, const real g, const real b);
 			explicit Rgba(const real gray);
-			explicit Rgba(const int rgb);
-			Rgba(Color::Type color);
+			const real* data() const;
 
+			const real red() const;
+			const real green() const;
+			const real blue() const;
 			const real alpha() const;
+
+			void red(const real v);
+			void green(const real v);
+			void blue(const real v);
 			void alpha(const real v);
 
-			//real& operator[](int index);
-			//const real& operator[](int index) const;
-
-			void rgba(const real r, const real g, const real b, const real a);
 			void rgb(const real r, const real g, const real b);
-			void rgb(int rgb);
-			void rgb(Color::Type color);
 		public:
+			real r;
+			real g;
+			real b;
 			real a;
 		};
 	}

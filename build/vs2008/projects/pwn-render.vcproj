@@ -377,6 +377,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\..\src\render\src\light.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\inc\pwn\render\light.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\render\src\material.cpp"
 			>
 		</File>

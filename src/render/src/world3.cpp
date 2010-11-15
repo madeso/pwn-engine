@@ -1,5 +1,6 @@
 #include <pwn/render/world3.h>
 #include <pwn/render/actor.h>
+#include <pwn/render/light.h>
 #include <pwn/render/renderlist.h>
 #include <pwn/render/renderargs.h>
 #include <vector>
@@ -45,18 +46,49 @@ namespace pwn
 				actors.erase(res);
 			}
 
+			void light_add(LightPtr light)
+			{
+				lights.push_back(light);
+			}
+
+			void light_remove(LightPtr light)
+			{
+				LightList::iterator res = std::find(lights.begin(), lights.end(), light);
+				if( res == lights.end() ) return;
+				lights.erase(res);
+			}
+
 			void render(const RenderArgs& r) const
 			{
 				glViewport(r.x, r.y, r.width, r.height);
 				pwnAssert_NoGLError();
-
 
 				list.begin();
 				BOOST_FOREACH(ActorPtr a, actors)
 				{
 					a->render(&list, r.compiled);
 				}
+
+				int id = GL_LIGHT0; pwnAssert_NoGLError();
+
+				if( lights.empty() == false )
+				{
+					glEnable(GL_LIGHTING); pwnAssert_NoGLError();
+					BOOST_FOREACH(LightPtr l, lights)
+					{
+						glEnable(id);
+						l->apply(id);
+						++id;
+					}
+				}
+
 				list.end();
+
+				// rendering is done, disable all lights again
+				for(int i=GL_LIGHT0; i<id; ++i)
+				{
+					glDisable(i);
+				}
 			}
 
 			mutable RenderList list; // mutable since we want to use frame-to-frame coherence, and avoid uneccessary reallocation of its internals
@@ -64,6 +96,9 @@ namespace pwn
 
 			typedef std::vector<ActorPtr> ActorList;
 			ActorList actors;
+
+			typedef std::vector<LightPtr> LightList;
+			LightList lights;
 		};
 
 		World3::Ptr World3::Create()

@@ -8,15 +8,17 @@ rewrite rendering so that it doesn't use io code
 rewrite rendering so that it doesnt need special features like shaders, but uses them if available?
 --------------------------
 ------------- features:
-* dynamic lights
 * tranform into vbos & vertex shaders
- - add material shaders
- - per pixel lights
- - support loading vertex & fragment from different files
- - make boneassignemnts to a seperate vec4 array in preperations for gpu animation & multiple bone assignments
+ - verify that animating normals work
  - transform to cpu updated vbos
+ - add material shaders
+ - support loading vertex & fragment from different files
+ - per pixel lights
+ - improve material system to send several textures to shaders
+ - make boneassignemnts to a seperate vec4 array in preperations for gpu animation & multiple bone assignments
  - transform to gpu updated vbos
 * investigate bug in physfs, mixing objCount & size?, move back to stable?
+* add material instances so that overiding & animating materials can be more easily supported
 * font support ( to be merged with "improve display framework"? )
 * console
 * scripting support

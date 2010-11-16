@@ -21,15 +21,15 @@ rewrite rendering so that it doesnt need special features like shaders, but uses
 * add material instances so that overiding & animating materials can be more easily supported
 * font support ( to be merged with "improve display framework"? )
 * console
+* 3d debugging (wireframe, view skeleton, draw boundingbox, draw position, line etc)
+* level editor
 * scripting support
 * scripting, settings & gui editor for fse
-* 3d debugging (wireframe, view skeleton, draw boundingbox, draw position, line etc)
 * particle engine
 * start on component framework
 * sound engine
 * character engine
 * gui editor for components
-* level editor
 * add physics to component framework
 * improve fse to support different "logical" paths
 * improve display framework to support huds

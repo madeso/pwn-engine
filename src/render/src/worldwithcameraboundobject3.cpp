@@ -30,7 +30,7 @@ namespace pwn
 			CompiledCamera cc(MoveToOrigo(r.camera));
 			list.begin();
 			actor->render(&list, cc);
-			list.end();
+			list.end(false);
 			
 			pwnAssert_NoGLError();
 			glClear(GL_DEPTH_BUFFER_BIT);

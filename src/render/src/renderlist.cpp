@@ -114,7 +114,7 @@ namespace pwn
 			}
 		}
 
-		void RenderList::render(const CommandList& commands)
+		void RenderList::render(const CommandList& commands, bool applyMaterials)
 		{
 			BOOST_FOREACH(const RenderList::Command& c, commands)
 			{
@@ -122,7 +122,7 @@ namespace pwn
 				{
 					glLoadMatrixf( c.mat.columnMajor ); pwnAssert_NoGLError();
 				}
-				apply(c.material);
+				apply(c.material, applyMaterials);
 				c.mesh->render(c.poseable->pose);
 			}
 		}
@@ -132,7 +132,7 @@ namespace pwn
 			return lhs.id < rhs.id;
 		}
 
-		void RenderList::end()
+		void RenderList::end(bool applyMaterials)
 		{
 			if( useGlCommands )
 			{
@@ -152,7 +152,7 @@ namespace pwn
 			}
 
 			std::sort(solid.begin(), solid.end(), CommandSort);
-			render(solid);
+			render(solid, applyMaterials);
 			std::sort(transparent.begin(), transparent.end(), CommandSort);
 
 			if( useGlCommands )
@@ -167,7 +167,7 @@ namespace pwn
 				glDepthMask(GL_FALSE); pwnAssert_NoGLError();
 			}
 
-			render(transparent);
+			render(transparent, applyMaterials);
 
 			if( useGlCommands )
 			{
@@ -183,12 +183,24 @@ namespace pwn
 			}
 		}
 
-		void RenderList::apply(MaterialPtr material)
+		void RenderList::apply(MaterialPtr material, bool applyMaterials)
 		{
 			if( useGlCommands )
 			{
-				glColor4f( material->diffuse.red(), material->diffuse.green(), material->diffuse.blue(), material->diffuse.alpha() );
-				pwnAssert_NoGLError();
+				if( applyMaterials )
+				{
+					const GLenum face = GL_FRONT;
+					glMaterialfv(face, GL_AMBIENT, material->ambient.data()); pwnAssert_NoGLError();
+					glMaterialfv(face, GL_DIFFUSE, material->diffuse.data()); pwnAssert_NoGLError();
+					glMaterialfv(face, GL_SPECULAR, material->specular.data()); pwnAssert_NoGLError();
+					glMaterialfv(face, GL_EMISSION, material->emission.data()); pwnAssert_NoGLError();
+					glMaterialf(face, GL_SHININESS, material->shininess); pwnAssert_NoGLError();
+				}
+				else
+				{
+					glColor4f( material->diffuse.red(), material->diffuse.green(), material->diffuse.blue(), material->diffuse.alpha() );
+					pwnAssert_NoGLError();
+				}
 				if( material->texture.get() )
 				{
 					if( applied == false )

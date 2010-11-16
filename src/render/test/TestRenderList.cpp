@@ -100,7 +100,7 @@ namespace test //SUITE(testRenderList)
 	{
 		rl.begin();
 		rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
-		rl.end();
+		rl.end(false);
 
 		ASSERT_THAT(list, testing::ElementsAre(0) );
 	}
@@ -113,7 +113,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
 		rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
 		rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
-		rl.end();
+		rl.end(false);
 
 		ASSERT_THAT(list, testing::ElementsAre(0, 0, 0, 0, 0) );
 	}
@@ -124,7 +124,7 @@ namespace test //SUITE(testRenderList)
 		rl.begin();
 		rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m0, &poseable);
 		rl.add(CreateMesh(2, &list), CreateMaterial(true, tNull), m0, &poseable);
-		rl.end();
+		rl.end(false);
 
 		ASSERT_THAT(list, testing::ElementsAre(1, 2) );
 	}
@@ -134,7 +134,7 @@ namespace test //SUITE(testRenderList)
 		rl.begin();
 		rl.add(CreateMesh(2, &list), CreateMaterial(true, tNull), m0, &poseable);
 		rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m0, &poseable);
-		rl.end();
+		rl.end(false);
 
 		ASSERT_THAT(list, testing::ElementsAre(1, 2) );
 	}
@@ -146,7 +146,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
 		rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m1, &poseable);
 		rl.add(CreateMesh(2, &list), CreateMaterial(false, tNull), m2, &poseable);
-		rl.end();
+		rl.end(false);
 
 		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2) );
 	}
@@ -157,7 +157,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(2, &list), CreateMaterial(false, tNull), m2, &poseable);
 		rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
 		rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m1, &poseable);
-		rl.end();
+		rl.end(false);
 
 		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2) );
 	}
@@ -168,7 +168,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(0, &list), CreateMaterial(true, tNull), m2, &poseable);
 		rl.add(CreateMesh(1, &list), CreateMaterial(true, tNull), m1, &poseable);
 		rl.add(CreateMesh(2, &list), CreateMaterial(true, tNull), m0, &poseable);
-		rl.end();
+		rl.end(false);
 
 		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2) );
 	}
@@ -179,7 +179,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(2, &list), CreateMaterial(true, tNull), m0, &poseable);
 		rl.add(CreateMesh(0, &list), CreateMaterial(true, tNull), m2, &poseable);
 		rl.add(CreateMesh(1, &list), CreateMaterial(true, tNull), m1, &poseable);
-		rl.end();
+		rl.end(false);
 
 		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2) );
 	}
@@ -191,7 +191,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(0, &list), CreateMaterial(false, t1), m0, &poseable);
 		rl.add(CreateMesh(1, &list), CreateMaterial(false, t2), m0, &poseable);
 		rl.add(CreateMesh(2, &list), CreateMaterial(false, t3), m0, &poseable);
-		rl.end();
+		rl.end(false);
 
 		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2 ) );
 	}
@@ -202,7 +202,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(2, &list), CreateMaterial(false, t3), m0, &poseable);
 		rl.add(CreateMesh(0, &list), CreateMaterial(false, t1), m0, &poseable);
 		rl.add(CreateMesh(1, &list), CreateMaterial(false, t2), m0, &poseable);
-		rl.end();
+		rl.end(false);
 
 		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2 ) );
 	}
@@ -228,7 +228,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(14, &list), CreateMaterial(true, t1),    m0, &poseable);
 		rl.add(CreateMesh(15, &list), CreateMaterial(true, t2),    m0, &poseable);
 		rl.add(CreateMesh(16, &list), CreateMaterial(true, t3),    m0, &poseable);
-		rl.end();
+		rl.end(false);
 
 		int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
 		ASSERT_THAT(list, testing::ElementsAreArray(arr) );
@@ -254,7 +254,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(4,  &list), CreateMaterial(false, t1),    m1, &poseable);
 		rl.add(CreateMesh(1,  &list), CreateMaterial(false, tNull), m0, &poseable);
 		
-		rl.end();
+		rl.end(false);
 
 		int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
 		ASSERT_THAT(list, testing::ElementsAreArray(arr) );

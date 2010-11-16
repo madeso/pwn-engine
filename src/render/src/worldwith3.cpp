@@ -24,6 +24,16 @@ namespace pwn
 			world->actor_remove(actor);
 		}
 
+		void WorldWith3::light_add(LightPtr light)
+		{
+			world->light_add(light);
+		}
+
+		void WorldWith3::light_remove(LightPtr light)
+		{
+			world->light_remove(light);
+		}
+
 		void WorldWith3::render(const RenderArgs& r) const
 		{
 			world->render(r);

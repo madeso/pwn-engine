@@ -82,7 +82,7 @@ namespace pwn
 					}
 				}
 
-				list.end();
+				list.end( lights.empty() == false ); // apply materials if there are lightds
 
 				// rendering is done, disable all lights again
 				for(int i=GL_LIGHT0; i<id; ++i)

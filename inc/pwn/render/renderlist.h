@@ -44,13 +44,13 @@ namespace pwn
 
 			void begin();
 			void add(MeshPtr mesh, MaterialPtr material, const math::mat44& mat, Poseable* pos);
-			void end();
+			void end(bool applyMaterials);
 
 			typedef std::vector<Command> CommandList;
-			void apply(MaterialPtr material);
+			void apply(MaterialPtr material, bool applyMaterials);
 
 		private:
-			void render(const CommandList& commands);
+			void render(const CommandList& commands, bool applyMaterials);
 			const bool useGlCommands;
 			CommandList transparent;
 			CommandList solid;

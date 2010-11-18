@@ -7,7 +7,10 @@
 	<writeResults>true</writeResults>
 
 	<sources>
-
+		<source>
+			<file>C:\Users\Gustav\dev\media\finished\3d\Alien_Breeding_Chamber\alien_chamber.obj</file>
+			<animations/>
+		</source>
 		<source>
 			<scale>0.2</scale>
 			<file>C:\Users\Gustav\dev\media\finished\3d\psionic3d\dwarf\dwarf1.ms3d</file>

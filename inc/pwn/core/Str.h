@@ -12,6 +12,11 @@ namespace pwn
 		public:
 			operator pwn::string() const
 			{
+				return toString();
+			}
+
+			pwn::string toString() const
+			{
 				return stream.str();
 			}
 

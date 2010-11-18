@@ -12,6 +12,7 @@ namespace pwn
 			, emission(0)
 			, shininess(0)
 		{
+			texture_diffuse[0] = 0;
 		}
 
 		const string Material::getTexture_Diffuse() const

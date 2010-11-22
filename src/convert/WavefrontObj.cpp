@@ -40,7 +40,7 @@ namespace pwn
 
 				std::size_t FixFaceIndex(long index, std::size_t count)
 				{
-					const std::size_t ret = ( index < 0 ) ? count + index : index - 1;
+					const std::size_t ret = ( index <= 0 ) ? count + index : index - 1;
 					Assert(ret >= 0);
 					Assert(count == 0 || ret < count );
 					return ret;

@@ -15,6 +15,7 @@
 #include <pwn/io/io.h>
 #include <pwn/render/worldwithcameraboundobject3.h>
 #include <pwn/render/fse/pipeline.h>
+#include <pwn/render/light.h>
 
 #include <pwn/render/shaderpool.h>
 
@@ -60,11 +61,14 @@ private:
 	real pos;
 	fse::PipelinePtr simple;
 	fse::PipelinePtr normal;
+	boost::shared_ptr<SpotLight> light;
+	bool right;
 public:
 	pwn::render::ShaderPool tempShaderPool;
 
 	EasyLoop(Game* game)
 		: Loop(game)
+		, right(false)
 	{
 		World3::Ptr world( new WorldWithCameraBoundObject3(Actor::Create(Origo3(), qIdentity(), CreateCube(10, "_stars-texture.jpg", &tpool, 1, false) ),
 			World3::Create()) );
@@ -78,6 +82,11 @@ public:
 		world->actor_add(
 			Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("alien_chamber.mesh", &tpool))
 			);
+
+		light.reset( new SpotLight() );
+		light->properties.diffuse.rgb(1,1,1);
+		light->exponent = 90;
+		world->light_add(light);
 
 		boost::shared_ptr<World3Widget > wid( new World3Widget( Dock::Fill(), world ) );
 
@@ -101,6 +110,10 @@ public:
 		{
 			dcam.camera.pipeline = isDown ? simple : normal;
 		}
+		else if ( key == Key::RMB )
+		{
+			right = isDown;
+		}
 		else
 		{
 			dcam.onKey(key, isDown);
@@ -114,6 +127,12 @@ public:
 		walk.getPose(pos, &p);
 		turtle->setPose(p);
 		dcam.update(delta, 3.0f, 10.0f);
+
+		if( !right )
+		{
+			light->position = dcam.camera.position.vec;
+			light->direction = dcam.camera.orientation;
+		}
 	}
 
 	void onRender()

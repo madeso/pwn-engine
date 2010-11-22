@@ -653,7 +653,7 @@ namespace pwn
 			void read(OptimizedMeshBuilder* builder, const pwn::string& file)
 			{
 				hidden::Load(builder, file);
-				builder->mBuilder.buildNormals();
+				//builder->mBuilder.buildNormals();
 				//pwn::mesh::BuildNormals(builder->mesh());
 			}
 		}

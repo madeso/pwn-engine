@@ -98,6 +98,7 @@ bool Load(pwn::convert::OptimizedMeshBuilder& builder, const pwn::string& inputf
 		std::cerr << "Unable to determine the kind of reader to use with " << inputfile;
 		return false;
 	}
+	builder.mBuilder.buildNormals();
 }
 
 struct ConvertMesh

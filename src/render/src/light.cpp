@@ -71,7 +71,7 @@ namespace pwn
 			: position(0,0,0)
 			, direction( math::qIdentity() )
 			, exponent(0)
-			, cutoff(180)
+			, cutoff(90)
 		{
 		}
 

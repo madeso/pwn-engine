@@ -258,6 +258,7 @@ namespace pwn
 
 		void Builder::buildNormals()
 		{
+			Assert(normals.empty());
 			using math::vec3;
 			std::vector<vec3> vertexNormalsSum(positions.size(), vec3(0,0,0));
 			BOOST_FOREACH(TriMap::value_type& tr, triangles)

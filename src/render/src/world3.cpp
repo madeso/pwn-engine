@@ -71,12 +71,14 @@ namespace pwn
 
 				int id = GL_LIGHT0; pwnAssert_NoGLError();
 
+				glLoadMatrixf( r.compiled.mat.columnMajor );  pwnAssert_NoGLError();
+
 				if( lights.empty() == false )
 				{
 					glEnable(GL_LIGHTING); pwnAssert_NoGLError();
 					BOOST_FOREACH(LightPtr l, lights)
 					{
-						glEnable(id);
+						glEnable(id); pwnAssert_NoGLError();
 						l->apply(id);
 						++id;
 					}

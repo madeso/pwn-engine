@@ -69,9 +69,30 @@ namespace pwn
 						glVertex3f(p.x, p.y, p.z);
 					}
 				}
+				glEnd(); pwnAssert_NoGLError();
 
-				glEnd();
-				pwnAssert_NoGLError();
+				glColor4f(0, 1, 0, 1);  pwnAssert_NoGLError(); // green
+				glDisable(GL_LIGHTING); pwnAssert_NoGLError();
+				glBegin(GL_LINES);
+				BOOST_FOREACH(const mesh::Triangle& tri, triangles)
+				{
+					for(int i=0; i<3; ++i)
+					{
+						const mesh::Point& point = smesh->positions[tri[i]];
+
+						glNormal3f(point.normal.x, point.normal.y, point.normal.z);
+						
+						const math::vec3 p = point.hasBone()
+							? pose.transforms[point.getBone()] * point.location
+							: point.location;
+						glVertex3f(p.x, p.y, p.z);
+
+						const math::vec3 t = p + point.normal;
+						glVertex3f(t.x, t.y, t.z);
+					}
+				}
+				glEnd(); pwnAssert_NoGLError();
+				glEnable(GL_LIGHTING); pwnAssert_NoGLError();
 			}
 		private:
 			boost::shared_ptr<SharedMesh> smesh;

@@ -83,22 +83,25 @@ bool Load(pwn::convert::OptimizedMeshBuilder& builder, const pwn::string& inputf
 		{
 		WriteDotCallback wdc(verbose);
 		pwn::convert::obj::read(&builder, inputfile, wdc);
+		builder.mBuilder.buildNormals();
 		}
 		return true;
 	case InputFormat::Studio3ds:
 		pwn::convert::studio3ds::read(&builder, inputfile);
+		builder.mBuilder.buildNormals();
 		return true;
 	case InputFormat::Ms3d_ascii:
 		pwn::convert::milkshape::ascii::Read(&builder, inputfile);
+		builder.mBuilder.buildNormals();
 		return true;
 	case InputFormat::Ms3d_binary:
 		pwn::convert::milkshape::binary::Read(&builder, inputfile);
+		builder.mBuilder.buildNormals();
 		return true;
 	default:
 		std::cerr << "Unable to determine the kind of reader to use with " << inputfile;
 		return false;
 	}
-	builder.mBuilder.buildNormals();
 }
 
 struct ConvertMesh

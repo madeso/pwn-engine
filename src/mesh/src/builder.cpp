@@ -258,7 +258,7 @@ namespace pwn
 
 		void Builder::buildNormals()
 		{
-			Assert(normals.empty());
+			//Assert(normals.empty());
 			using math::vec3;
 			std::vector<vec3> vertexNormalsSum(positions.size(), vec3(0,0,0));
 			BOOST_FOREACH(TriMap::value_type& tr, triangles)
@@ -272,13 +272,13 @@ namespace pwn
 					const vec3 d0 = math::FromTo(p1, p0);
 					const vec3 d1 = math::FromTo(p1, p2);
 
-					const vec3 faceNormal = math::crossNorm(d0, d1);
+					const vec3 faceNormal = math::crossNorm(d1, d0);
 
-					vertexNormalsSum[t[0].location] += faceNormal;
-					vertexNormalsSum[t[1].location] += faceNormal;
-					vertexNormalsSum[t[2].location] += faceNormal;
-
-					for(int i=0; i<3; ++i) t[i].normal = t[i].location;
+					for(int i=0; i<3; ++i)
+					{
+						vertexNormalsSum[t[i].location] += faceNormal;
+						t[i].normal = t[i].location;
+					}
 				}
 			}
 
@@ -287,6 +287,8 @@ namespace pwn
 			{
 				normals.push_back( math::GetNormalized(normalSum) );
 			}
+
+			Assert(normals.size() == positions.size());
 		}
 
 		namespace // local

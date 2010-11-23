@@ -77,7 +77,7 @@ public:
 
 		walk = LoadAnimation("dwarf1/Walk.anim");
 		turtle = Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("dwarf1.mesh", &tpool));
-		world->actor_add(turtle);
+		//world->actor_add(turtle);
 
 		world->actor_add(
 			Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("alien_chamber.mesh", &tpool))

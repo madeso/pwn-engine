@@ -34,6 +34,11 @@ namespace pwn
 			world->light_remove(light);
 		}
 
+		void WorldWith3::light_setAmbient(const math::Rgba& ambient)
+		{
+			world->light_setAmbient(ambient);
+		}
+
 		void WorldWith3::render(const RenderArgs& r) const
 		{
 			world->render(r);

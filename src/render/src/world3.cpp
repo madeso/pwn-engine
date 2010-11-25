@@ -31,6 +31,7 @@ namespace pwn
 		public:
 			BasicWorld()
 				: list(true)
+				, ambient(0.2f, 0.2f, 0.2f, 1.0f)
 			{
 			}
 
@@ -58,10 +59,17 @@ namespace pwn
 				lights.erase(res);
 			}
 
+			void light_setAmbient(const math::Rgba& c)
+			{
+				ambient = c;
+			}
+
 			void render(const RenderArgs& r) const
 			{
 				glViewport(r.x, r.y, r.width, r.height);
 				pwnAssert_NoGLError();
+
+				glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient.data());
 
 				list.begin();
 				BOOST_FOREACH(ActorPtr a, actors)
@@ -101,6 +109,8 @@ namespace pwn
 
 			typedef std::vector<LightPtr> LightList;
 			LightList lights;
+
+			math::Rgba ambient;
 		};
 
 		World3::Ptr World3::Create()

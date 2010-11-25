@@ -5,6 +5,11 @@
 
 namespace pwn
 {
+	namespace math
+	{
+		class Rgba;
+	};
+
 	namespace render
 	{
 		class Actor;
@@ -27,6 +32,7 @@ namespace pwn
 
 			virtual void light_add(LightPtr light) = 0;
 			virtual void light_remove(LightPtr light) = 0;
+			virtual void light_setAmbient(const math::Rgba& ambient) = 0;
 
 			virtual void render(const RenderArgs& r) const = 0;
 

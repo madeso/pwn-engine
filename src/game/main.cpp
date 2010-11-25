@@ -72,16 +72,17 @@ public:
 	{
 		World3::Ptr world( new WorldWithCameraBoundObject3(Actor::Create(Origo3(), qIdentity(), CreateCube(10, "_stars-texture.jpg", &tpool, 1, false) ),
 			World3::Create()) );
+		world->light_setAmbient( math::Rgba(0.7f) );
 
 		//world->actor_add( Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("fighter1.mesh", &tpool)) );
 
 		walk = LoadAnimation("dwarf1/Walk.anim");
 		turtle = Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("dwarf1.mesh", &tpool));
-		//world->actor_add(turtle);
+		world->actor_add(turtle);
 
-		world->actor_add(
+		/*world->actor_add(
 			Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("alien_chamber.mesh", &tpool))
-			);
+			);*/
 
 		light.reset( new SpotLight() );
 		light->properties.diffuse.rgb(1,1,1);

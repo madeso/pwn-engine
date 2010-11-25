@@ -20,6 +20,7 @@ namespace pwn
 
 			virtual void light_add(LightPtr light);
 			virtual void light_remove(LightPtr light);
+			virtual void light_setAmbient(const math::Rgba& ambient);
 
 			virtual void render(const RenderArgs& r) const;
 		private:

@@ -1,6 +1,7 @@
 #define PWN_ENGINE_NO_AUTOLINK
 
 #include <pwn/engine/key.h>
+#include <pwn/sfml-config.h>
 #include <SFML/Window/Event.hpp>
 #include <pwn/core/StringUtils.h>
 

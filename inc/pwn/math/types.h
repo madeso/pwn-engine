@@ -274,6 +274,9 @@ namespace pwn
 			might be removed in favor of a set-function instead
 			*/
 			real& at(int row, int column);
+
+			real operator[](const unsigned int index) const;
+			real& operator[](const unsigned int index);
 		};
 
 		/** a point in 2d.

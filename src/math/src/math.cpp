@@ -1526,6 +1526,15 @@ namespace pwn
 			return columnMajor[column * sizes::mat44_size + row];
 		}
 
+		real mat44::operator[](const unsigned int index) const
+		{
+			return columnMajor[index];
+		}
+		real& mat44::operator[](const unsigned int index)
+		{
+			return columnMajor[index];
+		}
+
 		const vec3 In(const mat44& m) { return In(cmat33(m)); }
 		const vec3 Right(const mat44& m) { return Right(cmat33(m)); }
 		const vec3 Up(const mat44& m) { return Up(cmat33(m)); }
@@ -1575,6 +1584,51 @@ namespace pwn
 		const vec3 operator *(const mat44& m, const vec3& v)
 		{
 			return vec3(multsum(m, v, 0), multsum(m, v, 1), multsum(m, v, 2));
+		}
+
+		const mat44 Inverse(const mat44& m)
+		{
+			const real kEpsilon = 0.0001f;
+
+			const real a0 = m[0]*m[5] - m[1]*m[4];
+			const real a1 = m[0]*m[6] - m[2]*m[4];
+			const real a2 = m[0]*m[7] - m[3]*m[4];
+			const real a3 = m[1]*m[6] - m[2]*m[5];
+			const real a4 = m[1]*m[7] - m[3]*m[5];
+			const real a5 = m[2]*m[7] - m[3]*m[6];
+			const real b0 = m[8]*m[13] - m[9]*m[12];
+			const real b1 = m[8]*m[14] - m[10]*m[12];
+			const real b2 = m[8]*m[15] - m[11]*m[12];
+			const real b3 = m[9]*m[14] - m[10]*m[13];
+			const real b4 = m[9]*m[15] - m[11]*m[13];
+			const real b5 = m[10]*m[15] - m[11]*m[14];
+
+			const real det = a0*b5 - a1*b4 + a2*b3 + a3*b2 - a4*b1 + a5*b0;
+			if (Abs(det) < kEpsilon) return mat44Identity();
+			const real invDet = 1/det;
+			
+			const real temp[] = { 
+				+m[5]*b5 - m[6]*b4 + m[7]*b3, -m[1]*b5 + m[2]*b4 - m[3]*b3, +m[13]*a5 - m[14]*a4 + m[15]*a3, -m[9]*a5 + m[10]*a4 - m[11]*a3,
+				-m[4]*b5 + m[6]*b2 - m[7]*b1, +m[0]*b5 - m[2]*b2 + m[3]*b1, -m[12]*a5 + m[14]*a2 - m[15]*a1, +m[8]*a5 - m[10]*a2 + m[11]*a1,
+				+m[4]*b4 - m[5]*b2 + m[7]*b0, -m[0]*b4 + m[1]*b2 - m[3]*b0, +m[12]*a4 - m[13]*a2 + m[15]*a0, -m[8]*a4 + m[9]*a2  - m[11]*a0,
+				-m[4]*b3 + m[5]*b1 - m[6]*b0, +m[0]*b3 - m[1]*b1 + m[2]*b0, -m[12]*a3 + m[13]*a1 - m[14]*a0, +m[8]*a3 - m[9]*a1  + m[10]*a0 
+			};
+
+			mat44 inverse(temp);
+			for(int i=0; i<16; ++i)
+			{
+				inverse[i] *= invDet;
+			}
+			return inverse;
+		}
+
+		const mat44 SetTransform(const mat44& m, const vec3& t)
+		{
+			mat44 tmp = m;
+			tmp.at(0,3) = t.x;
+			tmp.at(1,3) = t.y;
+			tmp.at(2,3) = t.z;
+			return tmp;
 		}
 
 		const mat44 cmat44(const AxisAngle& aa)

@@ -309,11 +309,7 @@ namespace pwn
 
 			vec3 VectorITransform (const vec3 vec, const mat44& mat)
 			{
-				vec3 tmp(
-					vec.x - mat.at(0,3),
-					vec.y - mat.at(1,3),
-					vec.z - mat.at(2,3));
-				return VectorIRotate(tmp, mat);
+				return math::Inverse(mat) * vec;
 			}
 
 			void PrepareVericesForAnimation(Mesh* mesh)
@@ -339,8 +335,8 @@ namespace pwn
 					Point& p = mesh->positions[i];
 					if( p.hasBone() == false) continue;
 					Data& data = bdp[p.getBone()];
-					vec3 ms3d = VectorITransform(p.location, data.globalskel);
-					p.location = ms3d;
+					p.location = VectorITransform(p.location, data.globalskel);
+					p.normal = GetNormalized(VectorITransform(p.normal, math::SetTransform(data.globalskel, math::vec3(0,0,0))));
 				}
 			}
 		}

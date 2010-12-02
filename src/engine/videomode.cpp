@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <pwn/engine/videomode.h>
+#include <pwn/sfml-config.h>
 #include <SFML/Window.hpp>
 
 namespace pwn

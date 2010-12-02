@@ -71,8 +71,8 @@ namespace pwn
 				}
 				glEnd(); pwnAssert_NoGLError();
 
-				glColor4f(0, 1, 0, 1);  pwnAssert_NoGLError(); // green
 				glDisable(GL_LIGHTING); pwnAssert_NoGLError();
+				glColor4f(0, 1, 0, 1);  pwnAssert_NoGLError(); // green
 				glBegin(GL_LINES);
 				BOOST_FOREACH(const mesh::Triangle& tri, triangles)
 				{
@@ -80,14 +80,18 @@ namespace pwn
 					{
 						const mesh::Point& point = smesh->positions[tri[i]];
 
-						glNormal3f(point.normal.x, point.normal.y, point.normal.z);
+						//glNormal3f(point.normal.x, point.normal.y, point.normal.z);
 						
 						const math::vec3 p = point.hasBone()
 							? pose.transforms[point.getBone()] * point.location
 							: point.location;
 						glVertex3f(p.x, p.y, p.z);
 
-						const math::vec3 t = p + point.normal;
+						const math::vec3 n = point.hasBone()
+							? math::GetNormalized(  math::Inverse( math::SetTransform(pose.transforms[point.getBone()], math::vec3(0,0,0))) * point.normal )
+							: point.normal;
+
+						const math::vec3 t = p + n;
 						glVertex3f(t.x, t.y, t.z);
 					}
 				}

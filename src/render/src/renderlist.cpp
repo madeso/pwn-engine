@@ -6,6 +6,7 @@
 #include <limits>
 #include <pwn/render/poseable.h>
 
+#include <pwn/sfml-config.h>
 #include <SFML/OpenGl.hpp>
 #pragma comment(lib, "opengl32.lib")
 

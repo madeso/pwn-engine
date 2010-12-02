@@ -8,6 +8,7 @@
 #include <pwn/engine/key.h>
 #include <pwn/assert.h>
 
+#include <pwn/sfml-config.h>
 #include <SFML/Window.hpp>
 #include "display.hpp"
 #include "gameimp.hpp"
@@ -16,6 +17,7 @@
 #include <pwn/math/types.h>
 #include <pwn/math/operations.h>
 
+#include <pwn/sfml-config.h>
 #include <SFML/OpenGl.hpp>
 
 #ifdef _DEBUG

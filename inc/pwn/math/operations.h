@@ -529,6 +529,10 @@ namespace pwn
 		*/
 		const mat44 cmat44(const quat& q);
 
+		const mat44 Inverse(const mat44& m);
+
+		const mat44 SetTransform(const mat44& m, const vec3& t);
+
 		/** identity matrix
 		*/
 		const mat44 mat44Identity();

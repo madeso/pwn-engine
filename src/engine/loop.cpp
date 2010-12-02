@@ -5,6 +5,7 @@
 #include "GameImp.hpp"
 #include "loop.hpp"
 
+#include <pwn/sfml-config.h>
 #include <SFML/System/Clock.hpp>
 
 namespace pwn

@@ -244,7 +244,7 @@ namespace PhysFS
 
   std::streamsize FileDevice::read(char* s, std::streamsize n)
   {
-    PHYSFS_sint64 ret = PHYSFS_readBytes(file, s, n); // sirGustav: transformed the call to readBytes as read is marked as deprecated
+    PHYSFS_sint64 ret = PHYSFS_read(file, s, 1, n); // @sirGustav changed code here, tried to revert it without the original source, might have done something wrong
     if (ret == -1)
       throw Exception(PHYSFS_getLastError());
     return std::streamsize(ret);

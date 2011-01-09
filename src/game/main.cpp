@@ -19,6 +19,15 @@
 
 #include <pwn/render/shaderpool.h>
 
+// linking to sfml-main otherwise argv becomes null and things crash and burn
+#include <pwn/sfml-config.h>
+#ifdef _DEBUG
+#define LIBRARY_SUFFIX "-d"
+#else
+#define LIBRARY_SUFFIX ""
+#endif
+#pragma comment(lib, "sfml-main" LIBRARY_SUFFIX ".lib" )
+
 using namespace pwn;
 using namespace pwn::engine;
 using namespace pwn::render;
@@ -151,7 +160,7 @@ public:
 	fse::PipelinePtr pipe;
 };
 
-int main(int argc, char** argv)
+int main(int, char** argv)
 {
 	{
 		Game game;

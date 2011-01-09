@@ -58,7 +58,8 @@ namespace pwn
 		{
 			const pwn::string GetParent(const pwn::string& app)
 			{
-				return (boost::filesystem::path(app).parent_path().parent_path() / "dummy.exe" ).file_string();
+				// system_complete solves relative paths we get from argv[0] and physfs seems give bad folders and data when it revieves them
+				return boost::filesystem::system_complete(boost::filesystem::path(app).parent_path().parent_path() / "dummy.exe" ).file_string();
 			}
 		}
 

@@ -175,17 +175,6 @@ namespace pwn
 		*/
 		const int IncrementAndWrapi(const int min, int* current, const int change, const int max);
 
-		/** Convert a float32 to a "float16".
-		Licensed under the \ref open-exr-license
-		*/
-		uint16 FloatToHalf(float32 f);
-
-		/**
-		* Convert a "float16" to a float32.
-		Licensed under the \ref open-exr-license
-		*/
-		float32 HalfToFloat(uint16 y);
-
 		/// @}
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/// \defgroup constants Constants

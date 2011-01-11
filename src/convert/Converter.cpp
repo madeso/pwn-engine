@@ -141,17 +141,6 @@ namespace pwn
 		{
 		}
 
-		const pwn::real CompressAndUncompress(pwn::real r)
-		{
-			return pwn::math::HalfToFloat(pwn::math::FloatToHalf(r));
-		}
-
-		const pwn::real LengthDiff(const pwn::math::vec3& v)
-		{
-			const pwn::math::vec3 loaded(CompressAndUncompress(v.x), CompressAndUncompress(v.y), CompressAndUncompress(v.z));
-			return pwn::math::Abs(pwn::math::LengthOf(v-loaded) - pwn::math::LengthOf(v));
-		}
-
 		const pwn::real AngleDiff(const pwn::math::vec3& v)
 		{
 			const pwn::math::vec3 loaded = pwn::math::CompressedToUnitVector(pwn::math::UnitVectorToCompressed(v));
@@ -159,26 +148,8 @@ namespace pwn
 			return a;
 		}
 
-		void EstimatedDataLossWhenCompressing(mesh::Mesh& data, Stat* positions, Stat* normals)
+		void EstimatedDataLossWhenCompressing(mesh::Mesh& data, Stat* normals)
 		{
-			//std::cout << "Normal: " << data.normalMap.size() << ", " << data.normalConvertions.size() << std::endl;
-			/* vertices */
-			if( positions )
-			{
-				const std::size_t vc = data.positions.size();
-				pwn::real min = 1000000000;
-				pwn::real max = -1;
-				pwn::real sum = 0;
-				for(std::size_t i=0; i<vc; ++i)
-				{
-					const pwn::real d = LengthDiff(data.positions[i].location);
-					sum += d;
-					if( min > d ) min = d;
-					if( max < d ) max = d;
-				}
-				*positions = Stat(min, max, sum / vc);
-			}
-
 			if( normals )
 			{
 				const std::size_t nc = data.positions.size();

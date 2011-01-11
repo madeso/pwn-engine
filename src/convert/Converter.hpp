@@ -61,7 +61,7 @@ namespace pwn
 			pwn::real average;
 		};
 
-		void EstimatedDataLossWhenCompressing(mesh::Mesh& data, Stat* positions, Stat* normals);
+		void EstimatedDataLossWhenCompressing(mesh::Mesh& data, Stat* normals);
 	}
 }
 

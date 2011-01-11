@@ -3,8 +3,12 @@
 
 #include <pwn/Assert.h>
 
+#ifdef PWN_USE_CUSTOM_MATH
 #include <cmath>
 #include <memory> // memcpy
+#else
+#include <cml/cml.h>
+#endif
 
 namespace pwn
 {

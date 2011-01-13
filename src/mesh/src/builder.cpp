@@ -299,19 +299,6 @@ namespace pwn
 				mat44 globalskel;
 			};
 
-			vec3 VectorIRotate(const vec3 vec, const mat44& mat)
-			{
-				return vec3(
-					vec.x*mat.at(0,0) + vec.y*mat.at(1,0) + vec.z*mat.at(2,0),
-					vec.x*mat.at(0,1) + vec.y*mat.at(1,1) + vec.z*mat.at(2,1),
-					vec.x*mat.at(0,2) + vec.y*mat.at(1,2) + vec.z*mat.at(2,2));
-			}
-
-			vec3 VectorITransform (const vec3 vec, const mat44& mat)
-			{
-				return math::Inverse(mat) * vec;
-			}
-
 			void PrepareVericesForAnimation(Mesh* mesh)
 			{
 				using namespace pwn;
@@ -335,8 +322,8 @@ namespace pwn
 					Point& p = mesh->positions[i];
 					if( p.hasBone() == false) continue;
 					Data& data = bdp[p.getBone()];
-					p.location = VectorITransform(p.location, data.globalskel);
-					p.normal = GetNormalized(VectorITransform(p.normal, math::SetTransform(data.globalskel, math::vec3(0,0,0))));
+					p.location = TranslateWithInverseMatrix(p.location, data.globalskel);
+					p.normal = GetNormalized(TranslateWithInverseMatrix(p.normal, math::SetTransform(data.globalskel, math::vec3(0,0,0))));
 				}
 			}
 		}

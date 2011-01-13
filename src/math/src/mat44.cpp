@@ -176,6 +176,19 @@ namespace pwn
 			return mat44_FromRowMajor(temp);
 		}
 
+		vec3 RotateWithInverseMatrix(const vec3 vec, const mat44& mat)
+		{
+			return vec3(
+				vec.x*mat.at(0,0) + vec.y*mat.at(1,0) + vec.z*mat.at(2,0),
+				vec.x*mat.at(0,1) + vec.y*mat.at(1,1) + vec.z*mat.at(2,1),
+				vec.x*mat.at(0,2) + vec.y*mat.at(1,2) + vec.z*mat.at(2,2));
+		}
+
+		vec3 TranslateWithInverseMatrix (const vec3 vec, const mat44& mat)
+		{
+			return math::Inverse(mat) * vec;
+		}
+
 		mat44helper::mat44helper(const mat44& mat)
 			: mat(mat)
 		{

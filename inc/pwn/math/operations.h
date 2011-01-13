@@ -467,6 +467,7 @@ namespace pwn
 		/** takes a 4x4 matrix and ignores the 4th row and the 4th column.
 		*/
 		const mat33 cmat33(const mat44& m);
+		const mat33 cmat33(const quat& q);
 
 		/// @}
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -533,6 +534,9 @@ namespace pwn
 		/** fills out the missing items with values from the identy-matrix
 		*/
 		const mat44 cmat44(const mat33& m);
+
+		vec3 RotateWithInverseMatrix(const vec3 vec, const mat44& mat);
+		vec3 TranslateWithInverseMatrix(const vec3 vec, const mat44& mat);
 
 		/** Syntax-sugar function-chainer helper-class for most common mat44 operations.
 		Example:
@@ -737,6 +741,8 @@ namespace pwn
 		/** gets the distance between 2 points.
 		*/
 		const real DistanceBetween(const point2& from, const point2& to);
+
+		const point2 ChangeY(const point2& v, const real newy);
 
 		/** point/direction addition.
 		*/

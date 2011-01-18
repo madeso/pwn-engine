@@ -126,7 +126,7 @@ struct ConvertMesh
 	pwn::string moutdir;
 	std::vector<pwn::mesh::AnimationInformation> animationsToExtract;
 
-	bool run(const pwn::string& aoutdir, bool runStatistics, bool verbose, bool meshInfo, bool writeResult) const
+	bool run(const pwn::string& argv0, const pwn::string& aoutdir, bool runStatistics, bool verbose, bool meshInfo, bool writeResult) const
 	{
 		const pwn::string outdir = outdir.empty() ? moutdir : aoutdir;
 		try
@@ -179,7 +179,7 @@ struct ConvertMesh
 			if( writeResult )
 			{
 				if( verbose ) cout << "writing.." << endl;
-				pwn::io::WriteTarget wt(outdir);
+				pwn::io::WriteTarget wt(argv0, outdir);
 				pwn::io::Write(mesh, boost::filesystem::path(inputfile).replace_extension("mesh").filename());
 			}
 
@@ -198,7 +198,7 @@ struct ConvertMesh
 						.directory_string();
 				};
 
-				pwn::io::WriteTarget wt(adir);
+				pwn::io::WriteTarget wt(argv0, adir);
 				pwn::io::Write(ani, boost::filesystem::path(ai.name).replace_extension("anim").filename());
 			}
 
@@ -224,7 +224,7 @@ struct ConvertMesh
 	}
 };
 
-void RunXml(const pwn::string& filename)
+void RunXml(const pwn::string& argv0, const pwn::string& filename)
 {
 	using boost::property_tree::ptree;
 
@@ -268,7 +268,7 @@ void RunXml(const pwn::string& filename)
 
 		BOOST_FOREACH(const ConvertMesh& cmesh, cm)
 		{
-			cmesh.run(outdir, runstats, verbose, displayMeshInfo, writeResults);
+			cmesh.run(argv0, outdir, runstats, verbose, displayMeshInfo, writeResults);
 		}
 	}
 	catch (std::exception &e)
@@ -282,7 +282,7 @@ void main(int argc, char* argv[])
 	using namespace std;
 
 	const pwn::string filename(argv[1]);
-	RunXml(filename);
+	RunXml(argv[0], filename);
 }
 
 

@@ -18,9 +18,9 @@ namespace pwn
 			}
 		}
 
-		WriteTarget::WriteTarget(const pwn::string& target)
+		WriteTarget::WriteTarget(const pwn::string& argv0, const pwn::string& target)
 		{
-			if( 0 == PHYSFS_init(NULL) ) Error("init");
+			if( 0 == PHYSFS_init(argv0.c_str()) ) Error("init");
 			set(target);
 		}
 
@@ -88,7 +88,7 @@ namespace pwn
 		void VirtualFile::writeReal(const pwn::real& value)
 		{
 			const PHYSFS_sint64 objects = PHYSFS_write(file, &value, 1, sizeof(pwn::real));
-			if( objects != 1 ) Error("write real");
+			if( objects != sizeof(pwn::real) ) Error("write real");
 		}
 
 		pwn::real VirtualFile::readReal()
@@ -129,7 +129,7 @@ namespace pwn
 		void VirtualFile::write(const void* data, pwn::uint32 size)
 		{
 			const PHYSFS_sint64 objects = PHYSFS_write(file, data, size, 1);
-			if( objects != size ) Error("writing data"); // size was 1, bug in nightly physfs
+			if( objects != 1 ) Error("writing data"); // size was 1, bug in nightly physfs
 		}
 
 		// ---------------------------------------------------------------------------------------------

@@ -88,7 +88,7 @@ namespace pwn
 						glVertex3f(p.x, p.y, p.z);
 
 						const math::vec3 n = point.hasBone()
-							? math::GetNormalized(  math::Inverse( math::SetTransform(pose.transforms[point.getBone()], math::vec3(0,0,0))) * point.normal )
+							? math::GetNormalized( TranslateWithInverseMatrix(point.normal, pose.transforms[point.getBone()] ) )
 							: point.normal;
 
 						const math::vec3 t = p + n;

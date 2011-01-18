@@ -3,6 +3,9 @@
 
 #include <pwn/number.h>
 
+// temporary
+#define PWN_USE_CUSTOM_MATH
+
 namespace pwn
 {
 	namespace math

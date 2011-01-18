@@ -145,6 +145,30 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\..\..\src\math\src\angle.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\src\axisangle.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\src\direction2.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\src\direction3.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\src\mat33.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\src\mat44.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\math\src\math.cpp"
 			>
 		</File>
@@ -154,6 +178,22 @@
 		</File>
 		<File
 			RelativePath="..\..\..\inc\pwn\math\operations.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\src\point2.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\src\point3.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\src\quat.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\src\rect.cpp"
 			>
 		</File>
 		<File
@@ -174,6 +214,14 @@
 		</File>
 		<File
 			RelativePath="..\..\..\inc\pwn\math\types.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\src\vec2.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\math\src\vec3.cpp"
 			>
 		</File>
 	</Files>

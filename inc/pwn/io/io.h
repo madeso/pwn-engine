@@ -16,7 +16,7 @@ namespace pwn
 		class WriteTarget
 		{	
 		public:
-			explicit WriteTarget(const pwn::string& target);
+			WriteTarget(const pwn::string& argv0, const pwn::string& target);
 			void set(const pwn::string& target);
 			~WriteTarget();
 		};

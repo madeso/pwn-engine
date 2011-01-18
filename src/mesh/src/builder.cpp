@@ -310,7 +310,7 @@ namespace pwn
 				for (unsigned int i = 0; i < mesh->bones.size(); ++i)
 				{
 					Bone& bone = mesh->bones[i];
-					
+					Assert(!bone.hasParent() || bone.getParent() < i); // if it has a parent, it should already have been processed
 					const mat44 local = mat44helper(mat44Identity()).translate(bone.pos).rotate(GetConjugate(bone.rot)).mat;
 					const mat44 parent = bone.hasParent() ? bdp[bone.getParent()].globalskel : mat44Identity();
 					const mat44 global = parent*local;

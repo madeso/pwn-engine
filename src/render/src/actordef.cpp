@@ -59,7 +59,11 @@ namespace pwn
 					{
 						const mesh::Point& point = smesh->positions[tri[i]];
 
-						glNormal3f(point.normal.x, point.normal.y, point.normal.z);
+						const math::vec3 n = point.hasBone()
+							? math::GetNormalized( math::SetTransform(pose.transforms[point.getBone()], math::vec3(0,0,0)) * point.normal )
+							: point.normal;
+
+						glNormal3f(n.x, n.y, n.z);
 
 						glTexCoord2f(point.textcoord.x, point.textcoord.y);
 						
@@ -88,7 +92,7 @@ namespace pwn
 						glVertex3f(p.x, p.y, p.z);
 
 						const math::vec3 n = point.hasBone()
-							? math::GetNormalized( TranslateWithInverseMatrix(point.normal, pose.transforms[point.getBone()] ) )
+							? math::GetNormalized( math::SetTransform(pose.transforms[point.getBone()], math::vec3(0,0,0)) * point.normal )
 							: point.normal;
 
 						const math::vec3 t = p + n;

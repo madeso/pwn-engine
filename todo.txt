@@ -9,7 +9,6 @@ rewrite rendering so that it doesnt need special features like shaders, but uses
 --------------------------
 ------------- features:
 * tranform into vbos & vertex shaders (indexed vbo!)
- - verify that animating normals work
  - transform to cpu updated vbos
  - add material shaders
  - support loading vertex & fragment from different files
@@ -17,7 +16,6 @@ rewrite rendering so that it doesnt need special features like shaders, but uses
  - improve material system to send several textures to shaders
  - make boneassignemnts to a seperate vec4 array in preperations for gpu animation & multiple bone assignments
  - transform to gpu updated vbos
-* investigate bug in physfs, mixing objCount & size?, move back to stable?
 * improve math and rgb(a) library, memberfunctions, more syntactic sugar
 * add multiple textures and multiple instances to materials so that overiding & animating materials can be more easily supported
 * font support ( to be merged with "improve display framework"? )

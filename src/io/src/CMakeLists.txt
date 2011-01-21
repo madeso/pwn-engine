@@ -3,8 +3,8 @@
 # delete the in file if you need to edit this one
 
 set ( io_src
-	animation-writer.cpp
-	config.cpp
-	mesh-writer.cpp
-	vfs.cpp
+	src/animation-writer.cpp
+	src/config.cpp
+	src/mesh-writer.cpp
+	src/vfs.cpp
 )

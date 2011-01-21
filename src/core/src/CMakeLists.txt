@@ -3,6 +3,6 @@
 # delete the in file if you need to edit this one
 
 set ( core_src
-	idpool.cpp
-	StringUtils.cpp
+	src/idpool.cpp
+	src/StringUtils.cpp
 )

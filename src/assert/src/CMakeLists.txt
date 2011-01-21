@@ -3,5 +3,5 @@
 # delete the in file if you need to edit this one
 
 set ( assert_src
-	assert.cpp
+	src/assert.cpp
 )

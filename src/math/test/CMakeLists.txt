@@ -3,13 +3,13 @@
 # delete the in file if you need to edit this one
 
 set ( mathtest_src
-	TestAngle.cpp
-	TestBase.cpp
-	TestMat33.cpp
-	TestMat44.cpp
-	TestMath1.cpp
-	TestQuat.cpp
-	TestRect.cpp
-	TestVec2.cpp
-	TestVec3.cpp
+	test/TestAngle.cpp
+	test/TestBase.cpp
+	test/TestMat33.cpp
+	test/TestMat44.cpp
+	test/TestMath1.cpp
+	test/TestQuat.cpp
+	test/TestRect.cpp
+	test/TestVec2.cpp
+	test/TestVec3.cpp
 )

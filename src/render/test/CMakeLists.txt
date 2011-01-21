@@ -3,5 +3,5 @@
 # delete the in file if you need to edit this one
 
 set ( rendertest_src
-	TestRenderList.cpp
+	test/TestRenderList.cpp
 )

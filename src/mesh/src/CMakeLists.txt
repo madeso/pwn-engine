@@ -3,10 +3,10 @@
 # delete the in file if you need to edit this one
 
 set ( mesh_src
-	animation.cpp
-	bone.cpp
-	builder.cpp
-	material.cpp
-	mesh.cpp
-	triangle.cpp
+	src/animation.cpp
+	src/bone.cpp
+	src/builder.cpp
+	src/material.cpp
+	src/mesh.cpp
+	src/triangle.cpp
 )

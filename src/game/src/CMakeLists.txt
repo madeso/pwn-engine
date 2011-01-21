@@ -3,5 +3,5 @@
 # delete the in file if you need to edit this one
 
 set ( game_src
-	main.cpp
+	src/main.cpp
 )

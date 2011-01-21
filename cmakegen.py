@@ -29,7 +29,7 @@ def makeCmakeFile(path):
 				if os.path.isfile(filepath):
 					if os.path.splitext(fname)[1]==".cpp":
 						print " - adding " + fname + " to " + sourcename
-						f.write("\t"+fname+"\n")
+						f.write("\t" + foldername + "/" +fname+"\n")
 			f.write(")\n")
 
 def walkDirs(path):

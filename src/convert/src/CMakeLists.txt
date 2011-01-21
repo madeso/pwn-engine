@@ -3,11 +3,11 @@
 # delete the in file if you need to edit this one
 
 set ( convert_src
-	3ds.cpp
-	convert.cpp
-	Converter.cpp
-	MilkshapeAscii.cpp
-	MilkshapeBinary.cpp
-	MilkshapeCommon.cpp
-	WavefrontObj.cpp
+	src/3ds.cpp
+	src/convert.cpp
+	src/Converter.cpp
+	src/MilkshapeAscii.cpp
+	src/MilkshapeBinary.cpp
+	src/MilkshapeCommon.cpp
+	src/WavefrontObj.cpp
 )

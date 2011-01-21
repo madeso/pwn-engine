@@ -3,6 +3,6 @@
 # delete the in file if you need to edit this one
 
 set ( meshtest_src
-	test-builder.cpp
-	test-mesh.cpp
+	test/test-builder.cpp
+	test/test-mesh.cpp
 )

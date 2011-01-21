@@ -1,3 +1,3 @@
-add_subdirectory(src)
+include(src/CMakeLists.txt)
 
-add_library(pwn-assert "${assert_src}")
+add_library(pwn-assert ${assert_src})

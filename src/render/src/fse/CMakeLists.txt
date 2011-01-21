@@ -3,21 +3,21 @@
 # delete the in file if you need to edit this one
 
 set ( render_fse_src
-	Binder.cpp
-	BufferReference.cpp
-	Command.cpp
-	Command_BindBufferCommand.cpp
-	Command_Commands.cpp
-	Command_SetVec2Uniform.cpp
-	exceptions.cpp
-	Linker.cpp
-	Pipeline.cpp
-	Provider.cpp
-	Provider_Providers.cpp
-	Provider_RenderFullscreenProvider.cpp
-	Provider_RenderWorldProvider.cpp
-	Target.cpp
-	Target_BufferTarget.cpp
-	Target_FormTarget.cpp
-	Target_Targets.cpp
+	fse/Binder.cpp
+	fse/BufferReference.cpp
+	fse/Command.cpp
+	fse/Command_BindBufferCommand.cpp
+	fse/Command_Commands.cpp
+	fse/Command_SetVec2Uniform.cpp
+	fse/exceptions.cpp
+	fse/Linker.cpp
+	fse/Pipeline.cpp
+	fse/Provider.cpp
+	fse/Provider_Providers.cpp
+	fse/Provider_RenderFullscreenProvider.cpp
+	fse/Provider_RenderWorldProvider.cpp
+	fse/Target.cpp
+	fse/Target_BufferTarget.cpp
+	fse/Target_FormTarget.cpp
+	fse/Target_Targets.cpp
 )

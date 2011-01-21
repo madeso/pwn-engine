@@ -1,4 +1,4 @@
-add_subdirectory(src)
-#add_subdirectory(test)
+include(src/CMakeLists.txt)
+#include(test/CMakeLists.txt)
 
-add_library(pwn-engine "${engine_src}")
+add_library(pwn-engine ${engine_src})

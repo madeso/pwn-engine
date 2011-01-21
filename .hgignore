@@ -12,10 +12,10 @@ glob:build/vs2008/*.ncb
 glob:build/vs2008/pwn.suo
 glob:dist/Debug/*.pdb
 glob:dist/Debug/*.ilk
-glob:*.txt
 glob:code-design/resolution-test/*.png
 glob:dist/Debug/pwn-*
 glob:dist/Release/pwn-*
 glob:dist/*.mesh
 glob:dist/*/*.anim
 glob:dist/alien_chamber/*
+glob:build/cmake/*

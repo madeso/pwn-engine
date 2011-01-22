@@ -2,7 +2,7 @@
 # do not edit, since this file might get overwritten
 # delete the in file if you need to edit this one
 
-set ( math_src
+set ( autogen_src
 	src/angle.cpp
 	src/axisangle.cpp
 	src/direction2.cpp

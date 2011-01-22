@@ -2,7 +2,7 @@
 # do not edit, since this file might get overwritten
 # delete the in file if you need to edit this one
 
-set ( mathtest_src
+set ( autogen_test
 	test/TestAngle.cpp
 	test/TestBase.cpp
 	test/TestMat33.cpp

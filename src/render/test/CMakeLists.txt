@@ -2,6 +2,6 @@
 # do not edit, since this file might get overwritten
 # delete the in file if you need to edit this one
 
-set ( rendertest_src
+set ( autogen_test
 	test/TestRenderList.cpp
 )

@@ -2,41 +2,43 @@
 # This script walks recursivly thorugh the entire structure and wrtes a CMAkeLists.txt file where requested (using a CMakeLists.in.txt file)
 import os
 
-def fileasstring(file):
-	with open(file, "r") as f:
-		return f.read()
+def makeCmakeFile(path, sub):
+	cmakefile = os.path.join(path, sub)
+	folder = os.path.dirname(cmakefile)
+	varname = "autogen_"+os.path.dirname(sub).replace("/", "_")
+	relpath = os.path.dirname(sub)
+	with open(cmakefile, 'w') as f:
+		f.write("# atuogenerated file from cmakegen.py through listdir\n")
+		f.write("# do not edit, since this file might get overwritten\n")
+		f.write("# delete the in file if you need to edit this one\n")
+		f.write("\n")
+		f.write("set ( " + varname + "\n")
+		for fname in os.listdir(folder):
+			filepath = os.path.join(folder, fname)
+			if os.path.isfile(filepath):
+				if os.path.splitext(fname)[1]==".cpp":
+					print " - in " + os.path.basename(path) + " adding " + fname + " to " + varname
+					f.write("\t" + relpath + "/" +fname+"\n")
+		f.write(")\n")
+	
 
-def makeCmakeFile(path):
+def parseCmakeFile(path):
 	cmakefile = os.path.join(path, "CMakeLists.txt")
-	foldername = os.path.basename(path)
-	
-	runcmakefile = os.path.join(path, "CMakeLists.in.txt")
-	
-	if os.path.exists( runcmakefile ):
-		cmakein = fileasstring(runcmakefile)
-		sourcename = cmakein
-		if sourcename == "":
-			sourcename = foldername + "_src" # override var name if left unassigned
-		print "generating " + sourcename + " for " + path
-		with open(cmakefile, 'w') as f:
-			f.write("# atuogenerated file from cmakegen.py through listdir\n")
-			f.write("# do not edit, since this file might get overwritten\n")
-			f.write("# delete the in file if you need to edit this one\n")
-			f.write("\n")
-			f.write("set ( " + sourcename + "\n")
-			for fname in os.listdir(path):
-				filepath = os.path.join(path, fname)
-				if os.path.isfile(filepath):
-					if os.path.splitext(fname)[1]==".cpp":
-						print " - adding " + fname + " to " + sourcename
-						f.write("\t" + foldername + "/" +fname+"\n")
-			f.write(")\n")
+	if os.path.exists(cmakefile):
+		lastline = ""
+		with open(cmakefile) as f:
+			for line in f:
+				line = line.strip()
+				if line.startswith("include") and lastline.strip(" #")=="autogen this:":
+					sub = line[7:].strip(" ()\"")
+					makeCmakeFile(path, sub)
+				lastline = line
 
 def walkDirs(path):
 	for name in os.listdir(path):
 		dir = os.path.join(path, name)
 		if os.path.isdir(dir):
 			walkDirs(dir)
-			makeCmakeFile(dir)
+			parseCmakeFile(dir)
 
 walkDirs(os.getcwd())

@@ -2,7 +2,7 @@
 # do not edit, since this file might get overwritten
 # delete the in file if you need to edit this one
 
-set ( engine_src
+set ( autogen_src
 	src/democamera.cpp
 	src/display.cpp
 	src/game.cpp

@@ -2,7 +2,7 @@
 # do not edit, since this file might get overwritten
 # delete the in file if you need to edit this one
 
-set ( coretest_src
+set ( autogen_test
 	test/idpooltest.cpp
 	test/TestStdUtil.cpp
 	test/TestStringUtils.cpp

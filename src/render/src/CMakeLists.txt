@@ -2,7 +2,7 @@
 # do not edit, since this file might get overwritten
 # delete the in file if you need to edit this one
 
-set ( render_src
+set ( autogen_src
 	src/actor.cpp
 	src/actordef.cpp
 	src/camera.cpp

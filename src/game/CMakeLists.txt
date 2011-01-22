@@ -1,4 +1,5 @@
+#autogen this:
 include(src/CMakeLists.txt)
 
-add_executable(pwn-game ${game_src})
+add_executable(pwn-game ${autogen_src})
 target_link_libraries(pwn-game pwn-engine)

@@ -8,18 +8,18 @@ def makeCmakeFile(path, sub):
 	varname = "autogen_"+os.path.dirname(sub).replace("/", "_")
 	relpath = os.path.dirname(sub)
 	with open(cmakefile, 'w') as f:
-		f.write("# atuogenerated file from cmakegen.py through listdir\n")
-		f.write("# do not edit, since this file might get overwritten\n")
-		f.write("# delete the in file if you need to edit this one\n")
-		f.write("\n")
-		f.write("set ( " + varname + "\n")
+		os.write(f.fileno(), "# atuogenerated file from cmakegen.py through listdir\n")
+		os.write(f.fileno(), "# do not edit, since this file might get overwritten\n")
+		os.write(f.fileno(), "# delete the in file if you need to edit this one\n")
+		os.write(f.fileno(), "\n")
+		os.write(f.fileno(), "set ( " + varname + "\n")
 		for fname in os.listdir(folder):
 			filepath = os.path.join(folder, fname)
 			if os.path.isfile(filepath):
 				if os.path.splitext(fname)[1]==".cpp":
 					print " - in " + os.path.basename(path) + " adding " + fname + " to " + varname
-					f.write("\t" + relpath + "/" +fname+"\n")
-		f.write(")\n")
+					os.write(f.fileno(), "\t" + relpath + "/" +fname+"\n")
+		os.write(f.fileno(), ")\n")
 	
 
 def parseCmakeFile(path):

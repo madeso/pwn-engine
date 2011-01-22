@@ -3,6 +3,6 @@
 # delete the in file if you need to edit this one
 
 set ( autogen_src
-	src/idpool.cpp
 	src/StringUtils.cpp
+	src/idpool.cpp
 )

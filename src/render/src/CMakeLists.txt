@@ -3,6 +3,7 @@
 # delete the in file if you need to edit this one
 
 set ( autogen_src
+	src/RenderArgs.cpp
 	src/actor.cpp
 	src/actordef.cpp
 	src/camera.cpp
@@ -15,7 +16,6 @@ set ( autogen_src
 	src/material.cpp
 	src/part.cpp
 	src/poseable.cpp
-	src/RenderArgs.cpp
 	src/renderlist.cpp
 	src/shader.cpp
 	src/shaderpool.cpp

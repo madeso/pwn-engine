@@ -6,8 +6,8 @@ set ( autogen_src
 	src/democamera.cpp
 	src/display.cpp
 	src/game.cpp
-	src/gameimp.cpp
 	src/game_install.cpp
+	src/gameimp.cpp
 	src/key.cpp
 	src/loop.cpp
 	src/startup.cpp
@@ -15,7 +15,7 @@ set ( autogen_src
 	src/system_render.cpp
 	src/system_vfs.cpp
 	src/system_window.cpp
-	src/vfstexturepool2.cpp
 	src/vfs_util.cpp
+	src/vfstexturepool2.cpp
 	src/videomode.cpp
 )

@@ -14,7 +14,7 @@ def makeCmakeFile(path, sub):
 		f.write("# delete the in file if you need to edit this one\n")
 		f.write("\n")
 		f.write("set ( " + varname + "\n")
-		for fname in os.listdir(folder):
+		for fname in sorted(os.listdir(folder)):
 			filepath = os.path.join(folder, fname)
 			if os.path.isfile(filepath):
 				if os.path.splitext(fname)[1]==".cpp":

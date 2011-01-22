@@ -3,7 +3,7 @@
 # delete the in file if you need to edit this one
 
 set ( autogen_test
-	test/idpooltest.cpp
 	test/TestStdUtil.cpp
 	test/TestStringUtils.cpp
+	test/idpooltest.cpp
 )

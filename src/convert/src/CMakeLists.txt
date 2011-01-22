@@ -4,10 +4,10 @@
 
 set ( autogen_src
 	src/3ds.cpp
-	src/convert.cpp
 	src/Converter.cpp
 	src/MilkshapeAscii.cpp
 	src/MilkshapeBinary.cpp
 	src/MilkshapeCommon.cpp
 	src/WavefrontObj.cpp
+	src/convert.cpp
 )

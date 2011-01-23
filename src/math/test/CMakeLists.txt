@@ -5,6 +5,7 @@
 set ( autogen_test
 	test/TestAngle.cpp
 	test/TestBase.cpp
+	test/TestBase.h
 	test/TestMat33.cpp
 	test/TestMat44.cpp
 	test/TestMath1.cpp

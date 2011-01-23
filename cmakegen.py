@@ -5,19 +5,20 @@ import os
 def makeCmakeFile(path, sub):
 	cmakefile = os.path.join(path, sub)
 	folder = os.path.dirname(cmakefile)
-	varname = "autogen_"+os.path.dirname(sub).replace("/", "_")
+	varname = "autogen_"+os.path.dirname(sub).replace("/", "_").replace(".", "")
 	relpath = os.path.dirname(sub)
 	#open as binary to force unix/linux(LF) type of lineendings on other systems than unix/linux such as windows(that uses CRLF)
 	with open(cmakefile, 'wb') as f:
 		f.write("# atuogenerated file from cmakegen.py through listdir\n")
 		f.write("# do not edit, since this file might get overwritten\n")
-		f.write("# delete the in file if you need to edit this one\n")
+		f.write("# delete the comment where this file is included to remove the autogeneration\n")
 		f.write("\n")
 		f.write("set ( " + varname + "\n")
 		for fname in sorted(os.listdir(folder)):
 			filepath = os.path.join(folder, fname)
 			if os.path.isfile(filepath):
-				if os.path.splitext(fname)[1]==".cpp":
+				ext = os.path.splitext(fname)[1]
+				if ext==".cpp" or ext==".h":
 					print " - adding " + fname + " to " + varname
 					f.write("\t" + relpath + "/" +fname+"\n")
 		f.write(")\n")

@@ -1,1 +1,4 @@
-UnitTest++ http://unittest-cpp.sourceforge.net/
+google mock
+open gl
+sfml 2
+boost

@@ -2,3 +2,13 @@ google mock
 open gl
 sfml 2
 boost
+physfs
+
+INCLUDED for laziness:
+physfs c++
+glew
+soil
+
+cml
+mongoose
+event

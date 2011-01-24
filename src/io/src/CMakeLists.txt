@@ -7,4 +7,5 @@ set ( autogen_src
 	src/config.cpp
 	src/mesh-writer.cpp
 	src/vfs.cpp
+	src/vfs.hpp
 )

@@ -14,6 +14,7 @@ set ( autogen_src
 	src/fbo.cpp
 	src/light.cpp
 	src/material.cpp
+	src/opengl_debug.hpp
 	src/part.cpp
 	src/poseable.cpp
 	src/renderlist.cpp

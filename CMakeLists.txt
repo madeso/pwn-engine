@@ -4,6 +4,16 @@ project(pwn)
 set(pwn_version_major 1)
 set(pwn_version_minor 0)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake-modules")
+
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREADED ON)
+
+find_package(GoogleMock REQUIRED)
+find_package(PhysFs REQUIRED)
+find_package(Boost REQUIRED COMPONENTS filesystem )
+find_package(OpenGL REQUIRED)
+
 option (PWN_USE_CUSTOM_MATH "Use pwn.math instead of cml" ON)
 
 configure_file("inc/config.in.h" "${PROJECT_BINARY_DIR}/pwn-config.h")

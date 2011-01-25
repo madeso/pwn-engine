@@ -10,7 +10,7 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 
 find_package(GoogleMock REQUIRED)
-find_package(PhysFs REQUIRED)
+find_package(PhysFS REQUIRED)
 find_package(Boost REQUIRED COMPONENTS filesystem )
 find_package(OpenGL REQUIRED)
 

@@ -1,11 +1,12 @@
 #include <pwn/math/types.h>
 #include <pwn/math/operations.h>
 
-#include <pwn/Assert.h>
+#include <pwn/assert.h>
 
 #ifdef PWN_USE_CUSTOM_MATH
 #include <cmath>
 #include <memory> // memcpy
+#include <cstring> // for memcpy according to cplusplus.com, todo: check if memory is needed
 #else
 #include <cml/cml.h>
 #endif
@@ -112,12 +113,12 @@ namespace pwn
 			const real det = a0*b5 - a1*b4 + a2*b3 + a3*b2 - a4*b1 + a5*b0;
 			if (Abs(det) < kEpsilon) return mat44Identity();
 			const real invDet = 1/det;
-			
-			const real temp[] = { 
+
+			const real temp[] = {
 				+m[5]*b5 - m[6]*b4 + m[7]*b3, -m[1]*b5 + m[2]*b4 - m[3]*b3, +m[13]*a5 - m[14]*a4 + m[15]*a3, -m[9]*a5 + m[10]*a4 - m[11]*a3,
 				-m[4]*b5 + m[6]*b2 - m[7]*b1, +m[0]*b5 - m[2]*b2 + m[3]*b1, -m[12]*a5 + m[14]*a2 - m[15]*a1, +m[8]*a5 - m[10]*a2 + m[11]*a1,
 				+m[4]*b4 - m[5]*b2 + m[7]*b0, -m[0]*b4 + m[1]*b2 - m[3]*b0, +m[12]*a4 - m[13]*a2 + m[15]*a0, -m[8]*a4 + m[9]*a2  - m[11]*a0,
-				-m[4]*b3 + m[5]*b1 - m[6]*b0, +m[0]*b3 - m[1]*b1 + m[2]*b0, -m[12]*a3 + m[13]*a1 - m[14]*a0, +m[8]*a3 - m[9]*a1  + m[10]*a0 
+				-m[4]*b3 + m[5]*b1 - m[6]*b0, +m[0]*b3 - m[1]*b1 + m[2]*b0, -m[12]*a3 + m[13]*a1 - m[14]*a0, +m[8]*a3 - m[9]*a1  + m[10]*a0
 			};
 
 			mat44 inverse(temp);

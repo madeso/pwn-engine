@@ -1,7 +1,7 @@
 #include <pwn/math/types.h>
 #include <pwn/math/operations.h>
 
-#include <pwn/Assert.h>
+#include <pwn/assert.h>
 
 #ifdef PWN_USE_CUSTOM_MATH
 #include <cmath>
@@ -88,7 +88,7 @@ namespace pwn
 
 		const Angle Asin(const real v)
 		{
-			Assert(v <= 1 && "v must be smaller than 1, use Limmit or Max on the value to not trigger this Assert");
+		    Assert(v <= 1 && "v must be smaller than 1, use Limmit or Max on the value to not trigger this Assert");
 			Assert(v >= -1 && "v must be greater than -1, use Limmit or Min on the value to not trigger this Assert");
 			return Angle::FromRadians(std::asin(v));
 		}

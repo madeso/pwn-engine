@@ -1,11 +1,12 @@
 #include <pwn/math/types.h>
 #include <pwn/math/operations.h>
 
-#include <pwn/Assert.h>
+#include <pwn/assert.h>
 
 #ifdef PWN_USE_CUSTOM_MATH
 #include <cmath>
 #include <memory> // memcpy
+#include <cstring> // for memcpy according to cplusplus.com, todo: check if memory is needed
 #else
 #include <cml/cml.h>
 #endif

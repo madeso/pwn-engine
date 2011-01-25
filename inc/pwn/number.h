@@ -7,12 +7,18 @@ namespace pwn
 	typedef float float32;
 
 	// integers too...
-	typedef __int64 int64; // long long for other than msvc++?
-	typedef int int32;
-	typedef short int16;
-	typedef char int8;
+	#ifdef _MSC_VER
+        typedef __int64 int64_pwn;
+    #else
+        typedef long int64_pwn;
+	#endif
 
-	typedef unsigned __int64 uint64;
+	typedef int64_pwn int64;
+	typedef signed int int32;
+	typedef signed short int16;
+	typedef signed char int8;
+
+	typedef int64_pwn uint64;
 	typedef unsigned int uint32;
 	typedef unsigned short uint16;
 	typedef unsigned char uint8;

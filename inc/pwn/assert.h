@@ -3,7 +3,15 @@
 
 #include <string>
 
-#define Assert(x) do { if( (x)==0 && ::pwn::assert::ShouldBreak(#x) ) { _asm { int 3 }; } } while( ::pwn::assert::kFalse() )
+#ifdef _MSC_VER
+#define pwnBreakpoint() __debugbreak()
+#else
+// todo: come up with a better solution for asserting
+#include <cassert>
+#define pwnBreakpoint() assert(false)
+#endif
+
+#define Assert(x) do { if( (x)==0 && ::pwn::assert::ShouldBreak(#x) ) { pwnBreakpoint(); } } while( ::pwn::assert::kFalse() )
 
 namespace pwn
 {

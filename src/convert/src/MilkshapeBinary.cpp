@@ -25,7 +25,7 @@ namespace pwn
 					std::vector<int> tri;
 				};
 
-				#include <pshpack1.h>
+				#pragma pack(push,1)
 				struct MS3DHeader
 				{
 					char ID[10];
@@ -89,7 +89,7 @@ namespace pwn
 					float time;
 					float parameter[3];
 				};
-				#include <poppack.h>
+				#pragma pack(pop)
 
 				void copyToColor(Color& color,float* p)
 				{

@@ -22,6 +22,7 @@ namespace PhysFS
   {
   public:
     Exception(const std::string& what) : s(what) { }
+    ~Exception() throw () {}
     const char* what() const throw() { return s.c_str(); }
 
   private:
@@ -54,7 +55,7 @@ namespace PhysFS
   StringVector getCdRomDirs();
 
 
-  /** 
+  /**
    * Add a new directory or archive to the PhysFS search path.
    * @param location  Location to add
    * @param append    Append to the end of the search list? Otherwise prepend.
@@ -151,7 +152,7 @@ namespace PhysFS
   {
   public:
     typedef char char_type;
-    struct category : boost::iostreams::seekable, boost::iostreams::device_tag, 
+    struct category : boost::iostreams::seekable, boost::iostreams::device_tag,
       boost::iostreams::closable_tag, boost::iostreams::flushable_tag {};
 
     FileDevice(const std::string& path, OpenMode om);

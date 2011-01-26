@@ -1,7 +1,7 @@
 #include "Converter.hpp"
 
 #include <pwn/math/operations.h>
-#include <pwn/mesh/Mesh.h>
+#include <pwn/mesh/mesh.h>
 #include <pwn/assert.h>
 
 #include <iostream>
@@ -94,7 +94,7 @@ namespace pwn
 
 			if( optimizeNormals == false ) return;
 
-			
+
 			const std::size_t mc = mBuilder.triangles.size();
 			for(std::size_t mi=0; mi<mc; ++mi)
 			{

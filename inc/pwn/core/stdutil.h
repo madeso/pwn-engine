@@ -12,12 +12,14 @@ namespace pwn
 	namespace core
 	{
 		// todo: provide an indexed version of this function as well.
-		template<typename Type>
-		void SwapBackAndEraseObject(Type what, std::vector<Type>* from)
+		template<typename pwnType>
+		void SwapBackAndEraseObject(pwnType what, std::vector<pwnType>* from)
 		{
-			const std::vector<Type>::iterator result = std::find(from->begin(), from->end(), what);
+		    std::vector<int>::iterator iii;
+		    typedef std::vector<pwnType> Vec;
+			typename Vec::iterator result = std::find(from->begin(), from->end(), what);
 			if( result == from->end() ) return;
-			std::vector<Type>::iterator last = from->end();
+			typename Vec::iterator last = from->end();
 			last--; // point to a valid entry
 			std::swap(*result, *last);
 			from->pop_back();

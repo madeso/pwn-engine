@@ -1,7 +1,7 @@
 #include <pwn/io/config.h>
 #include <boost/property_tree/xml_parser.hpp>
 
-#include "Physfs++.h"
+#include "PhysFS++.h"
 
 #pragma comment (lib, "physfs.lib")
 

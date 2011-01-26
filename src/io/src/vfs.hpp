@@ -77,7 +77,8 @@ namespace pwn
 				pwn::uint32 size = map.size();
 				file->write32(size);
 				std::vector<pwn::uint32> ret;
-				for(std::map<pwn::uint32, Value>::const_iterator i = map.begin(); i != map.end(); ++i)
+				typedef std::map<pwn::uint32, Value> Map;
+				for(typename Map::const_iterator i = map.begin(); i != map.end(); ++i)
 				{
 					const pwn::uint32 v = i->first;
 					file->write32(v);

@@ -2,7 +2,6 @@
 
 #include <pwn/mesh/mesh.h>
 #include <pwn/math/operations.h>
-#include <pwn/core/stdutil.h>
 #include <boost/foreach.hpp>
 #include <pwn/assert.h>
 
@@ -28,7 +27,7 @@ namespace pwn
 			, location(math::Origo3().vec)
 		{
 		}
-	
+
 		FramePosition::FramePosition(real time, const math::vec3& loc)
 			: Timed(time)
 			, location(loc)
@@ -57,7 +56,7 @@ namespace pwn
 			, rotation(math::qIdentity())
 		{
 		}
-		
+
 		FrameRotation::FrameRotation(real time, const math::quat& rot)
 			: Timed(time)
 			, rotation(rot)
@@ -68,7 +67,7 @@ namespace pwn
 		{
 			return rotation;
 		}
-		
+
 		string FrameRotation::toString() const
 		{
 			return core::Str() << getTime() << " " << math::cAxisAngle(rotation);
@@ -98,7 +97,7 @@ namespace pwn
 			return core::Str() << location << ": " << math::cAxisAngle(rotation);
 		}
 
-		
+
 
 		template<typename T, typename R>
 		R Get(const std::vector<T>& da, real current)
@@ -126,7 +125,7 @@ namespace pwn
 		{
 			return Get<FrameRotation, math::quat>(fr, time);
 		}
-		
+
 		math::vec3 Interpolate(real time, const std::vector<FramePosition>& fp)
 		{
 			return Get<FramePosition, math::vec3>(fp, time);
@@ -232,7 +231,7 @@ namespace pwn
 		CompiledPose::CompiledPose()
 		{
 		}
-		
+
 		CompiledPose::CompiledPose(const Pose& pose, const std::vector<Bone>& bones)
 		{
 			if (pose.bones.size() != bones.size()) throw "Invalid animation/mesh, bone count differs";
@@ -248,7 +247,7 @@ namespace pwn
 
 				const math::mat44 anim = math::mat44helper(math::mat44Identity()).translate(poseloc).rotate(GetConjugate(poserot)).mat;
 				const math::mat44 skel = math::mat44helper(math::mat44Identity()).translate(bone.pos).rotate(GetConjugate(bone.rot)).mat;
-				
+
 				result[boneIndex] = math::mat44helper(parent).mult(skel).mult(anim).mat;
 			}
 			transforms = result;

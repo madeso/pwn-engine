@@ -1,8 +1,9 @@
-#include <pwn/core/StringUtils.h>
+#include <pwn/core/stringutils.h>
 
-#include <pwn/Assert.h>
+#include <pwn/assert.h>
 #include <boost/tokenizer.hpp>
 #include <boost/smart_ptr.hpp>
+#include <cstring>
 
 namespace pwn
 {

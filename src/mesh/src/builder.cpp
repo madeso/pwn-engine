@@ -1,14 +1,16 @@
-#pragma warning(disable:4512) // boost unable to generate assignment operator
+//#pragma warning(disable:4512) // boost unable to generate assignment operator
 
 #include <pwn/mesh/builder.h>
 #include <pwn/mesh/mesh.h>
 #include <boost/foreach.hpp>
 #include <pwn/math/operations.h>
-#include <pwn/core/StringUtils.h>
+#include <pwn/core/stringutils.h>
 #include <fstream>
 
-#include <pwn/core/stdutil.h>
 #include <pwn/assert.h>
+
+
+
 namespace pwn
 {
 	namespace mesh
@@ -177,7 +179,7 @@ namespace pwn
 		{
 			return addPosition(BPoint(pos, bone));
 		}
-		
+
 		BTriangle::index Builder::addNormal(const math::vec3& norm)
 		{
 			normals.push_back(norm);
@@ -194,7 +196,7 @@ namespace pwn
 			materials.push_back(m);
 			return static_cast<BTriangle::index>(materials.size()-1);
 		}
-		
+
 		void Builder::addQuad(bool reverse, pwn::uint32 material, const BTriangle::Vertex& v0, const BTriangle::Vertex& v1, const BTriangle::Vertex& v2, const BTriangle::Vertex& v3)
 		{
 			if( reverse )
@@ -221,7 +223,7 @@ namespace pwn
 			}
 			if( false == added ) throw "Unable to triangulate face";
 		}
-		
+
 		void Builder::setBox(Material material, real w, real h, real d, bool faceOut)
 		{
 			using math::vec2;
@@ -351,7 +353,7 @@ namespace pwn
 			else TEST(texture);
 			else TEST(normal);
 			else TEST(boneIndex);
-			else 
+			else
 			{
 				// all equal
 				return false;

@@ -277,12 +277,13 @@ void RunXml(const pwn::string& argv0, const pwn::string& filename)
 	}
 }
 
-void main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
 	using namespace std;
 
 	const pwn::string filename(argv[1]);
 	RunXml(argv[0], filename);
+	return 0;
 }
 
 

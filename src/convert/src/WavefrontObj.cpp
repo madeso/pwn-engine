@@ -6,12 +6,12 @@
 #include "WavefrontObj.hpp"
 #include "Converter.hpp"
 
-#include <pwn/core/StringUtils.h>
+#include <pwn/core/stringutils.h>
 #include <pwn/math/operations.h>
 
 #include <pwn/mesh/builder.h>
 
-#include <pwn/mesh/Mesh.h>
+#include <pwn/mesh/mesh.h>
 #include <pwn/core/str.h>
 
 #include <iostream>
@@ -199,7 +199,7 @@ namespace pwn
 						while( f.get() != '\n' );
 						continue;
 					}
-					
+
 					if( command == "v" )
 					{
 						pwn::string x = Read(f);
@@ -214,7 +214,7 @@ namespace pwn
 						//Assert(0 && "do we need to add a 1-y when adding a textcoord?");
 						builder->addTextCoord(pwn::math::vec2(creal(x), creal(y)));
 
-						
+
 						SkipWhitespace(f);
 						char p = f.peek();
 						if( pwn::string("0123456789").find_first_of(p) != pwn::string::npos )

@@ -2,7 +2,7 @@
 
 #include <boost/foreach.hpp>
 #include <pwn/math/operations.h>
-#include <pwn/core/StringUtils.h>
+#include <pwn/core/stringutils.h>
 #include <boost/filesystem.hpp>
 #include <pwn/mesh/mesh.h>
 #include "Converter.hpp"
@@ -58,7 +58,7 @@ namespace pwn
 					}
 				}
 
-			
+
 				Mesh::Mesh()
 					: flags(0)
 					, materialId(0)
@@ -136,7 +136,7 @@ namespace pwn
 					ss >> a;
 				}
 
-			
+
 
 				Material::Material()
 					: name("")
@@ -146,17 +146,17 @@ namespace pwn
 					, alphatexture("")
 				{
 				}
-			
 
-			
+
+
 
 				/*string RotationKey::ToString()
 				{
 					return string.Format("{0} {1}", time, MilkshapeCommon.makeQuat( math::vec3(x, y, z)).AxisAngle);
 				}*/
-			
 
-			
+
+
 				Bone::Bone()
 					: name("")
 					, parentName("")

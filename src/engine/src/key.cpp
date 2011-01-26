@@ -3,7 +3,7 @@
 #include <pwn/engine/key.h>
 #include <pwn/sfml-config.h>
 #include <SFML/Window/Event.hpp>
-#include <pwn/core/StringUtils.h>
+#include <pwn/core/stringutils.h>
 
 #include <map>
 

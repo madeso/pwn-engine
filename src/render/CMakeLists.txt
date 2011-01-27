@@ -7,8 +7,13 @@ include(test/CMakeLists.txt)
 #autogen this:
 include(../../inc/pwn/render/CMakeLists.txt)
 
-add_library(pwn-render ${autogen_src} ${autogen_src_fse} ${autogen___inc_pwn_render})
+set(src ${autogen_src} ${autogen_src_fse} ${autogen___inc_pwn_render})
+set(test ${autogen_test})
+
+source_group(src FILES ${src})
+add_library(pwn-render ${src})
 target_link_libraries(pwn-render pwn-math pwn-mesh)
 
-add_executable(pwn-render-test ${autogen_test})
+source_group(test FILES ${test})
+add_executable(pwn-render-test ${test})
 target_link_libraries(pwn-render-test pwn-render)

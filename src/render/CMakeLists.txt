@@ -17,4 +17,4 @@ target_link_libraries(pwn-render pwn-math pwn-mesh)
 
 source_group(test FILES ${test})
 add_executable(pwn-render-test ${test})
-target_link_libraries(pwn-render-test pwn-render)
+target_link_libraries(pwn-render-test pwn-render ${GOOGLEMOCK_LIBRARIES})

@@ -17,6 +17,8 @@
 # PHYSFS_LIBRARY to override this selection.
 FIND_PATH(PHYSFS_INCLUDE_DIR physfs.h
   $ENV{PHYSFSDIR}/include
+  $ENV{PHYSFSDIR}
+  $ENV{PHYSFSDIR}/..
   ~/Library/Frameworks/PhysFS.framework/Headers
   /Library/Frameworks/PhysFS.framework/Headers
   /usr/local/include/physfs
@@ -55,10 +57,12 @@ IF(${PHYSFS_INCLUDE_DIR} MATCHES ".framework")
   SET(PHYSFS_FRAMEWORK_PATH_TMP "" CACHE INTERNAL "")
 
 ELSE(${PHYSFS_INCLUDE_DIR} MATCHES ".framework")
+	SET(PHYSFS_BUILD_TARGET "MinSizeRel" CACHE STRING "If needed, the build configuration of the library")
   FIND_LIBRARY(PHYSFS_LIBRARY 
     NAMES physfs PhysFS
     PATHS
     $ENV{PHYSFSDIR}/lib
+	$ENV{PHYSFSDIR}/lib/${PHYSFS_BUILD_TARGET}
     /usr/local/lib
     /usr/lib
     /sw/lib
@@ -73,3 +77,8 @@ IF(PHYSFS_LIBRARY)
   SET(PHYSFS_FOUND "YES")
 ENDIF(PHYSFS_LIBRARY)
 
+if(PHYSFS_DEBUG)
+	message("env physfsdir: $ENV{PHYSFSDIR}")
+	message("physfs inc: ${PHYSFS_INCLUDE_DIR}")
+	message("physfs lib: ${PHYSFS_LIBRARY}")
+ENDIF()

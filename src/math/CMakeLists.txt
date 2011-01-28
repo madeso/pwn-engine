@@ -8,5 +8,5 @@ include(../../inc/pwn/math/CMakeLists.txt)
 set(src ${autogen_src} ${autogen___inc_pwn_math})
 
 add_library(pwn-math ${src})
-add_executable(pwn-math-test ${autogen_test})
+add_executable(pwn-math-test ${autogen_test} ../test-main.cpp)
 target_link_libraries(pwn-math-test pwn-math ${GOOGLEMOCK_LIBRARIES})

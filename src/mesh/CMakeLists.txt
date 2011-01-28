@@ -10,5 +10,5 @@ set(src ${autogen_src} ${autogen___inc_pwn_mesh})
 add_library(pwn-mesh ${src})
 target_link_libraries(pwn-mesh pwn-math)
 
-add_executable(pwn-mesh-test ${autogen_test})
+add_executable(pwn-mesh-test ${autogen_test} ../test-main.cpp)
 target_link_libraries(pwn-mesh-test pwn-mesh ${GOOGLEMOCK_LIBRARIES})

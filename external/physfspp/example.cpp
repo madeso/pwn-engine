@@ -1,3 +1,4 @@
+#if 0
 #include "PhysFS++.h"
 
 int main(int argc, char** argv)
@@ -18,3 +19,4 @@ int main(int argc, char** argv)
   // shutdown PhysFS
   PhysFS::deinit();
 }
+#endif

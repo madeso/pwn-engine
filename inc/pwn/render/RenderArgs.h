@@ -1,8 +1,8 @@
 #ifndef PWN_RENDER_FSE_RENDERARGS
 #define PWN_RENDER_FSE_RENDERARGS
 
-#include <pwn/render/Camera.h>
-#include <pwn/render/CompiledCamera.h>
+#include <pwn/render/camera.h>
+#include <pwn/render/compiledcamera.h>
 
 namespace pwn
 {
@@ -21,7 +21,7 @@ namespace pwn
 
 		public:
 			void render(World3* world) const;
-		
+
 			CompiledCamera compiled;
 			Camera camera;
 			int x;

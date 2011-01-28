@@ -15,7 +15,7 @@ SET(Boost_ADDITIONAL_VERSIONS "1.43" "1.43.0" "1.45" "1.45.0")
 
 find_package(GoogleMock)
 find_package(PhysFS)
-find_package(Boost COMPONENTS filesystem )
+find_package(Boost COMPONENTS filesystem system)
 find_package(OpenGL)
 
 

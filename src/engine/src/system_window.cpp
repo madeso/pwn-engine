@@ -20,16 +20,6 @@
 #include <pwn/sfml-config.h>
 #include <SFML/OpenGl.hpp>
 
-#ifdef _DEBUG
-#define LIBRARY_SUFFIX "-d"
-#else
-#define LIBRARY_SUFFIX ""
-#endif
-
-#pragma comment(lib, "sfml-main" LIBRARY_SUFFIX ".lib" )
-#pragma comment(lib, "sfml-system-s" LIBRARY_SUFFIX ".lib" )
-#pragma comment(lib, "sfml-window-s" LIBRARY_SUFFIX ".lib" )
-
 namespace pwn
 {
 	namespace engine

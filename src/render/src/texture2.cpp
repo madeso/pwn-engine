@@ -2,8 +2,6 @@
 #include <pwn/render/engine.h>
 
 #include "opengl_debug.hpp"
-#pragma comment(lib, "opengl32.lib")
-//#pragma comment(lib, "glu32.lib")
 
 namespace pwn
 {

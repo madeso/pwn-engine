@@ -9,8 +9,6 @@
 
 #include <boost/filesystem.hpp>
 
-#pragma comment (lib, "physfs.lib")
-
 namespace pwn
 {
 	namespace engine

@@ -3,8 +3,6 @@
 
 #include "PhysFS++.h"
 
-#pragma comment (lib, "physfs.lib")
-
 namespace pwn
 {
 	namespace io

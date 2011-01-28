@@ -2,8 +2,6 @@
 #include <pwn/io/io.h>
 #include <boost/scoped_array.hpp>
 
-#pragma comment (lib, "physfs.lib")
-
 namespace pwn
 {
 	namespace io

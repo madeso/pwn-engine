@@ -8,7 +8,6 @@
 
 #include <pwn/sfml-config.h>
 #include <SFML/OpenGl.hpp>
-#pragma comment(lib, "opengl32.lib")
 
 #pragma warning(disable:4512) //'boost::detail::addr_impl_ref<T>' : assignment operator could not be generated
 #include <boost/foreach.hpp>

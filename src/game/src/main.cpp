@@ -19,15 +19,6 @@
 
 #include <pwn/render/shaderpool.h>
 
-// linking to sfml-main otherwise argv becomes null and things crash and burn
-#include <pwn/sfml-config.h>
-#ifdef _DEBUG
-#define LIBRARY_SUFFIX "-d"
-#else
-#define LIBRARY_SUFFIX ""
-#endif
-#pragma comment(lib, "sfml-main" LIBRARY_SUFFIX ".lib" )
-
 using namespace pwn;
 using namespace pwn::engine;
 using namespace pwn::render;
@@ -160,6 +151,9 @@ public:
 	fse::PipelinePtr pipe;
 };
 
+
+// we need to link to sfml-main otherwise argv becomes null and things crash and burn
+// rethink this design and get and send cwd from boost filesystem to physfs
 int main(int, char** argv)
 {
 	{

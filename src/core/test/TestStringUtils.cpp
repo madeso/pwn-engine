@@ -2,8 +2,6 @@
 
 #include <pwn/core/stringutils.h>
 
-#pragma comment(lib, "pwn-core.lib")
-
 #define GTEST(x) TEST(StringUtils, x)
 
 namespace test

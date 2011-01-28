@@ -5,7 +5,6 @@
 
 #include <pwn/sfml-config.h>
 #include <SFML/OpenGl.hpp>
-#pragma comment(lib, "opengl32.lib")
 
 namespace pwn
 {

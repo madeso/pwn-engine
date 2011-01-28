@@ -17,8 +17,6 @@
 #include "MilkshapeAscii.hpp"
 #include "MilkshapeBinary.hpp"
 
-#pragma comment (lib, "physfs.lib")
-
 using namespace std;
 
 std::ostream& operator<<(std::ostream& os, const ::pwn::convert::Stat& s)

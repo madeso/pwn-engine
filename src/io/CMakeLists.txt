@@ -12,6 +12,6 @@ set(src ${autogen_src} ${autogen___inc_pwn_io} ${autogen___external_physfspp})
 include_directories(../../external/physfspp)
 
 add_library(pwn-io ${src})
-target_link_libraries(pwn-io ${PHYSFS_LIBRARY})
+target_link_libraries(pwn-io ${PHYSFS_LIBRARY} ${Boost_LIBRARIES})
 #add_executable(pwn-io-test ${autogen_test})
 #target_link_libraries(pwn-io-test pwn-io)

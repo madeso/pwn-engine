@@ -46,6 +46,5 @@ include_directories(inc)
 include_directories(external)
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${GOOGLEMOCK_INCLUDE_DIRS})
-message("mock dirs: ${GOOGLEMOCK_INCLUDE_DIRS}")
 
 add_subdirectory(src)

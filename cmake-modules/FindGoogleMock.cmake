@@ -7,11 +7,13 @@
 # GOOGLEMOCK_LIBRARIES, the path to Google Mock and Google Test library
 # GOOGLEMOCK_FOUND, whether Google Mock was found
 
-find_program(GMOCK-CONFIG_EXECUTABLE NAMES gmock-config PATHS
-       ${BIN_INSTALL_DIR}
-       /opt/local/bin
-       /usr/bin
-)
+# update this to include gtest too?
+# for now the fallback seems to work on ubuntu
+#find_program(GMOCK-CONFIG_EXECUTABLE NAMES gmock-config PATHS
+#       ${BIN_INSTALL_DIR}
+#       /opt/local/bin
+#       /usr/bin
+#)
 
 if(GMOCK-CONFIG_EXECUTABLE)
 	exec_program(${GMOCK-CONFIG_EXECUTABLE} ARGS --includedir OUTPUT_VARIABLE GOOGLEMOCK_INCLUDE_DIR)

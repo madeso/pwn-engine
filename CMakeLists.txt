@@ -21,7 +21,7 @@ find_package(GoogleMock)
 find_package(PhysFS)
 find_package(Boost COMPONENTS filesystem system)
 find_package(OpenGL)
-find_package(SFML)
+find_package(SFML COMPONENTS system window)
 
 if(NOT PHYSFS_FOUND)
 	message(SEND_ERROR "PhysFs not found")
@@ -42,6 +42,8 @@ endif()
 if( NOT SFML_FOUND)
 	message(SEND_ERROR "sfml not found")
 endif()
+
+set(SFML_LIBS ${SFML_LIBRARIES})
 
 option (PWN_USE_CUSTOM_MATH "Use pwn.math instead of cml" ON)
 

@@ -12,7 +12,7 @@ include(../../external/glew/GL/CMakeLists.txt)
 set(src ${autogen_src} ${autogen_src_fse} ${autogen___inc_pwn_render} ${autogen___external_glew_GL})
 set(test ${autogen_test})
 
-include_directories("../../external/glew")
+include_directories("../../external/glew" ${SFML_INCLUDE_DIR})
 source_group(src FILES ${src})
 add_library(pwn-render ${src})
 target_link_libraries(pwn-render pwn-math pwn-mesh)

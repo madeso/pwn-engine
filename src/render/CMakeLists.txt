@@ -15,7 +15,8 @@ set(test ${autogen_test})
 include_directories("../../external/glew" ${SFML_INCLUDE_DIR})
 source_group(src FILES ${src})
 add_library(pwn-render ${src})
-target_link_libraries(pwn-render pwn-math pwn-mesh)
+target_link_libraries(pwn-render pwn-math pwn-mesh ${OPENGL_LIBRARIES})
+target_link_libraries(pwn-render pwn-io) #temporary, todo: fix fse loader
 
 source_group(test FILES ${test})
 add_executable(pwn-render-test ${test} ../test-main.cpp)

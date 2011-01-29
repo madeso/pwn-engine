@@ -10,6 +10,7 @@ include(../../external/physfspp/CMakeLists.txt)
 set(src ${autogen_src} ${autogen___inc_pwn_io} ${autogen___external_physfspp})
 
 include_directories(../../external/physfspp)
+include_directories(${PHYSFS_INCLUDE_DIR})
 
 add_library(pwn-io ${src})
 target_link_libraries(pwn-io ${PHYSFS_LIBRARY} ${Boost_LIBRARIES})

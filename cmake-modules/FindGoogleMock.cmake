@@ -2,7 +2,7 @@
 # - Find Googlemock
 # Find the google mock includes and the google mock libraries
 # This module defines
-# GOOGLEMOCK_INCLUDE_DIR, root google mock include dir
+# GOOGLEMOCK_INCLUDE_DIRS, root google mock & gtest include dirs
 # GOOGLEMOCK_LIBRARY, the path to Google Mock library
 # GOOGLEMOCK_LIBRARIES, the path to Google Mock and Google Test library
 # GOOGLEMOCK_FOUND, whether Google Mock was found
@@ -14,63 +14,78 @@ find_program(GMOCK-CONFIG_EXECUTABLE NAMES gmock-config PATHS
 )
 
 if(GMOCK-CONFIG_EXECUTABLE)
-exec_program(${GMOCK-CONFIG_EXECUTABLE} ARGS --includedir OUTPUT_VARIABLE GOOGLEMOCK_INCLUDE_DIR)
-exec_program(${GMOCK-CONFIG_EXECUTABLE} ARGS --ldflags OUTPUT_VARIABLE GOOGLEMOCK_LDFLAGS)
-exec_program(${GMOCK-CONFIG_EXECUTABLE} ARGS --libs OUTPUT_VARIABLE GOOGLEMOCK_libs_tmp)
-set(GOOGLEMOCK_LIBRARIES ${GOOGLEMOCK_LDFLAGS} ${GOOGLEMOCK_libs_tmp})
+	exec_program(${GMOCK-CONFIG_EXECUTABLE} ARGS --includedir OUTPUT_VARIABLE GOOGLEMOCK_INCLUDE_DIR)
+	exec_program(${GMOCK-CONFIG_EXECUTABLE} ARGS --ldflags OUTPUT_VARIABLE GOOGLEMOCK_LDFLAGS)
+	exec_program(${GMOCK-CONFIG_EXECUTABLE} ARGS --libs OUTPUT_VARIABLE GOOGLEMOCK_libs_tmp)
+	set(GOOGLEMOCK_LIBRARIES ${GOOGLEMOCK_LDFLAGS} ${GOOGLEMOCK_libs_tmp})
 
-if(GOOGLEMOCK_INCLUDE_DIR AND GOOGLEMOCK_LIBRARIES)
-   set(GOOGLEMOCK_FOUND TRUE)
-   message(STATUS "Found libgmock: ${GOOGLEMOCK_INCLUDE_DIR}, ${GOOGLEMOCK_LIBRARIES}")
-else(GOOGLEMOCK_INCLUDE_DIR AND GOOGLEMOCK_LIBRARIES)
-   set(GOOGLEMOCK_FOUND FALSE)
-   if (GOOGLEMOCK_FIND_REQUIRED)
-      message(FATAL_ERROR "Could NOT find required package Googlemock")
-   endif(GOOGLEMOCK_FIND_REQUIRED)
-endif(GOOGLEMOCK_INCLUDE_DIR AND GOOGLEMOCK_LIBRARIES)
+	if(GOOGLEMOCK_INCLUDE_DIR AND GOOGLEMOCK_LIBRARIES)
+	   set(GOOGLEMOCK_FOUND TRUE)
+	   message(STATUS "Found libgmock: ${GOOGLEMOCK_INCLUDE_DIR}, ${GOOGLEMOCK_LIBRARIES}")
+	else(GOOGLEMOCK_INCLUDE_DIR AND GOOGLEMOCK_LIBRARIES)
+	   set(GOOGLEMOCK_FOUND FALSE)
+	   if (GOOGLEMOCK_FIND_REQUIRED)
+		  message(FATAL_ERROR "Could NOT find required package Googlemock")
+	   endif(GOOGLEMOCK_FIND_REQUIRED)
+	endif(GOOGLEMOCK_INCLUDE_DIR AND GOOGLEMOCK_LIBRARIES)
 
 else(GMOCK-CONFIG_EXECUTABLE)
 
-find_path(GOOGLEMOCK_INCLUDE_DIR NAMES gmock.h
-   HINTS
-   ~/usr/include
-   /opt/local/include
-   /usr/include
-   /usr/local/include
-   /opt/kde4/include
-   ${KDE4_INCLUDE_DIR}
-   $ENV{GMOCK_ROOT}/include
-   PATH_SUFFIXES gmock
-)
-
-find_library( GOOGLEMOCK_LIBRARY NAMES gmock
-    PATHS
-    ~/usr/lib
-   /opt/local/lib
-   /usr/lib
-   /usr/lib64
-   /usr/local/lib
-   /opt/kde4/lib
-   ${KDE4_LIB_DIR}
-   $ENV{GMOCK_ROOT}/msvc/Release
-)
-
-if( GMOCK_CMAKE_DEBUG )
-	message("gmock root:  $ENV{GMOCK_ROOT}")
+	find_path(GOOGLEMOCK_INCLUDE_DIR NAMES gmock.h
+	   HINTS
+	   ~/usr/include
+	   /opt/local/include
+	   /usr/include
+	   /usr/local/include
+	   /opt/kde4/include
+	   ${KDE4_INCLUDE_DIR}
+	   $ENV{GMOCK_ROOT}/include
+	   PATH_SUFFIXES gmock
+	)
 	message("gmock inc: ${GOOGLEMOCK_INCLUDE_DIR}")
-	message("gmock lib: ${GOOGLEMOCK_LIBRARY}")
-endif(GMOCK_CMAKE_DEBUG)
+	
+	find_path(GOOGLEMOCK_GTEST_INCLUDE_DIR NAMES gtest.h
+	   HINTS
+	   ~/usr/include
+	   /opt/local/include
+	   /usr/include
+	   /usr/local/include
+	   /opt/kde4/include
+	   ${KDE4_INCLUDE_DIR}
+	   $ENV{GMOCK_ROOT}/gtest/include
+	   PATH_SUFFIXES gtest
+	)
 
-if(GOOGLEMOCK_INCLUDE_DIR AND GOOGLEMOCK_LIBRARY)
-   set(GOOGLEMOCK_FOUND TRUE)
-   set(GOOGLEMOCK_LIBRARIES ${GOOGLEMOCK_LIBRARY})
-   message(STATUS "Found libgmock: ${GOOGLEMOCK_INCLUDE_DIR}, ${GOOGLEMOCK_LIBRARIES}")
-else(GOOGLEMOCK_INCLUDE_DIR AND GOOGLEMOCK_LIBRARY)
-   set(GOOGLEMOCK_FOUND FALSE)
-   if (GOOGLEMOCK_FIND_REQUIRED)
-      message(FATAL_ERROR "Could NOT find required package Googlemock")
-   endif(GOOGLEMOCK_FIND_REQUIRED)
-endif(GOOGLEMOCK_INCLUDE_DIR AND GOOGLEMOCK_LIBRARY)
+	find_library( GOOGLEMOCK_LIBRARY NAMES gmock
+		PATHS
+		~/usr/lib
+	   /opt/local/lib
+	   /usr/lib
+	   /usr/lib64
+	   /usr/local/lib
+	   /opt/kde4/lib
+	   ${KDE4_LIB_DIR}
+	   $ENV{GMOCK_ROOT}/msvc/Release
+	)
+
+	if( GMOCK_CMAKE_DEBUG )
+		message("gmock root:  $ENV{GMOCK_ROOT}")
+		message("gmock inc: ${GOOGLEMOCK_INCLUDE_DIR}")
+		message("gmock lib: ${GOOGLEMOCK_LIBRARY}")
+		message("gmocks gtest include dir: ${GOOGLEMOCK_GTEST_INCLUDE_DIR}")
+	endif(GMOCK_CMAKE_DEBUG)
+
+	if(GOOGLEMOCK_INCLUDE_DIR AND GOOGLEMOCK_LIBRARY AND GOOGLEMOCK_GTEST_INCLUDE_DIR)
+	   set(GOOGLEMOCK_FOUND TRUE)
+	   set(GOOGLEMOCK_LIBRARIES ${GOOGLEMOCK_LIBRARY})
+	   set(GOOGLEMOCK_INCLUDE_DIRS ${GOOGLEMOCK_INCLUDE_DIR} ${GOOGLEMOCK_GTEST_INCLUDE_DIR})
+	   # message(STATUS "Found libgmock: ${GOOGLEMOCK_INCLUDE_DIR}, ${GOOGLEMOCK_LIBRARIES}")
+	else(GOOGLEMOCK_INCLUDE_DIR AND GOOGLEMOCK_LIBRARY  AND GOOGLEMOCK_GTEST_INCLUDE_DIR)
+	   set(GOOGLEMOCK_FOUND FALSE)
+	   if (GOOGLEMOCK_FIND_REQUIRED)
+		  message(FATAL_ERROR "Could NOT find required package Googlemock")
+	   endif(GOOGLEMOCK_FIND_REQUIRED)
+	endif(GOOGLEMOCK_INCLUDE_DIR AND GOOGLEMOCK_LIBRARY  AND GOOGLEMOCK_GTEST_INCLUDE_DIR)
 
 endif(GMOCK-CONFIG_EXECUTABLE)
 

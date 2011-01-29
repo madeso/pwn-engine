@@ -8,7 +8,7 @@ include(../../inc/pwn/mesh/CMakeLists.txt)
 set(src ${autogen_src} ${autogen___inc_pwn_mesh})
 
 add_library(pwn-mesh ${src})
-target_link_libraries(pwn-mesh pwn-math)
+target_link_libraries(pwn-mesh pwn-math pwn-core)
 
 add_executable(pwn-mesh-test ${autogen_test} ../test-main.cpp)
 target_link_libraries(pwn-mesh-test pwn-mesh ${GOOGLEMOCK_LIBRARIES})

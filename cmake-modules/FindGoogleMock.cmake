@@ -31,7 +31,7 @@ if(GMOCK-CONFIG_EXECUTABLE)
 
 else(GMOCK-CONFIG_EXECUTABLE)
 
-	find_path(GOOGLEMOCK_INCLUDE_DIR NAMES gmock.h
+	find_path(GOOGLEMOCK_INCLUDE_DIR NAMES gmock/gmock.h
 	   HINTS
 	   ~/usr/include
 	   /opt/local/include
@@ -40,11 +40,9 @@ else(GMOCK-CONFIG_EXECUTABLE)
 	   /opt/kde4/include
 	   ${KDE4_INCLUDE_DIR}
 	   $ENV{GMOCK_ROOT}/include
-	   PATH_SUFFIXES gmock
 	)
-	message("gmock inc: ${GOOGLEMOCK_INCLUDE_DIR}")
 	
-	find_path(GOOGLEMOCK_GTEST_INCLUDE_DIR NAMES gtest.h
+	find_path(GOOGLEMOCK_GTEST_INCLUDE_DIR NAMES gtest/gtest.h
 	   HINTS
 	   ~/usr/include
 	   /opt/local/include
@@ -53,7 +51,6 @@ else(GMOCK-CONFIG_EXECUTABLE)
 	   /opt/kde4/include
 	   ${KDE4_INCLUDE_DIR}
 	   $ENV{GMOCK_ROOT}/gtest/include
-	   PATH_SUFFIXES gtest
 	)
 
 	find_library( GOOGLEMOCK_LIBRARY NAMES gmock

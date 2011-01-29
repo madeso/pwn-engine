@@ -10,7 +10,7 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 SET(Boost_ADDITIONAL_VERSIONS "1.43" "1.43.0" "1.45" "1.45.0")
 
-set(GMOCK_CMAKE_DEBUG ON)
+#set(GMOCK_CMAKE_DEBUG ON)
 #set(PHYSFS_DEBUG ON)
 
 find_package(GoogleMock)

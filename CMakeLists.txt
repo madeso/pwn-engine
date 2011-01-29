@@ -10,6 +10,10 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 SET(Boost_ADDITIONAL_VERSIONS "1.43" "1.43.0" "1.45" "1.45.0")
 
+set(SFML_STATIC_LIBRARIES ON)
+
+set(SFMLDIR $ENV{SFMLDIR})
+
 #set(GMOCK_CMAKE_DEBUG ON)
 #set(PHYSFS_DEBUG ON)
 
@@ -17,6 +21,7 @@ find_package(GoogleMock)
 find_package(PhysFS)
 find_package(Boost COMPONENTS filesystem system)
 find_package(OpenGL)
+find_package(SFML)
 
 if(NOT PHYSFS_FOUND)
 	message(SEND_ERROR "PhysFs not found")
@@ -32,6 +37,10 @@ endif()
 
 if(NOT OPENGL_FOUND)
 	message(SEND_ERROR "opengl not found")
+endif()
+
+if( NOT SFML_FOUND)
+	message(SEND_ERROR "sfml not found")
 endif()
 
 option (PWN_USE_CUSTOM_MATH "Use pwn.math instead of cml" ON)

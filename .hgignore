@@ -19,3 +19,5 @@ glob:dist/*.mesh
 glob:dist/*/*.anim
 glob:dist/alien_chamber/*
 glob:build/cmake/*
+glob:dist/-Debug/*
+glob:dist/-Release/*

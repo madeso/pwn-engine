@@ -53,6 +53,12 @@ include_directories("${PROJECT_BINARY_DIR}")
 option(BUILD_SHARED_LIBS "build shared libraries" OFF)
 set(BUILD_SHARED_LIBS OFF)
 
+set(PWN_DIST_FOLDER "${PROJECT_SOURCE_DIR}/dist")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PWN_DIST_FOLDER})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PWN_DIST_FOLDER})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PWN_DIST_FOLDER})
+message("will place builds at ${PWN_DIST_FOLDER}")
+
 include_directories(inc)
 include_directories(external)
 include_directories(${Boost_INCLUDE_DIRS})

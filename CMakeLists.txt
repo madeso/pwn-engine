@@ -10,7 +10,13 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 SET(Boost_ADDITIONAL_VERSIONS "1.43" "1.43.0" "1.45" "1.45.0")
 
-set(SFML_STATIC_LIBRARIES ON)
+if(WIN32)
+	#on windows, link to sfml static, to avoid crash on exit with ati cards
+	set(SFML_STATIC_LIBRARIES ON)
+else(WIN32)
+	#on linux, link with dynamic since static library dependencies are horrible on linux
+	set(SFML_STATIC_LIBRARIES OFF)
+endif(WIN32)
 
 set(SFMLDIR $ENV{SFMLDIR})
 

@@ -43,7 +43,18 @@ if( NOT SFML_FOUND)
 	message(SEND_ERROR "sfml not found")
 endif()
 
-set(SFML_LIBS ${SFML_LIBRARIES})
+option(PWN_SFML_DEBUG "use sfml debug libraries" ON)
+
+set(PWN_VAR_EXTRA "")
+if( PWN_SFML_DEBUG )
+	set(PWN_VAR_EXTRA "_DEBUG")
+endif()
+
+set(SFML_LIBS ${SFML_SYSTEM_LIBRARY${PWN_VAR_EXTRA}} ${SFML_WINDOW_LIBRARY${PWN_VAR_EXTRA}})
+set(SFML_MAIN_LIBS ${SFML_MAIN_LIBRARY${PWN_VAR_EXTRA}})
+
+message("main libs: ${SFML_MAIN_LIBS}" )
+message("libs: ${SFML_LIBS}" )
 
 option (PWN_USE_CUSTOM_MATH "Use pwn.math instead of cml" ON)
 

@@ -27,7 +27,14 @@ find_package(GoogleMock)
 find_package(PhysFS)
 find_package(Boost COMPONENTS filesystem system)
 find_package(OpenGL)
-find_package(SFML COMPONENTS system window main)
+
+#on windows main is needed, not on linux
+if(WIN32)
+	find_package(SFML COMPONENTS system window main)
+else(WIN32)
+	find_package(SFML COMPONENTS system window)
+endif(WIN32)
+
 
 if(NOT PHYSFS_FOUND)
 	message(SEND_ERROR "PhysFs not found")

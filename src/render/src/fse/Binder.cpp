@@ -82,7 +82,7 @@ namespace pwn
 					{
 						ShaderPtr shader = linker->getShaderOrNull(id);
 						if( shader.get() ) return shader;
-						else pool->getFromFile(id);
+						else return pool->getFromFile(id);
 					}
 				private:
 					Linker* linker;

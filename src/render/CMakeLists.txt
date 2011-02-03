@@ -6,10 +6,14 @@ include(src/fse/CMakeLists.txt)
 include(test/CMakeLists.txt)
 #autogen this:
 include(../../inc/pwn/render/CMakeLists.txt)
-#autogen this:
-include(../../external/glew/GL/CMakeLists.txt)
 
-set(src ${autogen_src} ${autogen_src_fse} ${autogen___inc_pwn_render} ${autogen___external_glew_GL})
+set ( src_glew
+	../../external/glew/GL/glew.c
+	../../external/glew/GL/glew.h
+	../../external/glew/GL/wglew.h
+)
+
+set(src ${autogen_src} ${autogen_src_fse} ${autogen___inc_pwn_render} ${src_glew})
 set(test ${autogen_test})
 
 include_directories("../../external/glew" ${SFML_INCLUDE_DIR})

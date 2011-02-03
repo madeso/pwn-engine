@@ -279,7 +279,7 @@ namespace PhysFS
     if (!PHYSFS_seek(file, (PHYSFS_uint64)pos))
       throw Exception(PHYSFS_getLastError());
 
-    return std::streampos(pos);
+	return std::streampos( static_cast<std::streamoff>(pos) );
   }
 
   bool FileDevice::flush()

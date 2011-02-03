@@ -1,3 +1,8 @@
+#ifdef _MSC_VER
+	// 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+	#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 #include <pwn/core/stringutils.h>
 
 #include <pwn/assert.h>

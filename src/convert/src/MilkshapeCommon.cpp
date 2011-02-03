@@ -43,7 +43,7 @@ namespace pwn
 				int Model::boneId(string bone)
 				{
 					if (bone == "") return -1;
-					for (int i = 0; i < bones.size(); ++i)
+					for (unsigned int i = 0; i < bones.size(); ++i)
 					{
 						if (bones[i].name == bone) return i;
 					}

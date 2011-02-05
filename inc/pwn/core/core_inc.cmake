@@ -2,7 +2,7 @@
 # do not edit, since this file might get overwritten
 # delete the comment where this file is included to remove the autogeneration
 
-set ( autogen___inc_pwn_core
+set ( autogen_core_inc
 	../../inc/pwn/core/StringSeperator.h
 	../../inc/pwn/core/config.h
 	../../inc/pwn/core/idpool.h

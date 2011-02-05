@@ -2,7 +2,9 @@
 # do not edit, since this file might get overwritten
 # delete the comment where this file is included to remove the autogeneration
 
-set ( autogen___inc_pwn_io
-	../../inc/pwn/io/config.h
-	../../inc/pwn/io/io.h
+set ( autogen_math_inc
+	../../inc/pwn/math/operations.h
+	../../inc/pwn/math/rgb.h
+	../../inc/pwn/math/rgba.h
+	../../inc/pwn/math/types.h
 )

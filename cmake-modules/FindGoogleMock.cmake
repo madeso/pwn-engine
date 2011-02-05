@@ -66,6 +66,26 @@ else(GMOCK-CONFIG_EXECUTABLE)
 	   ${KDE4_LIB_DIR}
 	   $ENV{GMOCK_ROOT}/msvc/Release
 	)
+	
+	if( WIN32 AND GOOGLEMOCK_LIBRARY)
+		find_library( GOOGLEMOCK_LIBRARY_DEBUG NAMES gmockd
+			PATHS
+			~/usr/lib
+		   /opt/local/lib
+		   /usr/lib
+		   /usr/lib64
+		   /usr/local/lib
+		   /opt/kde4/lib
+		   ${KDE4_LIB_DIR}
+		   $ENV{GMOCK_ROOT}/msvc/Debug
+		)
+		
+		if( GOOGLEMOCK_LIBRARY_DEBUG )
+			set(GOOGLEMOCK_LIBRARY debug ${GOOGLEMOCK_LIBRARY_DEBUG} optimized ${GOOGLEMOCK_LIBRARY})
+		else(GOOGLEMOCK_LIBRARY_DEBUG )
+			set(GOOGLEMOCK_LIBRARY "")
+		endif(GOOGLEMOCK_LIBRARY_DEBUG)
+	endif( WIN32 AND GOOGLEMOCK_LIBRARY)
 
 	if( GMOCK_CMAKE_DEBUG )
 		message("gmock root:  $ENV{GMOCK_ROOT}")

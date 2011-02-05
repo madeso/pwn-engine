@@ -2,7 +2,7 @@
 # do not edit, since this file might get overwritten
 # delete the comment where this file is included to remove the autogeneration
 
-set ( autogen_mesh_src
+set ( mesh_src
 	src/animation.cpp
 	src/bone.cpp
 	src/builder.cpp

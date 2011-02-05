@@ -2,7 +2,7 @@
 # do not edit, since this file might get overwritten
 # delete the comment where this file is included to remove the autogeneration
 
-set ( autogen_render_inc
+set ( render_inc
 	../../inc/pwn/render/RenderArgs.h
 	../../inc/pwn/render/actor.h
 	../../inc/pwn/render/actordef.h

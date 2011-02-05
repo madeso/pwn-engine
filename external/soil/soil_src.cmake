@@ -2,7 +2,7 @@
 # do not edit, since this file might get overwritten
 # delete the comment where this file is included to remove the autogeneration
 
-set ( autogen_soil_src
+set ( soil_src
 	../../external/soil/SOIL.c
 	../../external/soil/SOIL.h
 	../../external/soil/image_DXT.c

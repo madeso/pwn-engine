@@ -2,7 +2,7 @@
 # do not edit, since this file might get overwritten
 # delete the comment where this file is included to remove the autogeneration
 
-set ( autogen_io_src
+set ( io_src
 	src/animation-writer.cpp
 	src/config.cpp
 	src/mesh-writer.cpp

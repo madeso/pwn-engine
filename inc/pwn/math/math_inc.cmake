@@ -2,7 +2,7 @@
 # do not edit, since this file might get overwritten
 # delete the comment where this file is included to remove the autogeneration
 
-set ( autogen_math_inc
+set ( math_inc
 	../../inc/pwn/math/operations.h
 	../../inc/pwn/math/rgb.h
 	../../inc/pwn/math/rgba.h

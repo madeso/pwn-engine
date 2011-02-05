@@ -2,7 +2,7 @@
 # do not edit, since this file might get overwritten
 # delete the comment where this file is included to remove the autogeneration
 
-set ( autogen_mesh_test
+set ( mesh_test
 	test/test-builder.cpp
 	test/test-mesh.cpp
 )

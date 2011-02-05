@@ -6,7 +6,7 @@ include(../../inc/pwn/engine/engine_inc.cmake)
 #autogen this:
 include(../../external/soil/soil_src.cmake)
 
-set(src ${autogen_src} ${autogen___inc_pwn_engine} ${autogen___external_soil})
+set(src ${engine_src} ${engine_inc} ${soil_src})
 include_directories(${PHYSFS_INCLUDE_DIR} ${SFML_INCLUDE_DIR})
 
 add_library(pwn-engine ${src})

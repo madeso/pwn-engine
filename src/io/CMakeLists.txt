@@ -7,7 +7,7 @@ include(../../inc/pwn/io/io_inc.cmake)
 #autogen this:
 include(../../external/physfspp/physfscpp.cmake)
 
-set(src ${autogen_src} ${autogen___inc_pwn_io} ${autogen___external_physfspp})
+set(src ${io_src} ${io_inc} ${physfscpp})
 
 include_directories(../../external/physfspp)
 include_directories(${PHYSFS_INCLUDE_DIR})

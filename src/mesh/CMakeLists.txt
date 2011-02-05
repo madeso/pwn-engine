@@ -5,10 +5,10 @@ include(test/mesh_test.cmake)
 #autogen this:
 include(../../inc/pwn/mesh/mesh_inc.cmake)
 
-set(src ${autogen_src} ${autogen___inc_pwn_mesh})
+set(src ${mesh_src} ${mesh_inc})
 
 add_library(pwn-mesh ${src})
 target_link_libraries(pwn-mesh pwn-math pwn-core)
 
-add_executable(pwn-mesh-test ${autogen_test} ../test-main.cpp)
+add_executable(pwn-mesh-test ${mesh_test} ../test-main.cpp)
 target_link_libraries(pwn-mesh-test pwn-mesh ${GOOGLEMOCK_LIBRARIES})

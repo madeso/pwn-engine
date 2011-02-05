@@ -1,4 +1,4 @@
 #autogen this:
 include(src/assert_src.cmake)
 
-add_library(pwn-assert ${autogen_src} ../../inc/pwn/assert.h)
+add_library(pwn-assert ${assert_src} ../../inc/pwn/assert.h)

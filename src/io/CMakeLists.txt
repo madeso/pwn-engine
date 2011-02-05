@@ -5,7 +5,7 @@ include(src/io_src.cmake)
 include(../../inc/pwn/io/io_inc.cmake)
 
 #autogen this:
-include(../../external/physfspp/CMakeLists.txt)
+include(../../external/physfspp/physfscpp.cmake)
 
 set(src ${autogen_src} ${autogen___inc_pwn_io} ${autogen___external_physfspp})
 

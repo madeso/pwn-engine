@@ -12,7 +12,7 @@ def makeCmakeFile(path, sub):
 	cmakefile = os.path.join(path, sub)
 	folder = os.path.dirname(cmakefile)
 	filenameWithoutExt = os.path.basename(sub)
-	varname = "autogen_"+os.path.splitext(filenameWithoutExt)[0].replace(".", "_").replace("-", "_")
+	varname = os.path.splitext(filenameWithoutExt)[0].replace(".", "_").replace("-", "_")
 	relpath = os.path.dirname(sub)
 	#open as binary to force unix/linux(LF) type of lineendings on other systems than unix/linux such as windows(that uses CRLF)
 	with open(cmakefile, 'wb') as f:

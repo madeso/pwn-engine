@@ -1,9 +1,9 @@
 #autogen this:
-include(src/CMakeLists.txt)
+include(src/math_src.cmake)
 #autogen this:
-include(test/CMakeLists.txt)
+include(test/math_test.cmake)
 #autogen this:
-include(../../inc/pwn/math/CMakeLists.txt)
+include(../../inc/pwn/math/math_inc.cmake)
 
 set(src ${autogen_src} ${autogen___inc_pwn_math})
 

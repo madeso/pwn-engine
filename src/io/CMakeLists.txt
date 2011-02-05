@@ -1,8 +1,8 @@
 #autogen this:
-include(src/CMakeLists.txt)
+include(src/io_src.cmake)
 #include(test/CMakeLists.txt)
 #autogen this:
-include(../../inc/pwn/io/CMakeLists.txt)
+include(../../inc/pwn/io/io_inc.cmake)
 
 #autogen this:
 include(../../external/physfspp/CMakeLists.txt)

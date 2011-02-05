@@ -1,11 +1,11 @@
 #autogen this:
-include(src/CMakeLists.txt)
+include(src/render_src.cmake)
 #autogen this:
-include(src/fse/CMakeLists.txt)
+include(src/fse/renderfse_src.cmake)
 #autogen this:
-include(test/CMakeLists.txt)
+include(test/render_test.cmake)
 #autogen this:
-include(../../inc/pwn/render/CMakeLists.txt)
+include(../../inc/pwn/render/render_inc.cmake)
 
 set ( src_glew
 	../../external/glew/GL/glew.c

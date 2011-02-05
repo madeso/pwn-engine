@@ -1,9 +1,9 @@
 #autogen this:
-include(src/CMakeLists.txt)
+include(src/core_src.cmake)
 #autogen this:
-include(test/CMakeLists.txt)
+include(test/core_test.cmake)
 #autogen this:
-include(../../inc/pwn/core/CMakeLists.txt)
+include(../../inc/pwn/core/core_inc.cmake)
 
 set(src ${autogen_src} ${autogen___inc_pwn_core})
 

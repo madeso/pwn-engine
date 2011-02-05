@@ -1,9 +1,9 @@
 #autogen this:
-include(src/CMakeLists.txt)
+include(src/mesh_src.cmake)
 #autogen this:
-include(test/CMakeLists.txt)
+include(test/mesh_test.cmake)
 #autogen this:
-include(../../inc/pwn/mesh/CMakeLists.txt)
+include(../../inc/pwn/mesh/mesh_inc.cmake)
 
 set(src ${autogen_src} ${autogen___inc_pwn_mesh})
 

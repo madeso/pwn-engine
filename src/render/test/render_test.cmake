@@ -2,6 +2,6 @@
 # do not edit, since this file might get overwritten
 # delete the comment where this file is included to remove the autogeneration
 
-set ( autogen_src
-	src/assert.cpp
+set ( autogen_render_test
+	test/TestRenderList.cpp
 )

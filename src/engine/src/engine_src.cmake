@@ -2,7 +2,7 @@
 # do not edit, since this file might get overwritten
 # delete the comment where this file is included to remove the autogeneration
 
-set ( autogen_src
+set ( autogen_engine_src
 	src/democamera.cpp
 	src/display.cpp
 	src/display.hpp

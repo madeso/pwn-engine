@@ -2,7 +2,7 @@
 # do not edit, since this file might get overwritten
 # delete the comment where this file is included to remove the autogeneration
 
-set ( autogen_test
+set ( autogen_math_test
 	test/TestAngle.cpp
 	test/TestBase.cpp
 	test/TestBase.h

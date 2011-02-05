@@ -2,7 +2,7 @@
 # do not edit, since this file might get overwritten
 # delete the comment where this file is included to remove the autogeneration
 
-set ( autogen_src_fse
+set ( autogen_renderfse_src
 	src/fse/Binder.cpp
 	src/fse/BufferReference.cpp
 	src/fse/Command.cpp

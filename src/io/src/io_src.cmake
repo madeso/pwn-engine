@@ -2,6 +2,10 @@
 # do not edit, since this file might get overwritten
 # delete the comment where this file is included to remove the autogeneration
 
-set ( autogen_test
-	test/TestRenderList.cpp
+set ( autogen_io_src
+	src/animation-writer.cpp
+	src/config.cpp
+	src/mesh-writer.cpp
+	src/vfs.cpp
+	src/vfs.hpp
 )

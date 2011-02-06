@@ -1,7 +1,7 @@
 #autogen this:
-include(test/math_test.cmake)
+include(math_test.cmake)
 
-set(src ${math_test} ../test-main.cpp)
+set(src ${math_test} ../../test-main.cpp)
 source_group("" FILES ${src})
 
 add_executable(pwn-math-test ${src})

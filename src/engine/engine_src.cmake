@@ -3,27 +3,27 @@
 # delete the comment where this file is included to remove the autogeneration
 
 set ( engine_src
-	src/democamera.cpp
-	src/display.cpp
-	src/display.hpp
-	src/game.cpp
-	src/game_install.cpp
-	src/gameimp.cpp
-	src/gameimp.hpp
-	src/key.cpp
-	src/loop.cpp
-	src/loop.hpp
-	src/startup.cpp
-	src/system.cpp
-	src/system.hpp
-	src/system_render.cpp
-	src/system_render.hpp
-	src/system_vfs.cpp
-	src/system_vfs.hpp
-	src/system_window.cpp
-	src/system_window.hpp
-	src/vfs_util.cpp
-	src/vfs_util.hpp
-	src/vfstexturepool2.cpp
-	src/videomode.cpp
+	democamera.cpp
+	display.cpp
+	display.hpp
+	game.cpp
+	game_install.cpp
+	gameimp.cpp
+	gameimp.hpp
+	key.cpp
+	loop.cpp
+	loop.hpp
+	startup.cpp
+	system.cpp
+	system.hpp
+	system_render.cpp
+	system_render.hpp
+	system_vfs.cpp
+	system_vfs.hpp
+	system_window.cpp
+	system_window.hpp
+	vfs_util.cpp
+	vfs_util.hpp
+	vfstexturepool2.cpp
+	videomode.cpp
 )

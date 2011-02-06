@@ -3,10 +3,10 @@
 # delete the comment where this file is included to remove the autogeneration
 
 set ( mesh_src
-	src/animation.cpp
-	src/bone.cpp
-	src/builder.cpp
-	src/material.cpp
-	src/mesh.cpp
-	src/triangle.cpp
+	animation.cpp
+	bone.cpp
+	builder.cpp
+	material.cpp
+	mesh.cpp
+	triangle.cpp
 )

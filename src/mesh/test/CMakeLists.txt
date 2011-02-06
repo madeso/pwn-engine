@@ -1,5 +1,5 @@
 #autogen this:
-include(test/mesh_test.cmake)
+include(mesh_test.cmake)
 
 set(src ${mesh_test} ../../test-main.cpp)
 

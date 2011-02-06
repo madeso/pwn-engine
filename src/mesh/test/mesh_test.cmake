@@ -3,6 +3,6 @@
 # delete the comment where this file is included to remove the autogeneration
 
 set ( mesh_test
-	test/test-builder.cpp
-	test/test-mesh.cpp
+	test-builder.cpp
+	test-mesh.cpp
 )

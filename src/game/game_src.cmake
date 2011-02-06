@@ -3,5 +3,5 @@
 # delete the comment where this file is included to remove the autogeneration
 
 set ( game_src
-	src/main.cpp
+	main.cpp
 )

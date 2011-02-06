@@ -20,14 +20,14 @@ namespace pwn
 				BufferReference(const string& name);
 				const string& getName() const;
 				~BufferReference();
-				
+
 			public:
 				void setBuffer(FboPtr fbo);
 				void bindTexture(int location);
 				void updateTexture(Provider& a, World3* world, const RenderArgs& ra); /// < Calls doProvide
 				int getWidth() const;
 				int getHeight() const;
-				
+
 			private:
 				FboPtr buffer;
 				const string name;

@@ -81,7 +81,7 @@ namespace test
 	{
 		EXPECT_EQ(cquat(RightHandAround(Up(), Angle::FromDegrees(90))),
 			 Combine(cquat(RightHandAround(Up(), Angle::FromDegrees(90))), qIdentity()));
-		
+
 		EXPECT_EQ(cquat(RightHandAround(Up(), Angle::FromDegrees(90))),
 			 Combine(qIdentity(), cquat(RightHandAround(Up(), Angle::FromDegrees(90)))) );
 
@@ -107,7 +107,7 @@ namespace test
 		EXPECT_EQ(RightHandAround(Up(), Angle::FromDegrees(-45)), cAxisAngle(cquat(RightHandAround(-Up(), Angle::FromDegrees(45)))));
 		EXPECT_EQ(RightHandAround(Right(), Angle::FromDegrees(90)), cAxisAngle(cquat(RightHandAround(-Right(), Angle::FromDegrees(-90)))));
 	}
-	
+
 	struct Quat : ::testing::Test
 	{
 		quat qa;

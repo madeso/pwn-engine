@@ -159,7 +159,7 @@ namespace pwn
 			if (bytesread) {
 				PHYSFS_file* fp = (PHYSFS_file*) handle;
 				*bytesread = (int)PHYSFS_read(fp, buffer, 1, sizebytes);
-		    
+
 				if (*bytesread < sizebytes) {
 					return FMOD_ERR_FILE_EOF;
 				}

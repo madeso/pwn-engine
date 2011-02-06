@@ -34,7 +34,7 @@ namespace pwn
 			const int y = -static_cast<GLsizei>(TopOf(rect));
 			const int w = static_cast<GLsizei>(WidthOf(rect));
 			const int h = static_cast<GLsizei>(HeightOf(rect));
-			
+
 			// todo: test for mask occlusion and possible render to a temporary texture
 			RenderArgs ra(camera, x, y, w, h, AspectOf(rect));
 			//world->render(ra);

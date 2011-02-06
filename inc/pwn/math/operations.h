@@ -30,7 +30,7 @@ namespace pwn
 		@param target is the target value
 		@param current is the current value
 		@param smoothing is the smoothing value > 0, the lower, the less smooth
-		
+
 		@returns The smoothed result.
 		*/
 		const real Curve(const real target, const real current, const real smoothing);
@@ -239,7 +239,7 @@ namespace pwn
 		@param target is the target value
 		@param current is the current value
 		@param smoothing is the smoothing value > 0, the lower, the less smooth
-		
+
 		@returns The smoothed result.
 		*/
 		const vec2 Curve(const vec2& target, const vec2& current, real smoothing);
@@ -321,14 +321,14 @@ namespace pwn
 		@see GetNormalized(const vec3&)
 		*/
 		const vec3 crossNorm(const vec3& lhs, const vec3& rhs);
-		
+
 		/** Performs a single interpolating step to transform a old vector to a new vector.
 		Larger smoothing values result in a smoother but less resposive path
 
 		@param target is the target value
 		@param current is the current value
 		@param smoothing is the smoothing value > 0, the lower, the less smooth
-		
+
 		@returns The smoothed result.
 		*/
 		vec3 Curve(const vec3& target, const vec3& current, real smoothing);
@@ -700,7 +700,7 @@ namespace pwn
 		/** the dot product between two quaternions.
 		*/
 		real dot(const quat& lhs, const quat& rhs);
-		
+
 		/** quaternion multiplication.
 		*/
 		const quat operator*(const quat& lhs, const quat& rhs);
@@ -957,11 +957,11 @@ namespace pwn
 		/** flips the rectangle upside-down, without altering the source
 		*/
 		const rect TurnCopyUpsideDown(const rect& r, const real scale);
-		
+
 		/** transforms a point from one source to another.
 		*/
 		const point2 Remap(const rect& from, const point2& p, const rect& to);
-		
+
 		// todo: WrapWithin?
 
 		/** keeps a point within a rectangle.
@@ -991,7 +991,7 @@ namespace pwn
 		/** scale a rectangle.
 		*/
 		const rect operator*(const real scale, const rect& r);
-		
+
 		// todo: IsWithin/DoesOverlap operations for rect-rect operations?
 
 		/// @}

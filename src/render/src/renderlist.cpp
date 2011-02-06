@@ -16,7 +16,7 @@ namespace pwn
 {
 	namespace render
 	{
-		
+
 		GLenum glGetError_WithString()
 		{
 			const GLenum err = glGetError();
@@ -41,7 +41,7 @@ namespace pwn
 			}
 			return err;
 		}
-		
+
 
 		RenderList::RenderList(bool useGlCommands)
 			: useGlCommands(useGlCommands)
@@ -139,10 +139,10 @@ namespace pwn
 				glMatrixMode( GL_MODELVIEW ); pwnAssert_NoGLError();
 				glLoadIdentity(); pwnAssert_NoGLError();
 			}
-			
+
 			applied = false;
 			texture = 0;
-			
+
 			// todo: send correct commands to gl
 			if( useGlCommands )
 			{

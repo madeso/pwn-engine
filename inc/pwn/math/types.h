@@ -46,7 +46,7 @@ namespace pwn
 			@returns a 2-dimensional pointer to the member-variables
 			*/
 			real* data();
-			
+
 			/** a const data-pointer.
 			@returns a 2-dimensional const pointer to the member-variables
 			*/
@@ -107,7 +107,7 @@ namespace pwn
 			@returns a 2-dimensional pointer to the member-variables
 			*/
 			real* data();
-			
+
 			/** a const data-pointer.
 			@returns a 2-dimensional const pointer to the member-variables
 			*/
@@ -213,7 +213,7 @@ namespace pwn
 			copies the elements
 			*/
 			mat33(const real data[sizes::mat33_matrix_size]);
-			
+
 			/** A column major layout.
 			@code
 			    | 0 3 6 |

@@ -26,7 +26,7 @@ namespace pwn
 			protected:
 				void doLink(Linker* user);
 				void doBind(Binder* bd);
-				
+
 			private:
 				const string shaderName;
 				const string uniformName;

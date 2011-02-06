@@ -253,7 +253,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(10, &list), CreateMaterial(true,  t1),    m1, &poseable);
 		rl.add(CreateMesh(4,  &list), CreateMaterial(false, t1),    m1, &poseable);
 		rl.add(CreateMesh(1,  &list), CreateMaterial(false, tNull), m0, &poseable);
-		
+
 		rl.end(false);
 
 		int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};

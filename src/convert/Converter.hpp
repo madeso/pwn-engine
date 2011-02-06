@@ -17,7 +17,7 @@ namespace pwn
 		{
 		public:
 			OptimizedMeshBuilder(bool optimzeNormals);
-			
+
 			mesh::BTriangle::index addPosition(const mesh::BPoint& pos);
 			mesh::BTriangle::index addNormal(const math::vec3& norm);
 			mesh::BTriangle::index addTextCoord(const math::vec2& tc);

@@ -32,7 +32,7 @@ namespace pwn
 			if( 0 == PHYSFS_setWriteDir(target.c_str()) ) Error("change write dir to " + target);
 		}
 
-		
+
 		VirtualFile::VirtualFile(const pwn::string& path, bool isLoading)
 			: file(isLoading?PHYSFS_openRead(path.c_str()):PHYSFS_openWrite(path.c_str()))
 		{
@@ -147,7 +147,7 @@ namespace pwn
 			file->write32(value);
 		}
 
-		void FileWriter::handleReal(const pwn::real& value)	
+		void FileWriter::handleReal(const pwn::real& value)
 		{
 			file->writeReal(value);
 		}

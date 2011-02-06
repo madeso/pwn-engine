@@ -14,7 +14,7 @@ namespace pwn
 	namespace io
 	{
 		class WriteTarget
-		{	
+		{
 		public:
 			WriteTarget(const pwn::string& argv0, const pwn::string& target);
 			void set(const pwn::string& target);

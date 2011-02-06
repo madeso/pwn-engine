@@ -10,7 +10,7 @@ namespace pwn
 		// temporary
 		class CompiledCamera;
 		class World3;
-		
+
 		class Fbo;		typedef boost::shared_ptr<Fbo> FboPtr;
 
 		namespace fse

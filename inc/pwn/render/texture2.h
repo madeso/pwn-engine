@@ -40,7 +40,7 @@ namespace pwn
 		public:
 			Texture2(core::IdPool* pool, bool useGlTexture);
 			~Texture2();
-			
+
 			void bind(int location) const;
 			const uint32 sid() const; ///< sort id
 			void setImage(Image* img);

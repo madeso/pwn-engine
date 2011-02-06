@@ -14,7 +14,7 @@ namespace pwn
 		public:
 			WorldWith3(World3::Ptr w);
 			virtual ~WorldWith3();
-			
+
 			virtual void actor_add(ActorPtr actor);
 			virtual void actor_remove(ActorPtr actor);
 

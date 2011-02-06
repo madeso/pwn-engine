@@ -43,7 +43,7 @@ namespace pwn
 				{
 					unsigned short flags;
 					unsigned short vertexIndices[3];
-					float vertexNormals[3][3]; //[3],[3] 
+					float vertexNormals[3][3]; //[3],[3]
 					float s[3];
 					float t[3];
 					byte smoothingGroup;
@@ -67,9 +67,9 @@ namespace pwn
 					float diffuse[4];
 					float specular[4];
 					float emissive[4];
-					float shininess; // 0.0f - 128.0f 
-					float transparency; // 0.0f - 1.0f 
-					char mode; // 0, 1, 2 is unused now 
+					float shininess; // 0.0f - 128.0f
+					float transparency; // 0.0f - 1.0f
+					char mode; // 0, 1, 2 is unused now
 					char texture[128];
 					char alphamap[128];
 					*/
@@ -340,7 +340,7 @@ namespace pwn
 				void Read(OptimizedMeshBuilder* builder, const string& meshpath)
 				{
 					Model model;
-					
+
 					Runner run(meshpath);
 					run.run();
 					model = ExtractModel(run);

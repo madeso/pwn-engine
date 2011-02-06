@@ -26,7 +26,7 @@ namespace pwn
 				void storePipeline(PipelinePtr get, TargetPtr target);
 				void link();
 				ShaderPtr getShaderOrNull(const string& id);
-				
+
 			public:
 				/// @return the suggested target name
 				const string read(const string& path, ShaderPool* shaders);

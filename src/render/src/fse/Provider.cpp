@@ -25,28 +25,28 @@ namespace pwn
 			Link::~Link()
 			{
 			}
-			
+
 			void Link::provide(World3* world, RenderArgs ra)
 			{
 				prov->doProvide(world, ra);
 			}
-			
+
 			void Link::sortout(LinkerPtr usr)
 			{
 				prov = usr->getProvider(name);
 			}
-			
+
 			void Provider::setId(const string& aid)
 			{
 				if (id.empty() ) id = aid;
 				else throw FseException("Unable to change id from " + id + " to " + aid);
 			}
-			
+
 			const string Provider::getId() const
 			{
 				return id;
 			}
-			
+
 			void Provider::provide(World3* world, const RenderArgs& ra)
 			{
 				if (autocallCommands)
@@ -56,12 +56,12 @@ namespace pwn
 
 				target->apply(*this, world, ra);
 			}
-			
+
 			std::vector<Provider*>& Provider::getProviders()
 			{
 				return providers;
 			}
-			
+
 			void Provider::link(Linker* linker)
 			{
 				if (false == targetname.empty())
@@ -85,7 +85,7 @@ namespace pwn
 
 				doLink(linker);
 			}
-			
+
 			void Provider::bind(Binder* bd, ShaderPool* pool)
 			{
 				const string file = shaderdata.data();
@@ -109,17 +109,17 @@ namespace pwn
 					c->bind(bd);
 				}
 			}
-			
+
 			TargetPtr Provider::getTarget()
 			{
 				return target;
 			}
-			
+
 			BufferReferencePtr Provider::createBuffer(const string& name)
 			{
 				return BufferReferencePtr(new BufferReference(name));
 			}
-			
+
 			void Provider::postlink(Linker* linker)
 			{
 				BOOST_FOREACH(CommandPtr c, commands)
@@ -137,12 +137,12 @@ namespace pwn
 			{
 				return shader;
 			}
-			
+
 			void Provider::denyAutocallOfCommands()
 			{
 				autocallCommands = false;
 			}
-			
+
 			void Provider::callCommands()
 			{
 				BOOST_FOREACH(CommandPtr c, commands)
@@ -150,7 +150,7 @@ namespace pwn
 					c->apply();
 				}
 			}
-			
+
 			Provider::Provider(const core::Ptree& el, const string& afile)
 				: autocallCommands(true)
 				, shaderdata(el.get_child("shader"))
@@ -162,7 +162,7 @@ namespace pwn
 				{
 					const string& type = e.first;
 					const core::Ptree& data = e.second;
-					
+
 					commands.push_back(Commands_Create(type, data, this));
 				}
 			}
@@ -170,7 +170,7 @@ namespace pwn
 			Provider::~Provider()
 			{
 			}
-			
+
 			string Provider::toString() const
 			{
 				return core::Str() << getId() << "(" << targetname <<  "): <" << core::StringSeperator().english().iterate(commands).toString() << ">";

@@ -16,17 +16,17 @@ namespace pwn
 			Command::~Command()
 			{
 			}
-			
+
 			void Command::link(Linker* linker)
 			{
 				doLink(linker);
 			}
-			
+
 			void Command::bind(Binder* b)
 			{
 				doBind(b);
 			}
-			
+
 			const string Command::toString() const
 			{
 				return id;

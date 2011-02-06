@@ -16,15 +16,15 @@ namespace pwn
 			public:
 				Command(const core::Ptree& el, Provider* prov);
 				virtual ~Command();
-				
+
 				virtual void apply() = 0;
-				
+
 				// should be called by our provider
 				void link(Linker* linker);
 				void bind(Binder* b);
 
 				virtual std::vector<Provider*> getDependencies() = 0;
-				
+
 				const string toString() const;
 			protected:
 				BufferReferencePtr createBuffer(const string& name);

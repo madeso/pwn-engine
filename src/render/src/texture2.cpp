@@ -26,10 +26,10 @@ namespace pwn
 			const GLint internalFormat = doCompress ? internalFormat_c : internalFormat_nc;
 
 			//glEnable(GL_TEXTURE_2D); // might help on certain gfx cards
-			
+
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); pwnAssert_NoGLError();
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); pwnAssert_NoGLError();
-			
+
 			const GLint minFilter = mipmap? GL_LINEAR_MIPMAP_LINEAR: GL_LINEAR;
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); pwnAssert_NoGLError();
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter); pwnAssert_NoGLError();

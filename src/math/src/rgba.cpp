@@ -23,7 +23,7 @@ namespace pwn
 		{
 			return &r;
 		}
-		
+
 		const real Rgba::red() const
 		{
 			return r;

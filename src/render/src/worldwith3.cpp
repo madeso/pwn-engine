@@ -13,7 +13,7 @@ namespace pwn
 		WorldWith3::~WorldWith3()
 		{
 		}
-		
+
 		void WorldWith3::actor_add(ActorPtr actor)
 		{
 			world->actor_add(actor);

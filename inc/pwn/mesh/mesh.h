@@ -74,7 +74,7 @@ namespace pwn
 			Point(const math::vec3& location, math::vec3 normal, math::vec2 textcoord, BoneIndex bone);
 			bool hasBone() const;
 			BoneIndex getBone() const;
-			
+
 			math::vec3 location;
 			math::vec3 normal;
 			math::vec2 textcoord;
@@ -220,7 +220,7 @@ namespace pwn
 			typedef std::vector<Triangle> TriList;
 			//typedef boost::shared_ptr<TriList> TriListPtr;
 			typedef std::map<pwn::uint32, TriList> TriangleMap;
-			
+
 			Mesh();
 
 			Triangle::VertexIndex add(const math::vec3& pos, const math::vec2& text, const math::vec3& normal, const BoneIndex bone);

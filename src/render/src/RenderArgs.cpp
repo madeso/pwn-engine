@@ -28,7 +28,7 @@ namespace pwn
 			, aspect(ra.aspect)
 		{
 		}
-		
+
 		void RenderArgs::render(World3* world) const
 		{
 			glMatrixMode(GL_PROJECTION); pwnAssert_NoGLError();

@@ -127,11 +127,11 @@ namespace pwn
 			}
 		};
 
-		
+
 		void Flatouter::load(const Mesh& mesh)
 		{
 			newIndices.clear();/*
-			
+
 			std::vector<BoneToSort> bones;
 			for(BoneIndex i=0; i<mesh.bones.size(); ++i)
 			{

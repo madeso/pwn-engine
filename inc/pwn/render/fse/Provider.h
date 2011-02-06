@@ -25,12 +25,12 @@ namespace pwn
 
 				void provide(World3* world, RenderArgs ra);
 				void sortout(LinkerPtr usr);
-				
+
 			private:
 				ProviderPtr prov;
 				const string name;
 			};
-			
+
 			class Provider
 			{
 			public:
@@ -41,7 +41,7 @@ namespace pwn
 				void link(Linker* linker);
 				void bind(Binder* bd, ShaderPool* shaders);
 				string toString() const;
-				
+
 			public:
 				TargetPtr getTarget();
 				BufferReferencePtr createBuffer(const string& name);
@@ -57,12 +57,12 @@ namespace pwn
 
 				const core::Ptree shaderdata;
 				ShaderPtr shader;
-				
+
 				virtual void doLink(Linker* linker) = 0;
 				virtual void doBind(Binder* bd) = 0;
 			public:
 				virtual void doProvide(World3* world, const RenderArgs& ra) = 0;
-				
+
 			private:
 				TargetPtr target;
 				const string targetname;

@@ -31,7 +31,7 @@ namespace pwn
 			list.begin();
 			actor->render(&list, cc);
 			list.end(false);
-			
+
 			pwnAssert_NoGLError();
 			glClear(GL_DEPTH_BUFFER_BIT);
 			pwnAssert_NoGLError();

@@ -12,7 +12,7 @@ namespace pwn
 		{
 		public:
 			typedef std::vector<string> Vec;
-			
+
 			string toString() const
 			{
 				if (strings.empty()) return Str() << start << mempty << end;
@@ -40,7 +40,7 @@ namespace pwn
 				}
 
 				ss << end;
-				
+
 				return ss.str();
 			}
 

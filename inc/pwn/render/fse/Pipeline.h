@@ -26,11 +26,11 @@ namespace pwn
 
 			public:
 				void add(Provider* pr); ///< internal
-				
+
 			private:
 				Pipeline();
 				void bind(Binder* binder, ShaderPool* shaders);
-				
+
 			private:
 				Linker linker;
 				std::vector<Provider*> providers;

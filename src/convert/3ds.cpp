@@ -22,7 +22,7 @@ namespace pwn
 		{
 			namespace hidden
 			{
-				namespace 
+				namespace
 				{
 					using namespace pwn::math;
 
@@ -73,7 +73,7 @@ namespace pwn
 						{
 							ostringstream s;
 							tchar c;
-							do 
+							do
 							{
 								read(&c, 1);
 								if( c!= 0) s << c;
@@ -584,7 +584,7 @@ namespace pwn
 						BOOST_FOREACH(MaterialChunk& chunk, main.editor.materials)
 						{
 							pwn::mesh::Material mat;
-							
+
 							mat.setTexture_Diffuse(chunk.texture.Value);
 							//mat.specular = chunk.specular.Color;
 							//mat.ambient = chunk.ambient.Color;
@@ -611,7 +611,7 @@ namespace pwn
 									const pwn::mesh::BTriangle::index b = ibase + p.b;
 									const pwn::mesh::BTriangle::index c = ibase + p.c;
 
-									builder->mBuilder.addTriangle(material, pwn::mesh::BTriangle( 
+									builder->mBuilder.addTriangle(material, pwn::mesh::BTriangle(
 												  pwn::mesh::BTriangle::Vertex(a, 0, a)
 												, pwn::mesh::BTriangle::Vertex(b, 0, b)
 												, pwn::mesh::BTriangle::Vertex(c, 0, c)

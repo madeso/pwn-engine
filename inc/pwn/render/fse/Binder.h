@@ -30,7 +30,7 @@ namespace pwn
 				core::Pool<FboPtr> pool;
 				core::Map<FboPtr> map;
 			};
-			
+
 			class Binder
 			{
 			public:
@@ -42,7 +42,7 @@ namespace pwn
 				ShaderPtr getShader(const string& shadername);
 				ShaderPtr getShaderOrNull(const string& shadername);
 				void reference(BufferReferencePtr br);
-				
+
 				void createBuffers();
 				void associate(const string& p, Size size);
 

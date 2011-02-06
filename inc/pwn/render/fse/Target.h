@@ -29,17 +29,17 @@ namespace pwn
 				Provider* getProvider();
 				void setProvider(Provider* provider);
 				const string toString() const;
-				
+
 			public:
 				void bind(Binder* binder);
-				
+
 			protected:
 				BufferReferencePtr createBuffer(const string& name);
 				BufferReferencePtr createBuffer(const string& name, int width, int height);
-				
+
 			private:
 				void associate(const string& name, int width, int height);
-				
+
 				string id;
 				std::vector<BufferReferencePtr> references;
 				typedef std::map<string, Size> AssMap;

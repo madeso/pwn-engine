@@ -24,7 +24,7 @@ namespace pwn
 				void apply(Provider& a, World3* world, const RenderArgs& ra); // Calls doProvide
 				void link(Linker* usr);
 				string toString() const;
-				
+
 			private:
 				BufferReferencePtr buffer;
 				const string getName() const;

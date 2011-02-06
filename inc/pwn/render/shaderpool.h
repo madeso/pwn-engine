@@ -12,7 +12,7 @@ namespace pwn
 	{
 		class Shader;
 		typedef boost::shared_ptr<render::Shader> ShaderPtr;
-		
+
 		/// Pool for shaders
 		class ShaderPool
 		{

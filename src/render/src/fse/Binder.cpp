@@ -47,7 +47,7 @@ namespace pwn
 					}
 				};
 			}
-			
+
 			FboPool::FboPool(int width, int height)
 				: pool( CreateFboFunc(width, height) )
 				, map( GetFromPoolFunc<FboPtr>(&pool) )
@@ -57,18 +57,18 @@ namespace pwn
 			FboPool::~FboPool()
 			{
 			}
-			
+
 			FboPtr FboPool::create(const string& name)
 			{
 				return map.get(name);
 			}
-			
+
 			void FboPool::release(FboPtr fbo)
 			{
 				pool.release(fbo);
 			}
 
-			namespace 
+			namespace
 			{
 				class ShaderLoader
 				{
@@ -89,7 +89,7 @@ namespace pwn
 					ShaderPool* pool;
 				};
 			}
-			
+
 			Binder::Binder(Linker* linker, ShaderPool* pool)
 				: shaders( ShaderLoader(linker, pool) )
 			{
@@ -98,18 +98,18 @@ namespace pwn
 			Binder::~Binder()
 			{
 			}
-			
+
 			ShaderPtr Binder::getShader(const string& shadername)
 			{
 				return shaders.get(shadername);
 			}
-			
+
 			ShaderPtr Binder::getShaderOrNull(const string& shadername)
 			{
 				if (shadername.empty()) return ShaderPtr();
 				else return shaders.get(shadername);
 			}
-			
+
 			void Binder::reference(BufferReferencePtr br)
 			{
 				if (references.find(br) != references.end())
@@ -118,7 +118,7 @@ namespace pwn
 				}
 				references.insert(br);
 			}
-			
+
 			namespace
 			{
 				class StringCounter
@@ -142,7 +142,7 @@ namespace pwn
 					Map map;
 				};
 			}
-			
+
 			void Binder::createBuffers()
 			{
 				StringCounter sc;
@@ -163,12 +163,12 @@ namespace pwn
 					}
 				}
 			}
-			
+
 			void Binder::associate(const string& p, Size size)
 			{
 				associations[p] = size;
 			}
-			
+
 			FboPtr Binder::allocate(const string& name)
 			{
 				return getCreator(name)->create(name);
@@ -177,7 +177,7 @@ namespace pwn
 			{
 				return getCreator(sizeOf(name));
 			}
-			
+
 			FboCreatorPtr Binder::getCreator(Size size)
 			{
 				CreatorMap::iterator result = creators.find(size);
@@ -192,7 +192,7 @@ namespace pwn
 					return result->second;
 				}
 			}
-			
+
 			void Binder::release(FboPtr buff)
 			{
 				getCreator(
@@ -204,16 +204,16 @@ namespace pwn
 			{
 				return "";
 			}
-			
+
 			Size Binder::sizeOf(const string& name) const
 			{
 				AssociationMap::const_iterator r = associations.find(name);
-				
+
 				if (r == associations.end())
 				{
 					throw FseException(name + " is missing a defined size");
 				}
-				
+
 				else return r->second;
 			}
 		}

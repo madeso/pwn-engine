@@ -15,7 +15,7 @@ namespace pwn
 			RenderWorldProvider::~RenderWorldProvider()
 			{
 			}
-			
+
 			void RenderWorldProvider::doProvide(World3* world, const RenderArgs& ra)
 			{
 				// uncommented to make sure simple vertex shaders arent interfering with animation applying
@@ -23,15 +23,15 @@ namespace pwn
 				ra.render(world);
 				//Shader::Unbind(shader);
 			}
-			
+
 			void RenderWorldProvider::doLink(Linker*)
 			{
 			}
-			
+
 			void RenderWorldProvider::doBind(Binder*)
 			{
 			}
-			
+
 			const string RenderWorldProvider::toString() const
 			{
 				return Provider::toString() + " renders world with " + ((shader.get())?"shader":"no shader");

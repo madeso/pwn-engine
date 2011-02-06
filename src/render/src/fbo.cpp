@@ -24,7 +24,7 @@ namespace pwn
 			glBindRenderbuffer(GL_RENDERBUFFER, buffer); pwnAssert_NoGLError();
 		}
 
-		unsigned int RenderBuffer::getBuffer() const	
+		unsigned int RenderBuffer::getBuffer() const
 		{
 			return buffer;
 		}

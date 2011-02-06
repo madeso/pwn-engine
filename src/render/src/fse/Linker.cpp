@@ -26,7 +26,7 @@ namespace pwn
 				{
 					throw FseException(name + " is not a defined target");
 				}
-				
+
 				ProviderPtr CreateProviderFunction(const string& name)
 				{
 					throw FseException(name + " is not a defined provider");
@@ -49,32 +49,32 @@ namespace pwn
 			Linker::~Linker()
 			{
 			}
-			
+
 			void Linker::addProvider(ProviderPtr prov)
 			{
 				providers.add(prov->getId(), prov);
 			}
-			
+
 			void Linker::addTarget(TargetPtr targ)
 			{
 				targets.add(targ->getId(), targ);
 			}
-			
+
 			TargetPtr Linker::getTarget(string name)
 			{
 				return targets.get(name);
 			}
-			
+
 			ProviderPtr Linker::getProvider(const string& name)
 			{
 				return providers.get(name);
 			}
-			
+
 			void Linker::storePipeline(PipelinePtr pl, TargetPtr target)
 			{
 				pl->add( target->getProvider() );
 			}
-			
+
 			void Linker::link()
 			{
 				BOOST_FOREACH(ProviderPtr p, providers.getData())
@@ -98,7 +98,7 @@ namespace pwn
 			{
 				return shaders.get(id);
 			}
-			
+
 			const string Linker::read(const string& path, ShaderPool* pool)
 			{
 				core::Ptree file;

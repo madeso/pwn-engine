@@ -16,7 +16,7 @@ namespace pwn
 			BufferReference::~BufferReference()
 			{
 			}
-			
+
 			const string& BufferReference::getName() const
 			{
 				return name;
@@ -27,24 +27,24 @@ namespace pwn
 				if (buffer.get() != 0) throw FseException("Error, buffer already initialized!");
 				buffer = fbo;
 			}
-			
+
 			void BufferReference::bindTexture(int location)
 			{
 				buffer->bindTexture(location);
 			}
-			
+
 			void BufferReference::updateTexture(Provider& a, World3* world, const RenderArgs& r)
 			{
 				RenderArgs ra(r, getWidth(), getHeight());
 				TextureUpdator up(buffer.get());
 				a.doProvide(world, ra);
 			}
-			
+
 			int BufferReference::getWidth() const
 			{
 				return buffer->getWidth();
 			}
-			
+
 			int BufferReference::getHeight() const
 			{
 				return buffer->getHeight();

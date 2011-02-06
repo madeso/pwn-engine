@@ -21,7 +21,7 @@ namespace pwn
 				bind.createBuffers();
 				return pp;
 			}
-			
+
 			void Pipeline::render(World3* world, const RenderArgs& ra)
 			{
 				BOOST_FOREACH(Provider* p, providers)
@@ -29,7 +29,7 @@ namespace pwn
 					p->provide(world, ra);
 				}
 			}
-			
+
 			Pipeline::Pipeline()
 			{
 			}
@@ -37,7 +37,7 @@ namespace pwn
 			Pipeline::~Pipeline()
 			{
 			}
-			
+
 			void Pipeline::add(Provider* pr)
 			{
 				std::vector<Provider*> prp = pr->getProviders();
@@ -45,13 +45,13 @@ namespace pwn
 				{
 					add(p);
 				}
-				
+
 				if (providers.end() == find(providers.begin(), providers.end(), pr))
 				{
 					providers.push_back(pr);
 				}
 			}
-			
+
 			void Pipeline::bind(Binder* binder, ShaderPool* shaders)
 			{
 				BOOST_FOREACH(Provider* p, providers)

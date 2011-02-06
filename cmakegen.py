@@ -21,7 +21,6 @@ def makeCmakeFile(path, sub):
 		f.write("# delete the comment where this file is included to remove the autogeneration\n")
 		f.write("\n")
 		f.write("set ( " + varname + "\n")
-		print relpath
 		for fname in sorted(os.listdir(folder)):
 			filepath = os.path.join(folder, fname)
 			if os.path.isfile(filepath):

@@ -3,6 +3,6 @@
 # delete the comment where this file is included to remove the autogeneration
 
 set ( core_src
-	src/StringUtils.cpp
-	src/idpool.cpp
+	StringUtils.cpp
+	idpool.cpp
 )

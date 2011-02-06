@@ -3,14 +3,14 @@
 # delete the comment where this file is included to remove the autogeneration
 
 set ( math_test
-	test/TestAngle.cpp
-	test/TestBase.cpp
-	test/TestBase.h
-	test/TestMat33.cpp
-	test/TestMat44.cpp
-	test/TestMath1.cpp
-	test/TestQuat.cpp
-	test/TestRect.cpp
-	test/TestVec2.cpp
-	test/TestVec3.cpp
+	TestAngle.cpp
+	TestBase.cpp
+	TestBase.h
+	TestMat33.cpp
+	TestMat44.cpp
+	TestMath1.cpp
+	TestQuat.cpp
+	TestRect.cpp
+	TestVec2.cpp
+	TestVec3.cpp
 )

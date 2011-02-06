@@ -3,19 +3,19 @@
 # delete the comment where this file is included to remove the autogeneration
 
 set ( math_src
-	src/angle.cpp
-	src/axisangle.cpp
-	src/direction2.cpp
-	src/direction3.cpp
-	src/mat33.cpp
-	src/mat44.cpp
-	src/math.cpp
-	src/point2.cpp
-	src/point3.cpp
-	src/quat.cpp
-	src/rect.cpp
-	src/rgb.cpp
-	src/rgba.cpp
-	src/vec2.cpp
-	src/vec3.cpp
+	angle.cpp
+	axisangle.cpp
+	direction2.cpp
+	direction3.cpp
+	mat33.cpp
+	mat44.cpp
+	math.cpp
+	point2.cpp
+	point3.cpp
+	quat.cpp
+	rect.cpp
+	rgb.cpp
+	rgba.cpp
+	vec2.cpp
+	vec3.cpp
 )

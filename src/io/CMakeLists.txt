@@ -1,5 +1,5 @@
 #autogen this:
-include(src/io_src.cmake)
+include(io_src.cmake)
 #include(test/CMakeLists.txt)
 #autogen this:
 include(../../inc/pwn/io/io_inc.cmake)
@@ -8,6 +8,9 @@ include(../../inc/pwn/io/io_inc.cmake)
 include(../../external/physfspp/physfscpp.cmake)
 
 set(src ${io_src} ${io_inc} ${physfscpp})
+
+source_group("" FILES ${src})
+source_group("PhysFs++" FILES ${physfscpp})
 
 include_directories(../../external/physfspp)
 include_directories(${PHYSFS_INCLUDE_DIR})

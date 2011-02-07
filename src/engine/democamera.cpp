@@ -48,11 +48,11 @@ namespace pwn
 
 		namespace // local
 		{
-			int multi(bool pos, bool neg)
+			pwn::real multi(bool pos, bool neg)
 			{
-				int v = 0;
-				if( pos ) ++v;
-				if( neg ) --v;
+				pwn::real v = 0;
+				if( pos ) v+=1;
+				if( neg ) v-=1;
 				return v;
 			}
 		}

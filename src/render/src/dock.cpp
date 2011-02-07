@@ -13,7 +13,7 @@ namespace pwn
 
 		math::rect Dock::getRect(int width, int height) const
 		{
-			return math::FromLrud(0, width, 0, -height);
+			return math::FromLrud(0, static_cast<pwn::real>(width), 0, static_cast<pwn::real>(-height));
 		}
 
 		Dock::Dock()

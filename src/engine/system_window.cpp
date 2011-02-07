@@ -118,7 +118,7 @@ namespace pwn
 					}
 				}
 				const sf::Input& i = window.GetInput();
-				const math::vec2 size(window.GetWidth(), window.GetHeight());
+				const math::vec2 size(static_cast<pwn::real>(window.GetWidth()), static_cast<pwn::real>(window.GetHeight()));
 				const math::vec2 center = size / 2;
 				const math::vec2 movement( (i.GetMouseX()-center.x)/ size.y, (center.y - i.GetMouseY())/size.y ); // divide by size.y (height) as movement is measured in ´percenteage of window height
 				/// @todo: make it so that is determined by desktop resolution and not game size

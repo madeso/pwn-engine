@@ -251,7 +251,7 @@ namespace pwn
 
 					void readCurrentFrame(std::vector<string> cmd)
 					{
-						model.currentFrame = intParse(cmd[1]);
+						model.currentFrame = static_cast<pwn::real>(intParse(cmd[1]));
 					}
 
 					void readFrameCount(std::vector<string> cmd)

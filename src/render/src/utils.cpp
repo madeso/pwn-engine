@@ -20,11 +20,14 @@ namespace pwn
 		{
 			SetView2d(width, height);
 
+			const GLfloat w = static_cast<GLfloat>(width);
+			const GLfloat h = static_cast<GLfloat>(height);
+
 			glBegin(GL_QUADS);
 			glTexCoord2f(0, 1); glVertex2f(0, 0); // top left
-			glTexCoord2f(0, 0); glVertex2f(0, height); // bottom left
-			glTexCoord2f(1, 0); glVertex2f(width, height); // bottom right
-			glTexCoord2f(1, 1); glVertex2f(width, 0); // top right
+			glTexCoord2f(0, 0); glVertex2f(0, h); // bottom left
+			glTexCoord2f(1, 0); glVertex2f(w, h); // bottom right
+			glTexCoord2f(1, 1); glVertex2f(w, 0); // top right
 			glEnd(); pwnAssert_NoGLError();
 		}
 	}

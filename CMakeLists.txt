@@ -8,7 +8,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake-modules"
 
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
-SET(Boost_ADDITIONAL_VERSIONS "1.43" "1.43.0" "1.45" "1.45.0")
+set(Boost_ADDITIONAL_VERSIONS "1.43" "1.43.0" "1.45" "1.45.0")
 
 if(WIN32)
 	#on windows, link to sfml static, to avoid crash on exit with ati cards
@@ -76,6 +76,10 @@ option(BUILD_SHARED_LIBS "build shared libraries" OFF)
 set(BUILD_SHARED_LIBS OFF)
 
 set(PWN_DIST_FOLDER "${PROJECT_SOURCE_DIR}/dist")
+if(NOT MSVC)
+	# set it to a subfolder deeper, pwn expects it to run from say dist/Release
+	set(PWN_DIST_FOLDER "${PWN_DIST_FOLDER}/build")
+endif(NOT MSVC)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PWN_DIST_FOLDER})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PWN_DIST_FOLDER})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PWN_DIST_FOLDER})

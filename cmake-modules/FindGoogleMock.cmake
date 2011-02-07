@@ -68,7 +68,7 @@ else(GMOCK-CONFIG_EXECUTABLE)
 	)
 	
 	if( WIN32 AND GOOGLEMOCK_LIBRARY)
-		find_library( GOOGLEMOCK_LIBRARY_DEBUG NAMES gmockd
+		find_library( GOOGLEMOCK_LIBRARY_DEBUG NAMES gmockd gmock
 			PATHS
 			~/usr/lib
 		   /opt/local/lib

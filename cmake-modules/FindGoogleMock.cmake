@@ -86,6 +86,36 @@ else(GMOCK-CONFIG_EXECUTABLE)
 			set(GOOGLEMOCK_LIBRARY "")
 		endif(GOOGLEMOCK_LIBRARY_DEBUG)
 	endif( WIN32 AND GOOGLEMOCK_LIBRARY)
+	
+	if( NOT WIN32 AND GOOGLEMOCK_LIBRARY)
+		find_library( GOOGLEMOCK_TEST_LIBRARY NAMES gtest
+			PATHS
+			~/usr/lib
+		   /opt/local/lib
+		   /usr/lib
+		   /usr/lib64
+		   /usr/local/lib
+		   /opt/kde4/lib
+		   ${KDE4_LIB_DIR}
+		)
+		
+		find_library( GOOGLEMOCK_PTHREAD_LIBRARY NAMES pthread
+			PATHS
+			~/usr/lib
+		   /opt/local/lib
+		   /usr/lib
+		   /usr/lib64
+		   /usr/local/lib
+		   /opt/kde4/lib
+		   ${KDE4_LIB_DIR}
+		)
+		
+		if( GOOGLEMOCK_TEST_LIBRARY AND GOOGLEMOCK_PTHREAD_LIBRARY)
+			set(GOOGLEMOCK_LIBRARY ${GOOGLEMOCK_PTHREAD_LIBRARY} ${GOOGLEMOCK_TEST_LIBRARY} ${GOOGLEMOCK_LIBRARY})
+		else(GOOGLEMOCK_TEST_LIBRARY )
+			set(GOOGLEMOCK_LIBRARY "")
+		endif(GOOGLEMOCK_TEST_LIBRARY AND GOOGLEMOCK_PTHREAD_LIBRARY)
+	endif( NOT WIN32 AND GOOGLEMOCK_LIBRARY)
 
 	if( GMOCK_CMAKE_DEBUG )
 		message("gmock root:  $ENV{GMOCK_ROOT}")

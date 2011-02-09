@@ -8,17 +8,17 @@ namespace pwn
 
 	// integers too...
 	#ifdef _MSC_VER
-        typedef __int64 int64_pwn;
+        typedef __int64 int64;
+        typedef unsigned __int64 uint64;
     #else
-        typedef long int64_pwn;
+        typedef long long int64;
+        typedef unsigned long long uint64;
 	#endif
 
-	typedef int64_pwn int64;
 	typedef signed int int32;
 	typedef signed short int16;
 	typedef signed char int8;
 
-	typedef int64_pwn uint64;
 	typedef unsigned int uint32;
 	typedef unsigned short uint16;
 	typedef unsigned char uint8;

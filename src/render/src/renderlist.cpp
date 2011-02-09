@@ -7,10 +7,21 @@
 #include <pwn/render/poseable.h>
 
 #include <pwn/sfml-config.h>
-#include <SFML/OpenGl.hpp>
+#include <SFML/OpenGL.hpp>
 
 #pragma warning(disable:4512) //'boost::detail::addr_impl_ref<T>' : assignment operator could not be generated
 #include <boost/foreach.hpp>
+
+#ifndef MSC_VER
+#include <iostream>
+namespace
+{
+    void OutputDebugStringA(const std::string& s)
+    {
+        std::cout << s << std::endl;
+    }
+}
+#endif
 
 namespace pwn
 {

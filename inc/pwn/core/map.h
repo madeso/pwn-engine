@@ -25,7 +25,7 @@ namespace pwn
 
 			T get(const string& var)
 			{
-				M::iterator r = m.find(var);
+				typename M::iterator r = m.find(var);
 				if( r != m.end() ) return r->second;
 
 				T t = generator(var);

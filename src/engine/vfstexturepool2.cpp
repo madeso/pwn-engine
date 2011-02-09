@@ -1,9 +1,9 @@
 #include <pwn/engine/vfstexturepool2.h>
-#include <pwn/render/Texture2.h>
+#include <pwn/render/texture2.h>
 
 #include "vfs_util.hpp"
 
-#include<soil/soil.h>
+#include<soil/SOIL.h>
 
 namespace pwn
 {

@@ -7,12 +7,20 @@ namespace pwn
 		namespace fse
 		{
 			FseException::FseException(const string& reason)
-				: exception(reason.c_str())
-				, message(reason)
+				:
+				// apperently gcc on my ubuntu doesnt support std::exception(string-description)
+				#ifdef _MSVC_VER
+                exception(reason.c_str()),
+                #endif
+				message(reason)
 			{
 			}
 
-			const char* FseException::what() const
+			FseException::~FseException() throw ()
+			{
+			}
+
+			const char* FseException::what() const throw ()
 			{
 				return message.c_str();
 			}

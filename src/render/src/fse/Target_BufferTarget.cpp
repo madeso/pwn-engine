@@ -1,6 +1,6 @@
 ﻿#include <pwn/render/fse/Target_BufferTarget.h>
 #include <pwn/render/fse/BufferReference.h>
-#include <pwn/core/Str.h>
+#include <pwn/core/str.h>
 
 namespace pwn
 {

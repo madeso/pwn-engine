@@ -87,7 +87,7 @@ namespace pwn
 			template<class C>
 			StringSeperator& iterate(const C& c)
 			{
-				for(C::const_iterator i = c.begin(); i!= c.end(); ++i)
+				for(typename C::const_iterator i = c.begin(); i!= c.end(); ++i)
 				{
 					strings.push_back( Str() << *i );
 				}

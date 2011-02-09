@@ -7,9 +7,9 @@
 #include <pwn/render/fse/BufferReference.h>
 #include <pwn/render/fse/Command_Commands.h>
 #include <pwn/core/StringSeperator.h>
-#include <pwn/core/Str.h>
+#include <pwn/core/str.h>
 #include <pwn/render/fse/Binder.h>
-#include <pwn/render/ShaderPool.h>
+#include <pwn/render/shaderpool.h>
 
 namespace pwn
 {

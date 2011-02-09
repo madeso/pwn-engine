@@ -1,8 +1,8 @@
 #define PWN_ENGINE_NO_AUTOLINK
 
 #include <pwn/engine/loop.h>
-#include <pwn/engine/Game.h>
-#include "GameImp.hpp"
+#include <pwn/engine/game.h>
+#include "gameimp.hpp"
 #include "loop.hpp"
 
 #include <pwn/sfml-config.h>

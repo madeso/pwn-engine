@@ -18,7 +18,7 @@
 #include <pwn/math/operations.h>
 
 #include <pwn/sfml-config.h>
-#include <SFML/OpenGl.hpp>
+#include <SFML/OpenGL.hpp>
 
 namespace pwn
 {

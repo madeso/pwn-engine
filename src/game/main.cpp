@@ -14,7 +14,7 @@
 #include <pwn/engine/vfstexturepool2.h>
 #include <pwn/io/io.h>
 #include <pwn/render/worldwithcameraboundobject3.h>
-#include <pwn/render/fse/pipeline.h>
+#include <pwn/render/fse/Pipeline.h>
 #include <pwn/render/light.h>
 
 #include <pwn/render/shaderpool.h>

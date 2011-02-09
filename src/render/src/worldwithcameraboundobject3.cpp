@@ -3,7 +3,7 @@
 #include <pwn/render/camera.h>
 #include <pwn/render/compiledcamera.h>
 #include <pwn/render/renderlist.h>
-#include <pwn/render/renderargs.h>
+#include <pwn/render/RenderArgs.h>
 #include <pwn/math/operations.h>
 #include "opengl_debug.hpp"
 

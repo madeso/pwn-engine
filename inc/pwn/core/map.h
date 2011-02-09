@@ -35,7 +35,7 @@ namespace pwn
 
 			void add(const string& name, T t)
 			{
-				m.insert(M::value_type(name, t));
+				m.insert(typename M::value_type(name, t));
 				v.push_back(t);
 			}
 

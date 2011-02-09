@@ -1,7 +1,7 @@
 ﻿#include <pwn/render/fse/Command_BindBufferCommand.h>
 #include <pwn/render/fse/BufferReference.h>
 #include <pwn/render/fse/Target.h>
-#include <pwn/core/Str.h>
+#include <pwn/core/str.h>
 #include <pwn/render/fse/Linker.h>
 #include <pwn/render/fse/Binder.h>
 

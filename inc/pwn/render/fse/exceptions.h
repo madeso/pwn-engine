@@ -15,8 +15,9 @@ namespace pwn
 			{
 			public:
 				explicit FseException(const string& what);
+				~FseException() throw ();
 
-				virtual const char* what() const;
+				virtual const char* what() const throw ();
 				void addMessage(const string& m);
 			private:
 				string message;

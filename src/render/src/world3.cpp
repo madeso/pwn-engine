@@ -2,7 +2,7 @@
 #include <pwn/render/actor.h>
 #include <pwn/render/light.h>
 #include <pwn/render/renderlist.h>
-#include <pwn/render/renderargs.h>
+#include <pwn/render/RenderArgs.h>
 #include <vector>
 #include <algorithm>
 #include <pwn/render/compiledcamera.h>

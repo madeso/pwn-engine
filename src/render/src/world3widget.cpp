@@ -1,9 +1,9 @@
 #include <pwn/render/world3widget.h>
 #include <pwn/render/world3.h>
 #include <pwn/math/operations.h>
-#include <pwn/render/renderargs.h>
+#include <pwn/render/RenderArgs.h>
 #include <pwn/render/compiledcamera.h>
-#include <pwn/render/fse/pipeline.h>
+#include <pwn/render/fse/Pipeline.h>
 
 #include "opengl_debug.hpp"
 

@@ -3,7 +3,7 @@
 
 #include <pwn/render/fse/types.h>
 #include <pwn/core/map.h>
-#include <pwn/render/Shader.h>
+#include <pwn/render/shader.h>
 
 namespace pwn
 {

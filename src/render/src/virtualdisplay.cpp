@@ -4,7 +4,7 @@
 #include <boost/foreach.hpp>
 
 #include <pwn/sfml-config.h>
-#include <SFML/OpenGl.hpp>
+#include <SFML/OpenGL.hpp>
 
 namespace pwn
 {

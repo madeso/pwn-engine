@@ -1,14 +1,11 @@
-math: add functioncalltype specifications for easy use with libraries
-math: remove quatw and quat(x,y,z,w) contructor in favor of the vec-real constructors
 general: investigate other, more liberal, licenses
-test: add more tests
-math: make easier to use, more member functions, use external? cml?
-support more os's like linux & mac
-rewrite rendering so that it doesn't use io code
-rewrite rendering so that it doesnt need special features like shaders, but uses them if available?
+all: support more os's like linux & mac
+test: add more unit tests
+render: update/rewrite rendering so that it doesnt need special features like shaders, but uses them if available?
 --------------------------
 ------------- features:
 * tranform into vbos & vertex shaders (indexed vbo!)
+ - convert or remove pwn.math in favor of the tested cml
  - transform to cpu updated vbos
  - add material shaders
  - support loading vertex & fragment from different files
@@ -31,6 +28,7 @@ rewrite rendering so that it doesnt need special features like shaders, but uses
  - character mechanics, modern approach to character animation, character scripting, animation state machines, animation blending
 * gui editor for components
 * add physics to component framework
+* rewrite render.fse so that it doesn't use io code
 * improve fse to support different "logical" paths
 * improve display framework to support huds
 * ssao

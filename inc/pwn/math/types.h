@@ -2,17 +2,15 @@
 #define PWN_MATH_TYPES
 
 #include <pwn/number.h>
-
-// temporary
-#define PWN_USE_CUSTOM_MATH
+#include <cml/cml.h>
 
 namespace pwn
 {
 	namespace math
 	{
-		struct vec2;
-		struct vec3;
-		struct quat;
+		typedef cml::vector<real, cml::fixed<2> > vec2;
+		typedef cml::vector<real, cml::fixed<3> > vec3;
+		typedef cml::quaternion<real, cml::fixed<>, cml::vector_first, cml::positive_cross> quat;
 		struct point2;
 		struct direction2;
 		struct point3;
@@ -20,267 +18,31 @@ namespace pwn
 		struct rect;
 		struct AxisAngle;
 		struct Angle;
-		struct ArcBall;
+		//struct ArcBall;
 
-		/** A 2 dimensional vector.
-		*/
-		struct vec2
-		{
-			/** The x value.
-			*/
-			real x;
+		real X(const vec2& v);
+		real Y(const vec2& v);
+		real& X(vec2& v);
+		real& Y(vec2& v);
 
-			/** The y value.
-			*/
-			real y;
+		real X(const vec3& v);
+		real Y(const vec3& v);
+		real Z(const vec3& v);
+		real& X(vec3& v);
+		real& Y(vec3& v);
+		real& Z(vec3& v);
 
-			/** constructor.
-			*/
-			vec2(const real x, const real y);
+		real X(const quat& v);
+		real Y(const quat& v);
+		real Z(const quat& v);
+		real W(const quat& v);
+		real& X(quat& v);
+		real& Y(quat& v);
+		real& Z(quat& v);
+		real& W(quat& v);
 
-			/** constructor.
-			*/
-			vec2();
-
-			/** a data-pointer.
-			@returns a 2-dimensional pointer to the member-variables
-			*/
-			real* data();
-
-			/** a const data-pointer.
-			@returns a 2-dimensional const pointer to the member-variables
-			*/
-			const real* data() const;
-
-			/** index operator.
-			valid indices are 0 and 1
-			*/
-			real& operator[](int index);
-
-			/** const index operator.
-			valid indices are 0 and 1
-			*/
-			const real operator[](int index) const;
-
-			/** vector addition.
-			*/
-			void operator+=(const vec2& rhs);
-
-			/** vector substraction.
-			*/
-			void operator-=(const vec2& rhs);
-
-			/** uniform scaling.
-			*/
-			void operator*=(const real rhs);
-
-			/** uniform scaling.
-			*/
-			void operator/=(const real rhs);
-		};
-
-		/** A 3 dimensional vector.
-		*/
-		struct vec3
-		{
-			/** The x value.
-			*/
-			real x;
-
-			/** The y value.
-			*/
-			real y;
-
-			/** The z value.
-			*/
-			real z;
-
-			/** constructor.
-			*/
-			vec3(const real x, const real y, const real z);
-
-			/** constructor.
-			*/
-			vec3();
-
-			/** a data-pointer.
-			@returns a 2-dimensional pointer to the member-variables
-			*/
-			real* data();
-
-			/** a const data-pointer.
-			@returns a 2-dimensional const pointer to the member-variables
-			*/
-			const real* data() const;
-
-			/** index operator.
-			valid indices are 0 and 1
-			*/
-			real& operator[](int index);
-
-			/** const index operator.
-			valid indices are 0 and 1
-			*/
-			const real operator[](int index) const;
-
-			/** vector addition.
-			*/
-			void operator+=(const vec3& rhs);
-
-			/** vector substraction.
-			*/
-			void operator-=(const vec3& rhs);
-
-			/** uniform scaling.
-			*/
-			void operator*=(const real rhs);
-
-			/** uniform scaling.
-			*/
-			void operator/=(const real rhs);
-		};
-
-		/** A quaternion
-		*/
-		struct quat
-		{
-			/**
-			*/
-			real x;
-
-			/** The z value.
-			*/
-			real y;
-
-			/** The z value.
-			*/
-			real z;
-
-			/** The z value.
-			*/
-			real w;
-
-			/** deprecated.
-			*/
-			quat(const real x, const real y, const real z, const real w);
-
-			/** constructor.
-			*/
-			quat(const vec3& v, const real w);
-
-			/** constructor.
-			*/
-			quat(const real w, const vec3& v);
-
-			/** quaternion multiplication.
-			*/
-			void operator*=(const quat& q);
-
-			/** quaternion addition.
-			*/
-			void operator+=(const quat& rhs);
-
-			/** quaternion subtraction.
-			*/
-			void operator-=(const quat& rhs);
-
-			/** quaternion scaling.
-			*/
-			void operator*=(const real rhs);
-
-			/** quaternion scaling.
-			*/
-			void operator/=(const real rhs);
-		};
-
-		namespace sizes
-		{
-			/** the size of the columns/rows of the 3x3 matrix
-			*/
-			const int mat33_size = 3;
-
-			/** the total number of elements of the 3x3 matrix.
-			*/
-			const int mat33_matrix_size = mat33_size*mat33_size;
-		}
-
-		/** A 3x3 matrix.
-		@see mat44
-		*/
-		struct mat33
-		{
-			/** constructor.
-			copies the elements
-			*/
-			mat33(const real data[sizes::mat33_matrix_size]);
-
-			/** A column major layout.
-			@code
-			    | 0 3 6 |
-			M = | 1 4 7 |
-			    | 2 5 8 |
-			@endcode
-			*/
-			real columnMajor[sizes::mat33_matrix_size];
-
-			/** accessor function.
-			*/
-			real at(int row, int column) const;
-
-			/** accessor function.
-			might be removed in favor of a set-function instead
-			*/
-			real& at(int row, int column);
-		};
-
-		namespace sizes
-		{
-			/** the size of the columns/rows of the 4x4 matrix
-			*/
-			const int mat44_size = 4;
-
-			/** the total number of elements of the 4x4 matrix.
-			*/
-			const int mat44_matrix_size = mat44_size*mat44_size;
-		}
-
-		/** A 4x4 matrix.
-		@see mat33
-		*/
-		struct mat44
-		{
-			/** constructor.
-			does nothing
-			*/
-			mat44();
-
-			/** constructor.
-			copies the elements
-			*/
-			mat44(const real data[sizes::mat44_matrix_size]);
-
-			/** Column major layout.
-			@code
-			    | 0 4 8  12 |
-			M = | 1 5 9  13 |
-			    | 2 5 10 14 |
-			    | 3 7 11 15 |
-			@endcode
-			*/
-			real columnMajor[sizes::mat44_matrix_size];
-
-			/** accessor function.
-			*/
-			real at(int row, int column) const;
-
-			/** accessor function.
-			might be removed in favor of a set-function instead
-			*/
-			real& at(int row, int column);
-
-			real operator[](const unsigned int index) const;
-			real& operator[](const unsigned int index);
-		};
+		typedef cml::matrix<real, cml::fixed<3,3>, cml::col_basis, cml::col_major > mat33;
+		typedef cml::matrix<real, cml::fixed<4,4>, cml::col_basis, cml::col_major > mat44;
 
 		/** a point in 2d.
 		a simple wrapper over vec2 for added type-safety

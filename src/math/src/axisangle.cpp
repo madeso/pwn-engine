@@ -23,9 +23,9 @@ namespace pwn
 		// rewrite to better fit the mathematics instead of this "hack"
 		const AxisAngle cAxisAngle(const quat& q)
 		{
-			Assert( q.w <= 1 ); // if this happes, we should normalize, but this shouldnt happen
+			Assert( W(q) <= 1 ); // if this happes, we should normalize, but this shouldnt happen
 			const vec3 axis = cvec3(q);
-			AxisAngle aa(axis, Acos(q.w)*PWN_MATH_VALUE(2.0));
+			AxisAngle aa(axis, Acos(W(q))*PWN_MATH_VALUE(2.0));
 
 			return aa;
 		}

@@ -14,29 +14,6 @@ namespace pwn
 {
 	namespace math
 	{
-		quat::quat(const real ax, const real ay, const real az, const real aw)
-			: x(ax)
-			, y(ay)
-			, z(az)
-			, w(aw)
-		{
-		}
-
-		quat::quat(const vec3& v, const real aw)
-			: x(v.x)
-			, y(v.y)
-			, z(v.z)
-			, w(aw)
-		{
-		}
-		quat::quat(const real aw, const vec3& v)
-			: x(v.x)
-			, y(v.y)
-			, z(v.z)
-			, w(aw)
-		{
-		}
-
 		const quat cquat(const AxisAngle& aa)
 		{
 			const real s = Sin( aa.angle * 0.5 );
@@ -45,65 +22,11 @@ namespace pwn
 			return GetNormalized(q);
 		}
 
-		void quat::operator*=(const quat& q)
-		{
-			const real sc = w*q.w - dot(cvec3(*this), cvec3(q));
-			const vec3 r = cvec3(q)*w + cvec3(*this)*q.w + cross(cvec3(*this), cvec3(q));
-
-			x = r.x;
-			y = r.y;
-			z = r.z;
-			w = sc;
-		}
-
-		void quat::operator+=(const quat& rhs)
-		{
-			x += rhs.x;
-			y += rhs.y;
-			z += rhs.z;
-			w += rhs.w;
-		}
-
-		void quat::operator-=(const quat& rhs)
-		{
-			x -= rhs.x;
-			y -= rhs.y;
-			z -= rhs.z;
-			w -= rhs.w;
-		}
-
-		void quat::operator*=(const real rhs)
-		{
-			x *= rhs;
-			y *= rhs;
-			z *= rhs;
-			w *= rhs;
-		}
-
-		void quat::operator/=(const real rhs)
-		{
-			const real s = PWN_MATH_VALUE(1.0) / rhs;
-			x *= s;
-			y *= s;
-			z *= s;
-			w *= s;
-		}
-
 		// ------------------------------------------------------
 
 		const quat quatw(const real aw, const real ax, const real ay, const real az)
 		{
 			return quat(ax, ay, az, aw);
-		}
-
-		real LengthOf(const quat& q)
-		{
-			return Sqrt( LengthOfSquared(q) );
-		}
-
-		real LengthOfSquared(const quat& q)
-		{
-			return Square(q.x) + Square(q.y) + Square(q.z) + Square(q.w);
 		}
 
 		const quat Lerp(const quat& f, const real scale, const quat& t)
@@ -141,32 +64,10 @@ namespace pwn
 
 		const quat GetNormalized(const quat& q)
 		{
+			if( q.length_squared() < 0.001f ) return q;
 			quat temp = q;
-			Normalize(&temp);
+			temp.normalize();
 			return temp;
-		}
-
-		void Normalize(quat* q)
-		{
-			const real l = LengthOf(*q);
-			q->x /= l;
-			q->y /= l;
-			q->z /= l;
-			q->w /= l;
-		}
-
-		const void Conjugate(quat* q)
-		{
-			q->x = -q->x;
-			q->y = -q->y;
-			q->z = -q->z;
-			// ignore w
-		}
-		const quat GetConjugate(const quat& q)
-		{
-			quat t = q;
-			Conjugate(&t);
-			return t;
 		}
 
 		const vec3 In(const quat& q)
@@ -201,7 +102,14 @@ namespace pwn
 
 		const vec3 RightUpIn(const quat& q, const vec3& v)
 		{
-			return Right(q)*v.x + Up(q)*v.x + In(q)*v.z;
+			return Right(q)*X(v) + Up(q)*Y(v) + In(q)*Z(v);
+		}
+
+		quat GetConjugate(const quat& aq)
+		{
+			quat q = aq;
+			q.conjugate();
+			return q;
 		}
 
 		const vec3 RotateAroundOrigo(const quat& q, const vec3& v)
@@ -214,16 +122,6 @@ namespace pwn
 		{
 			return GetNormalized(extra * current);
 		}
-
-		namespace // local
-		{
-			bool isZero(real r)
-			{
-				return ( Abs(r) < PWN_MATH_VALUE(0.006) );
-			}
-		}
-
-		//quat::quat(const Euler& e);
 
 		const quat qIdentity()
 		{
@@ -239,7 +137,7 @@ namespace pwn
 		const quat qLookAtOrNot(const vec3& from, const vec3& to, const vec3& up)
 		{
 			const vec3 dir = to-from;
-			const real len = LengthOfSquared(dir);
+			const real len = dir.length_squared();
 			if( len > 0.001f ) return qLookInDirection(dir, up);
 			else return qIdentity();
 		}
@@ -290,67 +188,9 @@ namespace pwn
 
 		const quat qLookInDirection(const vec3& adir, const vec3& up)
 		{
-			Assert(LengthOf(adir) > 0.01f );
-			const vec3 dir = GetNormalized(adir);
-			const vec3 v = GetNormalized(cross(dir, up));
-			const vec3 u = cross(v, dir);
-			const vec3 n = -dir;
-#define VECARR(v) { v.x, v.y, v.z }
-			const real mat[3][3] = { VECARR(v), VECARR(u), VECARR(n) };
-#undef VECARR
-			return FromMatrix3(mat);
-		}
-
-		real dot(const quat& lhs, const quat& rhs)
-		{
-			return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z +lhs.w * rhs.w;
-		}
-
-		// -----------------------------------------------------------------------------------------------------------------
-
-		const quat operator*(const quat& lhs, const quat& rhs)
-		{
-			quat temp = lhs;
-			temp *= rhs;
-			return temp;
-		}
-
-		const quat operator+(const quat& lhs, const quat& rhs)
-		{
-			quat temp = lhs;
-			temp += rhs;
-			return temp;
-		}
-
-		const quat operator-(const quat& lhs, const quat& rhs)
-		{
-			quat temp = lhs;
-			temp -= rhs;
-			return temp;
-		}
-
-		const quat operator*(const real scalar, const quat& q)
-		{
-			quat temp = q;
-			temp *= scalar;
-			return temp;
-		}
-		const quat operator*(const quat& q, const real scalar)
-		{
-			quat temp = q;
-			temp *= scalar;
-			return temp;
-		}
-
-		const quat operator/(const quat& q, const real scalar)
-		{
-			quat temp = q;
-			temp /= scalar;
-			return temp;
-		}
-		const quat operator-(const quat& q)
-		{
-			return quat(-cvec3(q), -q.w);
+			quat ret;
+			quaternion_rotation_aim_at(ret, vec3(0,0,0), adir, up);
+			return ret;
 		}
 	}
 }

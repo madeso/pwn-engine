@@ -3,129 +3,28 @@
 
 #include <pwn/assert.h>
 
-#ifdef PWN_USE_CUSTOM_MATH
-#include <cmath>
-#include <memory> // memcpy
-#else
-#include <cml/cml.h>
-#endif
-
 namespace pwn
 {
 	namespace math
 	{
 		const vec3 cvec3(const quat& q)
 		{
-			return vec3(q.x, q.y, q.z);
+			return vec3(X(q), Y(q), Z(q));
 		}
 
 		const vec3 cvec3(const mat44& m)
 		{
-			return vec3(m.at(0, 3), m.at(1, 3), m.at(2, 3));
-		}
-
-		vec3::vec3(const real ax, const real ay, const real az)
-			: x(ax)
-			, y(ay)
-			, z(az)
-		{
-		}
-
-		vec3::vec3()
-			: x(0)
-			, y(0)
-			, z(0)
-		{
-		}
-
-		real* vec3::data()
-		{
-			return &x;
-		}
-
-		const real* vec3::data() const
-		{
-			return &x;
-		}
-
-		real& vec3::operator[](int index)
-		{
-			if( index == 0 ) return x;
-			else if( index == 1 ) return y;
-			else return z;
-		}
-
-		const real vec3::operator[](int index) const
-		{
-			if( index == 0 ) return x;
-			else if( index == 1 ) return y;
-			else return z;
-		}
-
-		void vec3::operator+=(const vec3& rhs)
-		{
-			x += rhs.x;
-			y += rhs.y;
-			z += rhs.z;
-		}
-
-		void vec3::operator-=(const vec3& rhs)
-		{
-			x -= rhs.x;
-			y -= rhs.y;
-			z -= rhs.z;
-		}
-
-		void vec3::operator*=(const real rhs)
-		{
-			x *= rhs;
-			y *= rhs;
-			z *= rhs;
-		}
-
-		void vec3::operator/=(const real rhs)
-		{
-			x /= rhs;
-			y /= rhs;
-			z /= rhs;
+			return vec3(m(0, 3), m(1, 3), m(2, 3));
 		}
 
 		// -------------------------------------------------------
 
-		real LengthOf(const vec3& vec)
-		{
-			return Sqrt(LengthOfSquared(vec));
-		}
-
-		real LengthOfSquared(const vec3& vec)
-		{
-			return Square(vec.x) + Square(vec.y) + Square(vec.z);
-		}
-
 		const vec3 GetNormalized(const vec3& vec)
 		{
+			if( vec.length_squared() < 0.001f ) return vec;
 			vec3 temp = vec;
-			Normalize(&temp);
+			temp.normalize();
 			return temp;
-		}
-
-		void Normalize(vec3* vec)
-		{
-			const real length = LengthOf(*vec);
-			if( length > PWN_MATH_VALUE(0.001) )
-			{
-				*vec /= length;
-			}
-		}
-
-		const vec3 cross(const vec3& lhs, const vec3& rhs)
-		{
-			return vec3(lhs.y*rhs.z - lhs.z*rhs.y, lhs.z*rhs.x - lhs.x*rhs.z, lhs.x*rhs.y - lhs.y*rhs.x);
-		}
-
-		const real dot(const vec3& lhs, const vec3& rhs)
-		{
-			return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
 		}
 
 		const vec3 crossNorm(const vec3& lhs, const vec3& rhs)
@@ -135,7 +34,7 @@ namespace pwn
 
 		vec3 Curve(const vec3& target, const vec3& old, real smoothing)
 		{
-			return vec3(Curve(target.x, old.x, smoothing), Curve(target.y, old.y, smoothing), Curve(target.z, old.z, smoothing) );
+			return vec3(Curve(X(target), X(old), smoothing), Curve(Y(target), Y(old), smoothing), Curve(Z(target), Z(old), smoothing) );
 		}
 
 		const vec3 FromTo(const vec3& from, const vec3& to)
@@ -227,9 +126,9 @@ namespace pwn
 			// Assert( tmp.length() <= 1.001f );
 
 			uint16 compressed = 0;
-			if ( tmp.x < 0 ) { compressed |= unit::XSIGN_MASK; tmp.x = -tmp.x; }
-			if ( tmp.y < 0 ) { compressed |= unit::YSIGN_MASK; tmp.y = -tmp.y; }
-			if ( tmp.z < 0 ) { compressed |= unit::ZSIGN_MASK; tmp.z = -tmp.z; }
+			if ( X(tmp) < 0 ) { compressed |= unit::XSIGN_MASK; X(tmp) = -X(tmp); }
+			if ( Y(tmp) < 0 ) { compressed |= unit::YSIGN_MASK; Y(tmp) = -Y(tmp); }
+			if ( Z(tmp) < 0 ) { compressed |= unit::ZSIGN_MASK; Z(tmp) = -Z(tmp); }
 
 			// project the normal onto the plane that goes through
 			// X0=(1,0,0),Y0=(0,1,0),Z0=(0,0,1).
@@ -238,9 +137,9 @@ namespace pwn
 
 			// a little slower... old pack was 4 multiplies and 2 adds.
 			// This is 2 multiplies, 2 adds, and a divide....
-			float32 w = 126.0f / ( tmp.x + tmp.y + tmp.z );
-			long xbits = (long)( tmp.x * w );
-			long ybits = (long)( tmp.y * w );
+			float32 w = 126.0f / ( X(tmp) + Y(tmp) + Z(tmp) );
+			long xbits = (long)( X(tmp) * w );
+			long ybits = (long)( Y(tmp) * w );
 
 			Assert( xbits <  127 );
 			Assert( xbits >= 0   );
@@ -292,9 +191,9 @@ namespace pwn
 			vec3 vec(uvadj * (float32) xbits, uvadj * (float32) ybits, uvadj * (float32)( 126 - xbits - ybits ));
 
 			// set all the sign bits
-			if ( compressed & unit::XSIGN_MASK ) vec.x = -vec.x;
-			if ( compressed & unit::YSIGN_MASK ) vec.y = -vec.y;
-			if ( compressed & unit::ZSIGN_MASK ) vec.z = -vec.z;
+			if ( compressed & unit::XSIGN_MASK ) X(vec) = -X(vec);
+			if ( compressed & unit::YSIGN_MASK ) Y(vec) = -Y(vec);
+			if ( compressed & unit::ZSIGN_MASK ) Z(vec) = -Z(vec);
 
 			//Assert( vec.isValid());
 
@@ -303,50 +202,11 @@ namespace pwn
 
 		// ----------------------------------------------------------------------------------
 
-		const vec3 operator+(const vec3& lhs, const vec3& rhs)
-		{
-			vec3 temp = lhs;
-			temp += rhs;
-			return temp;
-		}
-
-		const vec3 operator-(const vec3& lhs, const vec3& rhs)
-		{
-			vec3 temp = lhs;
-			temp -= rhs;
-			return temp;
-		}
-
-		const vec3 operator*(const real scalar, const vec3& vec)
-		{
-			vec3 temp = vec;
-			temp *= scalar;
-			return temp;
-		}
-		const vec3 operator*(const vec3& vec, const real scalar)
-		{
-			vec3 temp = vec;
-			temp *= scalar;
-			return temp;
-		}
-
-		const vec3 operator/(const vec3& vec, const real scalar)
-		{
-			vec3 temp = vec;
-			temp /= scalar;
-			return temp;
-		}
-		const vec3 operator-(const vec3& vec)
-		{
-			return vec3(-vec.x, -vec.y, -vec.z);
-		}
-
-		// -----------------------------------------------------------------------------------
-
 		const Angle AngleBetween(const vec3& a, const vec3& b)
 		{
 			return Acos( KeepWithin(-1, dot(GetNormalized(a), b),1) );
 		}
+
 		const Angle AngleBetween(const vec3& a, const vec3& b, const vec3& perpa)
 		{
 			const Angle s = AngleBetween(a,b);

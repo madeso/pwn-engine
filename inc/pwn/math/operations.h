@@ -204,26 +204,7 @@ namespace pwn
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/// \defgroup vec2 vec2 operations
 		/// @{
-
-		/** Calculates the length of a vector.
-		@see LengthOfSquared(const vec2&)
-		*/
-		real LengthOf(const vec2& vec);
-
-		/** Calculates the square length of a vector.
-		@see LengthOf(const vec2&)
-		*/
-		real LengthOfSquared(const vec2& vec);
-
-		/** Calculates the normalized version of a vector.
-		@see Normalize(vec2*)
-		*/
 		const vec2 GetNormalized(const vec2& vec);
-
-		/** Normalizes a vector.
-		@see GetNormalized(const vec2&)
-		*/
-		void Normalize(vec2* vec);
 
 		/** Generates a direction given two positions.
 		@returns a vector pointing from to to.
@@ -250,30 +231,6 @@ namespace pwn
 		*/
 		const vec2 ChangeY(const vec2& v, const real newy);
 
-		/** vector addition.
-		*/
-		const vec2 operator+(const vec2& lhs, const vec2& rhs);
-
-		/** vector subtraction.
-		*/
-		const vec2 operator-(const vec2& lhs, const vec2& rhs);
-
-		/** vector scaling with a scalar.
-		*/
-		const vec2 operator*(const real scalar, const vec2& vec);
-
-		/** vector scaling with a scalar.
-		*/
-		const vec2 operator*(const vec2& vec, const real scalar);
-
-		/** vector scaling with scalar.
-		*/
-		const vec2 operator/(const vec2& vec, const real scalar);
-
-		/** vector negation.
-		*/
-		const vec2 operator-(const vec2& vec);
-
 		/// @}
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/// \defgroup vec3 vec3 operations
@@ -288,36 +245,11 @@ namespace pwn
 		*/
 		const vec3 cvec3(const mat44& m);
 
-		/** the length of a vector.
-		@see LengthOfSquared(const vec3&)
-		*/
-		real LengthOf(const vec3& vec);
-
-		/** the squared length of a vector.
-		@see LengthOf(const vec3&)
-		*/
-		real LengthOfSquared(const vec3& vec);
-
 		/** normalizes a vector and returns it.
-		@see Normalize(vec3*)
 		*/
 		const vec3 GetNormalized(const vec3& vec);
 
-		/** normalizes a vector.
-		@see GetNormalized(const vec3&)
-		*/
-		void Normalize(vec3* vec);
-
-		/** computes the cross-product between two vectors.
-		*/
-		const vec3 cross(const vec3& lhs, const vec3& rhs);
-
-		/** computes the dot-product between two vectors.
-		*/
-		const real dot(const vec3& lhs, const vec3& rhs);
-
 		/** computes the cross-product and then normalizes the result.
-		@see cross(const vec3&,const vec3&)
 		@see GetNormalized(const vec3&)
 		*/
 		const vec3 crossNorm(const vec3& lhs, const vec3& rhs);
@@ -345,30 +277,6 @@ namespace pwn
 		/** quadratic interpolation between two vectors.
 		*/
 		const vec3 Qlerp(const vec3& f, real scale, const vec3& t);
-
-		/** vector-addition.
-		*/
-		const vec3 operator+(const vec3& lhs, const vec3& rhs);
-
-		/** vector substraction.
-		*/
-		const vec3 operator-(const vec3& lhs, const vec3& rhs);
-
-		/** vector scaling.
-		*/
-		const vec3 operator*(const real scalar, const vec3& vec);
-
-		/** vector scaling.
-		*/
-		const vec3 operator*(const vec3& vec, const real scalar);
-
-		/** vector scaling.
-		*/
-		const vec3 operator/(const vec3& vec, const real scalar);
-
-		/** vector negation.
-		*/
-		const vec3 operator-(const vec3& vec);
 
 		/** gets the angle between two vectors
 		only able to get 0-180 degrees
@@ -452,7 +360,7 @@ namespace pwn
 
 		/** creates a matrix from the row-major argument.
 		*/
-		const mat33 mat33_FromRowMajor(const real data[sizes::mat33_matrix_size]);
+		//const mat33 mat33_FromRowMajor(const real data[sizes::mat33_matrix_size]);
 
 		/** Scaling matrix.
 		*/
@@ -500,7 +408,7 @@ namespace pwn
 
 		/** creates a matrix from the row-major argument.
 		*/
-		const mat44 mat44_FromRowMajor(const real data[sizes::mat44_matrix_size]);
+		// const mat44 mat44_FromRowMajor(const real data[sizes::mat44_matrix_size]);
 
 		/** matrix-multiplication.
 		*/
@@ -578,23 +486,9 @@ namespace pwn
 		/// \defgroup quat quat operations
 		/// @{
 
-		/** "constructor" that takes w element first instead of last, obsolete
-		*/
-		const quat quatw(const real aw, const real ax, const real ay, const real az);
-
 		/** construct from a axis and a angle.
 		*/
 		const quat cquat(const AxisAngle& aa);
-
-		/** the length.
-		@see LengthOfSquared(const quat&)
-		*/
-		real LengthOf(const quat& q);
-
-		/** the squared length.
-		@see LengthOf(const quat&)
-		*/
-		real LengthOfSquared(const quat& q);
 
 		/** Linear interpolation.
 		*/
@@ -618,22 +512,6 @@ namespace pwn
 		@see Normalize(quat*)
 		*/
 		const quat GetNormalized(const quat& q);
-
-		/** normalizes the quaternion.
-		@see Normalize(const quat&)
-		*/
-		void Normalize(quat* q);
-
-		/** sets the quaternion to it's conjugate
-		@see GetConjugate(const quat&)
-		*/
-		const void Conjugate(quat* q);
-
-		/** gets the conjugate of the quaternion
-		@see Conjugate(quat*)
-		*/
-		const quat GetConjugate(const quat& q);
-
 
 		/** Unit-vector pointing in the direction of negative Z, (0,0,-1) in quaternion-space.
 		*/
@@ -697,37 +575,7 @@ namespace pwn
 		*/
 		const quat qLookInDirection(const vec3& adir, const vec3& up);
 
-		/** the dot product between two quaternions.
-		*/
-		real dot(const quat& lhs, const quat& rhs);
-
-		/** quaternion multiplication.
-		*/
-		const quat operator*(const quat& lhs, const quat& rhs);
-
-		/** quaternion addition.
-		*/
-		const quat operator+(const quat& lhs, const quat& rhs);
-
-		/** quaternion subtraction.
-		*/
-		const quat operator-(const quat& lhs, const quat& rhs);
-
-		/** quaternion scaling.
-		*/
-		const quat operator*(const real scalar, const quat& q);
-
-		/** quaternion scaling.
-		*/
-		const quat operator*(const quat& q, const real scalar);
-
-		/** quaternion scaling.
-		*/
-		const quat operator/(const quat& q, const real scalar);
-
-		/** the conjugate of the quaternion
-		*/
-		const quat operator-(const quat& q);
+		quat GetConjugate(const quat& q);
 
 		/// @}
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

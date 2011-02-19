@@ -24,11 +24,11 @@ namespace pwn
 		}
 		const real point2::x() const
 		{
-			return vec.x;
+			return X(vec);
 		}
 		const real point2::y() const
 		{
-			return vec.y;
+			return Y(vec);
 		}
 		void point2::operator+=(const direction2& dir)
 		{
@@ -49,7 +49,7 @@ namespace pwn
 
 		const point2 ChangeY(const point2& v, const real newy)
 		{
-			return point2(v.vec.x, newy);
+			return point2(X(v.vec), newy);
 		}
 
 		// -------------------------------------------

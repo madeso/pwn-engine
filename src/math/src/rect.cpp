@@ -26,22 +26,22 @@ namespace pwn
 
 		real TopOf(const rect& r)
 		{
-			return r.upperLeft.vec.y;
+			return Y(r.upperLeft.vec);
 		}
 
 		real BottomOf(const rect& r)
 		{
-			return r.lowerRight.vec.y;
+			return Y(r.lowerRight.vec);
 		}
 
 		real LeftOf(const rect& r)
 		{
-			return r.upperLeft.vec.x;
+			return X(r.upperLeft.vec);
 		}
 
 		real RightOf(const rect& r)
 		{
-			return r.lowerRight.vec.x;
+			return X(r.lowerRight.vec);
 		}
 
 		real WidthOf(const rect& r)
@@ -91,9 +91,9 @@ namespace pwn
 
 		const rect FromUpperLeftAndSize(const point2& point, const direction2& size)
 		{
-			Assert(size.vec.x >= 0);
-			Assert(size.vec.y >= 0);
-			return rect(point, point2(point.x() + size.vec.x, point.y()-size.vec.y) );
+			Assert(X(size.vec) >= 0);
+			Assert(Y(size.vec) >= 0);
+			return rect(point, point2(point.x() + X(size.vec), point.y()-Y(size.vec)) );
 		}
 
 		const rect FromUpperLeftAndSize(const point2& point, const real width, const real height)
@@ -113,10 +113,10 @@ namespace pwn
 
 		const rect FromSizeAndCenter(const direction2& size, const point2& center)
 		{
-			const real w = size.vec.x;
-			const real h = size.vec.y;
-			const real cx = center.vec.x;
-			const real cy = 1-center.vec.y;
+			const real w = X(size.vec);
+			const real h = Y(size.vec);
+			const real cx = X(center.vec);
+			const real cy = 1-Y(center.vec);
 			return FromUpperLeftAndLowerRight(point2(-w*cx, h*cy), point2(w*(1-cx), -h*(1-cy)) );
 		}
 
@@ -140,31 +140,31 @@ namespace pwn
 
 		const rect TurnCopyUpsideDown(const rect& r, const real scale)
 		{
-			const real lower = r.upperLeft.vec.y * scale;
-			const real upper = r.lowerRight.vec.y * scale;
+			const real lower = Y(r.upperLeft.vec) * scale;
+			const real upper = Y(r.lowerRight.vec) * scale;
 			return FromUpperLeftAndLowerRight(ChangeY(r.upperLeft, upper), ChangeY(r.lowerRight, lower));
 		}
 
 		const point2 Remap(const rect& from, const point2& p, const rect& to)
 		{
-			return point2( Remap(LeftOf(from), RightOf(from), p.vec.x, LeftOf(to), RightOf(to)) ,
-				Remap(TopOf(from), BottomOf(from), p.vec.y, TopOf(to), BottomOf(to)) );
+			return point2( Remap(LeftOf(from), RightOf(from), X(p.vec), LeftOf(to), RightOf(to)) ,
+				Remap(TopOf(from), BottomOf(from), Y(p.vec), TopOf(to), BottomOf(to)) );
 		}
 
 		const point2 KeepWithin(const point2& loc, const rect& region)
 		{
-			return point2( KeepWithin(LeftOf(region), loc.vec.x, RightOf(region)), KeepWithin(BottomOf(region), loc.vec.y, TopOf(region)));
+			return point2( KeepWithin(LeftOf(region), X(loc.vec), RightOf(region)), KeepWithin(BottomOf(region), Y(loc.vec), TopOf(region)));
 		}
 
 		const point2 KeepWithin(const point2& loc, const rect& region, const rect& object)
 		{
-			return point2( KeepWithin(LeftOf(region)-LeftOf(object), loc.vec.x, RightOf(region)-RightOf(object)), KeepWithin(BottomOf(region)-BottomOf(object), loc.vec.y, TopOf(region)-TopOf(object)));
+			return point2( KeepWithin(LeftOf(region)-LeftOf(object), X(loc.vec), RightOf(region)-RightOf(object)), KeepWithin(BottomOf(region)-BottomOf(object), Y(loc.vec), TopOf(region)-TopOf(object)));
 		}
 
 		const bool IsWithin(const point2& loc, const rect& region)
 		{
-			return IsWithin(LeftOf(region), loc.vec.x, RightOf(region))
-				&& IsWithin(BottomOf(region), loc.vec.y, TopOf(region));
+			return IsWithin(LeftOf(region), X(loc.vec), RightOf(region))
+				&& IsWithin(BottomOf(region), Y(loc.vec), TopOf(region));
 		}
 
 		// ------------------------------------------------------------------------

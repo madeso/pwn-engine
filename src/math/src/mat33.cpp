@@ -3,45 +3,22 @@
 
 #include <pwn/assert.h>
 
-#ifdef PWN_USE_CUSTOM_MATH
-#include <cmath>
-#include <memory> // memcpy
-#include <cstring> // for memcpy according to cplusplus.com, todo: check if memory is needed
-#else
-#include <cml/cml.h>
-#endif
-
 namespace pwn
 {
 	namespace math
 	{
-		mat33::mat33(const real data[sizes::mat33_matrix_size])
-		{
-			memcpy(columnMajor, data, sizeof(real) * sizes::mat33_matrix_size);
-		}
-
-		real mat33::at(int row, int column) const
-		{
-			return columnMajor[column * sizes::mat33_size + row];
-		}
-
-		real& mat33::at(int row, int column)
-		{
-			return columnMajor[column * sizes::mat33_size + row];
-		}
-
 		// - comes from making the test TestMat44=>TestIn run
 		const vec3 In(const mat33& m)
 		{
-			return vec3( m.at(0,2), m.at(1,2), -m.at(2,2));
+			return vec3( m(0,2), m(1,2), -m(2,2));
 		}
 		const vec3 Right(const mat33& m)
 		{
-			return vec3( m.at(0,0), m.at(1,0), -m.at(2,0));
+			return vec3( m(0,0), m(1,0), -m(2,0));
 		}
 		const vec3 Up(const mat33& m)
 		{
-			return vec3( m.at(0,1), m.at(1,1), -m.at(2,1));
+			return vec3( m(0,1), m(1,1), -m(2,1));
 		}
 
 		const vec3 Out(const mat33& m)
@@ -57,44 +34,27 @@ namespace pwn
 			return -Up(m);
 		}
 
-		const mat33 mat33_FromRowMajor(const real data[sizes::mat33_matrix_size])
+		const mat33 mat33_FromRowMajor(const real data[3*3])
 		{
-			const real temp[] = { data[0], data[3], data[6],
+			return mat33(data[0], data[3], data[6],
 				data[1], data[4], data[7],
-				data[2], data[5], data[8] };
-			return mat33( temp );
+				data[2], data[5], data[8] );
 		}
 
 		const mat33 Scale(const vec3& scale)
 		{
-			const real temp[] = { scale.x, 0,       0,
-				0,       scale.y, 0,
-				0,       0,       scale.z };
-			return mat33_FromRowMajor(temp);
-		}
-
-		const mat33 mat33Identity()
-		{
-			const real temp[] = { 1, 0, 0,
-				0, 1, 0,
-				0, 0, 1 };
-			return mat33_FromRowMajor(temp);
-		}
-
-		const mat33 cmat33(const mat44& m)
-		{
-			const real temp[] = { m.at(0, 0), m.at(0, 1), m.at(0, 2),
-				m.at(1, 0), m.at(1, 1), m.at(1, 2),
-				m.at(2, 0), m.at(2, 1), m.at(2, 2) };
+			const real temp[] = { X(scale), 0,       0,
+				0,       Y(scale), 0,
+				0,       0,       Z(scale) };
 			return mat33_FromRowMajor(temp);
 		}
 
 		const mat33 cmat33(const quat& q)
 		{
-			const real x = q.x;
-			const real y = q.y;
-			const real z = q.z;
-			const real w = q.w;
+			const real x = X(q);
+			const real y = Y(q);
+			const real z = Z(q);
+			const real w = W(q);
 
 			const real tXX = 2 * Square(x);
 			const real tYY = 2 * Square(y);

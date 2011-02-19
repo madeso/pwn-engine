@@ -33,7 +33,7 @@ namespace pwn
 
 		const real LengthOf(const direction3& dir)
 		{
-			return LengthOf(dir.vec);
+			return dir.vec.length();
 		}
 		const direction3 ToUnit(const direction3& dir)
 		{

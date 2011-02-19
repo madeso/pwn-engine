@@ -91,6 +91,7 @@ message("will place builds at ${PWN_DIST_FOLDER}")
 
 include_directories(inc)
 include_directories(external)
+include_directories(external/cml-1_0_2)
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${GOOGLEMOCK_INCLUDE_DIRS})
 

@@ -9,10 +9,10 @@ namespace test
 
 	GTEST(testLengthOf)
 	{
-		EXPECT_EQ(10, LengthOf(vec3(10, 0, 0)));
-		EXPECT_EQ(20, LengthOf(vec3(0, 20, 0)));
-		EXPECT_EQ(30, LengthOf(vec3(0, 0, 30)));
-		EXPECT_EQ(0, LengthOf(vec3(0, 0, 0)));
+		EXPECT_EQ(10, vec3(10, 0, 0).length());
+		EXPECT_EQ(20, vec3(0, 20, 0).length());
+		EXPECT_EQ(30, vec3(0, 0, 30).length());
+		EXPECT_EQ(0, vec3(0, 0, 0).length());
 	}
 
 	GTEST(testArrayOp)
@@ -24,9 +24,9 @@ namespace test
 		EXPECT_EQ(7, ctest[0]);
 		EXPECT_EQ(9, ctest[1]);
 		EXPECT_EQ(4, ctest[2]);
-		EXPECT_EQ(7, ctest.x);
-		EXPECT_EQ(9, ctest.y);
-		EXPECT_EQ(4, ctest.z);
+		EXPECT_EQ(7, X(ctest));
+		EXPECT_EQ(9, Y(ctest));
+		EXPECT_EQ(4, Z(ctest));
 
 		vec3 test(4,5, 6);
 		EXPECT_EQ(4, test.data()[0]);
@@ -35,9 +35,9 @@ namespace test
 		EXPECT_EQ(4, test[0]);
 		EXPECT_EQ(5, test[1]);
 		EXPECT_EQ(6, test[2]);
-		EXPECT_EQ(4, test.x);
-		EXPECT_EQ(5, test.y);
-		EXPECT_EQ(6, test.z);
+		EXPECT_EQ(4, X(test));
+		EXPECT_EQ(5, Y(test));
+		EXPECT_EQ(6, Z(test));
 	}
 
 	GTEST(testAdd)

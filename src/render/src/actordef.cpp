@@ -60,17 +60,17 @@ namespace pwn
 						const mesh::Point& point = smesh->positions[tri[i]];
 
 						const math::vec3 n = point.hasBone()
-							? math::GetNormalized( math::SetTransform(pose.transforms[point.getBone()], math::vec3(0,0,0)) * point.normal )
+							? math::GetNormalized(math::cmat33(math::SetTransform(pose.transforms[point.getBone()], math::vec3(0,0,0))) * point.normal)
 							: point.normal;
 
-						glNormal3f(n.x, n.y, n.z);
+						glNormal3fv(n.data());
 
-						glTexCoord2f(point.textcoord.x, point.textcoord.y);
+						glTexCoord2fv(point.textcoord.data());
 
 						const math::vec3 p = point.hasBone()
-							? pose.transforms[point.getBone()] * point.location
+							? math::cmat33(pose.transforms[point.getBone()]) * point.location
 							: point.location;
-						glVertex3f(p.x, p.y, p.z);
+						glVertex3fv(p.data());
 					}
 				}
 				glEnd(); pwnAssert_NoGLError();

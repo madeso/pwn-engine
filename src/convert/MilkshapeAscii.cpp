@@ -221,9 +221,9 @@ namespace pwn
 						string normalline = readLine();
 						std::vector<string> normalcmd = SplitString(normalline, " ");
 						Normal& n = mesh.newNormal();
-						n.norm.x = floatParse(normalcmd[0]);
-						n.norm.y = floatParse(normalcmd[1]);
-						n.norm.z = floatParse(normalcmd[2]);
+						math::X(n.norm) = floatParse(normalcmd[0]);
+						math::Y(n.norm) = floatParse(normalcmd[1]);
+						math::Z(n.norm) = floatParse(normalcmd[2]);
 						n.normalize();
 					}
 
@@ -233,17 +233,17 @@ namespace pwn
 						std::vector<string> vertexcmd = SplitString(vertexline, " ");
 						Vertex& v = mesh.newVertex();
 						v.flags = intParse(vertexcmd[0]);
-						v.pos.x = floatParse(vertexcmd[1]) * scale;
-						v.pos.y = floatParse(vertexcmd[2]) * scale;
-						v.pos.z = floatParse(vertexcmd[3]) * scale;
-						v.uv.x = floatParse(vertexcmd[4]);
-						v.uv.y = floatParse(vertexcmd[5]);
+						math::X(v.pos) = floatParse(vertexcmd[1]) * scale;
+						math::Y(v.pos) = floatParse(vertexcmd[2]) * scale;
+						math::Z(v.pos) = floatParse(vertexcmd[3]) * scale;
+						math::X(v.uv) = floatParse(vertexcmd[4]);
+						math::Y(v.uv) = floatParse(vertexcmd[5]);
 						v.bone = intParse(vertexcmd[6]);
 					}
 
 					const string readLine()
 					{
-						if( mLines.size() <= currentLine ) throw "file is to short...";
+						if( mLines.size() <= currentLine ) throw "file is too short...";
 						string line = mLines[currentLine];
 						++currentLine;
 						return line;

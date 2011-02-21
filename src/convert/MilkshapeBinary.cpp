@@ -278,18 +278,18 @@ namespace pwn
 								nid[i] = m.normals.size();
 
 								Normal& norm = m.newNormal();
-								norm.norm.x = tri.vertexNormals[i][0];
-								norm.norm.y = tri.vertexNormals[i][1];
-								norm.norm.z = tri.vertexNormals[i][2];
+								math::X(norm.norm) = tri.vertexNormals[i][0];
+								math::Y(norm.norm) = tri.vertexNormals[i][1];
+								math::Z(norm.norm) = tri.vertexNormals[i][2];
 
 								MS3DVertex v = run.vertices[ tri.vertexIndices[i] ];
 								Vertex& ver = m.newVertex();
-								ver.uv.x = tri.s[i];
-								ver.uv.y = tri.t[i];
+								math::X(ver.uv) = tri.s[i];
+								math::Y(ver.uv) = tri.t[i];
 								ver.bone = v.boneID;
-								ver.pos.x = v.vertex[0];
-								ver.pos.y = v.vertex[1];
-								ver.pos.z = v.vertex[2];
+								math::X(ver.pos) = v.vertex[0];
+								math::Y(ver.pos) = v.vertex[1];
+								math::Z(ver.pos) = v.vertex[2];
 							}
 
 							Tri& t = m.newTri();

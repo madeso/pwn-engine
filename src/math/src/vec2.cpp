@@ -7,6 +7,10 @@ namespace pwn
 {
 	namespace math
 	{
+		real X(const vec2& v) { return v[0]; }
+		real Y(const vec2& v) { return v[1]; }
+		real& X(vec2& v) { return v[0]; }
+		real& Y(vec2& v) { return v[1]; }
 		const vec2 GetNormalized(const vec2& vec)
 		{
 			if( vec.length_squared() < 0.001f ) return vec;

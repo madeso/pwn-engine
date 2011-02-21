@@ -245,8 +245,8 @@ namespace pwn
 				const math::vec3 poseloc = pose.bones[boneIndex].location;
 				const math::quat poserot = pose.bones[boneIndex].rotation;
 
-				const math::mat44 anim = math::mat44helper(math::mat44Identity()).translate(poseloc).rotate(GetConjugate(poserot)).mat;
-				const math::mat44 skel = math::mat44helper(math::mat44Identity()).translate(bone.pos).rotate(GetConjugate(bone.rot)).mat;
+				const math::mat44 anim = math::mat44helper(math::mat44Identity()).translate(poseloc).rotate(math::GetConjugate(poserot)).mat;
+				const math::mat44 skel = math::mat44helper(math::mat44Identity()).translate(bone.pos).rotate(math::GetConjugate(bone.rot)).mat;
 
 				result[boneIndex] = math::mat44helper(parent).mult(skel).mult(anim).mat;
 			}

@@ -19,6 +19,7 @@
 
 #include <pwn/sfml-config.h>
 #include <SFML/OpenGL.hpp>
+#include <pwn/math/operations.h>
 
 namespace pwn
 {
@@ -120,7 +121,7 @@ namespace pwn
 				const sf::Input& i = window.GetInput();
 				const math::vec2 size(static_cast<pwn::real>(window.GetWidth()), static_cast<pwn::real>(window.GetHeight()));
 				const math::vec2 center = size / 2;
-				const math::vec2 movement( (i.GetMouseX()-center.x)/ size.y, (center.y - i.GetMouseY())/size.y ); // divide by size.y (height) as movement is measured in ´percenteage of window height
+				const math::vec2 movement( (i.GetMouseX()-math::X(center))/ math::X(size), (math::Y(center) - i.GetMouseY())/math::Y(size) ); // divide by size.y (height) as movement is measured in ´percenteage of window height
 				/// @todo: make it so that is determined by desktop resolution and not game size
 				imp.handleMouse(movement*2);
 				resetMouse();

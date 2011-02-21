@@ -7,7 +7,7 @@ namespace pwn
 	namespace render
 	{
 		CompiledCamera::CompiledCamera(const Camera& camera)
-			: mat( cmat44(-camera.orientation) * cmat44(-camera.position.vec) )
+			: mat( math::cmat44(-camera.orientation) * math::cmat44(static_cast<math::vec3>(-camera.position.vec)) )
 		{
 		}
 	}

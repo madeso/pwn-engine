@@ -4,14 +4,10 @@
 #include <boost/utility.hpp>
 #include <boost/shared_ptr.hpp>
 #include <pwn/string.h>
+#include <pwn/math/types.h>
 
 namespace pwn
 {
-	namespace math
-	{
-		struct vec2;
-	}
-
 	namespace render
 	{
 		class Shader;

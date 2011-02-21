@@ -312,7 +312,7 @@ namespace pwn
 								RefMat(lmat, 3, 2) = 0;
 								RefMat(lmat, 3, 3) = 1;
 
-								return mat44_FromRowMajor(lmat);
+								return math::mat44_FromRowMajor(lmat);
 							}
 							else
 							{

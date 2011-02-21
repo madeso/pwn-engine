@@ -48,7 +48,7 @@ namespace pwn
 		{
 			properties.apply(light);
 			attenuation.apply(light);
-			GLfloat pos[4] = { position.x, position.y, position.z, 1 };
+			GLfloat pos[4] = { math::X(position), math::Y(position), math::Z(position), 1 };
 			glLightfv(light, GL_POSITION, pos); pwnAssert_NoGLError();
 		}
 
@@ -63,7 +63,7 @@ namespace pwn
 			properties.apply(light);
 			attenuation.apply(light);
 			math::vec3 vd = math::In(direction);
-			GLfloat dir[4] = { vd.x, vd.y, vd.z, 0 };
+			GLfloat dir[4] = { math::X(vd), math::Y(vd), math::Z(vd), 0 };
 			glLightfv(light, GL_POSITION, dir); pwnAssert_NoGLError();
 		}
 
@@ -82,9 +82,9 @@ namespace pwn
 			glLightf(light, GL_SPOT_EXPONENT, exponent); pwnAssert_NoGLError();
 			glLightf(light, GL_SPOT_CUTOFF, cutoff); pwnAssert_NoGLError();
 			math::vec3 vd = math::In(direction);
-			GLfloat dir[3] = { vd.x, vd.y, vd.z };
+			GLfloat dir[3] = { math::X(vd), math::Y(vd), math::Z(vd) };
 			glLightfv(light, GL_SPOT_DIRECTION, dir); pwnAssert_NoGLError();
-			GLfloat pos[4] = { position.x, position.y, position.z, 1 };
+			GLfloat pos[4] = { math::X(position), math::Y(position), math::Z(position), 1 };
 			glLightfv(light, GL_POSITION, pos); pwnAssert_NoGLError();
 		}
 	}

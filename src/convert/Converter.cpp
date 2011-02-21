@@ -64,8 +64,8 @@ namespace pwn
 		mesh::BTriangle::index OptimizedMeshBuilder::addTextCoord(const math::vec2& tc)
 		{
 			if( isBuilding == false ) throw "done has been called...";
-			Assert( math::IsWithinInclusive(0, tc.x, 1) );
-			Assert( math::IsWithinInclusive(0, tc.y, 1) );
+			Assert( math::IsWithinInclusive(0, math::X(tc), 1) );
+			Assert( math::IsWithinInclusive(0, math::Y(tc), 1) );
 			return mBuilder.addTextCoord(tc);
 		}
 

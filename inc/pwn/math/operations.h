@@ -360,7 +360,7 @@ namespace pwn
 
 		/** creates a matrix from the row-major argument.
 		*/
-		//const mat33 mat33_FromRowMajor(const real data[sizes::mat33_matrix_size]);
+		const mat33 mat33_FromRowMajor(const real data[3*3]);
 
 		/** Scaling matrix.
 		*/
@@ -408,7 +408,7 @@ namespace pwn
 
 		/** creates a matrix from the row-major argument.
 		*/
-		// const mat44 mat44_FromRowMajor(const real data[sizes::mat44_matrix_size]);
+		const mat44 mat44_FromRowMajor(const real data[4*4]);
 
 		/** matrix-multiplication.
 		*/
@@ -426,8 +426,6 @@ namespace pwn
 		/** quaternion rotation.
 		*/
 		const mat44 cmat44(const quat& q);
-
-		const mat44 Inverse(const mat44& m);
 
 		const mat44 SetTransform(const mat44& m, const vec3& t);
 
@@ -486,9 +484,13 @@ namespace pwn
 		/// \defgroup quat quat operations
 		/// @{
 
+		const quat quatw(const real aw, const real ax, const real ay, const real az);
+
 		/** construct from a axis and a angle.
 		*/
 		const quat cquat(const AxisAngle& aa);
+
+		const quat GetConjugate(const quat& q);
 
 		/** Linear interpolation.
 		*/
@@ -574,8 +576,6 @@ namespace pwn
 		@see qLookAt(const vec3&, const vec3&, const vec3&)
 		*/
 		const quat qLookInDirection(const vec3& adir, const vec3& up);
-
-		quat GetConjugate(const quat& q);
 
 		/// @}
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -923,27 +923,6 @@ namespace pwn
 		// quat GetRotation(const ArcBall& arc, const vec2 from, const vec2 to);
 
 		/// @}
-
-		template<class Stream>
-		Stream& operator<<(Stream& s, const vec2& v)
-		{
-			s << "(" << v.x << ", " << v.y << ")";
-			return s;
-		}
-
-		template<class Stream>
-		Stream& operator<<(Stream& s, const vec3& v)
-		{
-			s << "(" << v.x << ", " << v.y << ", " << v.z << ")";
-			return s;
-		}
-
-		template<class Stream>
-		Stream& operator<<(Stream& s, const quat& v)
-		{
-			s << "(" << v.x << ", " << v.y << ", " << v.z << ", " << v.w << ")";
-			return s;
-		}
 
 		template<class Stream>
 		Stream& operator<<(Stream& s, const Angle& a)

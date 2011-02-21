@@ -79,7 +79,7 @@ namespace pwn
 
 				int id = GL_LIGHT0; pwnAssert_NoGLError();
 
-				glLoadMatrixf( r.compiled.mat.columnMajor );  pwnAssert_NoGLError();
+				glLoadMatrixf( r.compiled.mat.data() );  pwnAssert_NoGLError();
 
 				if( lights.empty() == false )
 				{

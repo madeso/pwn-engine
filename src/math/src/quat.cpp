@@ -3,23 +3,32 @@
 
 #include <pwn/assert.h>
 
-#ifdef PWN_USE_CUSTOM_MATH
-#include <cmath>
-#include <memory> // memcpy
-#else
-#include <cml/cml.h>
-#endif
 
 namespace pwn
 {
 	namespace math
 	{
+		real X(const quat& q) { return q[0]; }
+		real Y(const quat& q) { return q[1]; }
+		real Z(const quat& q) { return q[2]; }
+		real W(const quat& q) { return q[3]; }
+		real& X(quat& q) { return q[0]; }
+		real& Y(quat& q) { return q[1]; }
+		real& Z(quat& q) { return q[2]; }
+		real& W(quat& q) { return q[3]; }
+
 		const quat cquat(const AxisAngle& aa)
 		{
 			const real s = Sin( aa.angle * 0.5 );
 
 			const quat q(aa.axis * s, Cos( aa.angle * PWN_MATH_VALUE(0.5)));
 			return GetNormalized(q);
+		}
+
+		const quat GetConjugate(const quat& q)
+		{
+			quat t = q;
+			return t.conjugate();
 		}
 
 		// ------------------------------------------------------
@@ -105,16 +114,9 @@ namespace pwn
 			return Right(q)*X(v) + Up(q)*Y(v) + In(q)*Z(v);
 		}
 
-		quat GetConjugate(const quat& aq)
-		{
-			quat q = aq;
-			q.conjugate();
-			return q;
-		}
-
 		const vec3 RotateAroundOrigo(const quat& q, const vec3& v)
 		{
-			const quat r = q * quat(v, PWN_MATH_VALUE(0.0)) * GetConjugate(q);
+			const quat r = q * quat(v, PWN_MATH_VALUE(0.0)) * math::GetConjugate(q);
 			return cvec3(r);
 		}
 

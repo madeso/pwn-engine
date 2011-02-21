@@ -16,12 +16,12 @@ namespace pwn
 	{
 		bool operator==(const vec2& d, const vec2& rhs)
 		{
-			return equal(d.x,rhs.x) && equal(d.y, rhs.y);
+			return equal(math::X(d),math::X(rhs)) && equal(math::Y(d), math::Y(rhs));
 		}
 
 		std::ostream& operator<<(std::ostream& o, const vec2& t)
 		{
-			o << "(" << t.x << ", " << t.y << ")";
+			o << "(" << math::X(t) << ", " << math::Y(t) << ")";
 			return o;
 		}
 
@@ -38,49 +38,49 @@ namespace pwn
 
 		bool operator==(const vec3& d, const vec3& rhs)
 		{
-			return equal(d.x, rhs.x) && equal(d.y, rhs.y) && equal(d.z, rhs.z);
+			return equal(math::X(d), math::X(rhs)) && equal(math::Y(d), math::Y(rhs)) && equal(math::Z(d), math::Z(rhs));
 		}
 
 		std::ostream& operator<<(std::ostream& o, const vec3& t)
 		{
-			o << "(" << t.x << ", " << t.y << ", " << t.z << ")";
+			o << "(" << math::X(t) << ", " << math::Y(t) << ", " << math::Z(t) << ")";
 			return o;
 		}
 
 		bool operator==(const quat& lhs, const quat& rhs)
 		{
-			return equal(lhs.x, rhs.x) && equal(lhs.y, rhs.y) && equal(lhs.z, rhs.z) && equal(lhs.w, rhs.w);
+			return equal(math::X(lhs), math::X(rhs)) && equal(math::Y(lhs), math::Y(rhs)) && equal(math::Z(lhs), math::Z(rhs)) && equal(math::W(lhs), math::W(rhs));
 		}
 
 		std::ostream& operator<<(std::ostream& o, const quat& t)
 		{
-			o << "(" << t.x << ", " << t.y << ", " << t.z  << ", " << t.w << ")";
+			o << "(" << math::X(t) << ", " << math::Y(t) << ", " << math::Z(t)  << ", " << math::W(t) << ")";
 			return o;
 		}
 
 		bool operator==(const mat33& lhs, const mat33& rhs)
 		{
-			for(int i=0; i<sizes::mat33_matrix_size; ++i ) if( !equal(lhs.columnMajor[i], rhs.columnMajor[i]) ) return false;
+			for(int i=0; i<3*3; ++i ) if( !equal(lhs.data()[i], rhs.data()[i]) ) return false;
 			return true;
 		}
 		std::ostream& operator<<(std::ostream& o, const mat33& m)
 		{
 			o << "( ";
-			for(int i=0; i<sizes::mat33_matrix_size; ++i ) o << m.columnMajor[i] << " ";
+			for(int i=0; i<3*3; ++i ) o << m.data()[i] << " ";
 			o << ")";
 			return o;
 		}
 
 		bool operator==(const mat44& lhs, const mat44& rhs)
 		{
-			for(int i=0; i<sizes::mat44_matrix_size; ++i ) if( !equal(lhs.columnMajor[i], rhs.columnMajor[i]) ) return false;
+			for(int i=0; i<4*4; ++i ) if( !equal(lhs.data()[i], rhs.data()[i]) ) return false;
 			return true;
 		}
 
 		std::ostream& operator<<(std::ostream& o, const mat44& m)
 		{
 			o << "( ";
-			for(int i=0; i<sizes::mat44_matrix_size; ++i ) o << m.columnMajor[i] << " ";
+			for(int i=0; i<4*4; ++i ) o << m.data()[i] << " ";
 			o << ")";
 			return o;
 		}
@@ -107,7 +107,7 @@ namespace pwn
 
 		std::ostream& operator<<(std::ostream& o, const AxisAngle& aa)
 		{
-			o << "(" << aa.axis.x << ", " << aa.axis.y << ", " << aa.axis.z << ": " << aa.angle.inDegrees() << ")";
+			o << "(" << math::X(aa.axis) << ", " << math::Y(aa.axis) << ", " << math::Z(aa.axis) << ": " << aa.angle.inDegrees() << ")";
 			return o;
 		}
 	}

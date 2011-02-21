@@ -7,6 +7,12 @@ namespace pwn
 {
 	namespace math
 	{
+		real X(const vec3& v) { return v[0]; }
+		real Y(const vec3& v) { return v[1]; }
+		real Z(const vec3& v) { return v[2]; }
+		real& X(vec3& v) { return v[0]; }
+		real& Y(vec3& v) { return v[1]; }
+		real& Z(vec3& v) { return v[2]; }
 		const vec3 cvec3(const quat& q)
 		{
 			return vec3(X(q), Y(q), Z(q));

@@ -84,7 +84,7 @@ namespace pwn
 			{
 				// todo: calculate a better id
 				const uint64 texture = material->texture ? material->texture->sid() : 0;
-				const uint64 distance =  CompressDistance(material->hasTransperency, 0, cvec3(mat).z, 100); // todo: use the camera frustrum
+				const uint64 distance =  CompressDistance(material->hasTransperency, 0, math::Z(math::cvec3(mat)), 100); // todo: use the camera frustrum
 
 
 				if( material->hasTransperency )
@@ -131,7 +131,7 @@ namespace pwn
 			{
 				if( useGlCommands )
 				{
-					glLoadMatrixf( c.mat.columnMajor ); pwnAssert_NoGLError();
+					glLoadMatrixf( c.mat.data()); pwnAssert_NoGLError();
 				}
 				apply(c.material, applyMaterials);
 				c.mesh->render(c.poseable->pose);

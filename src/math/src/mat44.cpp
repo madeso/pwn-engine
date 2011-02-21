@@ -113,7 +113,7 @@ namespace pwn
 
 		vec3 TranslateWithInverseMatrix (const vec3 vec, const mat44& mat)
 		{
-			return math::Inverse(mat) * vec;
+			return cml::inverse(mat) * vec;
 		}
 
 		mat44helper::mat44helper(const mat44& mat)

@@ -29,7 +29,7 @@ namespace pwn
 
 		void Uniform::bindUniform(const math::vec2& v)
 		{
-			glUniform2f(var, v.x, v.y);
+			glUniform2f(var, math::X(v), math::Y(v));
 			pwnAssert_NoGLError();
 		}
 

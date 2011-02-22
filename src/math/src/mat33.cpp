@@ -34,27 +34,27 @@ namespace pwn
 			return -Up(m);
 		}
 
-		const mat33 mat33_FromRowMajor(const real data[3*3])
+		const mat33 mat33_FromColMajor(const real data0, const real data1, const real data2,
+										const real data3, const real data4, const real data5,
+										const real data6, const real data7, const real data8)
 		{
-			return mat33(data[0], data[3], data[6],
-				data[1], data[4], data[7],
-				data[2], data[5], data[8] );
+			return mat33(data0, data3, data6,
+				data1, data4, data7,
+				data2, data5, data8 );
 		}
 
 		const mat33 Scale(const vec3& scale)
 		{
-			const real temp[] = { X(scale), 0,       0,
+			return mat33( X(scale), 0,       0,
 				0,       Y(scale), 0,
-				0,       0,       Z(scale) };
-			return mat33_FromRowMajor(temp);
+				0,       0,       Z(scale) );
 		}
 
 		const mat33 cmat33(const mat44& m)
 		{
-			const real temp[] = { m(0, 0), m(0, 1), m(0, 2),
+			return mat33( m(0, 0), m(0, 1), m(0, 2),
 				m(1, 0), m(1, 1), m(1, 2),
-				m(2, 0), m(2, 1), m(2, 2) };
-			return mat33_FromRowMajor(temp);
+				m(2, 0), m(2, 1), m(2, 2) );
 		}
 
 
@@ -75,11 +75,10 @@ namespace pwn
 			const real tXZ = 2 * x * z;
 			const real tYW = 2 * y * w;
 
-			const real temp[] = {
+			return mat33(
 				1-tYY-tZZ,  tXY-tZW,    tXZ+tYW,
 				tXY+tZW,    1-tXX-tZZ,  tYZ-tXW,
-				tXZ-tYW,    tYZ+tXW,    1-tXX-tYY};
-			return mat33_FromRowMajor(temp);
+				tXZ-tYW,    tYZ+tXW,    1-tXX-tYY);
 		}
 	}
 }

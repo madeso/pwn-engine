@@ -15,21 +15,24 @@ namespace pwn
 		const vec3 Left(const mat44& m) { return Left(cmat33(m)); }
 		const vec3 Down(const mat44& m) { return Down(cmat33(m)); }
 
-		const mat44 mat44_FromRowMajor(const real data[4*4])
+		const mat44 mat44_FromColMajor(
+									const real data0,  const real data1,  const real data2,  const real data3,
+									const real data4,  const real data5,  const real data6,  const real data7, 
+									const real data8,  const real data9,  const real data10, const real data11, 
+									const real data12, const real data13, const real data14, const real data15 )
 		{
-			return mat44(data[0], data[4], data[8],  data[12],
-				data[1], data[5], data[9],  data[13],
-				data[2], data[6], data[10], data[14],
-				data[3], data[7], data[11], data[15] );
+			return mat44(data0, data4, data8,  data12,
+				data1, data5, data9,  data13,
+				data2, data6, data10, data14,
+				data3, data7, data11, data15 );
 		}
 
 		const mat44 cmat44(const mat33& m)
 		{
-			const real temp[] = { m(0, 0), m(0, 1), m(0, 2), 0,
+			return mat44( m(0, 0), m(0, 1), m(0, 2), 0,
 				m(1, 0), m(1, 1), m(1, 2), 0,
 				m(2, 0), m(2, 1), m(2, 2), 0,
-				0         , 0         , 0         , 1};
-			return mat44_FromRowMajor(temp);
+				0         , 0         , 0         , 1);
 		}
 
 		namespace
@@ -46,11 +49,10 @@ namespace pwn
 
 		const mat44 operator* (const mat44& a, const mat44& b)
 		{
-			const real temp[] = { multsum(a,b, 0,0), multsum(a, b, 0, 1), multsum(a, b, 0, 2), multsum(a, b, 0, 3),
+			return mat44( multsum(a,b, 0,0), multsum(a, b, 0, 1), multsum(a, b, 0, 2), multsum(a, b, 0, 3),
 				multsum(a,b, 1,0), multsum(a, b, 1, 1), multsum(a, b, 1, 2), multsum(a, b, 1, 3),
 				multsum(a,b, 2,0), multsum(a, b, 2, 1), multsum(a, b, 2, 2), multsum(a, b, 2, 3),
-				multsum(a,b, 3,0), multsum(a, b, 3, 1), multsum(a, b, 3, 2), multsum(a, b, 3, 3) };
-			return mat44_FromRowMajor(temp);
+				multsum(a,b, 3,0), multsum(a, b, 3, 1), multsum(a, b, 3, 2), multsum(a, b, 3, 3) );
 		}
 		const vec3 operator *(const mat44& m, const vec3& v)
 		{
@@ -74,7 +76,7 @@ namespace pwn
 			const real y = Y(aa.axis);
 			const real z = Z(aa.axis);
 
-			return mat44( x*x*(1-c)+c,      x*y*(1-c)-z*s,  x*z*(1-c)+y*s,  0,
+			return mat44_FromColMajor( x*x*(1-c)+c,      x*y*(1-c)-z*s,  x*z*(1-c)+y*s,  0,
 				y*x*(1-c)+z*s,    y*y*(1-c)+c,    y*z*(1-c)-x*s,  0,
 				x*z*(1-c)-y*s,    y*z*(1-c)+x*s,  z*z*(1-c)+c,    0,
 				0,                0,              0,              1 );
@@ -87,20 +89,18 @@ namespace pwn
 
 		const mat44 mat44Identity()
 		{
-			const real temp[] = { 1, 0, 0, 0,
+			return mat44(1, 0, 0, 0,
 				0, 1, 0, 0,
 				0, 0, 1, 0,
-				0, 0, 0, 1};
-			return mat44_FromRowMajor(temp);
+				0, 0, 0, 1);
 		}
 
 		const mat44 cmat44(const vec3& v)
 		{
-			const real temp[] = { 1, 0, 0, X(v),
+			return mat44(1, 0, 0, X(v),
 				0, 1, 0, Y(v),
 				0, 0, 1, Z(v),
-				0, 0, 0, 1};
-			return mat44_FromRowMajor(temp);
+				0, 0, 0, 1);
 		}
 
 		vec3 RotateWithInverseMatrix(const vec3 vec, const mat44& mat)

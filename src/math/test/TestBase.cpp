@@ -14,7 +14,7 @@ namespace pwn
 {
 	namespace math
 	{
-		bool operator==(const vec2& d, const vec2& rhs)
+		bool vec2_equal(const vec2& d, const vec2& rhs)
 		{
 			return equal(math::X(d),math::X(rhs)) && equal(math::Y(d), math::Y(rhs));
 		}
@@ -25,7 +25,7 @@ namespace pwn
 			return o;
 		}
 
-		bool operator==(const point2& d, const point2& rhs)
+		bool point2_equal(const point2& d, const point2& rhs)
 		{
 			return equal(d.x(), rhs.x()) && equal(d.y(), rhs.y());
 		}
@@ -36,7 +36,7 @@ namespace pwn
 			return o;
 		}
 
-		bool operator==(const vec3& d, const vec3& rhs)
+		bool vec3_equal(const vec3& d, const vec3& rhs)
 		{
 			return equal(math::X(d), math::X(rhs)) && equal(math::Y(d), math::Y(rhs)) && equal(math::Z(d), math::Z(rhs));
 		}
@@ -47,18 +47,22 @@ namespace pwn
 			return o;
 		}
 
-		bool operator==(const quat& lhs, const quat& rhs)
+		bool quat_equal(const quat& lhs, const quat& rhs)
 		{
-			return equal(math::X(lhs), math::X(rhs)) && equal(math::Y(lhs), math::Y(rhs)) && equal(math::Z(lhs), math::Z(rhs)) && equal(math::W(lhs), math::W(rhs));
+			return equal(cml::dot(lhs, rhs), 1);//, math::X(rhs)) && equal(math::Y(lhs), math::Y(rhs)) && equal(math::Z(lhs), math::Z(rhs)) && equal(math::W(lhs), math::W(rhs));
 		}
 
 		std::ostream& operator<<(std::ostream& o, const quat& t)
 		{
-			o << "(" << math::X(t) << ", " << math::Y(t) << ", " << math::Z(t)  << ", " << math::W(t) << ")";
+			std::stringstream ss;
+			ss.precision( 5 ) ;
+			ss.setf( std::ios::fixed, std::ios::floatfield ) ;
+			ss << "(" << math::X(t) << ", " << math::Y(t) << ", " << math::Z(t)  << ", " << math::W(t) << ")";
+			o << ss.str();
 			return o;
 		}
 
-		bool operator==(const mat33& lhs, const mat33& rhs)
+		bool mat33_equal(const mat33& lhs, const mat33& rhs)
 		{
 			for(int i=0; i<3*3; ++i ) if( !equal(lhs.data()[i], rhs.data()[i]) ) return false;
 			return true;
@@ -71,7 +75,7 @@ namespace pwn
 			return o;
 		}
 
-		bool operator==(const mat44& lhs, const mat44& rhs)
+		bool mat44_equal(const mat44& lhs, const mat44& rhs)
 		{
 			for(int i=0; i<4*4; ++i ) if( !equal(lhs.data()[i], rhs.data()[i]) ) return false;
 			return true;
@@ -85,9 +89,9 @@ namespace pwn
 			return o;
 		}
 
-		bool operator==(const rect& lhs, const rect& rhs)
+		bool rect_equal(const rect& lhs, const rect& rhs)
 		{
-			return lhs.upperLeft == rhs.upperLeft && lhs.lowerRight == rhs.lowerRight;
+			return point2_equal(lhs.upperLeft, rhs.upperLeft) && point2_equal(lhs.lowerRight, rhs.lowerRight);
 		}
 
 		std::ostream& operator<<(std::ostream& o, const rect& t)
@@ -96,7 +100,7 @@ namespace pwn
 			return o;
 		}
 
-		bool operator==(const AxisAngle& lhs, const AxisAngle& rhs)
+		bool axisangle_equal(const AxisAngle& lhs, const AxisAngle& rhs)
 		{
 			if( equal(lhs.angle.inDegrees(), rhs.angle.inDegrees()) && equal(lhs.angle.inDegrees(), 0)) return true; // zero rotation is always equal zero
 

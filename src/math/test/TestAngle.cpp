@@ -14,44 +14,44 @@ namespace test
 
 	GTEST(testDeg)
 	{
-		EXPECT_EQ(0, Angle::FromDegrees(0).inDegrees());
-		EXPECT_EQ(90, Angle::FromDegrees(90).inDegrees());
-		EXPECT_EQ(180, Angle::FromDegrees(180).inDegrees());
+		EXPECT_REAL_EQ(0, Angle::FromDegrees(0).inDegrees());
+		EXPECT_REAL_EQ(90, Angle::FromDegrees(90).inDegrees());
+		EXPECT_REAL_EQ(180, Angle::FromDegrees(180).inDegrees());
 	}
 
 	GTEST(testRad)
 	{
-		EXPECT_EQ(0, Angle::FromRadians(0).inRadians());
-		EXPECT_EQ(HalfPi(), Angle::FromRadians(HalfPi()).inRadians());
-		EXPECT_EQ(Pi(), Angle::FromRadians(Pi()).inRadians());
+		EXPECT_REAL_EQ(0, Angle::FromRadians(0).inRadians());
+		EXPECT_REAL_EQ(HalfPi(), Angle::FromRadians(HalfPi()).inRadians());
+		EXPECT_REAL_EQ(Pi(), Angle::FromRadians(Pi()).inRadians());
 	}
 
 	GTEST(testAdd)
 	{
-		EXPECT_EQ(90, (Angle::FromDegrees(90) + Angle::FromDegrees(0)).inDegrees());
-		EXPECT_EQ(45, (Angle::FromDegrees(0) + Angle::FromDegrees(45)).inDegrees());
-		EXPECT_EQ(360+90, (Angle::FromDegrees(360) + Angle::FromDegrees(90)).inDegrees());
+		EXPECT_REAL_EQ(90, (Angle::FromDegrees(90) + Angle::FromDegrees(0)).inDegrees());
+		EXPECT_REAL_EQ(45, (Angle::FromDegrees(0) + Angle::FromDegrees(45)).inDegrees());
+		EXPECT_REAL_EQ(360+90, (Angle::FromDegrees(360) + Angle::FromDegrees(90)).inDegrees());
 	}
 
 	GTEST(testWrap)
 	{
-		EXPECT_EQ(90, GetWrapped(Angle::FromDegrees(90)).inDegrees());
+		EXPECT_REAL_EQ(90, GetWrapped(Angle::FromDegrees(90)).inDegrees());
 		EXPECT_REAL_EQ(90, GetWrapped(Angle::FromDegrees(360) + Angle::FromDegrees(90)).inDegrees());
 	}
 
 	GTEST(testSub)
 	{
-		EXPECT_EQ(45, (Angle::FromDegrees(90) - Angle::FromDegrees(45)).inDegrees());
-		EXPECT_EQ(90, (Angle::FromDegrees(90) - Angle::FromDegrees(0)).inDegrees());
+		EXPECT_REAL_EQ(45, (Angle::FromDegrees(90) - Angle::FromDegrees(45)).inDegrees());
+		EXPECT_REAL_EQ(90, (Angle::FromDegrees(90) - Angle::FromDegrees(0)).inDegrees());
 	}
 
 	GTEST(testConversion)
 	{
-		EXPECT_EQ(0, Angle::FromRadians(0).inRadians());
-		EXPECT_EQ(HalfPi(), Angle::FromDegrees(90).inRadians());
-		EXPECT_EQ(180, Angle::FromRadians(Pi()).inDegrees());
-		EXPECT_EQ(30, Angle::FromRadians(Pi()/6).inDegrees());
-		EXPECT_EQ(60, Angle::FromRadians(Pi()/3).inDegrees());
+		EXPECT_REAL_EQ(0, Angle::FromRadians(0).inRadians());
+		EXPECT_REAL_EQ(HalfPi(), Angle::FromDegrees(90).inRadians());
+		EXPECT_REAL_EQ(180, Angle::FromRadians(Pi()).inDegrees());
+		EXPECT_REAL_EQ(30, Angle::FromRadians(Pi()/6).inDegrees());
+		EXPECT_REAL_EQ(60, Angle::FromRadians(Pi()/3).inDegrees());
 	}
 
 	real kOneOverSqrt2()

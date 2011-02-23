@@ -49,6 +49,6 @@ namespace test
 
 	GTEST(TestFromToMat44)
 	{
-	//	EXPECT_EQ(cmat33(cmat44(mat33Identity())), mat33Identity());
+		EXPECT_PRED2(::pwn::math::mat33_equal, cmat33(cmat44(mat33Identity())), mat33Identity());
 	}
 }

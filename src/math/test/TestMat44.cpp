@@ -9,25 +9,25 @@ namespace test
 
 	GTEST(TestTransormation)
 	{
-		EXPECT_EQ(cvec3(cmat44(vec3(1, 2, 3))), vec3(1, 2, 3));
+		EXPECT_PRED2(::pwn::math::vec3_equal, cvec3(cmat44(vec3(1, 2, 3))), vec3(1, 2, 3));
 	}
 
 
 	GTEST(TestRight)
 	{
-		EXPECT_EQ(Right(mat44Identity()), Right());
+		EXPECT_PRED2(::pwn::math::vec3_equal, Right(mat44Identity()), Right());
 	}
 
 
 	GTEST(TestUp)
 	{
-		EXPECT_EQ(Up(mat44Identity()), Up());
+		EXPECT_PRED2(::pwn::math::vec3_equal, Up(mat44Identity()), Up());
 	}
 
 
 	GTEST(TestIn)
 	{
-		EXPECT_EQ(In(mat44Identity()), In());
+		EXPECT_PRED2(::pwn::math::vec3_equal, In(mat44Identity()), In());
 	}
 
 	struct TestRotationFixture : ::testing::Test
@@ -51,7 +51,7 @@ namespace test
 		vec3 r = mat44helper(start)
 			.rotate( aa )
 			.transform( toTransform );
-		EXPECT_EQ( r, result);
+		EXPECT_PRED2(::pwn::math::vec3_equal,  r, result);
 	}
 
 	TEST_F(TestRotationFixture, TestRotationQuat)
@@ -59,17 +59,26 @@ namespace test
 		vec3 r = mat44helper(start)
 			.rotate( cquat(aa) )
 			.transform( toTransform );
-		EXPECT_EQ( r, result);
+		EXPECT_PRED2(::pwn::math::vec3_equal,  r, result);
 	}
 
 
-	GTEST(TestCombined)
+	GTEST(TestCombined_RT)
 	{
 		vec3 r = mat44helper(mat44Identity())
 			.rotate(RightHandAround(Up(), Angle::FromDegrees(-90)))
 			.translate(vec3(0, 0, 5))
 			.transform(vec3(0, 0, 0));
-		EXPECT_EQ(r, vec3(5, 0, 0));
+		EXPECT_PRED2(::pwn::math::vec3_equal, r, vec3(5, 0, 0));
+	}
+
+	GTEST(TestCombined_TR)
+	{
+		vec3 r = mat44helper(mat44Identity())
+			.translate(vec3(0, 0, 5))
+			.rotate(RightHandAround(Up(), Angle::FromDegrees(-90)))
+			.transform(vec3(0, 0, 0));
+		EXPECT_PRED2(::pwn::math::vec3_equal, r, vec3(0, 0, 5));
 	}
 
 
@@ -78,7 +87,7 @@ namespace test
 		vec3 r = mat44helper(mat44Identity())
 			.translate(vec3(1,2,3))
 			.transform(vec3(7, 8, 9));
-		EXPECT_EQ(r, vec3(8, 10, 12));
+		EXPECT_PRED2(::pwn::math::vec3_equal, r, vec3(8, 10, 12));
 	}
 
 
@@ -86,12 +95,12 @@ namespace test
 	{
 		vec3 r = mat44helper(mat44Identity())
 			.transform(vec3(1, 2, 3));
-		EXPECT_EQ(r, vec3(1, 2, 3));
+		EXPECT_PRED2(::pwn::math::vec3_equal, r, vec3(1, 2, 3));
 	}
 
 
 	GTEST(TestIentityMultiply)
 	{
-	//	EXPECT_EQ(mat44Identity() * mat44Identity(), mat44Identity());
+		EXPECT_PRED2(::pwn::math::mat44_equal, mat44Identity() * mat44Identity(), mat44Identity());
 	}
 }

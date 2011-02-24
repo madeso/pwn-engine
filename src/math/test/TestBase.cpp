@@ -14,45 +14,45 @@ namespace pwn
 {
 	namespace math
 	{
-		bool vec2_equal(const vec2& d, const vec2& rhs)
+		bool IsEqual(const vec2& d, const vec2& rhs)
 		{
 			return equal(math::X(d),math::X(rhs)) && equal(math::Y(d), math::Y(rhs));
 		}
 
-		std::ostream& operator<<(std::ostream& o, const vec2& t)
+		::testing::AssertionResult& operator<<(::testing::AssertionResult& o, const vec2& t)
 		{
 			o << "(" << math::X(t) << ", " << math::Y(t) << ")";
 			return o;
 		}
 
-		bool point2_equal(const point2& d, const point2& rhs)
+		bool IsEqual(const point2& d, const point2& rhs)
 		{
 			return equal(d.x(), rhs.x()) && equal(d.y(), rhs.y());
 		}
 
-		std::ostream& operator<<(std::ostream& o, const point2& t)
+		::testing::AssertionResult& operator<<(::testing::AssertionResult& o, const point2& t)
 		{
 			o << "(" << t.x() << ", " << t.y() << ")";
 			return o;
 		}
 
-		bool vec3_equal(const vec3& d, const vec3& rhs)
+		bool IsEqual(const vec3& d, const vec3& rhs)
 		{
 			return equal(math::X(d), math::X(rhs)) && equal(math::Y(d), math::Y(rhs)) && equal(math::Z(d), math::Z(rhs));
 		}
 
-		std::ostream& operator<<(std::ostream& o, const vec3& t)
+		::testing::AssertionResult& operator<<(::testing::AssertionResult& o, const vec3& t)
 		{
 			o << "(" << math::X(t) << ", " << math::Y(t) << ", " << math::Z(t) << ")";
 			return o;
 		}
 
-		bool quat_equal(const quat& lhs, const quat& rhs)
+		bool IsEqual(const quat& lhs, const quat& rhs)
 		{
 			return equal(cml::dot(lhs, rhs), 1);//, math::X(rhs)) && equal(math::Y(lhs), math::Y(rhs)) && equal(math::Z(lhs), math::Z(rhs)) && equal(math::W(lhs), math::W(rhs));
 		}
 
-		std::ostream& operator<<(std::ostream& o, const quat& t)
+		::testing::AssertionResult& operator<<(::testing::AssertionResult& o, const quat& t)
 		{
 			std::stringstream ss;
 			ss.precision( 5 ) ;
@@ -62,12 +62,12 @@ namespace pwn
 			return o;
 		}
 
-		bool mat33_equal(const mat33& lhs, const mat33& rhs)
+		bool IsEqual(const mat33& lhs, const mat33& rhs)
 		{
 			for(int i=0; i<3*3; ++i ) if( !equal(lhs.data()[i], rhs.data()[i]) ) return false;
 			return true;
 		}
-		std::ostream& operator<<(std::ostream& o, const mat33& m)
+		::testing::AssertionResult& operator<<(::testing::AssertionResult& o, const mat33& m)
 		{
 			o << "( ";
 			for(int i=0; i<3*3; ++i ) o << m.data()[i] << " ";
@@ -75,13 +75,13 @@ namespace pwn
 			return o;
 		}
 
-		bool mat44_equal(const mat44& lhs, const mat44& rhs)
+		bool IsEqual(const mat44& lhs, const mat44& rhs)
 		{
 			for(int i=0; i<4*4; ++i ) if( !equal(lhs.data()[i], rhs.data()[i]) ) return false;
 			return true;
 		}
 
-		std::ostream& operator<<(std::ostream& o, const mat44& m)
+		::testing::AssertionResult& operator<<(::testing::AssertionResult& o, const mat44& m)
 		{
 			o << "( ";
 			for(int i=0; i<4*4; ++i ) o << m.data()[i] << " ";
@@ -89,18 +89,18 @@ namespace pwn
 			return o;
 		}
 
-		bool rect_equal(const rect& lhs, const rect& rhs)
+		bool IsEqual(const rect& lhs, const rect& rhs)
 		{
-			return point2_equal(lhs.upperLeft, rhs.upperLeft) && point2_equal(lhs.lowerRight, rhs.lowerRight);
+			return IsEqual(lhs.upperLeft, rhs.upperLeft) && IsEqual(lhs.lowerRight, rhs.lowerRight);
 		}
 
-		std::ostream& operator<<(std::ostream& o, const rect& t)
+		::testing::AssertionResult& operator<<(::testing::AssertionResult& o, const rect& t)
 		{
 			o << "(" << t.upperLeft.x() << ", " << t.upperLeft.y() << ", " << t.lowerRight.x()  << ", " << t.lowerRight.y() << ")";
 			return o;
 		}
 
-		bool axisangle_equal(const AxisAngle& lhs, const AxisAngle& rhs)
+		bool IsEqual(const AxisAngle& lhs, const AxisAngle& rhs)
 		{
 			if( equal(lhs.angle.inDegrees(), rhs.angle.inDegrees()) && equal(lhs.angle.inDegrees(), 0)) return true; // zero rotation is always equal zero
 
@@ -109,10 +109,30 @@ namespace pwn
 			return a || inv;
 		}
 
-		std::ostream& operator<<(std::ostream& o, const AxisAngle& aa)
+		::testing::AssertionResult& operator<<(::testing::AssertionResult& o, const AxisAngle& aa)
 		{
 			o << "(" << math::X(aa.axis) << ", " << math::Y(aa.axis) << ", " << math::Z(aa.axis) << ": " << aa.angle.inDegrees() << ")";
 			return o;
 		}
+
+		template<typename T>
+		::testing::AssertionResult equal_test(const char* aa, const char* bb, const T& a, const T& b)
+		{
+			if( IsEqual(a,b)) return ::testing::AssertionSuccess();
+			else return ::testing::AssertionFailure() << "Not equal! Expected:\n" << a << " but got:\n" << b;
+		}
+
+		::testing::AssertionResult vec2_equal_test(const char* a, const char* b, const vec2& d, const vec2& rhs) { return equal_test(a, b, d, rhs); }
+		::testing::AssertionResult point2_equal_test(const char* a, const char* b, const point2& d, const point2& rhs) { return equal_test(a, b, d, rhs); }
+		::testing::AssertionResult vec3_equal_test(const char* a, const char* b, const vec3& d, const vec3& rhs) { return equal_test(a, b, d, rhs); }
+		::testing::AssertionResult quat_equal_test(const char* aa, const char* bb, const quat& a, const quat& b)
+		{
+			if( IsEqual(a,b)) return ::testing::AssertionSuccess();
+			else return ::testing::AssertionFailure() << "Not equal! Expected:\n" << a << " but got:\n" << b << "\n" << "Dot is " << cml::dot(a,b);
+		}
+		::testing::AssertionResult mat33_equal_test(const char* a, const char* b, const mat33& lhs, const mat33& rhs) { return equal_test(a, b, lhs, rhs); }
+		::testing::AssertionResult mat44_equal_test(const char* a, const char* b, const mat44& lhs, const mat44& rhs) { return equal_test(a, b, lhs, rhs); }
+		::testing::AssertionResult rect_equal_test(const char* a, const char* b, const rect& lhs, const rect& rhs) { return equal_test(a, b, lhs, rhs); }
+		::testing::AssertionResult axisangle_equal_test(const char* a, const char* b, const AxisAngle& lhs, const AxisAngle& rhs) { return equal_test(a, b, lhs, rhs); }
 	}
 }

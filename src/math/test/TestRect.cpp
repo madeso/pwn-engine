@@ -79,7 +79,7 @@ namespace test
 
 	GTEST(TestAspectCreatorFunction_basic)
 	{
-#define TEST_RECT(l, r, u, d) EXPECT_PRED2(::pwn::math::rect_equal, FromLrud(l, r, u, d), FromAspectAndContainingInCenter(FromLrud(l, r, u, d), 1) )
+#define TEST_RECT(l, r, u, d) EXPECT_PRED_FORMAT2(::pwn::math::rect_equal_test, FromLrud(l, r, u, d), FromAspectAndContainingInCenter(FromLrud(l, r, u, d), 1) )
 		TEST_RECT(0, 2, 2, 0);
 		TEST_RECT(1, 3, 3, 1);
 		TEST_RECT(-1, 3, 5, 1);
@@ -88,28 +88,28 @@ namespace test
 
 	GTEST(TestAspectCreatorFunction_CenterOnWidth)
 	{
-		EXPECT_PRED2(::pwn::math::rect_equal, FromLrud(5, 6, 1, 0), FromAspectAndContainingInCenter(FromLrud(0, 11, 1, 0), 1) );
-		EXPECT_PRED2(::pwn::math::rect_equal, FromLrud(0, 1, 1, 0), FromAspectAndContainingInCenter(FromLrud(-5, 6, 1, 0), 1) );
+		EXPECT_PRED_FORMAT2(::pwn::math::rect_equal_test, FromLrud(5, 6, 1, 0), FromAspectAndContainingInCenter(FromLrud(0, 11, 1, 0), 1) );
+		EXPECT_PRED_FORMAT2(::pwn::math::rect_equal_test, FromLrud(0, 1, 1, 0), FromAspectAndContainingInCenter(FromLrud(-5, 6, 1, 0), 1) );
 	}
 
 	GTEST(TestAspectCreatorFunction_CenterOnHeight)
 	{
-		EXPECT_PRED2(::pwn::math::rect_equal, FromLrud(0, 1, 6, 5), FromAspectAndContainingInCenter(FromLrud(0, 1, 11, 0), 1) );
-		EXPECT_PRED2(::pwn::math::rect_equal, FromLrud(0, 1, 1, 0), FromAspectAndContainingInCenter(FromLrud(0, 1, 6, -5), 1) );
+		EXPECT_PRED_FORMAT2(::pwn::math::rect_equal_test, FromLrud(0, 1, 6, 5), FromAspectAndContainingInCenter(FromLrud(0, 1, 11, 0), 1) );
+		EXPECT_PRED_FORMAT2(::pwn::math::rect_equal_test, FromLrud(0, 1, 1, 0), FromAspectAndContainingInCenter(FromLrud(0, 1, 6, -5), 1) );
 	}
 
 	GTEST(tesRectKeepWithinAndBounds)
 	{
 		// todo: take another look at what I'm doing here???
-		EXPECT_PRED2(::pwn::math::point2_equal, point2(1, 0), KeepWithin(point2(0,0),FromLrud(0, 10, 5, -5), FromSizeAndCenter(2, point2(0.5, 0.5))) );
-		EXPECT_PRED2(::pwn::math::point2_equal, point2(1, 0), KeepWithin(point2(-5,0),FromLrud(0, 10, 5, -5), FromSizeAndCenter(2, point2(0.5, 0.5))) );
-		EXPECT_PRED2(::pwn::math::point2_equal, point2(5, 0), KeepWithin(point2(5,0),FromLrud(0, 10, 5, -5), FromSizeAndCenter(2, point2(0.5, 0.5))) );
-		EXPECT_PRED2(::pwn::math::point2_equal, point2(9, 0), KeepWithin(point2(10,0),FromLrud(0, 10, 5, -5), FromSizeAndCenter(2, point2(0.5, 0.5))) );
-		EXPECT_PRED2(::pwn::math::point2_equal, point2(9, 0), KeepWithin(point2(12,0),FromLrud(0, 10, 5, -5), FromSizeAndCenter(2, point2(0.5, 0.5))) );
+		EXPECT_PRED_FORMAT2(::pwn::math::point2_equal_test, point2(1, 0), KeepWithin(point2(0,0),FromLrud(0, 10, 5, -5), FromSizeAndCenter(2, point2(0.5, 0.5))) );
+		EXPECT_PRED_FORMAT2(::pwn::math::point2_equal_test, point2(1, 0), KeepWithin(point2(-5,0),FromLrud(0, 10, 5, -5), FromSizeAndCenter(2, point2(0.5, 0.5))) );
+		EXPECT_PRED_FORMAT2(::pwn::math::point2_equal_test, point2(5, 0), KeepWithin(point2(5,0),FromLrud(0, 10, 5, -5), FromSizeAndCenter(2, point2(0.5, 0.5))) );
+		EXPECT_PRED_FORMAT2(::pwn::math::point2_equal_test, point2(9, 0), KeepWithin(point2(10,0),FromLrud(0, 10, 5, -5), FromSizeAndCenter(2, point2(0.5, 0.5))) );
+		EXPECT_PRED_FORMAT2(::pwn::math::point2_equal_test, point2(9, 0), KeepWithin(point2(12,0),FromLrud(0, 10, 5, -5), FromSizeAndCenter(2, point2(0.5, 0.5))) );
 
-		EXPECT_PRED2(::pwn::math::point2_equal, point2(5, 4), KeepWithin(point2(5,5),FromLrud(0, 10, 5, -5), FromSizeAndCenter(2, point2(0.5, 0.5))) );
-		EXPECT_PRED2(::pwn::math::point2_equal, point2(5, 4), KeepWithin(point2(5,8),FromLrud(0, 10, 5, -5), FromSizeAndCenter(2, point2(0.5, 0.5))) );
-		EXPECT_PRED2(::pwn::math::point2_equal, point2(5, -4), KeepWithin(point2(5,-5),FromLrud(0, 10, 5, -5), FromSizeAndCenter(2, point2(0.5, 0.5))) );
-		EXPECT_PRED2(::pwn::math::point2_equal, point2(5, -4), KeepWithin(point2(5,-9),FromLrud(0, 10, 5, -5), FromSizeAndCenter(2, point2(0.5, 0.5))) );
+		EXPECT_PRED_FORMAT2(::pwn::math::point2_equal_test, point2(5, 4), KeepWithin(point2(5,5),FromLrud(0, 10, 5, -5), FromSizeAndCenter(2, point2(0.5, 0.5))) );
+		EXPECT_PRED_FORMAT2(::pwn::math::point2_equal_test, point2(5, 4), KeepWithin(point2(5,8),FromLrud(0, 10, 5, -5), FromSizeAndCenter(2, point2(0.5, 0.5))) );
+		EXPECT_PRED_FORMAT2(::pwn::math::point2_equal_test, point2(5, -4), KeepWithin(point2(5,-5),FromLrud(0, 10, 5, -5), FromSizeAndCenter(2, point2(0.5, 0.5))) );
+		EXPECT_PRED_FORMAT2(::pwn::math::point2_equal_test, point2(5, -4), KeepWithin(point2(5,-9),FromLrud(0, 10, 5, -5), FromSizeAndCenter(2, point2(0.5, 0.5))) );
 	}
 }

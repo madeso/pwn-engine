@@ -42,32 +42,32 @@ namespace test
 
 	GTEST(testAdd)
 	{
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(4,4,4), vec3(1,2,3) + vec3(3,2,1));
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(1,2,3), vec3(-1,1,4) + vec3(2,1,-1));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(4,4,4), vec3(1,2,3) + vec3(3,2,1));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(1,2,3), vec3(-1,1,4) + vec3(2,1,-1));
 	}
 
 	GTEST(testSub)
 	{
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(0,1,0), vec3(0,2,0) - vec3(0,1,0));
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(-2,0,2), vec3(1,2,3) - vec3(3,2,1));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(0,1,0), vec3(0,2,0) - vec3(0,1,0));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(-2,0,2), vec3(1,2,3) - vec3(3,2,1));
 	}
 
 	GTEST(testDiv)
 	{
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(4,2,1), vec3(8,4,2) / 2);
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(5,2,1), vec3(25,10,5) / 5);
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(4,2,1), vec3(8,4,2) / 2);
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(5,2,1), vec3(25,10,5) / 5);
 	}
 
 	GTEST(testMult)
 	{
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(8,4,2), vec3(4,2,1) * 2);
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(5,25,50), 5 * vec3(1,5,10));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(8,4,2), vec3(4,2,1) * 2);
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(5,25,50), 5 * vec3(1,5,10));
 	}
 
 	GTEST(testNormal)
 	{
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(1,0,0), GetNormalized(vec3(4,0,0) ));
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(0,1,0), GetNormalized(vec3(0,9,0) ));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(1,0,0), GetNormalized(vec3(4,0,0) ));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(0,1,0), GetNormalized(vec3(0,9,0) ));
 	}
 
 	GTEST(testDot)
@@ -78,7 +78,7 @@ namespace test
 
 	GTEST(testCross)
 	{
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(0,1,0), cross(vec3(0,0,-1), vec3(-1,0,0) ));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(0,1,0), cross(vec3(0,0,-1), vec3(-1,0,0) ));
 	}
 
 	GTEST(testAngle)
@@ -98,29 +98,29 @@ namespace test
 
 	GTEST(testX)
 	{
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(1, 0, 0), vec3(1, 0, 0));
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(2, 0, 0), vec3(1, 0, 0) * 2);
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(2, 0, 0), vec3(1, 0, 0) + vec3(1, 0, 0));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(1, 0, 0), vec3(1, 0, 0));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(2, 0, 0), vec3(1, 0, 0) * 2);
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(2, 0, 0), vec3(1, 0, 0) + vec3(1, 0, 0));
 	}
 
 	GTEST(testY)
 	{
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(0, 1, 0), vec3(0, 1, 0));
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(0, 2, 0), vec3(0, 1, 0) * 2);
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(0, 2, 0), vec3(0, 1, 0) + vec3(0, 1, 0));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(0, 1, 0), vec3(0, 1, 0));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(0, 2, 0), vec3(0, 1, 0) * 2);
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(0, 2, 0), vec3(0, 1, 0) + vec3(0, 1, 0));
 	}
 
 	GTEST(testZ)
 	{
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(0, 0, 1), vec3(0, 0, 1));
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(0, 0, 2), vec3(0, 0, 1) * 2);
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(0, 0, 2), vec3(0, 0, 1) + vec3(0, 0, 1));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(0, 0, 1), vec3(0, 0, 1));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(0, 0, 2), vec3(0, 0, 1) * 2);
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(0, 0, 2), vec3(0, 0, 1) + vec3(0, 0, 1));
 	}
 
 	GTEST(testLerp)
 	{
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(0, 1, 0), Lerp(vec3(0, 1, 0), 0, vec3(2, 4, 6)));
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(2, 4, 6), Lerp(vec3(0, 1, 0), 1, vec3(2, 4, 6)));
-		EXPECT_PRED2(::pwn::math::vec3_equal, vec3(3, 5, 7), Lerp(vec3(2, 4, 6), 0.5f, vec3(4, 6, 8)));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(0, 1, 0), Lerp(vec3(0, 1, 0), 0, vec3(2, 4, 6)));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(2, 4, 6), Lerp(vec3(0, 1, 0), 1, vec3(2, 4, 6)));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(3, 5, 7), Lerp(vec3(2, 4, 6), 0.5f, vec3(4, 6, 8)));
 	}
 }

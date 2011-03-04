@@ -1,7 +1,7 @@
-general: investigate other, more liberal, licenses
-all: support more os's like linux & mac
-test: add more unit tests
-render: update/rewrite rendering so that it doesnt need special features like shaders, but uses them if available?
+* investigate other, more liberal, licenses
+* support more os's like linux & mac
+* add more unit tests
+* update/rewrite rendering so that it doesnt need special features like shaders, but uses them if available?
 --------------------------
 ------------- features:
 * tranform into vbos & vertex shaders (indexed vbo!)

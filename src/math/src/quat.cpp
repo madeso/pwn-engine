@@ -25,11 +25,6 @@ namespace pwn
 			return GetNormalized(q);
 		}
 
-		const quat GetConjugate(const quat& q)
-		{
-			quat t = q;
-			return t.conjugate();
-		}
 
 		// ------------------------------------------------------
 
@@ -77,6 +72,12 @@ namespace pwn
 			quat temp = q;
 			temp.normalize();
 			return temp;
+		}
+
+		const quat GetConjugate(const quat& q)
+		{
+			quat t = q;
+			return t.conjugate();
 		}
 
 		const vec3 In(const quat& q)
@@ -191,7 +192,7 @@ namespace pwn
 		const quat qLookInDirection(const vec3& adir, const vec3& up)
 		{
 			quat ret;
-			quaternion_rotation_aim_at(ret, vec3(0,0,0), adir, up);
+			quaternion_rotation_aim_at(ret, adir, vec3(0,0,0), up);
 			return ret;
 		}
 	}

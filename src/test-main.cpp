@@ -30,7 +30,7 @@ public:
 	virtual void OnTestPartResult(const ::testing::TestPartResult& r)
 	{
 		if( r.passed() ) return;
-		const std::string errname = r.nonfatally_failed() ? "warning" : "error";
+		const std::string errname = "error"; //r.nonfatally_failed() ? "warning" : "error";
 		::std::cout << r.file_name() << "(" << r.line_number() << ") : " << errname << " C4242: " << r.summary() << std::endl;// << r.message() << std::endl;
 		// message seems to be the same as summary()
 	}

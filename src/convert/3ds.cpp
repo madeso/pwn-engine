@@ -277,9 +277,9 @@ namespace pwn
 					};
 
 
-					real& RefMat(real* m, int i, int j)
+					real& RefMat(mat44& m, int c, int r)
 					{
-						return m[i+4*j];
+						return m(c,r);
 					}
 
 					struct LocalCoordinateSystemChunk
@@ -298,7 +298,7 @@ namespace pwn
 								if (c->id != ChunkId::LOCAL_COORDINATES_SYSTEM) throw "not a coordsys";
 
 								Binary b = c->getBinary();
-								real lmat[4*4];
+								mat44 lmat;
 
 								for (int j = 0; j < 4; j++)
 								{
@@ -312,7 +312,7 @@ namespace pwn
 								RefMat(lmat, 3, 2) = 0;
 								RefMat(lmat, 3, 3) = 1;
 
-								return math::mat44_FromRowMajor(lmat);
+								return lmat;
 							}
 							else
 							{

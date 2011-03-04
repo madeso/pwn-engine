@@ -43,18 +43,18 @@ namespace pwn
 				data2, data5, data8 );
 		}
 
-		const mat33 mat33Identity()
-		{
-			mat33 r;
-			r.identity();
-			return r;
-		}
-
 		const mat33 Scale(const vec3& scale)
 		{
 			return mat33( X(scale), 0,       0,
 				0,       Y(scale), 0,
 				0,       0,       Z(scale) );
+		}
+
+		const mat33 mat33Identity()
+		{
+			mat33 r;
+			r.identity();
+			return r;
 		}
 
 		const mat33 cmat33(const mat44& m)
@@ -63,7 +63,6 @@ namespace pwn
 				m(1, 0), m(1, 1), m(1, 2),
 				m(2, 0), m(2, 1), m(2, 2) );
 		}
-
 
 		const mat33 cmat33(const quat& q)
 		{

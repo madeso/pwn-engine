@@ -10,6 +10,7 @@ namespace pwn
 	{
 		typedef cml::vector<real, cml::fixed<2> > vec2;
 		typedef cml::vector<real, cml::fixed<3> > vec3;
+		typedef cml::vector<real, cml::fixed<4> > vec4;
 		typedef cml::quaternion<real, cml::fixed<>, cml::vector_first, cml::positive_cross> quat;
 		struct point2;
 		struct direction2;

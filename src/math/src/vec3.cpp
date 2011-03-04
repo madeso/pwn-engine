@@ -246,5 +246,21 @@ namespace pwn
 		{
 			return -Up();
 		}
+
+		namespace
+		{
+			real X(const vec4& v) { return v[0]; }
+			real Y(const vec4& v) { return v[1]; }
+			real Z(const vec4& v) { return v[2]; }
+		}
+
+		const vec3 cvec3(const vec4& v)
+		{
+			return vec3(X(v), Y(v), Z(v));
+		}
+		const vec4 cvec4(const vec3& v)
+		{
+			return vec4(X(v), Y(v), Z(v), 1);
+		}
 	}
 }

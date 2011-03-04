@@ -68,7 +68,7 @@ namespace pwn
 						glTexCoord2fv(point.textcoord.data());
 
 						const math::vec3 p = point.hasBone()
-							? math::cmat33(pose.transforms[point.getBone()]) * point.location
+							? math::cvec3(pose.transforms[point.getBone()] * math::cvec4(point.location))
 							: point.location;
 						glVertex3fv(p.data());
 					}

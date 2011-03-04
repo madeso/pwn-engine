@@ -241,6 +241,7 @@ void RunXml(const pwn::string& argv0, const pwn::string& filename)
 
 		BOOST_FOREACH(ptree::value_type &v, pt.get_child("convert.sources"))
 		{
+			if( v.first == "<xmlcomment>" ) continue;
 			ptree source = v.second;
 			const pwn::string inputfile = source.get<pwn::string>("file");
 			ConvertMesh cmesh(inputfile);
@@ -272,6 +273,7 @@ void RunXml(const pwn::string& argv0, const pwn::string& filename)
 	catch (std::exception &e)
 	{
 		std::cout << "Error: " << e.what() << "\n";
+		cin.get();
 	}
 }
 

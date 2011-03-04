@@ -66,7 +66,7 @@ namespace test
 
 	GTEST(testLook)
 	{
-		(::pwn::math::quat_equal_test, cquat(RightHandAround(Up(), Angle::FromDegrees(-90))),qLookAt(vec3(0,0,0), vec3(5,0,0), Up()) );
+		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, cquat(RightHandAround(Up(), Angle::FromDegrees(-90))), qLookAt(vec3(0,0,0), vec3(5,0,0), Up()) );
 		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, cquat(RightHandAround(Up(), Angle::FromDegrees(-90))),  qLookAt(vec3(0,0,0), vec3(2,0,0), Up()) );
 		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, cquat(RightHandAround(Up(), Angle::FromDegrees(-90))),  qLookAt(vec3(0,0,0), vec3(0.25f,0,0), Up()) );
 

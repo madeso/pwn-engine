@@ -17,8 +17,8 @@ namespace pwn
 
 		const mat44 mat44_FromColMajor(
 									const real data0,  const real data1,  const real data2,  const real data3,
-									const real data4,  const real data5,  const real data6,  const real data7, 
-									const real data8,  const real data9,  const real data10, const real data11, 
+									const real data4,  const real data5,  const real data6,  const real data7,
+									const real data8,  const real data9,  const real data10, const real data11,
 									const real data12, const real data13, const real data14, const real data15 )
 		{
 			return mat44(data0, data4, data8,  data12,

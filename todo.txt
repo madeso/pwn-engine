@@ -2,6 +2,7 @@
 * support more os's like linux & mac
 * add more unit tests
 * update/rewrite rendering so that it doesnt need special features like shaders, but uses them if available?
+* refactor pwn.render to look like target api
 --------------------------
 ------------- features:
 * tranform into vbos & vertex shaders (indexed vbo!)
@@ -13,14 +14,19 @@
  - improve material system to send several textures to shaders
  - make boneassignemnts to a seperate vec4 array in preperations for gpu animation & multiple bone assignments
  - transform to gpu updated vbos
-* improve math and rgb(a) library, memberfunctions, more syntactic sugar
+* convert to lowercase-only filenames
+* improve math and rgb(a) library, memberfunctions, more syntactic sugar - still relevant?
 * add multiple textures and multiple instances to materials so that overiding & animating materials can be more easily supported
-* font support ( to be merged with "improve display framework"? )
+* improve display framework to support huds
+ - font support
 * console
 * 3d debugging (wireframe, view skeleton, draw boundingbox, draw position, line etc)
 * level editor
 * scripting support
-* scripting, settings & gui editor for fse
+* find out if fse is needed, or if a scripting approach should be used instead
+ - rewrite render.fse so that it doesn't use io code
+ - scripting, settings & gui editor for fse
+ - improve fse to support different "logical" paths
 * particle engine, check old notes
 * start on component framework
 * sound engine
@@ -28,9 +34,6 @@
  - character mechanics, modern approach to character animation, character scripting, animation state machines, animation blending
 * gui editor for components
 * add physics to component framework
-* rewrite render.fse so that it doesn't use io code
-* improve fse to support different "logical" paths
-* improve display framework to support huds
 * ssao
 * area support, camera effects(fse, shake...), scrips(enter, leave, onTick)
 * material effects, bump/normal map, animated textures, water

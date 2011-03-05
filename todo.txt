@@ -3,6 +3,7 @@
 * add more unit tests
 * update/rewrite rendering so that it doesnt need special features like shaders, but uses them if available?
 * refactor pwn.render to look like target api
+* improve arguments handling with pwn.convert
 --------------------------
 ------------- features:
 * tranform into vbos & vertex shaders (indexed vbo!)
@@ -19,10 +20,9 @@
 * add multiple textures and multiple instances to materials so that overiding & animating materials can be more easily supported
 * improve display framework to support huds
  - font support
-* console
+* console w/ lua/gamemonkey scripts
 * 3d debugging (wireframe, view skeleton, draw boundingbox, draw position, line etc)
 * level editor
-* scripting support
 * find out if fse is needed, or if a scripting approach should be used instead
  - rewrite render.fse so that it doesn't use io code
  - scripting, settings & gui editor for fse
@@ -32,6 +32,7 @@
 * sound engine
 * character engine
  - character mechanics, modern approach to character animation, character scripting, animation state machines, animation blending
+* scripting support for leveleditor, visual? point and click? gamemaker? labview? google android ide
 * gui editor for components
 * add physics to component framework
 * ssao

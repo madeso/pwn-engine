@@ -4,6 +4,7 @@
 * update/rewrite rendering so that it doesnt need special features like shaders, but uses them if available?
 * refactor pwn.render to look like target api
 * improve arguments handling with pwn.convert
+* include wxWidgets for messageboxes, exception displays and crash reporting
 --------------------------
 ------------- features:
 * tranform into vbos & vertex shaders (indexed vbo!)

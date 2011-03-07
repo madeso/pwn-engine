@@ -33,7 +33,7 @@
 * sound engine
 * character engine
  - character mechanics, modern approach to character animation, character scripting, animation state machines, animation blending
-* scripting support for leveleditor, visual? point and click? gamemaker? labview? google android ide
+* scripting support for leveleditor, visual? point and click? gamemaker? labview? Google app inventor (http://en.wikipedia.org/wiki/Google_App_Inventor)?, http://en.wikipedia.org/wiki/Visual_programming_language
 * gui editor for components
 * add physics to component framework
 * ssao

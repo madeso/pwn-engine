@@ -145,50 +145,6 @@ namespace pwn
 			else return qIdentity();
 		}
 
-		// todo: convert to a mat33 constructor
-		quat FromMatrix3(const real mat[3][3])
-		{
-			int   NXT[] = {1, 2, 0};
-			real q[4];
-
-			// check the diagonal
-			const real tr = mat[0][0] + mat[1][1] + mat[2][2];
-			if( tr > PWN_MATH_VALUE(0.0))
-			{
-				const real s = (real)Sqrt(tr + 1.0f);
-				const real t = PWN_MATH_VALUE(0.5) / s;
-
-				return quat(
-					(mat[1][2] - mat[2][1]) * t,
-					(mat[2][0] - mat[0][2]) * t,
-					(mat[0][1] - mat[1][0]) * t,
-					s * PWN_MATH_VALUE(0.5));
-			}
-			else
-			{
-				// diagonal is negative
-				// get biggest diagonal element
-				int i = 0;
-				if (mat[1][1] > mat[0][0]) i = 1;
-				if (mat[2][2] > mat[i][i]) i = 2;
-				//setup index sequence
-				int j = NXT[i];
-				int k = NXT[j];
-
-				real s = Sqrt((mat[i][i] - (mat[j][j] + mat[k][k])) + 1.0f);
-
-				q[i] = s * PWN_MATH_VALUE(0.5);
-
-				if (s != PWN_MATH_VALUE(0.0)) s = PWN_MATH_VALUE(0.5) / s;
-
-				q[j] = (mat[i][j] + mat[j][i]) * s;
-				q[k] = (mat[i][k] + mat[k][i]) * s;
-				q[3] = (mat[j][k] - mat[k][j]) * s;
-
-				return quat(q[0], q[1], q[2], q[3]);
-			}
-		}
-
 		const quat qLookInDirection(const vec3& adir, const vec3& up)
 		{
 			quat ret;

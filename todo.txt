@@ -4,17 +4,20 @@
 * update/rewrite rendering so that it doesnt need special features like shaders, but uses them if available?
 * refactor pwn.render to look like target api
 * include wxWidgets for messageboxes, exception displays and crash reporting
+* convert or remove pwn.math in favor of the tested cml
 --------------------------
 ------------- features:
 * tranform into vbos & vertex shaders (indexed vbo!)
- - convert or remove pwn.math in favor of the tested cml
+ - remove optimization from OpimizedMeshBuilder
+ - make FlatOuter work on MeshBuilder
+ - transfrom Mesh into a float-array structure
+ - make boneassignemnts to a seperate vec4 array in preperations for gpu animation & multiple bone assignments
  - transform to cpu updated vbos
  - improve arguments handling with pwn.convert
  - add material shaders
  - support loading vertex & fragment from different files & preprocessor
  - per pixel lights
  - improve material system to send several textures to shaders
- - make boneassignemnts to a seperate vec4 array in preperations for gpu animation & multiple bone assignments
  - transform to gpu updated vbos
 * convert to lowercase-only filenames
 * improve math and rgb(a) library, memberfunctions, more syntactic sugar - still relevant?

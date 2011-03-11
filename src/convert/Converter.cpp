@@ -74,45 +74,5 @@ namespace pwn
 			if( isBuilding == false ) throw "done has been called...";
 			isBuilding = false;
 		}
-
-		Stat::Stat()
-			: min(0)
-			, max(0)
-			, average(0)
-		{
-		}
-
-		Stat::Stat(pwn::real aMin, pwn::real aMax, pwn::real aAverage)
-			: min(aMin)
-			, max(aMax)
-			, average(aAverage)
-		{
-		}
-
-		const pwn::real AngleDiff(const pwn::math::vec3& v)
-		{
-			const pwn::math::vec3 loaded = pwn::math::CompressedToUnitVector(pwn::math::UnitVectorToCompressed(v));
-			const pwn::real a = pwn::math::AngleBetween(v, loaded).inDegrees();
-			return a;
-		}
-
-		void EstimatedDataLossWhenCompressing(mesh::Mesh& data, Stat* normals)
-		{
-			if( normals )
-			{
-				const std::size_t nc = data.positions.size();
-				pwn::real min = 10000000000;
-				pwn::real max = -1;
-				pwn::real sum = 0;
-				for(std::size_t i=0; i<nc; ++i)
-				{
-					const pwn::real d = AngleDiff(data.positions[i].normal);
-					sum += d;
-					if( min > d ) min = d;
-					if( max < d ) max = d;
-				}
-				*normals = Stat(min, max, sum / nc);
-			}
-		}
 	}
 }

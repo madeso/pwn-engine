@@ -39,18 +39,6 @@ namespace pwn
 			typedef std::map<pwn::string, uint32> MaterialNameIdMap;
 			MaterialNameIdMap materialid;
 		};
-
-		struct Stat
-		{
-			Stat();
-			Stat(pwn::real aMin, pwn::real aMax, pwn::real aAverage);
-
-			pwn::real min;
-			pwn::real max;
-			pwn::real average;
-		};
-
-		void EstimatedDataLossWhenCompressing(mesh::Mesh& data, Stat* normals);
 	}
 }
 

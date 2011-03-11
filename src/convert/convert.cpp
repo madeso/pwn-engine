@@ -19,12 +19,6 @@
 
 using namespace std;
 
-std::ostream& operator<<(std::ostream& os, const ::pwn::convert::Stat& s)
-{
-	os << "< " << s.min << " | " << s.average << " | " << s.max << " >";
-	return os;
-}
-
 /** Writes a dot to std::out to display progress..
 */
 struct WriteDotCallback : public pwn::convert::obj::VoidVoidCallback

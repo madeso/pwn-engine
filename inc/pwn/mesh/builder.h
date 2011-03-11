@@ -72,6 +72,7 @@ namespace pwn
 
 			void addQuad(bool reverse, pwn::uint32 material, const BTriangle::Vertex& v0, const BTriangle::Vertex& v1, const BTriangle::Vertex& v2, const BTriangle::Vertex& v3);
 			void addFace(pwn::uint32 material, const std::vector<BTriangle::Vertex>& vertices);
+			void addBone(const Bone& b);
 			void setBox(Material material, real w, real h, real d, bool faceOut);
 			void buildNormals();
 

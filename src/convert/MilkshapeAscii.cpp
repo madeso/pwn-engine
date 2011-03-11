@@ -260,7 +260,7 @@ namespace pwn
 					}
 				};
 
-				void Read(OptimizedMeshBuilder* builder, const pwn::string& path)
+				void Read(pwn::mesh::Builder* builder, pwn::mesh::Animation* animation, const pwn::string& path)
 				{
 					std::ifstream f(path.c_str());
 					if( !f ) throw "failed to open file";
@@ -270,7 +270,7 @@ namespace pwn
 					Runner runner(lines, 1.0f);
 					runner.run();
 					MilkshapeCommon::ExtractMeshDefinition(runner.model, builder);
-					builder->mAnimation = MilkshapeCommon::ExtractAnimation(runner.model);
+					*animation = MilkshapeCommon::ExtractAnimation(runner.model);
 				}
 			}
 		}

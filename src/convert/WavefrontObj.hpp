@@ -5,16 +5,20 @@
 
 namespace pwn
 {
+	namespace mesh
+	{
+		class Builder;
+	}
+
 	namespace convert
 	{
-		class OptimizedMeshBuilder;
 		namespace obj
 		{
 			struct VoidVoidCallback
 			{
 				virtual void perform() = 0;
 			};
-			void read(OptimizedMeshBuilder* builder, const std::string& file, VoidVoidCallback& cb);
+			void read(pwn::mesh::Builder* builder, const std::string& file, VoidVoidCallback& cb);
 		}
 	}
 }

@@ -337,7 +337,7 @@ namespace pwn
 					return model;
 				}
 
-				void Read(OptimizedMeshBuilder* builder, const string& meshpath)
+				void Read(pwn::mesh::Builder* builder, pwn::mesh::Animation* animation, const string& meshpath)
 				{
 					Model model;
 
@@ -346,7 +346,7 @@ namespace pwn
 					model = ExtractModel(run);
 
 					MilkshapeCommon::ExtractMeshDefinition(model, builder);
-					builder->mAnimation = MilkshapeCommon::ExtractAnimation(model);
+					*animation = MilkshapeCommon::ExtractAnimation(model);
 				}
 			}
 		}

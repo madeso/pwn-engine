@@ -173,7 +173,7 @@ namespace pwn
 				while( f.peek() == ' ') f.ignore();
 			}
 
-			void read(OptimizedMeshBuilder* builder, const std::string& file, VoidVoidCallback& cb)
+			void read(pwn::mesh::Builder* builder, const std::string& file, VoidVoidCallback& cb)
 			{
 				std::ifstream f(file.c_str());
 				if( false == f.good() ) throw "missing obj file";
@@ -237,12 +237,12 @@ namespace pwn
 						while( pwn::string("-0123456789/").find(f.peek()) != pwn::string::npos )
 						{
 							faces.push_back(cFaceIndex(Read(f),
-								builder->mBuilder.positions.size(),
-								builder->mBuilder.normals.size(),
-								builder->mBuilder.texcoords.size()));
+								builder->positions.size(),
+								builder->normals.size(),
+								builder->texcoords.size()));
 							SkipWhitespace(f);
 						}
-						builder->mBuilder.addFace(materials[currentMaterial],faces);
+						builder->addFace(materials[currentMaterial],faces);
 					}
 					else if ( command == "usemtl" )
 					{
@@ -250,7 +250,7 @@ namespace pwn
 					}
 					else if ( command == "mtllib" )
 					{
-						LoadMaterialLibrary(&builder->mBuilder, &materials, file, Read(f));
+						LoadMaterialLibrary(builder, &materials, file, Read(f));
 					}
 					else if( command == "g" )
 					{
@@ -269,8 +269,6 @@ namespace pwn
 						throw e;
 					}
 				}
-
-				builder->done();
 			}
 		}
 	}

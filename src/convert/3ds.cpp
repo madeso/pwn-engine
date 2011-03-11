@@ -577,10 +577,10 @@ namespace pwn
 					};
 
 
-
-
-					static void ParseChunk(OptimizedMeshBuilder* builder, MainChunk& main)
+					static void ParseChunk(pwn::mesh::Builder* builder, MainChunk& main)
 					{
+						NamedMaterials namedMaterials(builder);
+
 						BOOST_FOREACH(MaterialChunk& chunk, main.editor.materials)
 						{
 							pwn::mesh::Material mat;
@@ -589,12 +589,12 @@ namespace pwn
 							//mat.specular = chunk.specular.Color;
 							//mat.ambient = chunk.ambient.Color;
 							//mat.diffuse = chunk.diffuse.Color;
-							builder->addMaterial(chunk.name.Value, mat);
+							namedMaterials.addMaterial(chunk.name.Value, mat);
 						}
 
 						BOOST_FOREACH(ObjectChunk chunk , main.editor.objects)
 						{
-							pwn::mesh::BTriangle::index ibase = builder->mBuilder.positions.size();
+							pwn::mesh::BTriangle::index ibase = builder->positions.size();
 							for (std::size_t i = 0; i < chunk.trimesh.points.size(); ++i)
 							{
 								builder->addPosition( pwn::mesh::BPoint(chunk.trimesh.coordsys.translate(chunk.trimesh.points[i]), 0) );
@@ -602,7 +602,7 @@ namespace pwn
 							}
 							BOOST_FOREACH(FaceMaterialChunk fmc , chunk.trimesh.facematerials)
 							{
-								pwn::uint32 material = builder->getMaterial(fmc.name);
+								pwn::uint32 material = namedMaterials.getMaterial(fmc.name);
 								BOOST_FOREACH(int faceindex, fmc.faces)
 								{
 									const TriMeshChunk::Poly p = chunk.trimesh.faces[faceindex];
@@ -611,7 +611,7 @@ namespace pwn
 									const pwn::mesh::BTriangle::index b = ibase + p.b;
 									const pwn::mesh::BTriangle::index c = ibase + p.c;
 
-									builder->mBuilder.addTriangle(material, pwn::mesh::BTriangle(
+									builder->addTriangle(material, pwn::mesh::BTriangle(
 												  pwn::mesh::BTriangle::Vertex(a, 0, a)
 												, pwn::mesh::BTriangle::Vertex(b, 0, b)
 												, pwn::mesh::BTriangle::Vertex(c, 0, c)
@@ -622,7 +622,7 @@ namespace pwn
 						}
 					}
 
-					void Load(OptimizedMeshBuilder* builder, const string& filename)
+					void Load(pwn::mesh::Builder* builder, const string& filename)
 					{
 						std::vector<BinaryChunkPtr> chunks;
 
@@ -644,13 +644,12 @@ namespace pwn
 						MainChunk main;
 						main.load(chunks[0]);
 						ParseChunk(builder, main);
-						builder->done();
 					}
 
 				}
 			}
 
-			void read(OptimizedMeshBuilder* builder, const pwn::string& file)
+			void read(pwn::mesh::Builder* builder, const pwn::string& file)
 			{
 				hidden::Load(builder, file);
 				//builder->mBuilder.buildNormals();

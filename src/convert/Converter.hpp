@@ -13,28 +13,16 @@ namespace pwn
 {
 	namespace convert
 	{
-		class OptimizedMeshBuilder
+		class NamedMaterials
 		{
 		public:
-			OptimizedMeshBuilder();
+			explicit NamedMaterials(::pwn::mesh::Builder* aBuilder);
 
-			mesh::BTriangle::index addPosition(const mesh::BPoint& pos);
-			mesh::BTriangle::index addNormal(const math::vec3& norm);
-			mesh::BTriangle::index addTextCoord(const math::vec2& tc);
-
-			// util functions, simply call theese on the mesh
-			void addTriangle(pwn::uint32 material, const mesh::BTriangle& tri);
 			mesh::BTriangle::index addMaterial(const pwn::string& name, mesh::Material m);
-			void addBone(const ::pwn::mesh::Bone& b);
-
-			void done();
-
 			uint32 getMaterial(const pwn::string& name) const;
 
-			::pwn::mesh::Builder mBuilder;
-			::pwn::mesh::Animation mAnimation;
 		private:
-			bool isBuilding;
+			::pwn::mesh::Builder* mBuilder;
 
 			typedef std::map<pwn::string, uint32> MaterialNameIdMap;
 			MaterialNameIdMap materialid;

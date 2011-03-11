@@ -214,14 +214,16 @@ namespace pwn
 						else throw "no animations found";
 					}
 
-					void ExtractMeshDefinition(const Model& model, OptimizedMeshBuilder* builder)
+					void ExtractMeshDefinition(const Model& model, pwn::mesh::Builder* builder)
 					{
+						NamedMaterials materials(builder);
+
 						int id = 0;
 						BOOST_FOREACH(const Material& mat, model.materials)
 						{
 							mesh::Material smat;
 							smat.setTexture_Diffuse(mat.diffuseTexture);
-							builder->addMaterial(mat.name, smat);
+							materials.addMaterial(mat.name, smat);
 							++id;
 						}
 
@@ -276,7 +278,6 @@ namespace pwn
 									));
 							}
 						}
-						builder->done();
 					}
 
 					math::quat makeQuat(const math::vec3& angles)

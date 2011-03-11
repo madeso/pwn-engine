@@ -63,7 +63,7 @@ const InputFormat::Type SuggestFormat(const pwn::string& inputfile, const InputF
  Supports: 3ds, obj, milkshape binary & milkshape ascii.
  Add support for x, collada, md2, md3, md5, an8, ogre mesh, dxf & blender
 */
-bool Load(pwn::convert::OptimizedMeshBuilder& builder, const pwn::string& inputfile, const InputFormat::Type formatOveride, bool verbose)
+bool Load(pwn::mesh::Builder* builder, pwn::mesh::Animation* animation, const pwn::string& inputfile, const InputFormat::Type formatOveride, bool verbose)
 {
 	const InputFormat::Type fileFormat = SuggestFormat(inputfile, formatOveride);
 
@@ -74,21 +74,21 @@ bool Load(pwn::convert::OptimizedMeshBuilder& builder, const pwn::string& inputf
 	case InputFormat::Obj:
 		{
 		WriteDotCallback wdc(verbose);
-		pwn::convert::obj::read(&builder, inputfile, wdc);
-		builder.mBuilder.buildNormals();
+		pwn::convert::obj::read(builder, inputfile, wdc);
+		builder->buildNormals();
 		}
 		return true;
 	case InputFormat::Studio3ds:
-		pwn::convert::studio3ds::read(&builder, inputfile);
-		builder.mBuilder.buildNormals();
+		pwn::convert::studio3ds::read(builder, inputfile);
+		builder->buildNormals();
 		return true;
 	case InputFormat::Ms3d_ascii:
-		pwn::convert::milkshape::ascii::Read(&builder, inputfile);
-		builder.mBuilder.buildNormals();
+		pwn::convert::milkshape::ascii::Read(builder, animation, inputfile);
+		builder->buildNormals();
 		return true;
 	case InputFormat::Ms3d_binary:
-		pwn::convert::milkshape::binary::Read(&builder, inputfile);
-		builder.mBuilder.buildNormals();
+		pwn::convert::milkshape::binary::Read(builder, animation, inputfile);
+		builder->buildNormals();
 		return true;
 	default:
 		std::cerr << "Unable to determine the kind of reader to use with " << inputfile;
@@ -123,15 +123,14 @@ struct ConvertMesh
 		const pwn::string outdir = outdir.empty() ? moutdir : aoutdir;
 		try
 		{
-			pwn::convert::OptimizedMeshBuilder builder;
-			if( Load(builder, inputfile, formatOveride, verbose) == false ) return false;
+			pwn::mesh::Builder builder;
+			pwn::mesh::Animation animation;
+			if( Load(&builder, &animation, inputfile, formatOveride, verbose) == false ) return false;
 
 			pwn::mesh::Flatouter flatouter;
 
 			pwn::mesh::Mesh mesh;
-			builder.mBuilder.makeMesh(mesh, &flatouter);
-
-			pwn::mesh::Animation& animation = builder.mAnimation;
+			builder.makeMesh(mesh, &flatouter);
 			flatouter.modify(&animation);
 
 			{

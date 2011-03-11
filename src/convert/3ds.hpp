@@ -5,12 +5,16 @@
 
 namespace pwn
 {
+	namespace mesh
+	{
+		class Builder;
+	}
+
 	namespace convert
 	{
-		class OptimizedMeshBuilder;
 		namespace studio3ds
 		{
-			void read(OptimizedMeshBuilder* builder, const pwn::string& file);
+			void read(pwn::mesh::Builder* builder, const pwn::string& file);
 		}
 	}
 }

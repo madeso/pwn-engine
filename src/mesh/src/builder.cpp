@@ -224,6 +224,12 @@ namespace pwn
 			if( false == added ) throw "Unable to triangulate face";
 		}
 
+		void Builder::addBone(const Bone& b)
+		{
+			bones.push_back(b);
+		}
+
+
 		void Builder::setBox(Material material, real w, real h, real d, bool faceOut)
 		{
 			using math::vec2;

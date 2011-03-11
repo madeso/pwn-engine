@@ -5,14 +5,19 @@
 
 namespace pwn
 {
+	namespace mesh
+	{
+		class Builder;
+		class Animation;
+	}
+
 	namespace convert
 	{
-		class OptimizedMeshBuilder;
 		namespace milkshape
 		{
 			namespace binary
 			{
-				void Read(OptimizedMeshBuilder* builder, const string& meshpath);
+				void Read(pwn::mesh::Builder* builder, pwn::mesh::Animation* animation, const string& meshpath);
 			}
 		}
 	}

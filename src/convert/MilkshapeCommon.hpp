@@ -12,11 +12,11 @@ namespace pwn
 	{
 		class Mesh;
 		class Animation;
+		class Builder;
 	}
 
 	namespace convert
 	{
-		class OptimizedMeshBuilder;
 		namespace milkshape
 		{
 			namespace common
@@ -176,7 +176,7 @@ namespace pwn
 				{
 					mesh::Animation ExtractAnimation(const Model& model);
 
-					void ExtractMeshDefinition(const Model& model, OptimizedMeshBuilder* builder);
+					void ExtractMeshDefinition(const Model& model, pwn::mesh::Builder* builder);
 
 					math::quat makeQuat(const math::vec3& angles);
 

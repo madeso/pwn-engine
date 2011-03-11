@@ -28,16 +28,6 @@ namespace pwn
 			else return res->second;
 		}
 
-		uint32 Check(const pwn::string& name, std::size_t i, std::size_t max)
-		{
-			if( i >= max )
-			{
-				std::cerr << name << " is bad.. " << i << " of " << max << std::endl;
-				return 1;
-			}
-			else return 0;
-		}
-
 		mesh::BTriangle::index OptimizedMeshBuilder::addNormal(const pwn::math::vec3& n)
 		{
 			if( isBuilding == false ) throw "done has been called...";

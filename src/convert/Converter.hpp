@@ -16,7 +16,7 @@ namespace pwn
 		class OptimizedMeshBuilder
 		{
 		public:
-			OptimizedMeshBuilder(bool optimzeNormals);
+			OptimizedMeshBuilder();
 
 			mesh::BTriangle::index addPosition(const mesh::BPoint& pos);
 			mesh::BTriangle::index addNormal(const math::vec3& norm);
@@ -31,21 +31,10 @@ namespace pwn
 
 			uint32 getMaterial(const pwn::string& name) const;
 
-			// stat functions
-			pwn::real removedNormals() const;
-			std::size_t numberOfRemovedNormals() const;
-
 			::pwn::mesh::Builder mBuilder;
 			::pwn::mesh::Animation mAnimation;
 		private:
-			typedef mesh::BTriangle::index NormalIndex;
-			typedef pwn::uint16 CompressedNormal;
-
 			bool isBuilding;
-
-			bool mOptimizeNormals;
-			std::map<CompressedNormal, NormalIndex> normalMap;
-			std::vector<NormalIndex> normalConvertions;
 
 			typedef std::map<pwn::string, uint32> MaterialNameIdMap;
 			MaterialNameIdMap materialid;

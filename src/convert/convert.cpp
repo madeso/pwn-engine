@@ -129,7 +129,7 @@ struct ConvertMesh
 		const pwn::string outdir = outdir.empty() ? moutdir : aoutdir;
 		try
 		{
-			pwn::convert::OptimizedMeshBuilder builder(false);
+			pwn::convert::OptimizedMeshBuilder builder;
 			if( Load(builder, inputfile, formatOveride, verbose) == false ) return false;
 
 			pwn::mesh::Flatouter flatouter;

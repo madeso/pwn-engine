@@ -10,9 +10,8 @@ namespace pwn
 {
 	namespace convert
 	{
-		OptimizedMeshBuilder::OptimizedMeshBuilder(bool optimizeNormals)
+		OptimizedMeshBuilder::OptimizedMeshBuilder()
 			: isBuilding(true)
-			, mOptimizeNormals(optimizeNormals)
 		{
 		}
 
@@ -43,22 +42,7 @@ namespace pwn
 		{
 			if( isBuilding == false ) throw "done has been called...";
 
-			if( mOptimizeNormals )
-			{
-				const pwn::uint16 c = ::pwn::math::UnitVectorToCompressed(n);
-
-				if( normalMap.find(c) == normalMap.end() )
-				{
-					normalMap[c] = mBuilder.addNormal(n);
-				}
-
-				normalConvertions.push_back(normalMap[c]);
-				return normalMap[c];
-			}
-			else
-			{
-				return mBuilder.addNormal(n);
-			}
+			return mBuilder.addNormal(n);
 		}
 
 		mesh::BTriangle::index OptimizedMeshBuilder::addTextCoord(const math::vec2& tc)
@@ -89,42 +73,6 @@ namespace pwn
 		{
 			if( isBuilding == false ) throw "done has been called...";
 			isBuilding = false;
-
-			const bool optimizeNormals = mOptimizeNormals && mBuilder.normals.size() != 0;
-
-			if( optimizeNormals == false ) return;
-
-
-			const std::size_t mc = mBuilder.triangles.size();
-			for(std::size_t mi=0; mi<mc; ++mi)
-			{
-				const std::size_t fc = mBuilder.triangles[mi].size();
-				for(std::size_t i=0; i<fc; ++i)
-				{
-					for(int faceIndex=0; faceIndex<3; ++faceIndex)
-					{
-						::pwn::mesh::BTriangle::Vertex& v = mBuilder.triangles[mi][i][faceIndex];
-						if( optimizeNormals )
-						{
-							v.normal = normalConvertions[v.normal];
-						}
-					}
-				}
-			}
-		}
-
-		pwn::real OptimizedMeshBuilder::removedNormals() const
-		{
-			if( mOptimizeNormals == false) return 0;
-			const std::size_t normals = numberOfRemovedNormals();
-			if( normals == 0 ) return 0;
-			else return static_cast<pwn::real>(normals) / normalConvertions.size();
-		}
-
-		std::size_t OptimizedMeshBuilder::numberOfRemovedNormals() const
-		{
-			if( mOptimizeNormals==false ) return 0;
-			return normalConvertions.size() - normalMap.size();
 		}
 
 		Stat::Stat()

@@ -8,7 +8,7 @@
 --------------------------
 ------------- features:
 * tranform into vbos & vertex shaders (indexed vbo!)
- - remove optimization from OpimizedMeshBuilder
+ - make obj converter use NamedMaterials and possible move NamedMaterials into the Builder
  - make FlatOuter work on MeshBuilder
  - transfrom Mesh into a float-array structure
  - make boneassignemnts to a seperate vec4 array in preperations for gpu animation & multiple bone assignments

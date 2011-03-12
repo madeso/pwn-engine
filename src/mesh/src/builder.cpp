@@ -48,6 +48,54 @@ namespace pwn
 			return mesh;
 		}
 
+		
+
+		namespace // local
+		{
+			BTriangle::Vertex v(BTriangle::index p, BTriangle::index t)
+			{
+				BTriangle::Vertex vt;
+				vt.location = p;
+				vt.texture = t;
+				return vt;
+			}
+		}
+
+		Builder CreateBox(Material material, real w, real h, real d, bool faceOut)
+		{
+			using math::vec2;
+			using math::vec3;
+
+			Builder b;
+
+			const BTriangle::index t0 = b.addTextCoord(vec2(0,1));
+			const BTriangle::index t1 = b.addTextCoord(vec2(1,1));
+			const BTriangle::index t2 = b.addTextCoord(vec2(0,0));
+			const BTriangle::index t3 = b.addTextCoord(vec2(1,0));
+
+			// front side
+			const BTriangle::index v0 = b.addPosition(vec3(0, 0, 0), 0);
+			const BTriangle::index v1 = b.addPosition(vec3(w, 0, 0), 0);
+			const BTriangle::index v2 = b.addPosition(vec3(0, h, 0), 0);
+			const BTriangle::index v3 = b.addPosition(vec3(w, h, 0), 0);
+
+			// back side
+			const BTriangle::index v4 = b.addPosition(vec3(0, 0, d), 0);
+			const BTriangle::index v5 = b.addPosition(vec3(w, 0, d), 0);
+			const BTriangle::index v6 = b.addPosition(vec3(0, h, d), 0);
+			const BTriangle::index v7 = b.addPosition(vec3(w, h, d), 0);
+
+			b.addQuad(!faceOut, 0, v(v0,t2), v(v2,t0), v(v3,t1), v(v1,t3)); // front
+			b.addQuad(!faceOut, 0, v(v1,t3), v(v3,t1), v(v7,t0), v(v5,t2)); // right
+			b.addQuad(!faceOut, 0, v(v4,t3), v(v6,t1), v(v2,t0), v(v0,t2)); // left
+			b.addQuad(!faceOut, 0, v(v5,t2), v(v7,t0), v(v6,t1), v(v4,t3)); // back
+			b.addQuad(!faceOut, 0, v(v3,t1), v(v2,t3), v(v6,t2), v(v7,t0)); // up
+			b.addQuad(!faceOut, 0, v(v4,t0), v(v0,t1), v(v1,t3), v(v5,t2)); // bottom
+
+			b.materials.push_back(material);
+			return b;
+		}
+
 		namespace
 		{
 			void KeepLast(pwn::string& t, const char c)
@@ -86,17 +134,6 @@ namespace pwn
 		}
 
 		// ==================================================================================================================================
-
-		namespace // local
-		{
-			BTriangle::Vertex v(BTriangle::index p, BTriangle::index t)
-			{
-				BTriangle::Vertex vt;
-				vt.location = p;
-				vt.texture = t;
-				return vt;
-			}
-		}
 
 		BPoint::BPoint(const math::vec3& alocation, BoneIndex abone)
 			: location(alocation)
@@ -241,41 +278,6 @@ namespace pwn
 			bones.push_back(b);
 		}
 
-
-		void Builder::setBox(Material material, real w, real h, real d, bool faceOut)
-		{
-			using math::vec2;
-			using math::vec3;
-
-			clear();
-
-			const BTriangle::index t0 = addTextCoord(vec2(0,1));
-			const BTriangle::index t1 = addTextCoord(vec2(1,1));
-			const BTriangle::index t2 = addTextCoord(vec2(0,0));
-			const BTriangle::index t3 = addTextCoord(vec2(1,0));
-
-			// front side
-			const BTriangle::index v0 = addPosition(vec3(0, 0, 0), 0);
-			const BTriangle::index v1 = addPosition(vec3(w, 0, 0), 0);
-			const BTriangle::index v2 = addPosition(vec3(0, h, 0), 0);
-			const BTriangle::index v3 = addPosition(vec3(w, h, 0), 0);
-
-			// back side
-			const BTriangle::index v4 = addPosition(vec3(0, 0, d), 0);
-			const BTriangle::index v5 = addPosition(vec3(w, 0, d), 0);
-			const BTriangle::index v6 = addPosition(vec3(0, h, d), 0);
-			const BTriangle::index v7 = addPosition(vec3(w, h, d), 0);
-
-			addQuad(!faceOut, 0, v(v0,t2), v(v2,t0), v(v3,t1), v(v1,t3)); // front
-			addQuad(!faceOut, 0, v(v1,t3), v(v3,t1), v(v7,t0), v(v5,t2)); // right
-			addQuad(!faceOut, 0, v(v4,t3), v(v6,t1), v(v2,t0), v(v0,t2)); // left
-			addQuad(!faceOut, 0, v(v5,t2), v(v7,t0), v(v6,t1), v(v4,t3)); // back
-			addQuad(!faceOut, 0, v(v3,t1), v(v2,t3), v(v6,t2), v(v7,t0)); // up
-			addQuad(!faceOut, 0, v(v4,t0), v(v0,t1), v(v1,t3), v(v5,t2)); // bottom
-
-			materials.push_back(material);
-		}
-
 		void Builder::buildNormals()
 		{
 			//Assert(normals.empty());
@@ -379,9 +381,9 @@ namespace pwn
 #undef TEST
 		}
 
-		bool Builder::makeMesh(Mesh& mesh) const
+		Mesh Builder::asMesh() const
 		{
-			mesh.clear();
+			Mesh mesh;
 
 			typedef std::map<Combo, Triangle::VertexIndex> ComboMap;
 			ComboMap combinations;
@@ -427,7 +429,8 @@ namespace pwn
 
 			PrepareVericesForAnimation(&mesh);
 
-			return mesh.validate(true) ==0;
+			if(mesh.validate(true) != 0 ) throw "Mesh failed to validate";
+			return mesh;
 		}
 
 		uint32 NumberOfTriangles(const Mesh& mesh)

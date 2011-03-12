@@ -20,8 +20,10 @@ namespace pwn
 		Mesh* Scale(Mesh* mesh, pwn::real scale);
 		Mesh* InvertNormals(Mesh* mesh);
 		void MoveTextures(Mesh* mesh, const pwn::string& newFolder);
-
 		uint32 NumberOfTriangles(const Mesh& mesh);
+
+		class Builder;
+		Builder CreateBox(Material material, real w, real h, real d, bool faceOut);
 
 		class BPoint
 		{
@@ -63,23 +65,25 @@ namespace pwn
 		{
 		public:
 			void clear();
+
 			BTriangle::index addTextCoord(const math::vec2& v);
 			BTriangle::index addPosition(const BPoint& pos);
 			BTriangle::index addPosition(const math::vec3& pos, BoneIndex bone); // syntax sugar
 			BTriangle::index addNormal(const math::vec3& norm);
 			void addTriangle(pwn::uint32 material, const BTriangle& t);
 			BTriangle::index addMaterial(Material m);
+
 			BTriangle::index addMaterial(const pwn::string& name, mesh::Material m);
 			uint32 getMaterial(const pwn::string& name) const;
 
 			void addQuad(bool reverse, pwn::uint32 material, const BTriangle::Vertex& v0, const BTriangle::Vertex& v1, const BTriangle::Vertex& v2, const BTriangle::Vertex& v3);
 			void addFace(pwn::uint32 material, const std::vector<BTriangle::Vertex>& vertices);
+
 			void addBone(const Bone& b);
 
-			void setBox(Material material, real w, real h, real d, bool faceOut);
 			void buildNormals();
 
-			bool makeMesh(Mesh& mesh) const;
+			Mesh asMesh() const;
 
 			typedef std::vector<BTriangle> TriList;
 			typedef std::map<pwn::uint32, TriList> TriMap;
@@ -100,7 +104,7 @@ namespace pwn
 			explicit Flatouter(const Builder& mesh);
 			void modify(Builder* mesh) const;
 			void modify(Animation* animation) const;
-
+		private:
 			std::vector<BoneIndex> newIndices;
 		};
 	}

@@ -67,11 +67,11 @@ namespace pwn
 
 			namespace // local
 			{
-				void Add(const pwn::string& name, mesh::Material material, std::map<std::string, std::size_t>* materials, mesh::Builder* converter)
+				void Add(const pwn::string& name, mesh::Material material, NamedMaterials* materials)
 				{
-					materials->insert( std::make_pair(name, converter->addMaterial(material)) );
+					materials->addMaterial(name, material);
 				}
-				void LoadMaterialLibrary(mesh::Builder* converter, std::map<std::string, std::size_t>* materials, const pwn::string& sourceFile, const pwn::string& materialLibraryFileName)
+				void LoadMaterialLibrary(NamedMaterials* materials, const pwn::string& sourceFile, const pwn::string& materialLibraryFileName)
 				{
 					const pwn::string file = (boost::filesystem::path(sourceFile).remove_filename() / materialLibraryFileName).string();
 
@@ -93,7 +93,7 @@ namespace pwn
 
 						if( command == "newmtl" )
 						{
-							Add(materialname, material, materials, converter);
+							Add(materialname, material, materials);
 							material = mesh::Material();
 							materialname = sline[1];
 						}
@@ -157,7 +157,7 @@ namespace pwn
 						}
 					}
 
-					Add(materialname, material, materials, converter);
+					Add(materialname, material, materials);
 				}
 			}
 
@@ -178,7 +178,7 @@ namespace pwn
 				std::ifstream f(file.c_str());
 				if( false == f.good() ) throw "missing obj file";
 
-				std::map<std::string, std::size_t> materials;
+				NamedMaterials materials(builder);
 				pwn::string currentMaterial = "";
 
 				int lineIndex = 0;
@@ -242,7 +242,7 @@ namespace pwn
 								builder->texcoords.size()));
 							SkipWhitespace(f);
 						}
-						builder->addFace(materials[currentMaterial],faces);
+						builder->addFace(materials.getMaterial(currentMaterial),faces);
 					}
 					else if ( command == "usemtl" )
 					{
@@ -250,7 +250,7 @@ namespace pwn
 					}
 					else if ( command == "mtllib" )
 					{
-						LoadMaterialLibrary(builder, &materials, file, Read(f));
+						LoadMaterialLibrary(&materials, file, Read(f));
 					}
 					else if( command == "g" )
 					{

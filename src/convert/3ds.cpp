@@ -12,8 +12,6 @@
 #include <pwn/mesh/mesh.h>
 #include <pwn/mesh/builder.h>
 
-#include "Converter.hpp"
-
 namespace pwn
 {
 	namespace convert

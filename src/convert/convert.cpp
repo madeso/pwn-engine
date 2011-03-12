@@ -10,7 +10,6 @@
 #include <pwn/mesh/builder.h>
 #include <boost/foreach.hpp>
 
-#include "Converter.hpp"
 #include "WavefrontObj.hpp"
 #include "3ds.hpp"
 

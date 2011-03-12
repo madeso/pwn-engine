@@ -3,7 +3,7 @@
 #include <boost/scoped_array.hpp>
 #include <boost/foreach.hpp>
 #include "MilkshapeCommon.hpp"
-#include "Converter.hpp"
+#include <pwn/mesh/mesh.h>
 
 namespace pwn
 {

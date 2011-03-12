@@ -4,7 +4,6 @@
 #include <boost/filesystem.hpp>
 
 #include "WavefrontObj.hpp"
-#include "Converter.hpp"
 
 #include <pwn/core/stringutils.h>
 #include <pwn/math/operations.h>

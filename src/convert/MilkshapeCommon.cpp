@@ -5,8 +5,8 @@
 #include <pwn/core/stringutils.h>
 #include <boost/filesystem.hpp>
 #include <pwn/mesh/mesh.h>
-#include "Converter.hpp"
 #include <boost/lexical_cast.hpp>
+#include <pwn/mesh/builder.h>
 
 namespace pwn
 {

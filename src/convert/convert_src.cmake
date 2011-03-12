@@ -5,8 +5,6 @@
 set ( convert_src
 	3ds.cpp
 	3ds.hpp
-	Converter.cpp
-	Converter.hpp
 	MilkshapeAscii.cpp
 	MilkshapeAscii.hpp
 	MilkshapeBinary.cpp

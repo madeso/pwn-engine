@@ -2,14 +2,8 @@ glob:doc/html/*.*
 glob:doc/xml/*
 glob:naturald/*
 glob:temp/*
-glob:build/vs2005/projects/*.user
-glob:build/vs2005/pwn.ncb
 glob:dist/Thumbs.db
 glob:doc/*
-glob:build/vs2005/*.suo
-glob:build/vs2008/projects/*.user
-glob:build/vs2008/*.ncb
-glob:build/vs2008/pwn.suo
 glob:dist/Debug/*.pdb
 glob:dist/Debug/*.ilk
 glob:code-design/resolution-test/*.png
@@ -18,7 +12,7 @@ glob:dist/Release/pwn-*
 glob:dist/*.mesh
 glob:dist/*/*.anim
 glob:dist/alien_chamber/*
-glob:build/cmake/*
 glob:dist/-Debug/*
 glob:dist/-Release/*
 glob:dist/build/*
+glob:build/*

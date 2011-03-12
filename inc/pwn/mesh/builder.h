@@ -69,10 +69,13 @@ namespace pwn
 			BTriangle::index addNormal(const math::vec3& norm);
 			void addTriangle(pwn::uint32 material, const BTriangle& t);
 			BTriangle::index addMaterial(Material m);
+			BTriangle::index addMaterial(const pwn::string& name, mesh::Material m);
+			uint32 getMaterial(const pwn::string& name) const;
 
 			void addQuad(bool reverse, pwn::uint32 material, const BTriangle::Vertex& v0, const BTriangle::Vertex& v1, const BTriangle::Vertex& v2, const BTriangle::Vertex& v3);
 			void addFace(pwn::uint32 material, const std::vector<BTriangle::Vertex>& vertices);
 			void addBone(const Bone& b);
+
 			void setBox(Material material, real w, real h, real d, bool faceOut);
 			void buildNormals();
 
@@ -86,6 +89,9 @@ namespace pwn
 			std::vector<math::vec2> texcoords;
 			std::vector<Bone> bones;
 			std::vector<Material> materials;
+
+			typedef std::map<pwn::string, BTriangle::index> MaterialNameIdMap;
+			MaterialNameIdMap materialid;
 		};
 	}
 }

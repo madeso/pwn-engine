@@ -579,8 +579,6 @@ namespace pwn
 
 					static void ParseChunk(pwn::mesh::Builder* builder, MainChunk& main)
 					{
-						NamedMaterials namedMaterials(builder);
-
 						BOOST_FOREACH(MaterialChunk& chunk, main.editor.materials)
 						{
 							pwn::mesh::Material mat;
@@ -589,7 +587,7 @@ namespace pwn
 							//mat.specular = chunk.specular.Color;
 							//mat.ambient = chunk.ambient.Color;
 							//mat.diffuse = chunk.diffuse.Color;
-							namedMaterials.addMaterial(chunk.name.Value, mat);
+							builder->addMaterial(chunk.name.Value, mat);
 						}
 
 						BOOST_FOREACH(ObjectChunk chunk , main.editor.objects)
@@ -602,7 +600,7 @@ namespace pwn
 							}
 							BOOST_FOREACH(FaceMaterialChunk fmc , chunk.trimesh.facematerials)
 							{
-								pwn::uint32 material = namedMaterials.getMaterial(fmc.name);
+								pwn::uint32 material = builder->getMaterial(fmc.name);
 								BOOST_FOREACH(int faceindex, fmc.faces)
 								{
 									const TriMeshChunk::Poly p = chunk.trimesh.faces[faceindex];

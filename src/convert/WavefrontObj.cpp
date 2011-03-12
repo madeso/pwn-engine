@@ -67,11 +67,7 @@ namespace pwn
 
 			namespace // local
 			{
-				void Add(const pwn::string& name, mesh::Material material, NamedMaterials* materials)
-				{
-					materials->addMaterial(name, material);
-				}
-				void LoadMaterialLibrary(NamedMaterials* materials, const pwn::string& sourceFile, const pwn::string& materialLibraryFileName)
+				void LoadMaterialLibrary(mesh::Builder* builder, const pwn::string& sourceFile, const pwn::string& materialLibraryFileName)
 				{
 					const pwn::string file = (boost::filesystem::path(sourceFile).remove_filename() / materialLibraryFileName).string();
 
@@ -93,7 +89,7 @@ namespace pwn
 
 						if( command == "newmtl" )
 						{
-							Add(materialname, material, materials);
+							builder->addMaterial(materialname, material);
 							material = mesh::Material();
 							materialname = sline[1];
 						}
@@ -157,7 +153,7 @@ namespace pwn
 						}
 					}
 
-					Add(materialname, material, materials);
+					builder->addMaterial(materialname, material);
 				}
 			}
 
@@ -178,7 +174,6 @@ namespace pwn
 				std::ifstream f(file.c_str());
 				if( false == f.good() ) throw "missing obj file";
 
-				NamedMaterials materials(builder);
 				pwn::string currentMaterial = "";
 
 				int lineIndex = 0;
@@ -242,7 +237,7 @@ namespace pwn
 								builder->texcoords.size()));
 							SkipWhitespace(f);
 						}
-						builder->addFace(materials.getMaterial(currentMaterial),faces);
+						builder->addFace(builder->getMaterial(currentMaterial),faces);
 					}
 					else if ( command == "usemtl" )
 					{
@@ -250,7 +245,7 @@ namespace pwn
 					}
 					else if ( command == "mtllib" )
 					{
-						LoadMaterialLibrary(&materials, file, Read(f));
+						LoadMaterialLibrary(builder, file, Read(f));
 					}
 					else if( command == "g" )
 					{

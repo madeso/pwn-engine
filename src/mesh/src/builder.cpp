@@ -9,8 +9,6 @@
 
 #include <pwn/assert.h>
 
-
-
 namespace pwn
 {
 	namespace mesh
@@ -195,6 +193,20 @@ namespace pwn
 		{
 			materials.push_back(m);
 			return static_cast<BTriangle::index>(materials.size()-1);
+		}
+
+		BTriangle::index Builder::getMaterial(const pwn::string& name) const
+		{
+			MaterialNameIdMap::const_iterator res = materialid.find(name);
+			if( res == materialid.end() ) throw "unable to find material..";
+			else return res->second;
+		}
+		
+		BTriangle::index Builder::addMaterial(const pwn::string& name, Material m)
+		{
+			const BTriangle::index index = addMaterial(m);
+			materialid[name] = index;
+			return index;
 		}
 
 		void Builder::addQuad(bool reverse, pwn::uint32 material, const BTriangle::Vertex& v0, const BTriangle::Vertex& v1, const BTriangle::Vertex& v2, const BTriangle::Vertex& v3)

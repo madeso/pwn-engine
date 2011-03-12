@@ -216,14 +216,12 @@ namespace pwn
 
 					void ExtractMeshDefinition(const Model& model, pwn::mesh::Builder* builder)
 					{
-						NamedMaterials materials(builder);
-
 						int id = 0;
 						BOOST_FOREACH(const Material& mat, model.materials)
 						{
 							mesh::Material smat;
 							smat.setTexture_Diffuse(mat.diffuseTexture);
-							materials.addMaterial(mat.name, smat);
+							builder->addMaterial(mat.name, smat);
 							++id;
 						}
 

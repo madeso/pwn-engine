@@ -79,7 +79,7 @@ namespace pwn
 			void setBox(Material material, real w, real h, real d, bool faceOut);
 			void buildNormals();
 
-			bool makeMesh(Mesh& mesh, Flatouter* flatouter) const;
+			bool makeMesh(Mesh& mesh) const;
 
 			typedef std::vector<BTriangle> TriList;
 			typedef std::map<pwn::uint32, TriList> TriMap;
@@ -92,6 +92,16 @@ namespace pwn
 
 			typedef std::map<pwn::string, BTriangle::index> MaterialNameIdMap;
 			MaterialNameIdMap materialid;
+		};
+
+		class Flatouter
+		{
+		public:
+			explicit Flatouter(const Builder& mesh);
+			void modify(Builder* mesh) const;
+			void modify(Animation* animation) const;
+
+			std::vector<BoneIndex> newIndices;
 		};
 	}
 }

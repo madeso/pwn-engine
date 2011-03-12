@@ -234,16 +234,6 @@ namespace pwn
 			TriangleMap triangles; // the map key referenses the materials vector below
 			std::vector<Material> materials; // this is done so materials could easily be swapped and overriden later on per actor
 		};
-
-		class Flatouter
-		{
-		public:
-			void load(const Mesh& mesh);
-			void modify(Mesh* mesh) const;
-			void modify(Animation* animation) const;
-
-			std::vector<BoneIndex> newIndices;
-		};
 	}
 }
 

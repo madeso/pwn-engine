@@ -379,7 +379,7 @@ namespace pwn
 #undef TEST
 		}
 
-		bool Builder::makeMesh(Mesh& mesh, Flatouter* flatouter) const
+		bool Builder::makeMesh(Mesh& mesh) const
 		{
 			mesh.clear();
 
@@ -425,12 +425,6 @@ namespace pwn
 
 			Assert(mesh.validate(false) == 0);
 
-			if( flatouter )
-			{
-				flatouter->load(mesh);
-				flatouter->modify(&mesh);
-			}
-
 			PrepareVericesForAnimation(&mesh);
 
 			return mesh.validate(true) ==0;
@@ -444,6 +438,71 @@ namespace pwn
 				count += i->second.size();
 			}
 			return count;
+		}
+
+		Flatouter::Flatouter(const Builder& mesh)
+		{
+			/*
+			std::vector<BoneToSort> bones;
+			for(BoneIndex i=0; i<mesh.bones.size(); ++i)
+			{
+				BoneToSort b;
+				b.index = i;
+				b.parent = 0;
+				bones.push_back(b);
+			}
+			for(BoneIndex i=0; i<bones.size(); ++i)
+			{
+				if( mesh.bones[i].hasParent() )
+				{
+					bones[i].parent = &bones[mesh.bones[i].getParent()];
+				}
+			}
+			for(BoneIndex i=0; i<bones.size(); ++i)
+			{
+				if( bones[i].parent )
+				{
+					bones[i].parent->children.push_back(&bones[i]);
+				}
+			}
+			for(BoneIndex i=0; i<mesh.bones.size(); ++i)
+			{
+				if( bones[i].parent == 0 )
+				{
+					bones[i].traverse(&newIndices);
+				}
+			}*/
+		}
+
+		void Flatouter::modify(Builder* mesh) const
+		{
+			if( newIndices.empty() ) return;
+			BOOST_FOREACH(BPoint& p, mesh->positions)
+			{
+				p.bone = newIndices[p.bone];
+			}
+
+			std::vector<Bone> bs = mesh->bones;
+			for(pwn::uint32 i=0; i<mesh->bones.size(); ++i)
+			{
+				mesh->bones[i] = bs[newIndices[i]];
+				Bone& b = mesh->bones[i];
+				if( b.hasParent() )
+				{
+					b.setParent(newIndices[b.getParent()]);
+				}
+			}
+		}
+
+		void Flatouter::modify(Animation* animation) const
+		{
+			if( newIndices.empty() ) return;
+
+			std::vector<AnimationPerBone> apb = animation->bones;
+			for(pwn::uint32 i=0; i<animation->bones.size(); ++i)
+			{
+				animation->bones[i] = apb[newIndices[i]];
+			}
 		}
 	}
 }

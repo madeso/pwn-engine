@@ -8,7 +8,6 @@
 --------------------------
 ------------- features:
 * tranform into vbos & vertex shaders (indexed vbo!)
- - make FlatOuter work on MeshBuilder
  - transfrom Mesh into a float-array structure
  - make boneassignemnts to a seperate vec4 array in preperations for gpu animation & multiple bone assignments
  - transform to cpu updated vbos

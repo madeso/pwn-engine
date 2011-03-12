@@ -126,11 +126,12 @@ struct ConvertMesh
 			pwn::mesh::Animation animation;
 			if( Load(&builder, &animation, inputfile, formatOveride, verbose) == false ) return false;
 
-			pwn::mesh::Flatouter flatouter;
+			pwn::mesh::Flatouter flatouter(builder);
+			flatouter.modify(&builder);
+			flatouter.modify(&animation);
 
 			pwn::mesh::Mesh mesh;
-			builder.makeMesh(mesh, &flatouter);
-			flatouter.modify(&animation);
+			builder.makeMesh(mesh);
 
 			{
 				pwn::mesh::Pose p;

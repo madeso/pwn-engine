@@ -27,12 +27,10 @@ using namespace pwn::mesh;
 
 boost::shared_ptr<ActorDef> CreateCube(real size, const string& texture, TexturePool2* tpool, real alpha, bool out)
 {
-	Mesh mesh;
 	const real halfsize = size/2;
 
-	Builder b;
-	b.setBox(materials::White(), halfsize*2, halfsize*2, halfsize*2, out);
-	b.makeMesh(mesh);
+	Mesh mesh = CreateBox(materials::White(), halfsize*2, halfsize*2, halfsize*2, out)
+		.asMesh();
 	mesh.materials[0].setTexture_Diffuse(texture);
 	mesh.materials[0].diffuse.alpha(alpha);
 	Move(&mesh, vec3(-halfsize, -halfsize, -halfsize));

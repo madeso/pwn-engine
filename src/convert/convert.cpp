@@ -130,8 +130,7 @@ struct ConvertMesh
 			flatouter.modify(&builder);
 			flatouter.modify(&animation);
 
-			pwn::mesh::Mesh mesh;
-			builder.makeMesh(mesh);
+			pwn::mesh::Mesh mesh = builder.asMesh();
 
 			{
 				pwn::mesh::Pose p;

@@ -443,6 +443,23 @@ namespace pwn
 			return count;
 		}
 
+		class BoneToSort
+		{
+		public:
+			BoneIndex index;
+			BoneToSort* parent;
+			std::vector<BoneToSort*> children;
+
+			void traverse(std::vector<BoneIndex>* list) const
+			{
+				list->push_back(index);
+				BOOST_FOREACH(BoneToSort* b, children)
+				{
+					b->traverse(list);
+				}
+			}
+		};
+
 		Flatouter::Flatouter(const Builder& mesh)
 		{
 			/*

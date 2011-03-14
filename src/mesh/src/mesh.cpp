@@ -41,19 +41,20 @@ namespace pwn
 		{
 		}
 
-		Triangle::VertexIndex Mesh::add(const math::vec3& pos, const math::vec2& text, const math::vec3& normal, const BoneIndex bone)
+		Mesh::Mesh(const Mesh& m)
 		{
-			const Triangle::VertexIndex r = positions.size();
-			positions.push_back( Point(pos, normal, text, bone) );
-			return r;
+			doCopy(m);
 		}
 
-		void Mesh::clear()
+		const Mesh& Mesh::operator=(const Mesh& m)
 		{
-			positions.clear();
-			triangles.clear();
-			bones.clear();
-			materials.clear();
+			doCopy(m);
+			return *this;
+		}
+		
+		pwn::uint32 Mesh::getCount() const
+		{
+			return count;
 		}
 
 		int Check(const string& reason, size_t index, size_t size)
@@ -83,7 +84,6 @@ namespace pwn
 			}
 
 			// test that the triangles point to valid indices
-			const std::size_t positionSize = positions.size();
 			const std::size_t materialSize = materials.size();
 			BOOST_FOREACH(const TriangleMap::value_type& mt, triangles)
 			{
@@ -92,40 +92,43 @@ namespace pwn
 				{
 					for(int i=0; i<3; ++i)
 					{
-						errors += Check("position index", t[i], positionSize);
+						errors += Check("position index", t[i], count);
 					}
 				}
 			}
 
 			// test that the points are valid
 			const std::size_t boneSize = bones.size();
-			BOOST_FOREACH(const Point& p, positions)
+			for(BoneIndex p = 0; p < count; ++p)
 			{
-				if( p.hasBone() )
+				if( p != 0 )
 				{
-					errors += Check("bone index", p.getBone(), boneSize);
+					errors += Check("bone index", p -1, boneSize);
 				}
 			}
 
 			return errors;
 		}
 
-		class BoneToSort
+		template<typename T>
+		void Copy(boost::scoped_array<T>& dst, const boost::scoped_array<T>& src, std::size_t count)
 		{
-		public:
-			BoneIndex index;
-			BoneToSort* parent;
-			std::vector<BoneToSort*> children;
+			dst.reset(new T[count]);
+			memcpy(dst.get(), src.get(), count);
+		}
 
-			void traverse(std::vector<BoneIndex>* list) const
-			{
-				list->push_back(index);
-				BOOST_FOREACH(BoneToSort* b, children)
-				{
-					b->traverse(list);
-				}
-			}
-		};
+		void Mesh::doCopy(const Mesh& m)
+		{
+			count = m.count;
 
+			Copy<real>(locations, m.locations, 3*count);
+			Copy<real>(normals, m.normals, 3*count);
+			Copy<real>(textcoords, m.textcoords, 2*count);
+			Copy<BoneIndex>(boneindexes, m.boneindexes, count);
+
+			bones = m.bones;
+			triangles = m.triangles;
+			materials = m.materials;
+		}
 	}
 }

@@ -8,9 +8,16 @@
 #include <boost/noncopyable.hpp>
 #include <pwn/math/rgba.h>
 #include <boost/shared_ptr.hpp>
+#include <boost/scoped_array.hpp>
 
 namespace pwn
 {
+	namespace io
+	{
+		template<class T, typename V>
+		class MeshFile;
+	}
+
 	namespace mesh
 	{
 		class Material
@@ -222,13 +229,23 @@ namespace pwn
 			typedef std::map<pwn::uint32, TriList> TriangleMap;
 
 			Mesh();
-
-			Triangle::VertexIndex add(const math::vec3& pos, const math::vec2& text, const math::vec3& normal, const BoneIndex bone);
-			void clear();
+			Mesh(const Mesh& m);
+			const Mesh& operator=(const Mesh& m);
 			pwn::uint32 validate(bool testSortedBones) const;
 
-			// todo: make private and add accessors instead...
-			std::vector<Point> positions;
+			pwn::uint32 getCount() const;
+		private:
+			void doCopy(const Mesh& m);
+		protected:
+			template<class T, typename V>
+			friend class pwn::io::MeshFile;
+
+			pwn::uint32 count;
+			boost::scoped_array<real> locations; // 3*count
+			boost::scoped_array<real> normals; // 3*count
+			boost::scoped_array<real> textcoords; // 2*count
+			boost::scoped_array<BoneIndex> boneindexes; // count
+
 			std::vector<Bone> bones;
 
 			TriangleMap triangles; // the map key referenses the materials vector below

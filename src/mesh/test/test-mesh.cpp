@@ -18,12 +18,6 @@ namespace test
 		Mesh m;
 	}
 
-	GTEST(ClearOnEmpty)
-	{
-		Mesh m;
-		m.clear();
-	}
-
 	GTEST(AdvancedExample)
 	{
 		const real size = 10;

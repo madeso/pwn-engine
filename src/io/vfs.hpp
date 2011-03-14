@@ -64,6 +64,15 @@ namespace pwn
 			}
 
 			template<class T>
+			void handleArray(const boost::scoped_array<T>& arr, pwn::uint32 size)
+			{
+				if( size > 0 )
+				{
+					file->write(arr.get(), size * sizeof(T));
+				}
+			}
+
+			template<class T>
 			pwn::uint32 handleVectorSize(const std::vector<T>& vector)
 			{
 				pwn::uint32 size = vector.size();
@@ -109,6 +118,20 @@ namespace pwn
 				if( size > 0 )
 				{
 					file->read(&vector[0], size * sizeof(T));
+				}
+			}
+
+			template<class T>
+			void handleArray(boost::scoped_array<T>& arr, pwn::uint32 size)
+			{
+				if( size > 0 )
+				{
+					arr.reset(new T[size]);
+					file->read(arr.get(), size * sizeof(T));
+				}
+				else
+				{
+					arr.reset();
 				}
 			}
 

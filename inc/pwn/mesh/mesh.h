@@ -221,21 +221,17 @@ namespace pwn
 			const VertexIndex& operator[](pwn::uint32 index) const;
 		};
 
-		class Mesh
+		class VertexData
 		{
 		public:
-			typedef std::vector<Triangle> TriList;
-			//typedef boost::shared_ptr<TriList> TriListPtr;
-			typedef std::map<pwn::uint32, TriList> TriangleMap;
-
-			Mesh();
-			Mesh(const Mesh& m);
-			const Mesh& operator=(const Mesh& m);
-			pwn::uint32 validate(bool testSortedBones) const;
+			VertexData();
+			VertexData(const VertexData& m);
+			const VertexData& operator=(const VertexData& m);
 
 			pwn::uint32 getCount() const;
+			BoneIndex getBone(pwn::uint32 id) const;
 		private:
-			void doCopy(const Mesh& m);
+			void doCopy(const VertexData& m);
 		protected:
 			template<class T, typename V>
 			friend class pwn::io::MeshFile;
@@ -245,7 +241,23 @@ namespace pwn
 			boost::scoped_array<real> normals; // 3*count
 			boost::scoped_array<real> textcoords; // 2*count
 			boost::scoped_array<BoneIndex> boneindexes; // count
+		};
 
+		class Mesh
+		{
+		public:
+			typedef std::vector<Triangle> TriList;
+			//typedef boost::shared_ptr<TriList> TriListPtr;
+			typedef std::map<pwn::uint32, TriList> TriangleMap;
+
+			pwn::uint32 validate(bool testSortedBones) const;
+			const VertexData& data() const;
+			const std::vector<Material> getMaterials() const;
+		protected:
+			template<class T, typename V>
+			friend class pwn::io::MeshFile;
+
+			VertexData vertexes;
 			std::vector<Bone> bones;
 
 			TriangleMap triangles; // the map key referenses the materials vector below

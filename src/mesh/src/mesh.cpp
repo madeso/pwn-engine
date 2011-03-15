@@ -37,26 +37,6 @@ namespace pwn
 			return bone -1;
 		}
 
-		Mesh::Mesh()
-		{
-		}
-
-		Mesh::Mesh(const Mesh& m)
-		{
-			doCopy(m);
-		}
-
-		const Mesh& Mesh::operator=(const Mesh& m)
-		{
-			doCopy(m);
-			return *this;
-		}
-		
-		pwn::uint32 Mesh::getCount() const
-		{
-			return count;
-		}
-
 		int Check(const string& reason, size_t index, size_t size)
 		{
 			if( index >= size )
@@ -92,15 +72,16 @@ namespace pwn
 				{
 					for(int i=0; i<3; ++i)
 					{
-						errors += Check("position index", t[i], count);
+						errors += Check("position index", t[i], vertexes.getCount());
 					}
 				}
 			}
 
 			// test that the points are valid
 			const std::size_t boneSize = bones.size();
-			for(BoneIndex p = 0; p < count; ++p)
+			for(pwn::uint32 i = 0; i < vertexes.getCount(); ++i)
 			{
+				BoneIndex p = vertexes.getBone(i);
 				if( p != 0 )
 				{
 					errors += Check("bone index", p -1, boneSize);
@@ -110,6 +91,48 @@ namespace pwn
 			return errors;
 		}
 
+		const VertexData& Mesh::data() const
+		{
+			return vertexes;
+		}
+
+		const std::vector<Material> Mesh::getMaterials() const
+		{
+			return materials;
+		}
+
+
+
+
+
+
+
+
+		VertexData::VertexData()
+		{
+		}
+
+		VertexData::VertexData(const VertexData& m)
+		{
+			doCopy(m);
+		}
+
+		const VertexData& VertexData::operator=(const VertexData& m)
+		{
+			doCopy(m);
+			return *this;
+		}
+
+		pwn::uint32 VertexData::getCount() const
+		{
+			return count;
+		}
+
+		BoneIndex VertexData::getBone(pwn::uint32 id) const
+		{
+			return boneindexes[id];
+		}
+
 		template<typename T>
 		void Copy(boost::scoped_array<T>& dst, const boost::scoped_array<T>& src, std::size_t count)
 		{
@@ -117,7 +140,7 @@ namespace pwn
 			memcpy(dst.get(), src.get(), count);
 		}
 
-		void Mesh::doCopy(const Mesh& m)
+		void VertexData::doCopy(const VertexData& m)
 		{
 			count = m.count;
 
@@ -125,10 +148,6 @@ namespace pwn
 			Copy<real>(normals, m.normals, 3*count);
 			Copy<real>(textcoords, m.textcoords, 2*count);
 			Copy<BoneIndex>(boneindexes, m.boneindexes, count);
-
-			bones = m.bones;
-			triangles = m.triangles;
-			materials = m.materials;
 		}
 	}
 }

@@ -132,11 +132,11 @@ struct ConvertMesh
 
 			pwn::mesh::Mesh mesh = builder.asMesh();
 
-			{
+			/*todo: remove{
 				pwn::mesh::Pose p;
 				animation.getPose(3.5f, &p);
 				pwn::mesh::CompiledPose cp(p, mesh.bones);
-			}
+			}*/
 
 			const pwn::uint32 validationErrors = mesh.validate(true);
 			if( validationErrors != 0)
@@ -160,8 +160,8 @@ struct ConvertMesh
 			{
 				cout
 					<< "Mesh information: " << endl
-					<< " positions: " << mesh.getCount() << endl
-					<< " materials: " << mesh.triangles.size() << endl
+					<< " positions: " << mesh.data().getCount() << endl
+					<< " materials: " << mesh.getMaterials().size() << endl
 					<< " triangles: " << pwn::mesh::NumberOfTriangles(mesh) << endl
 					<< endl;
 			}

@@ -46,11 +46,11 @@ namespace pwn
 			{
 				vf.handle8(version);
 				if( version != kVersion ) throw "mesh version mismatch";
-				vf.handle32(mesh.count);
-				vf.handleArray(mesh.locations, mesh.count*3);
-				vf.handleArray(mesh.normals, mesh.count*3);
-				vf.handleArray(mesh.textcoords, mesh.count*2);
-				vf.handleArray(mesh.boneindexes, mesh.count);
+				vf.handle32(mesh.vertexes.count);
+				vf.handleArray(mesh.vertexes.locations, mesh.vertexes.count*3);
+				vf.handleArray(mesh.vertexes.normals, mesh.vertexes.count*3);
+				vf.handleArray(mesh.vertexes.textcoords, mesh.vertexes.count*2);
+				vf.handleArray(mesh.vertexes.boneindexes, mesh.vertexes.count);
 				vf.handleVector(mesh.bones);
 				std::vector<pwn::uint32> keys = vf.handleKeys(mesh.triangles);
 				BOOST_FOREACH(pwn::uint32 id, keys)

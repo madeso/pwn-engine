@@ -16,12 +16,6 @@ namespace pwn
 	{
 		class Mesh;
 
-		Mesh* Move(Mesh* mesh, const math::vec3& dir);
-		Mesh* Scale(Mesh* mesh, pwn::real scale);
-		Mesh* InvertNormals(Mesh* mesh);
-		void MoveTextures(Mesh* mesh, const pwn::string& newFolder);
-		uint32 NumberOfTriangles(const Mesh& mesh);
-
 		class Builder;
 		Builder CreateBox(Material material, real w, real h, real d, bool faceOut);
 
@@ -97,6 +91,11 @@ namespace pwn
 			typedef std::map<pwn::string, BTriangle::index> MaterialNameIdMap;
 			MaterialNameIdMap materialid;
 		};
+
+		Builder* Move(Builder* mesh, const math::vec3& dir);
+		Builder* Scale(Builder* mesh, pwn::real scale);
+		Builder* InvertNormals(Builder* mesh);
+		void MoveTextures(Builder* mesh, const pwn::string& newFolder);
 
 		class Flatouter
 		{

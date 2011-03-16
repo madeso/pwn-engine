@@ -24,11 +24,11 @@ namespace test
 		const real halfsize = size/2;
 		bool out = false;
 
-		Mesh mesh = CreateBox(materials::White(), halfsize*2, halfsize*2, halfsize*2, out)
-			.asMesh();
-		mesh.materials[0].setTexture_Diffuse("hello");
-		mesh.materials[0].diffuse.alpha(0.25f);
-		Move(&mesh, vec3(-halfsize, -halfsize, -halfsize));
+		Builder b = CreateBox(materials::White(), halfsize*2, halfsize*2, halfsize*2, out);
+		b.materials[0].setTexture_Diffuse("hello");
+		b.materials[0].diffuse.alpha(0.25f);
+		Move(&b, vec3(-halfsize, -halfsize, -halfsize));
+		Mesh m = b.asMesh();
 		//return Compile(mesh, tpool);
 	}
 }

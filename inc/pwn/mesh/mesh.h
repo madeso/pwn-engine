@@ -230,11 +230,22 @@ namespace pwn
 
 			pwn::uint32 getCount() const;
 			BoneIndex getBone(pwn::uint32 id) const;
+			const Point getPoint(uint32 i) const;
+			void setLocationNormal(const uint32 i, const math::vec3& pos, const math::vec3& norm);
 		private:
 			void doCopy(const VertexData& m);
 		protected:
 			template<class T, typename V>
 			friend class pwn::io::MeshFile;
+
+			const math::vec3x& pos(const uint32 i) const;
+			const math::vec3x& norm(const uint32 i) const;
+			const math::vec2x& tex(const uint32 i) const;
+			const BoneIndex& bone(const uint32 i) const;
+			math::vec3x& pos(const uint32 i);
+			math::vec3x& norm(const uint32 i);
+			math::vec2x& tex(const uint32 i);
+			BoneIndex& bone(const uint32 i);
 
 			pwn::uint32 count;
 			boost::scoped_array<real> locations; // 3*count
@@ -252,7 +263,9 @@ namespace pwn
 
 			pwn::uint32 validate(bool testSortedBones) const;
 			const VertexData& data() const;
-			const std::vector<Material> getMaterials() const;
+			const std::vector<Material>& getMaterials() const;
+			const std::vector<Bone>& getBones() const;
+			void setLocationNormal(const uint32 i, const math::vec3& pos, const math::vec3& norm);
 		protected:
 			template<class T, typename V>
 			friend class pwn::io::MeshFile;

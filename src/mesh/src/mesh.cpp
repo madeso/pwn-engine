@@ -96,9 +96,18 @@ namespace pwn
 			return vertexes;
 		}
 
-		const std::vector<Material> Mesh::getMaterials() const
+		const std::vector<Material>& Mesh::getMaterials() const
 		{
 			return materials;
+		}
+
+		const std::vector<Bone>& Mesh::getBones() const
+		{
+			return bones;
+		}
+		void Mesh::setLocationNormal(const uint32 i, const math::vec3& pos, const math::vec3& norm)
+		{
+			vertexes.setLocationNormal(i, pos, norm);
 		}
 
 
@@ -131,6 +140,57 @@ namespace pwn
 		BoneIndex VertexData::getBone(pwn::uint32 id) const
 		{
 			return boneindexes[id];
+		}
+
+		const Point VertexData::getPoint(uint32 i) const
+		{
+			return Point(pos(i), norm(i), tex(i), bone(i));
+		}
+
+		void VertexData::setLocationNormal(const uint32 i, const math::vec3& apos, const math::vec3& anorm)
+		{
+			pos(i) = apos;
+			norm(i) = anorm;
+		}
+
+		math::vec3x& VertexData::pos(const uint32 i)
+		{
+			return math::vec3x(&locations[i*3]);
+		}
+
+		math::vec3x& VertexData::norm(const uint32 i)
+		{
+			return math::vec3x(&normals[i*3]);
+		}
+
+		math::vec2x& VertexData::tex(const uint32 i)
+		{
+			return math::vec2x(&textcoords[i*2]);
+		}
+
+		BoneIndex& VertexData::bone(const uint32 i)
+		{
+			return boneindexes[i];
+		}
+
+		const math::vec3x& VertexData::pos(const uint32 i) const
+		{
+			return math::vec3x(&locations[i*3]);
+		}
+
+		const math::vec3x& VertexData::norm(const uint32 i) const
+		{
+			return math::vec3x(&normals[i*3]);
+		}
+
+		const math::vec2x& VertexData::tex(const uint32 i) const
+		{
+			return math::vec2x(&textcoords[i*2]);
+		}
+
+		const BoneIndex& VertexData::bone(const uint32 i) const
+		{
+			return boneindexes[i];
 		}
 
 		template<typename T>

@@ -13,9 +13,9 @@ namespace pwn
 {
 	namespace mesh
 	{
-		Mesh* Move(Mesh* mesh, const math::vec3& dir)
+		Builder* Move(Builder* mesh, const math::vec3& dir)
 		{
-			BOOST_FOREACH(Point& p, mesh->positions)
+			BOOST_FOREACH(BPoint& p, mesh->positions)
 			{
 				p.location += dir;
 			}
@@ -23,9 +23,9 @@ namespace pwn
 			return mesh;
 		}
 
-		Mesh* Scale(Mesh* mesh, pwn::real scale)
+		Builder* Scale(Builder* mesh, pwn::real scale)
 		{
-			BOOST_FOREACH(Point& p, mesh->positions)
+			BOOST_FOREACH(BPoint& p, mesh->positions)
 			{
 				p.location *= scale;
 			}
@@ -38,11 +38,11 @@ namespace pwn
 			return mesh;
 		}
 
-		Mesh* InvertNormals(Mesh* mesh)
+		Builder* InvertNormals(Builder* mesh)
 		{
-			BOOST_FOREACH(Point& p, mesh->positions)
+			BOOST_FOREACH(math::vec3& p, mesh->normals)
 			{
-				p.normal = -p.normal;
+				p = -p;
 			}
 
 			return mesh;
@@ -125,7 +125,7 @@ namespace pwn
 			}
 		}
 
-		void MoveTextures(Mesh* mesh, const pwn::string& newFolder)
+		void MoveTextures(Builder* mesh, const pwn::string& newFolder)
 		{
 			for(std::size_t i = 0; i < mesh->materials.size(); ++i)
 			{
@@ -327,11 +327,11 @@ namespace pwn
 				using namespace pwn::mesh;
 				using namespace pwn::math;
 
-				std::vector<Data> bdp(mesh->bones.size());
+				std::vector<Data> bdp(mesh->getBones().size());
 
-				for (unsigned int i = 0; i < mesh->bones.size(); ++i)
+				for (unsigned int i = 0; i < mesh->getBones().size(); ++i)
 				{
-					Bone& bone = mesh->bones[i];
+					const Bone& bone = mesh->getBones()[i];
 					Assert(!bone.hasParent() || bone.getParent() < i); // if it has a parent, it should already have been processed
 					const mat44 local = mat44helper(mat44Identity()).translate(bone.pos).rotate(GetConjugate(bone.rot)).mat;
 					const mat44 parent = bone.hasParent() ? bdp[bone.getParent()].globalskel : mat44Identity();
@@ -339,13 +339,14 @@ namespace pwn
 					bdp[i].globalskel = global;
 				}
 
-				for(unsigned int i=0; i < mesh->positions.size(); ++i)
+				for(unsigned int i=0; i < mesh->data().getCount(); ++i)
 				{
-					Point& p = mesh->positions[i];
+					const Point& p = mesh->data().getPoint(i);
 					if( p.hasBone() == false) continue;
 					Data& data = bdp[p.getBone()];
-					p.location = TranslateWithInverseMatrix(p.location, data.globalskel);
-					p.normal = GetNormalized(TranslateWithInverseMatrix(p.normal, math::SetTransform(data.globalskel, math::vec3(0,0,0))));
+					const vec3 location = TranslateWithInverseMatrix(p.location, data.globalskel);
+					const vec3 normal = GetNormalized(TranslateWithInverseMatrix(p.normal, math::SetTransform(data.globalskel, math::vec3(0,0,0))));
+					mesh->setLocationNormal(i, location, normal);
 				}
 			}
 		}

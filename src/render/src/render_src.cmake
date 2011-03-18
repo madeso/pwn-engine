@@ -3,6 +3,10 @@
 # delete the comment where this file is included to remove the autogeneration
 
 set ( render_src
+	MeshCompiler.cpp
+	MeshCompiler.hpp
+	MeshCompiler_ImmediateMode.cpp
+	MeshCompiler_ImmediateMode.hpp
 	RenderArgs.cpp
 	actor.cpp
 	actordef.cpp

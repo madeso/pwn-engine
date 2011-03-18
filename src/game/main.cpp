@@ -29,12 +29,11 @@ boost::shared_ptr<ActorDef> CreateCube(real size, const string& texture, Texture
 {
 	const real halfsize = size/2;
 
-	Mesh mesh = CreateBox(materials::White(), halfsize*2, halfsize*2, halfsize*2, out)
-		.asMesh();
-	mesh.materials[0].setTexture_Diffuse(texture);
-	mesh.materials[0].diffuse.alpha(alpha);
-	Move(&mesh, vec3(-halfsize, -halfsize, -halfsize));
-	return Compile(mesh, tpool);
+	Builder b = CreateBox(materials::White(), halfsize*2, halfsize*2, halfsize*2, out);;
+	b.materials[0].setTexture_Diffuse(texture);
+	b.materials[0].diffuse.alpha(alpha);
+	Move(&b, vec3(-halfsize, -halfsize, -halfsize));
+	return Compile(b.asMesh(), tpool);
 }
 
 boost::shared_ptr<ActorDef> LoadMesh(const string& file, TexturePool2* tpool)

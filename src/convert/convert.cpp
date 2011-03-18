@@ -130,14 +130,18 @@ struct ConvertMesh
 			flatouter.modify(&builder);
 			flatouter.modify(&animation);
 
+			if( useModelScale )
+			{
+				if( verbose ) cout << "scaling " << modelScale << ".." << std::endl;
+				pwn::mesh::Scale(&builder, modelScale);
+				animation.scale(modelScale);
+			}
+
+			if( verbose ) cout << endl;
+
+			pwn::mesh::MoveTextures(&builder, texturedir);
+
 			pwn::mesh::Mesh mesh = builder.asMesh();
-
-			/*todo: remove{
-				pwn::mesh::Pose p;
-				animation.getPose(3.5f, &p);
-				pwn::mesh::CompiledPose cp(p, mesh.bones);
-			}*/
-
 			const pwn::uint32 validationErrors = mesh.validate(true);
 			if( validationErrors != 0)
 			{
@@ -145,24 +149,13 @@ struct ConvertMesh
 				return false;
 			}
 
-			if( useModelScale )
-			{
-				if( verbose ) cout << "scaling " << modelScale << ".." << std::endl;
-				pwn::mesh::Scale(&mesh, modelScale);
-				animation.scale(modelScale);
-			}
-
-			if( verbose ) cout << endl;
-
-			pwn::mesh::MoveTextures(&mesh, texturedir);
-
 			if( meshInfo )
 			{
 				cout
 					<< "Mesh information: " << endl
 					<< " positions: " << mesh.data().getCount() << endl
 					<< " materials: " << mesh.getMaterials().size() << endl
-					<< " triangles: " << pwn::mesh::NumberOfTriangles(mesh) << endl
+					<< " triangles: " << mesh.getNumberOfTriangles() << endl
 					<< endl;
 			}
 

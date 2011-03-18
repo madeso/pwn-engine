@@ -1,6 +1,7 @@
 #include <pwn/mesh/mesh.h>
 #include <pwn/assert.h>
 #include <boost/foreach.hpp>
+#include <pwn/assert.h>
 
 namespace pwn
 {
@@ -45,6 +46,32 @@ namespace pwn
 				return 1;
 			}
 			else return 0;
+		}
+
+
+
+
+
+
+
+
+		Mesh::Mesh()
+		{
+		}
+
+		Mesh::Mesh(const std::vector<math::vec3>& posv,
+				const std::vector<math::vec3>& normv,
+				const std::vector<math::vec2>&textv,
+				const std::vector<BoneIndex>& bonev,
+				const TriangleMap& trim,
+				const std::vector<Bone>& abones,
+				const std::vector<Material>& amaterials)
+				: vertexes(posv, normv, textv, bonev)
+				, bones(abones)
+				, triangles(trim)
+				, materials(amaterials)
+
+		{
 		}
 
 		pwn::uint32 Mesh::validate(bool testSortedBones) const
@@ -105,20 +132,52 @@ namespace pwn
 		{
 			return bones;
 		}
+
+		const Mesh::TriangleMap& Mesh::getTriangles() const
+		{
+			return triangles;
+		}
+
 		void Mesh::setLocationNormal(const uint32 i, const math::vec3& pos, const math::vec3& norm)
 		{
 			vertexes.setLocationNormal(i, pos, norm);
 		}
 
-
-
-
+		pwn::uint32 Mesh::getNumberOfTriangles() const
+		{
+			uint32 count = 0;
+			for(Mesh::TriangleMap::const_iterator i = triangles.begin(); i != triangles.end(); ++i)
+			{
+				count += i->second.size();
+			}
+			return count;
+		}
 
 
 
 
 		VertexData::VertexData()
 		{
+		}
+
+		VertexData::VertexData(const std::vector<math::vec3>& posv,
+				const std::vector<math::vec3>& normv,
+				const std::vector<math::vec2>&textv,
+				const std::vector<BoneIndex>& bonev)
+				: count(posv.size())
+		{
+			Assert(posv.size() == normv.size() == textv.size() == bonev.size()); // if this fails, we didnt get a matched data
+			locations.reset(new real[count*3]);
+			normals.reset(new real[count*3]);
+			textcoords.reset(new real[count*2]);
+			boneindexes.reset(new BoneIndex[count]);
+			for(uint32 i=0; i<count; ++i)
+			{
+				pos(i) = posv[i];
+				norm(i) = normv[i];
+				tex(i) = textv[i];
+				boneindexes[i] = bonev[i];
+			}
 		}
 
 		VertexData::VertexData(const VertexData& m)
@@ -153,17 +212,25 @@ namespace pwn
 			norm(i) = anorm;
 		}
 
-		math::vec3x& VertexData::pos(const uint32 i)
+		void VertexData::assign(Point* p, uint32 i) const
+		{
+			p->location = pos(i);
+			p->normal = norm(i);
+			p->textcoord = tex(i);
+			p->bone = bone(i);
+		}
+
+		math::vec3x VertexData::pos(const uint32 i)
 		{
 			return math::vec3x(&locations[i*3]);
 		}
 
-		math::vec3x& VertexData::norm(const uint32 i)
+		math::vec3x VertexData::norm(const uint32 i)
 		{
 			return math::vec3x(&normals[i*3]);
 		}
 
-		math::vec2x& VertexData::tex(const uint32 i)
+		math::vec2x VertexData::tex(const uint32 i)
 		{
 			return math::vec2x(&textcoords[i*2]);
 		}
@@ -173,17 +240,17 @@ namespace pwn
 			return boneindexes[i];
 		}
 
-		const math::vec3x& VertexData::pos(const uint32 i) const
+		const math::vec3x VertexData::pos(const uint32 i) const
 		{
 			return math::vec3x(&locations[i*3]);
 		}
 
-		const math::vec3x& VertexData::norm(const uint32 i) const
+		const math::vec3x VertexData::norm(const uint32 i) const
 		{
 			return math::vec3x(&normals[i*3]);
 		}
 
-		const math::vec2x& VertexData::tex(const uint32 i) const
+		const math::vec2x VertexData::tex(const uint32 i) const
 		{
 			return math::vec2x(&textcoords[i*2]);
 		}

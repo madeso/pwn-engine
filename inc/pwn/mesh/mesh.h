@@ -225,6 +225,10 @@ namespace pwn
 		{
 		public:
 			VertexData();
+			VertexData(const std::vector<math::vec3>& posv,
+				const std::vector<math::vec3>& normv,
+				const std::vector<math::vec2>&textv,
+				const std::vector<BoneIndex>& bonev);
 			VertexData(const VertexData& m);
 			const VertexData& operator=(const VertexData& m);
 
@@ -232,19 +236,20 @@ namespace pwn
 			BoneIndex getBone(pwn::uint32 id) const;
 			const Point getPoint(uint32 i) const;
 			void setLocationNormal(const uint32 i, const math::vec3& pos, const math::vec3& norm);
+			void assign(Point* p, uint32 i) const;
 		private:
 			void doCopy(const VertexData& m);
 		protected:
 			template<class T, typename V>
 			friend class pwn::io::MeshFile;
 
-			const math::vec3x& pos(const uint32 i) const;
-			const math::vec3x& norm(const uint32 i) const;
-			const math::vec2x& tex(const uint32 i) const;
+			const math::vec3x pos(const uint32 i) const;
+			const math::vec3x norm(const uint32 i) const;
+			const math::vec2x tex(const uint32 i) const;
 			const BoneIndex& bone(const uint32 i) const;
-			math::vec3x& pos(const uint32 i);
-			math::vec3x& norm(const uint32 i);
-			math::vec2x& tex(const uint32 i);
+			math::vec3x pos(const uint32 i);
+			math::vec3x norm(const uint32 i);
+			math::vec2x tex(const uint32 i);
 			BoneIndex& bone(const uint32 i);
 
 			pwn::uint32 count;
@@ -261,11 +266,23 @@ namespace pwn
 			//typedef boost::shared_ptr<TriList> TriListPtr;
 			typedef std::map<pwn::uint32, TriList> TriangleMap;
 
+			Mesh();
+			Mesh(const std::vector<math::vec3>& posv,
+				const std::vector<math::vec3>& normv,
+				const std::vector<math::vec2>&textv,
+				const std::vector<BoneIndex>& bonev,
+				const TriangleMap& trim,
+				const std::vector<Bone>& bones,
+				const std::vector<Material>& materials);
+
 			pwn::uint32 validate(bool testSortedBones) const;
 			const VertexData& data() const;
 			const std::vector<Material>& getMaterials() const;
 			const std::vector<Bone>& getBones() const;
+			const TriangleMap& getTriangles() const;
 			void setLocationNormal(const uint32 i, const math::vec3& pos, const math::vec3& norm);
+
+			pwn::uint32 getNumberOfTriangles() const;
 		protected:
 			template<class T, typename V>
 			friend class pwn::io::MeshFile;

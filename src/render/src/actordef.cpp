@@ -28,8 +28,12 @@ namespace pwn
 		{
 		public:
 			explicit SharedMesh(const mesh::Mesh& mesh)
-				: positions(mesh.positions)
+				: positions(mesh.data().getCount())
 			{
+				for(uint32 i=0; i<mesh.data().getCount(); ++i)
+				{
+					mesh.data().assign(&positions[i], i);
+				}
 			}
 
 			std::vector<mesh::Point> positions;
@@ -107,16 +111,16 @@ namespace pwn
 			boost::shared_ptr<SharedMesh> smesh( new SharedMesh(mesh) );
 
 			// todo: implement better rendering
-			BOOST_FOREACH(mesh::Mesh::TriangleMap::const_reference r, mesh.triangles)
+			BOOST_FOREACH(mesh::Mesh::TriangleMap::const_reference r, mesh.getTriangles())
 			{
 				ActorDef::PartPtr part( new Part() );
 				const pwn::uint32 index = r.first;
-				part->material = Compile( mesh.materials[index], pool );
+				part->material = Compile( mesh.getMaterials()[index], pool );
 				part->mesh.reset( new ImmediateMode(smesh, r.second) );
 				def->parts.push_back(part);
 			}
 
-			def->bones = mesh.bones;
+			def->bones = mesh.getBones();
 			return def;
 		}
 	}

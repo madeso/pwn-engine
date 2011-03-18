@@ -384,12 +384,15 @@ namespace pwn
 
 		Mesh Builder::asMesh() const
 		{
-			Mesh mesh;
-
 			typedef std::map<Combo, Triangle::VertexIndex> ComboMap;
 			ComboMap combinations;
 
 			// foreach triangle
+			std::vector<math::vec3> posv;
+			std::vector<math::vec3> normv;
+			std::vector<math::vec2> textv;
+			std::vector<BoneIndex> bonev;
+			Mesh::TriangleMap trim;
 			BOOST_FOREACH(const TriMap::value_type& triangleMaterial, triangles)
 			{
 				const pwn::uint32 material = triangleMaterial.first;
@@ -412,36 +415,28 @@ namespace pwn
 							const math::vec3 pos = positions[c.location].location;
 							const math::vec2 text = texcoords[c.texture];
 							const math::vec3 normal = normals.empty() == false ? normals[c.normal] : math::vec3(0,0,0);
-							Triangle::VertexIndex ind = mesh.add(pos, text, normal, boneIndex);
+							Triangle::VertexIndex ind = posv.size();
+							posv.push_back(pos);
+							textv.push_back(text);
+							normv.push_back(normal);
+							bonev.push_back(boneIndex);
 							combinations.insert( ComboMap::value_type(c, ind) );
 							triangle[i] = ind;
 						}
 					}
 
 					// add traingle to mesh
-					mesh.triangles[material].push_back(triangle);
+					trim[material].push_back(triangle);
 				}
 			}
 
-			mesh.bones = bones;
-			mesh.materials = materials;
-
+			Mesh mesh(posv, normv, textv, bonev, trim, bones, materials);
 			Assert(mesh.validate(false) == 0);
 
 			PrepareVericesForAnimation(&mesh);
 
 			if(mesh.validate(true) != 0 ) throw "Mesh failed to validate";
 			return mesh;
-		}
-
-		uint32 NumberOfTriangles(const Mesh& mesh)
-		{
-			uint32 count = 0;
-			for(Mesh::TriangleMap::const_iterator i = mesh.triangles.begin(); i != mesh.triangles.end(); ++i)
-			{
-				count += i->second.size();
-			}
-			return count;
 		}
 
 		class BoneToSort

@@ -10,7 +10,7 @@ namespace pwn
 		class Builder;
 		class Animation;
 	}
-	
+
 	namespace convert
 	{
 		namespace milkshape

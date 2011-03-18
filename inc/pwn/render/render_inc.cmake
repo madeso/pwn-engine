@@ -14,7 +14,6 @@ set ( render_inc
 	../../../inc/pwn/render/fbo.h
 	../../../inc/pwn/render/light.h
 	../../../inc/pwn/render/material.h
-	../../../inc/pwn/render/mesh.h
 	../../../inc/pwn/render/part.h
 	../../../inc/pwn/render/poseable.h
 	../../../inc/pwn/render/renderlist.h

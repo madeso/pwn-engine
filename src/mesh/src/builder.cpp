@@ -48,7 +48,7 @@ namespace pwn
 			return mesh;
 		}
 
-		
+
 
 		namespace // local
 		{
@@ -238,7 +238,7 @@ namespace pwn
 			if( res == materialid.end() ) throw "unable to find material..";
 			else return res->second;
 		}
-		
+
 		BTriangle::index Builder::addMaterial(const pwn::string& name, Material m)
 		{
 			const BTriangle::index index = addMaterial(m);

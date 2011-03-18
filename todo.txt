@@ -5,6 +5,7 @@
 * refactor pwn.render to look like target api
 * include wxWidgets for messageboxes, exception displays and crash reporting
 * convert or remove pwn.math in favor of the tested cml
+* test astyle on pwn source
 --------------------------
 ------------- features:
 * tranform into vbos & vertex shaders (indexed vbo!)

@@ -166,7 +166,7 @@ namespace pwn
 				const std::vector<BoneIndex>& bonev)
 				: count(posv.size())
 		{
-			Assert(posv.size() == normv.size() == textv.size() == bonev.size()); // if this fails, we didnt get a matched data
+			Assert(posv.size() == normv.size() && textv.size() == bonev.size() && normv.size() == textv.size()); // if this fails, we didnt get a matched data
 			locations.reset(new real[count*3]);
 			normals.reset(new real[count*3]);
 			textcoords.reset(new real[count*2]);
@@ -264,7 +264,7 @@ namespace pwn
 		void Copy(boost::scoped_array<T>& dst, const boost::scoped_array<T>& src, std::size_t count)
 		{
 			dst.reset(new T[count]);
-			memcpy(dst.get(), src.get(), count);
+			memcpy(dst.get(), src.get(), sizeof(T)*count);
 		}
 
 		void VertexData::doCopy(const VertexData& m)

@@ -10,7 +10,8 @@
 
 #include <pwn/assert.h>
 
-#include "opengl_debug.hpp"
+#include"MeshCompiler.hpp"
+#include "MeshCompiler_ImmediateMode.hpp"
 
 namespace pwn
 {
@@ -23,66 +24,6 @@ namespace pwn
 		ActorDef::~ActorDef()
 		{
 		}
-
-		class SharedMesh
-		{
-		public:
-			explicit SharedMesh(const mesh::Mesh& mesh)
-				: positions(mesh.data().getCount())
-			{
-				for(uint32 i=0; i<mesh.data().getCount(); ++i)
-				{
-					mesh.data().assign(&positions[i], i);
-				}
-			}
-
-			std::vector<mesh::Point> positions;
-		};
-
-		class ImmediateMode : public CompiledMesh
-		{
-		public:
-			ImmediateMode(boost::shared_ptr<SharedMesh> smesh, const mesh::Mesh::TriList& tridata)
-				: smesh(smesh)
-				, triangles(tridata)
-			{
-			}
-
-			~ImmediateMode()
-			{
-			}
-
-			void render(const mesh::CompiledPose& pose)
-			{
-				pwnAssert_NoGLError();
-				glBegin(GL_TRIANGLES);
-
-				BOOST_FOREACH(const mesh::Triangle& tri, triangles)
-				{
-					for(int i=0; i<3; ++i)
-					{
-						const mesh::Point& point = smesh->positions[tri[i]];
-
-						const math::vec3 n = point.hasBone()
-							? math::GetNormalized(math::cmat33(math::SetTransform(pose.transforms[point.getBone()], math::vec3(0,0,0))) * point.normal)
-							: point.normal;
-
-						glNormal3fv(n.data());
-
-						glTexCoord2fv(point.textcoord.data());
-
-						const math::vec3 p = point.hasBone()
-							? math::cvec3(pose.transforms[point.getBone()] * math::cvec4(point.location))
-							: point.location;
-						glVertex3fv(p.data());
-					}
-				}
-				glEnd(); pwnAssert_NoGLError();
-			}
-		private:
-			boost::shared_ptr<SharedMesh> smesh;
-			mesh::Mesh::TriList triangles;
-		};
 
 		boost::shared_ptr<render::Material> Compile(const mesh::Material mm, TexturePool2* pool)
 		{
@@ -108,7 +49,7 @@ namespace pwn
 		boost::shared_ptr<ActorDef> Compile(const mesh::Mesh& mesh, TexturePool2* pool)
 		{
 			boost::shared_ptr<ActorDef> def( new ActorDef() );
-			boost::shared_ptr<SharedMesh> smesh( new SharedMesh(mesh) );
+			std::auto_ptr<MeshCompiler> compiler( CreateMeshCompiler_ImmediateMode(mesh) );
 
 			// todo: implement better rendering
 			BOOST_FOREACH(mesh::Mesh::TriangleMap::const_reference r, mesh.getTriangles())
@@ -116,7 +57,7 @@ namespace pwn
 				ActorDef::PartPtr part( new Part() );
 				const pwn::uint32 index = r.first;
 				part->material = Compile( mesh.getMaterials()[index], pool );
-				part->mesh.reset( new ImmediateMode(smesh, r.second) );
+				part->mesh.reset( compiler->compile(r.second) );
 				def->parts.push_back(part);
 			}
 

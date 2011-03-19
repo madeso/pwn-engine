@@ -19,27 +19,27 @@
  - transform to gpu updated vbos
 * convert to lowercase-only filenames
 * improve math and rgb(a) library, memberfunctions, more syntactic sugar - still relevant?
-* add multiple textures and multiple instances to materials so that overiding & animating materials can be more easily supported
 * improve display framework to support huds
  - font support
 * console w/ lua/gamemonkey scripts
 * 3d debugging (wireframe, view skeleton, draw boundingbox, draw position, line etc)
+* add multiple textures and multiple instances to materials so that overiding & animating materials can be more easily supported
+* material effects, bump/normal map, animated textures, water
+* start on component framework
+* sound engine
 * level editor
+* scripting support for leveleditor, visual? point and click? gamemaker? labview? Google app inventor (http://en.wikipedia.org/wiki/Google_App_Inventor)?, http://en.wikipedia.org/wiki/Visual_programming_language
+* add physics to component framework
+* gui editor for components
+* character engine
+ - character mechanics, modern approach to character animation, character scripting, animation state machines, animation blending
 * find out if fse is needed, or if a scripting approach should be used instead
  - rewrite render.fse so that it doesn't use io code
  - scripting, settings & gui editor for fse
  - improve fse to support different "logical" paths
 * particle engine, check old notes
-* start on component framework
-* sound engine
-* character engine
- - character mechanics, modern approach to character animation, character scripting, animation state machines, animation blending
-* scripting support for leveleditor, visual? point and click? gamemaker? labview? Google app inventor (http://en.wikipedia.org/wiki/Google_App_Inventor)?, http://en.wikipedia.org/wiki/Visual_programming_language
-* gui editor for components
-* add physics to component framework
 * ssao
 * area support, camera effects(fse, shake...), scrips(enter, leave, onTick)
-* material effects, bump/normal map, animated textures, water
 * shadows
 * improve rendering speed with portals
 * ai base

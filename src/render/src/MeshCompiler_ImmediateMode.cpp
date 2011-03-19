@@ -17,7 +17,7 @@ namespace pwn
 				{
 					for(uint32 i=0; i<mesh.data().getCount(); ++i)
 					{
-						mesh.data().assign(&positions[i], i);
+						positions[i] = mesh.data().getPoint(i);
 					}
 				}
 

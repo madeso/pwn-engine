@@ -212,14 +212,6 @@ namespace pwn
 			norm(i) = anorm;
 		}
 
-		void VertexData::assign(Point* p, uint32 i) const
-		{
-			p->location = pos(i);
-			p->normal = norm(i);
-			p->textcoord = tex(i);
-			p->bone = bone(i);
-		}
-
 		math::vec3x VertexData::pos(const uint32 i)
 		{
 			return math::vec3x(&locations[i*3]);

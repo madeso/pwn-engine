@@ -236,7 +236,6 @@ namespace pwn
 			BoneIndex getBone(pwn::uint32 id) const;
 			const Point getPoint(uint32 i) const;
 			void setLocationNormal(const uint32 i, const math::vec3& pos, const math::vec3& norm);
-			void assign(Point* p, uint32 i) const;
 		private:
 			void doCopy(const VertexData& m);
 		protected:

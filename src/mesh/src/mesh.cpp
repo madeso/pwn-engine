@@ -8,18 +8,16 @@ namespace pwn
 	namespace mesh
 	{
 		Point::Point()
-			: location(0, 0, 0)
-			, bone(0)
 		{
 		}
 
-		Point::Point(const math::vec3& alocation, BoneIndex abone)
+		Point::Point(const math::vec3& alocation, math::vec4 abone)
 			: location(alocation)
 			, bone(abone)
 		{
 		}
 
-		Point::Point(const math::vec3& alocation, math::vec3 anormal, math::vec2 atextcoord, BoneIndex abone)
+		Point::Point(const math::vec3& alocation, math::vec3 anormal, math::vec2 atextcoord, math::vec4 abone)
 			: location(alocation)
 			, normal(anormal)
 			, textcoord(atextcoord)
@@ -29,13 +27,12 @@ namespace pwn
 
 		bool Point::hasBone() const
 		{
-			return bone != 0;
+			return bone[0] >= 0.0f;
 		}
 
-		BoneIndex Point::getBone() const
+		math::vec4 Point::getBone() const
 		{
-			Assert(bone != 0);
-			return bone -1;
+			return bone;
 		}
 
 		int Check(const string& reason, size_t index, size_t size)
@@ -51,6 +48,18 @@ namespace pwn
 
 
 
+		BoneIndex GetBoneIndex(real val)
+		{
+			BoneIndex r = static_cast<int>(floor(val));
+			Assert(r > 0);
+			return r;
+		}
+
+		real GetBoneInfluence(real val)
+		{
+			Assert(val > 0);
+			return val - floor(val);
+		}
 
 
 
@@ -62,7 +71,7 @@ namespace pwn
 		Mesh::Mesh(const std::vector<math::vec3>& posv,
 				const std::vector<math::vec3>& normv,
 				const std::vector<math::vec2>&textv,
-				const std::vector<BoneIndex>& bonev,
+				const std::vector<math::vec4>& bonev,
 				const TriangleMap& trim,
 				const std::vector<Bone>& abones,
 				const std::vector<Material>& amaterials)
@@ -108,10 +117,13 @@ namespace pwn
 			const std::size_t boneSize = bones.size();
 			for(pwn::uint32 i = 0; i < vertexes.getCount(); ++i)
 			{
-				BoneIndex p = vertexes.getBone(i);
-				if( p != 0 )
+				for(int b=0; b<4; ++b)
 				{
-					errors += Check("bone index", p -1, boneSize);
+					BoneIndex p = GetBoneIndex(vertexes.getBone(i)[b]);
+					if( p != 0 )
+					{
+						errors += Check("bone index", p -1, boneSize);
+					}
 				}
 			}
 
@@ -163,20 +175,20 @@ namespace pwn
 		VertexData::VertexData(const std::vector<math::vec3>& posv,
 				const std::vector<math::vec3>& normv,
 				const std::vector<math::vec2>&textv,
-				const std::vector<BoneIndex>& bonev)
+				const std::vector<math::vec4>& bonev)
 				: count(posv.size())
 		{
 			Assert(posv.size() == normv.size() && textv.size() == bonev.size() && normv.size() == textv.size()); // if this fails, we didnt get a matched data
 			locations.reset(new real[count*3]);
 			normals.reset(new real[count*3]);
 			textcoords.reset(new real[count*2]);
-			boneindexes.reset(new BoneIndex[count]);
+			boneindexes.reset(new real[count*4]);
 			for(uint32 i=0; i<count; ++i)
 			{
 				pos(i) = posv[i];
 				norm(i) = normv[i];
 				tex(i) = textv[i];
-				boneindexes[i] = bonev[i];
+				bone(i) = bonev[i];
 			}
 		}
 
@@ -196,9 +208,9 @@ namespace pwn
 			return count;
 		}
 
-		BoneIndex VertexData::getBone(pwn::uint32 id) const
+		math::vec4 VertexData::getBone(pwn::uint32 id) const
 		{
-			return boneindexes[id];
+			return bone(id);
 		}
 
 		const Point VertexData::getPoint(uint32 i) const
@@ -227,9 +239,9 @@ namespace pwn
 			return math::vec2x(&textcoords[i*2]);
 		}
 
-		BoneIndex& VertexData::bone(const uint32 i)
+		math::vec4x VertexData::bone(const uint32 i)
 		{
-			return boneindexes[i];
+			return math::vec4x(&boneindexes[i*4]);
 		}
 
 		const math::vec3x VertexData::pos(const uint32 i) const
@@ -247,9 +259,9 @@ namespace pwn
 			return math::vec2x(&textcoords[i*2]);
 		}
 
-		const BoneIndex& VertexData::bone(const uint32 i) const
+		const math::vec4x VertexData::bone(const uint32 i) const
 		{
-			return boneindexes[i];
+			return math::vec4x(&boneindexes[i*4]);
 		}
 
 		template<typename T>
@@ -266,7 +278,7 @@ namespace pwn
 			Copy<real>(locations, m.locations, 3*count);
 			Copy<real>(normals, m.normals, 3*count);
 			Copy<real>(textcoords, m.textcoords, 2*count);
-			Copy<BoneIndex>(boneindexes, m.boneindexes, count);
+			Copy<real>(boneindexes, m.boneindexes, 4*count);
 		}
 	}
 }

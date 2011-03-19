@@ -77,15 +77,15 @@ namespace pwn
 		struct Point
 		{
 			Point();
-			Point(const math::vec3& location, BoneIndex bone);
-			Point(const math::vec3& location, math::vec3 normal, math::vec2 textcoord, BoneIndex bone);
+			Point(const math::vec3& location, math::vec4 bone);
+			Point(const math::vec3& location, math::vec3 normal, math::vec2 textcoord, math::vec4 bone);
 			bool hasBone() const;
-			BoneIndex getBone() const;
+			math::vec4 getBone() const;
 
 			math::vec3 location;
 			math::vec3 normal;
 			math::vec2 textcoord;
-			BoneIndex bone;
+			math::vec4 bone;
 		};
 
 		//
@@ -221,6 +221,9 @@ namespace pwn
 			const VertexIndex& operator[](pwn::uint32 index) const;
 		};
 
+		BoneIndex GetBoneIndex(real val);
+		real GetBoneInfluence(real val);
+
 		class VertexData
 		{
 		public:
@@ -228,12 +231,12 @@ namespace pwn
 			VertexData(const std::vector<math::vec3>& posv,
 				const std::vector<math::vec3>& normv,
 				const std::vector<math::vec2>&textv,
-				const std::vector<BoneIndex>& bonev);
+				const std::vector<math::vec4>& bonev);
 			VertexData(const VertexData& m);
 			const VertexData& operator=(const VertexData& m);
 
 			pwn::uint32 getCount() const;
-			BoneIndex getBone(pwn::uint32 id) const;
+			math::vec4 getBone(pwn::uint32 id) const;
 			const Point getPoint(uint32 i) const;
 			void setLocationNormal(const uint32 i, const math::vec3& pos, const math::vec3& norm);
 		private:
@@ -245,17 +248,17 @@ namespace pwn
 			const math::vec3x pos(const uint32 i) const;
 			const math::vec3x norm(const uint32 i) const;
 			const math::vec2x tex(const uint32 i) const;
-			const BoneIndex& bone(const uint32 i) const;
+			const math::vec4x bone(const uint32 i) const;
 			math::vec3x pos(const uint32 i);
 			math::vec3x norm(const uint32 i);
 			math::vec2x tex(const uint32 i);
-			BoneIndex& bone(const uint32 i);
+			math::vec4x bone(const uint32 i);
 
 			pwn::uint32 count;
 			boost::scoped_array<real> locations; // 3*count
 			boost::scoped_array<real> normals; // 3*count
 			boost::scoped_array<real> textcoords; // 2*count
-			boost::scoped_array<BoneIndex> boneindexes; // count
+			boost::scoped_array<real> boneindexes; // 4*count
 		};
 
 		class Mesh
@@ -269,7 +272,7 @@ namespace pwn
 			Mesh(const std::vector<math::vec3>& posv,
 				const std::vector<math::vec3>& normv,
 				const std::vector<math::vec2>&textv,
-				const std::vector<BoneIndex>& bonev,
+				const std::vector<math::vec4>& bonev,
 				const TriangleMap& trim,
 				const std::vector<Bone>& bones,
 				const std::vector<Material>& materials);

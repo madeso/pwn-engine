@@ -10,8 +10,9 @@
 ------------- features:
 * tranform into vbos & vertex shaders (indexed vbo!)
  - make boneassignemnts to a seperate vec4 array in preperations for gpu animation & multiple bone assignments
- - transform to cpu updated vbos
  - improve arguments handling with pwn.convert
+ - an8 file loading
+ - transform to cpu updated vbos
  - add material shaders
  - support loading vertex & fragment from different files & preprocessor
  - per pixel lights

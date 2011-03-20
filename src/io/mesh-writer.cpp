@@ -50,7 +50,7 @@ namespace pwn
 				vf.handleArray(mesh.vertexes.locations, mesh.vertexes.count*3);
 				vf.handleArray(mesh.vertexes.normals, mesh.vertexes.count*3);
 				vf.handleArray(mesh.vertexes.textcoords, mesh.vertexes.count*2);
-				vf.handleArray(mesh.vertexes.boneindexes, mesh.vertexes.count);
+				vf.handleArray(mesh.vertexes.boneindexes, mesh.vertexes.count*4);
 				vf.handleVector(mesh.bones);
 				std::vector<pwn::uint32> keys = vf.handleKeys(mesh.triangles);
 				BOOST_FOREACH(pwn::uint32 id, keys)

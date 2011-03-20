@@ -47,10 +47,10 @@ namespace pwn
 						for(int i=0; i<3; ++i)
 						{
 							const mesh::Point& point = smesh->positions[tri[i]];
-							math::vec3 normal;
-							math::vec3 vertex;
+							math::vec3 normal(0,0,0);
+							math::vec3 vertex(0,0,0);
 
-							if( point.hasBone() )
+							if( false == point.hasBone() )
 							{
 								normal = point.normal;
 								vertex = point.location;
@@ -62,13 +62,14 @@ namespace pwn
 								for(int b=0; b<4; ++b)
 								{
 									const real val = bone[b];
+									if( val < 0.0f ) break;
 									const real inf = mesh::GetBoneInfluence(val);
-									if( inf < 0.0f ) break;
-									infsum += inf;
 									const mesh::BoneIndex boneIndex = mesh::GetBoneIndex(val);
+									infsum += inf;
 									normal += math::GetNormalized(math::cmat33(math::SetTransform(pose.transforms[boneIndex], math::vec3(0,0,0))) * point.normal);
 									vertex += math::cvec3(pose.transforms[boneIndex] * math::cvec4(point.location));
 								}
+								Assert(infsum > 0 );
 								const real inv = 1/infsum;
 								vertex *= inv;
 								normal = math::GetNormalized( math::vec3(inv*normal) );

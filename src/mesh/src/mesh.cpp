@@ -55,7 +55,7 @@ namespace pwn
 		BoneIndex GetBoneIndex(real val)
 		{
 			BoneIndex r = static_cast<int>(floor(val));
-			Assert(r > 0);
+			Assert(r >= 0);
 			return r;
 		}
 

@@ -73,17 +73,19 @@ namespace pwn
 			const BTriangle::index t2 = b.addTextCoord(vec2(0,0));
 			const BTriangle::index t3 = b.addTextCoord(vec2(1,0));
 
+			const math::vec4 noBone(-1, -1, -1, -1);
+
 			// front side
-			const BTriangle::index v0 = b.addPosition(vec3(0, 0, 0), 0);
-			const BTriangle::index v1 = b.addPosition(vec3(w, 0, 0), 0);
-			const BTriangle::index v2 = b.addPosition(vec3(0, h, 0), 0);
-			const BTriangle::index v3 = b.addPosition(vec3(w, h, 0), 0);
+			const BTriangle::index v0 = b.addPosition(vec3(0, 0, 0), noBone);
+			const BTriangle::index v1 = b.addPosition(vec3(w, 0, 0), noBone);
+			const BTriangle::index v2 = b.addPosition(vec3(0, h, 0), noBone);
+			const BTriangle::index v3 = b.addPosition(vec3(w, h, 0), noBone);
 
 			// back side
-			const BTriangle::index v4 = b.addPosition(vec3(0, 0, d), 0);
-			const BTriangle::index v5 = b.addPosition(vec3(w, 0, d), 0);
-			const BTriangle::index v6 = b.addPosition(vec3(0, h, d), 0);
-			const BTriangle::index v7 = b.addPosition(vec3(w, h, d), 0);
+			const BTriangle::index v4 = b.addPosition(vec3(0, 0, d), noBone);
+			const BTriangle::index v5 = b.addPosition(vec3(w, 0, d), noBone);
+			const BTriangle::index v6 = b.addPosition(vec3(0, h, d), noBone);
+			const BTriangle::index v7 = b.addPosition(vec3(w, h, d), noBone);
 
 			b.addQuad(!faceOut, 0, v(v0,t2), v(v2,t0), v(v3,t1), v(v1,t3)); // front
 			b.addQuad(!faceOut, 0, v(v1,t3), v(v3,t1), v(v7,t0), v(v5,t2)); // right
@@ -345,8 +347,8 @@ namespace pwn
 					if( p.hasBone() == false) continue;
 					const math::vec4 bone = p.getBone();
 
-					vec3 location;
-					vec3 normal;
+					vec3 location(0,0,0);
+					vec3 normal(0,0,0);
 
 					real insum = 0;
 

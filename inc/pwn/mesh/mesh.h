@@ -221,6 +221,7 @@ namespace pwn
 			const VertexIndex& operator[](pwn::uint32 index) const;
 		};
 
+		void SetBoneIndex(real* val, BoneIndex newIndex);
 		BoneIndex GetBoneIndex(real val);
 		real GetBoneInfluence(real val);
 

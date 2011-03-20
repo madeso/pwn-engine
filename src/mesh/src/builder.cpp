@@ -135,7 +135,7 @@ namespace pwn
 
 		// ==================================================================================================================================
 
-		BPoint::BPoint(const math::vec3& alocation, BoneIndex abone)
+		BPoint::BPoint(const math::vec3& alocation, math::vec4 abone)
 			: location(alocation)
 			, bone(abone)
 		{
@@ -210,7 +210,7 @@ namespace pwn
 			return static_cast<BTriangle::index>(positions.size()-1);
 		}
 
-		BTriangle::index Builder::addPosition(const math::vec3& pos, BoneIndex bone)
+		BTriangle::index Builder::addPosition(const math::vec3& pos, math::vec4 bone)
 		{
 			return addPosition(BPoint(pos, bone));
 		}
@@ -343,10 +343,20 @@ namespace pwn
 				{
 					const Point& p = mesh->data().getPoint(i);
 					if( p.hasBone() == false) continue;
-					Data& data = bdp[p.getBone()];
-					const vec3 location = TranslateWithInverseMatrix(p.location, data.globalskel);
-					const vec3 normal = GetNormalized(TranslateWithInverseMatrix(p.normal, math::SetTransform(data.globalskel, math::vec3(0,0,0))));
-					mesh->setLocationNormal(i, location, normal);
+					const math::vec4 bone = p.getBone();
+
+					vec3 location;
+					vec3 normal;
+
+					for(int b=0; b<4; ++i)
+					{
+						const real x = bone[b];
+						const real in = GetBoneInfluence(x);
+						Data& data = bdp[GetBoneIndex(x)];
+						location += in * TranslateWithInverseMatrix(p.location, data.globalskel);
+						normal += in * GetNormalized(TranslateWithInverseMatrix(p.normal, math::SetTransform(data.globalskel, math::vec3(0,0,0))));
+					}
+					mesh->setLocationNormal(i, location, GetNormalized(normal));
 				}
 			}
 		}
@@ -356,9 +366,9 @@ namespace pwn
 			Triangle::VertexIndex location;
 			Triangle::VertexIndex texture;
 			Triangle::VertexIndex normal;
-			BoneIndex boneIndex;
+			math::vec4 boneIndex;
 
-			Combo(const BTriangle::Vertex& v, BoneIndex bi)
+			Combo(const BTriangle::Vertex& v, math::vec4 bi)
 				: location(v.location)
 				, texture(v.texture)
 				, normal(v.normal)
@@ -391,7 +401,7 @@ namespace pwn
 			std::vector<math::vec3> posv;
 			std::vector<math::vec3> normv;
 			std::vector<math::vec2> textv;
-			std::vector<BoneIndex> bonev;
+			std::vector<math::vec4> bonev;
 			Mesh::TriangleMap trim;
 			BOOST_FOREACH(const TriMap::value_type& triangleMaterial, triangles)
 			{
@@ -403,7 +413,7 @@ namespace pwn
 					// get combinations, add if not existing
 					for(int i=0; i<3; ++i)
 					{
-						const BoneIndex boneIndex = positions[sourceTriangle[i].location].bone;
+						const math::vec4 boneIndex = positions[sourceTriangle[i].location].bone;
 						const Combo c(sourceTriangle[i], boneIndex);
 						ComboMap::iterator result = combinations.find(c);
 						if( result != combinations.end() )
@@ -495,7 +505,10 @@ namespace pwn
 			if( newIndices.empty() ) return;
 			BOOST_FOREACH(BPoint& p, mesh->positions)
 			{
-				p.bone = newIndices[p.bone];
+				for(int i=0; i<4; ++i)
+				{
+					SetBoneIndex(&p.bone[i], newIndices[ GetBoneIndex(p.bone[i]) ]);
+				}
 			}
 
 			std::vector<Bone> bs = mesh->bones;

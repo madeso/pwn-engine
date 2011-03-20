@@ -22,10 +22,10 @@ namespace pwn
 		class BPoint
 		{
 		public:
-			BPoint(const math::vec3& location, BoneIndex bone);
+			BPoint(const math::vec3& location, math::vec4 bone);
 
 			math::vec3 location;
-			BoneIndex bone;
+			math::vec4 bone;
 		};
 
 		class BTriangle
@@ -62,7 +62,7 @@ namespace pwn
 
 			BTriangle::index addTextCoord(const math::vec2& v);
 			BTriangle::index addPosition(const BPoint& pos);
-			BTriangle::index addPosition(const math::vec3& pos, BoneIndex bone); // syntax sugar
+			BTriangle::index addPosition(const math::vec3& pos, math::vec4 bone); // syntax sugar
 			BTriangle::index addNormal(const math::vec3& norm);
 			void addTriangle(pwn::uint32 material, const BTriangle& t);
 			BTriangle::index addMaterial(Material m);

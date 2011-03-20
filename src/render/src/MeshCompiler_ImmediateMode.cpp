@@ -47,19 +47,33 @@ namespace pwn
 						for(int i=0; i<3; ++i)
 						{
 							const mesh::Point& point = smesh->positions[tri[i]];
+							math::vec3 normal;
+							math::vec3 vertex;
 
-							const math::vec3 n = point.hasBone()
-								? math::GetNormalized(math::cmat33(math::SetTransform(pose.transforms[point.getBone()], math::vec3(0,0,0))) * point.normal)
-								: point.normal;
+							if( point.hasBone() )
+							{
+								normal = point.normal;
+								vertex = point.location;
+							}
+							else
+							{
+								const math::vec4 bone = point.getBone();
+								for(int b=0; b<4; ++b)
+								{
+									const real val = bone[b];
+									const mesh::BoneIndex boneIndex = mesh::GetBoneIndex(val);
+									const real inf = mesh::GetBoneInfluence(val);
+									normal += math::GetNormalized(math::cmat33(math::SetTransform(pose.transforms[boneIndex], math::vec3(0,0,0))) * point.normal);
+									vertex += math::cvec3(pose.transforms[boneIndex] * math::cvec4(point.location));
+								}
 
-							glNormal3fv(n.data());
+								normal = math::GetNormalized(normal);
+							}
+
+							glNormal3fv(normal.data());
 
 							glTexCoord2fv(point.textcoord.data());
-
-							const math::vec3 p = point.hasBone()
-								? math::cvec3(pose.transforms[point.getBone()] * math::cvec4(point.location))
-								: point.location;
-							glVertex3fv(p.data());
+							glVertex3fv(vertex.data());
 						}
 					}
 					glEnd(); pwnAssert_NoGLError();

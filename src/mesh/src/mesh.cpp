@@ -46,7 +46,11 @@ namespace pwn
 		}
 
 
-
+		void SetBoneIndex(real* val, BoneIndex newIndex)
+		{
+			const real inf = GetBoneInfluence(*val);
+			*val = newIndex + inf;
+		}
 
 		BoneIndex GetBoneIndex(real val)
 		{

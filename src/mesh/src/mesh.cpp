@@ -123,9 +123,10 @@ namespace pwn
 			{
 				for(int b=0; b<4; ++b)
 				{
-					BoneIndex p = GetBoneIndex(vertexes.getBone(i)[b]);
-					if( p != 0 )
+					const real x = vertexes.getBone(i)[b];
+					if( x >= 0 )
 					{
+						const BoneIndex p = GetBoneIndex(x);
 						errors += Check("bone index", p -1, boneSize);
 					}
 				}

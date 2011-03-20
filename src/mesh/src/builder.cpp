@@ -350,11 +350,11 @@ namespace pwn
 
 					real insum = 0;
 
-					for(int b=0; b<4; ++i)
+					for(int b=0; b<4; ++b)
 					{
 						const real x = bone[b];
+						if( x < 0 ) break;
 						const real in = GetBoneInfluence(x);
-						if( in < 0 ) break;
 						insum += in;
 						Data& data = bdp[GetBoneIndex(x)];
 						location += in * TranslateWithInverseMatrix(p.location, data.globalskel);

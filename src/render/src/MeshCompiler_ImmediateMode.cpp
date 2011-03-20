@@ -58,16 +58,20 @@ namespace pwn
 							else
 							{
 								const math::vec4 bone = point.getBone();
+								real infsum = 0;
 								for(int b=0; b<4; ++b)
 								{
 									const real val = bone[b];
-									const mesh::BoneIndex boneIndex = mesh::GetBoneIndex(val);
 									const real inf = mesh::GetBoneInfluence(val);
+									if( inf < 0.0f ) break;
+									infsum += inf;
+									const mesh::BoneIndex boneIndex = mesh::GetBoneIndex(val);
 									normal += math::GetNormalized(math::cmat33(math::SetTransform(pose.transforms[boneIndex], math::vec3(0,0,0))) * point.normal);
 									vertex += math::cvec3(pose.transforms[boneIndex] * math::cvec4(point.location));
 								}
-
-								normal = math::GetNormalized(normal);
+								const real inv = 1/infsum;
+								vertex *= inv;
+								normal = math::GetNormalized( math::vec3(inv*normal) );
 							}
 
 							glNormal3fv(normal.data());

@@ -348,15 +348,20 @@ namespace pwn
 					vec3 location;
 					vec3 normal;
 
+					real insum = 0;
+
 					for(int b=0; b<4; ++i)
 					{
 						const real x = bone[b];
 						const real in = GetBoneInfluence(x);
+						if( in < 0 ) break;
+						insum += in;
 						Data& data = bdp[GetBoneIndex(x)];
 						location += in * TranslateWithInverseMatrix(p.location, data.globalskel);
 						normal += in * GetNormalized(TranslateWithInverseMatrix(p.normal, math::SetTransform(data.globalskel, math::vec3(0,0,0))));
 					}
-					mesh->setLocationNormal(i, location, GetNormalized(normal));
+					const real inv = 1/insum;
+					mesh->setLocationNormal(i, inv*location, GetNormalized(math::vec3(inv*normal)));
 				}
 			}
 		}

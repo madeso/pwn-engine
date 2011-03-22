@@ -1,0 +1,22 @@
+animations
+{
+	animation { start 1 end 13 name "Walk" }
+	animation { start 15 end 25 name "Run" }
+	animation { start 27 end 39 name "Jump" }
+	animation { start 41 end 53 name "Jump on the spot" }
+	animation { start 55 end 58 name "Crouch down" }
+	animation { start 59 end 68 name "Stay crouched loop" }
+	animation { start 69 end 73 name "Get up" }
+	animation { start 74 end 87 name "Battle idle 1" }
+	animation { start 89 end 109 name "Battle idle 2" }
+	animation { start 111 end 125 name "Attack 1 Swipe axe" }
+	animation { start 127 end 141 name "Attack 2 Jump and overhead whack attack" }
+	animation { start 143 end 159 name "Attack 3 360 spin Back hander" }
+	animation { start 161 end 180 name "Attack 4 2 Swipes left and right" }
+	animation { start 181 end 191 name "Attack 5 Stab" }
+	animation { start 193 end 209 name "Block" }
+	animation { start 211 end 226 name "Die Forwards" }
+	animation { start 229 end 250 name "Die Backwards" }
+	animation { start 252 end 271 name "Nod YES" }
+	animation { start 273 end 289 name "Shake head NO" }
+}

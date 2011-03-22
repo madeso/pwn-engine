@@ -1,5 +1,5 @@
 #include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser.hpp>
+#include <boost/property_tree/info_parser.hpp>
 
 #include <boost/filesystem.hpp>
 #include <string>
@@ -115,14 +115,22 @@ pwn::string SuggestTextureDirectory(const pwn::string& in)
 	return boost::filesystem::path(in).replace_extension().filename();
 }
 
-pwn::string SuggestAnimationFile(const pwn::string& in)
+bool SuggestAnimationFile(const pwn::string& in, pwn::string* out)
 {
-	return boost::filesystem::path(in).replace_extension("animxml").filename();
+	boost::filesystem::path p
+		= boost::filesystem::path(in).replace_extension("animinfo");
+	if( out ) *out = p.file_string();
+	return boost::filesystem::exists(p);
+}
+
+pwn::string GetAbsolutePath(const pwn::string& in)
+{
+	return boost::filesystem::system_complete( boost::filesystem::path( in.c_str(), boost::filesystem::native ) ).string();
 }
 
 pwn::string SuggestOutDirectory(const pwn::string& in)
 {
-	return boost::filesystem::path(in).directory_string();
+	return boost::filesystem::path(in).remove_filename().directory_string();
 }
 
 struct ConvertData
@@ -147,9 +155,10 @@ struct ConvertData
 	bool writeResult;
 };
 
-bool Convert(const pwn::string& argv0, const ConvertData& cd, const AnimationExtract& animationsToExtract, const pwn::string& inputfile, InputFormat::Type formatOveride)
+bool Convert(const pwn::string& argv0, const ConvertData& cd, const AnimationExtract& animationsToExtract, const pwn::string& ainputfile, InputFormat::Type formatOveride)
 {
-	pwn::string outdir =
+	const pwn::string inputfile = GetAbsolutePath(ainputfile);
+	const pwn::string outdir =
 		cd.outdir.empty() ? SuggestOutDirectory(inputfile) : cd.outdir;
 	pwn::mesh::Builder builder;
 	pwn::mesh::Animation animation;
@@ -225,7 +234,7 @@ AnimationExtract LoadAnimations(const pwn::string& filename)
 
 	AnimationExtract ae;
 	ptree pt;
-	read_xml(filename, pt);
+	read_info(filename, pt);
 	BOOST_FOREACH(ptree::value_type &an, pt.get_child("animations"))
 	{
 		ptree anida = an.second;
@@ -257,12 +266,13 @@ public:
 		ConvertData arg;
 		ConvertData old;
 		InputFormat::Type formatOveride = InputFormat::Unknown;
+		bool breakOnErrors = true;
 
-		for(int i=0; i<argc; ++i)
+		for(int i=1; i<argc; ++i)
 		{
 			if( IsArgument(argv[i]) )
 			{
-				const std::string name = pwn::core::ToLower(pwn::core::TrimLeft(argv[i], "-/"));
+				const std::string name = pwn::core::TrimLeft(argv[i], "-/");
 				const std::string val = i+1<argc ? argv[i+1] : "";
 				if( name == "s" || name == "scale" )
 				{
@@ -282,10 +292,10 @@ public:
 				}
 				else if ( name == "o" || name=="out" || name == "outdir" )
 				{
-					arg.outdir == val;
+					arg.outdir = val;
 					++i;
 				}
-				else if ( name=="s" || name=="stat" || name == "showstat" )
+				else if ( name=="S" || name=="stat" || name == "showstat" )
 				{
 					arg.runStatistics = true;
 				}
@@ -295,7 +305,11 @@ public:
 				}
 				else if( name == "w" || name=="nowrite" )
 				{
-					arg.writeResults = false;
+					arg.writeResult = false;
+				}
+				else if( name == "v" || name=="verbose" )
+				{
+					arg.verbose = true;
 				}
 				else if ( name == "k" || name == "keep" )
 				{
@@ -306,15 +320,57 @@ public:
 					formatOveride = SuggestFormatData(val);
 					++i;
 				}
+				else if (name == "B" || name=="no-break" || name=="no-break-on-error" )
+				{
+					breakOnErrors = false;
+				}
+				else
+				{
+					std::cerr << "Unknown option " << name << std::endl;
+					++errors;
+				}
 			}
 			else
 			{
 				const pwn::string file = argv[i];
-				AnimationExtract animations = LoadAnimations(SuggestAnimationFile(file));
-				Convert(argv[0], arg, animations, file, formatOveride);
+				pwn::string animationfile;
+				AnimationExtract animations;
+				try {
+					if( SuggestAnimationFile(file, &animationfile) )
+					{
+						animations = LoadAnimations(animationfile);
+					}
+					Convert(argv[0], arg, animations, file, formatOveride);
+				}
+				catch(const std::exception& ex)
+				{
+					std::cerr << "Error: " << ex.what() << std::endl;
+					++errors;
+				}
+				catch(const char* msg)
+				{
+					std::cerr << "Error: " << msg << std::endl;
+					++errors;
+				}
+				catch(const std::string& msg)
+				{
+					std::cerr << "Error: " << msg << std::endl;
+					++errors;
+				}
+				catch(...)
+				{
+					std::cerr << "Unknown error detected!" << std::endl;
+					++errors;
+				}
 				old = arg;
 				arg = ConvertData();
 				formatOveride = InputFormat::Unknown;
+			}
+
+			if( breakOnErrors && errors > 0 )
+			{
+				std::cerr << "Errors detected, aborting" << std::endl;
+				return;
 			}
 		}
 	}

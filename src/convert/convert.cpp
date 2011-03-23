@@ -37,36 +37,112 @@ struct WriteDotCallback : public pwn::convert::obj::VoidVoidCallback
 	}
 };
 
-namespace InputFormat
+class InputFormat
 {
-	enum Type
+public:
+	virtual ~InputFormat() {}
+	virtual const std::string getName() const = 0;
+	virtual void load(pwn::mesh::Builder* builder, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const = 0;
+};
+
+template<class IF>
+static InputFormat* GetInputFormat()
+{
+	static IF format;
+	return &format;
+};
+
+class InputFormat_Obj
+	: public InputFormat
+{
+public:
+	~InputFormat_Obj()
 	{
-		Unknown
-		, Obj
-		, Ms3d_ascii
-		, Ms3d_binary
-		, Studio3ds
-	};
+	}
+	const std::string getName() const
+	{
+		return "wavefront obj";
+	}
+	void load(pwn::mesh::Builder* builder, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
+	{
+		WriteDotCallback wdc(verbose);
+		pwn::convert::obj::read(builder, inputfile, wdc);
+		builder->buildNormals();
+	}
+};
+
+class InputFormat_Studio3ds
+	: public InputFormat
+{
+public:
+	~InputFormat_Studio3ds()
+	{
+	}
+	const std::string getName() const
+	{
+		return "3d studio";
+	}
+	void load(pwn::mesh::Builder* builder, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
+	{
+		pwn::convert::studio3ds::read(builder, inputfile);
+		builder->buildNormals();
+	}
+};
+
+class InputFormat_Ms3d_ascii
+	: public InputFormat
+{
+public:
+	~InputFormat_Ms3d_ascii()
+	{
+	}
+	const std::string getName() const
+	{
+		return "milkshape ascii";
+	}
+	void load(pwn::mesh::Builder* builder, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
+	{
+		pwn::convert::milkshape::ascii::Read(builder, animation, inputfile);
+		builder->buildNormals();
+	}
+};
+
+class InputFormat_Ms3d_binary
+	: public InputFormat
+{
+public:
+	~InputFormat_Ms3d_binary()
+	{
+	}
+	const std::string getName() const
+	{
+		return "milkshape binary";
+	}
+	void load(pwn::mesh::Builder* builder, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
+	{
+		pwn::convert::milkshape::binary::Read(builder, animation, inputfile);
+		builder->buildNormals();
+	}
+};
+
+const InputFormat* SuggestFormat(const pwn::string& ext)
+{
+	if( ext == ".obj" ) return GetInputFormat<InputFormat_Obj>();
+	else if( ext == ".3ds" ) return GetInputFormat<InputFormat_Studio3ds>();
+	else if( ext == ".txt" ) return GetInputFormat<InputFormat_Ms3d_ascii>();
+	else if( ext == ".ms3d" ) return GetInputFormat<InputFormat_Ms3d_binary>();
+	else return 0;
 }
 
-const InputFormat::Type SuggestFormat(const pwn::string& ext)
+const InputFormat* SuggestFormat(const pwn::string& inputfile, const InputFormat* formatOveride)
 {
-	if( ext == ".obj" ) return InputFormat::Obj;
-	else if( ext == ".3ds" ) return InputFormat::Studio3ds;
-	else if( ext == ".txt" ) return InputFormat::Ms3d_ascii;
-	else if( ext == ".ms3d" ) return InputFormat::Ms3d_binary;
-	else return InputFormat::Unknown;
-}
-
-const InputFormat::Type SuggestFormat(const pwn::string& inputfile, const InputFormat::Type formatOveride)
-{
-	if( formatOveride != InputFormat::Unknown ) return formatOveride;
+	if( formatOveride != 0 ) return formatOveride;
 	const pwn::string ext = boost::filesystem::path(inputfile).extension();
 
 	return SuggestFormat(ext);
 }
 
-const InputFormat::Type SuggestFormatData(const pwn::string& name)
+const InputFormat* SuggestFormatData(const pwn::string& name)
 {
 	return SuggestFormat("." + name);
 }
@@ -75,34 +151,18 @@ const InputFormat::Type SuggestFormatData(const pwn::string& name)
  Supports: 3ds, obj, milkshape binary & milkshape ascii.
  Add support for x, collada, md2, md3, md5, an8, ogre mesh, dxf & blender
 */
-bool Load(pwn::mesh::Builder* builder, pwn::mesh::Animation* animation, const pwn::string& inputfile, const InputFormat::Type formatOveride, bool verbose)
+bool Load(pwn::mesh::Builder* builder, pwn::mesh::Animation* animation, const pwn::string& inputfile, const InputFormat* formatOveride, bool verbose)
 {
-	const InputFormat::Type fileFormat = SuggestFormat(inputfile, formatOveride);
+	const InputFormat* fileFormat = SuggestFormat(inputfile, formatOveride);
 
-	if( verbose ) cout << "reading " << fileFormat << ".." << std::endl;
-
-	switch(fileFormat)
+	if(fileFormat)
 	{
-	case InputFormat::Obj:
-		{
-		WriteDotCallback wdc(verbose);
-		pwn::convert::obj::read(builder, inputfile, wdc);
-		builder->buildNormals();
-		}
+		if( verbose ) cout << "reading " << inputfile << " (" << fileFormat->getName() << ").." << std::endl;
+		fileFormat->load(builder, animation, inputfile, verbose);
 		return true;
-	case InputFormat::Studio3ds:
-		pwn::convert::studio3ds::read(builder, inputfile);
-		builder->buildNormals();
-		return true;
-	case InputFormat::Ms3d_ascii:
-		pwn::convert::milkshape::ascii::Read(builder, animation, inputfile);
-		builder->buildNormals();
-		return true;
-	case InputFormat::Ms3d_binary:
-		pwn::convert::milkshape::binary::Read(builder, animation, inputfile);
-		builder->buildNormals();
-		return true;
-	default:
+	}
+	else
+	{
 		std::cerr << "Unable to determine the kind of reader to use with " << inputfile;
 		return false;
 	}
@@ -155,7 +215,7 @@ struct ConvertData
 	bool writeResult;
 };
 
-bool Convert(const pwn::string& argv0, const ConvertData& cd, const AnimationExtract& animationsToExtract, const pwn::string& ainputfile, InputFormat::Type formatOveride)
+bool Convert(const pwn::string& argv0, const ConvertData& cd, const AnimationExtract& animationsToExtract, const pwn::string& ainputfile, const InputFormat* formatOveride)
 {
 	const pwn::string inputfile = GetAbsolutePath(ainputfile);
 	const pwn::string outdir =
@@ -265,7 +325,7 @@ public:
 	{
 		ConvertData arg;
 		ConvertData old;
-		InputFormat::Type formatOveride = InputFormat::Unknown;
+		const InputFormat* formatOveride = 0;
 		bool breakOnErrors = true;
 
 		for(int i=1; i<argc; ++i)
@@ -317,8 +377,17 @@ public:
 				}
 				else if (name == "f" || name=="format" || name=="force" )
 				{
-					formatOveride = SuggestFormatData(val);
 					++i;
+					const InputFormat* sf = SuggestFormatData(val);
+					if( sf )
+					{
+						formatOveride = sf;
+					}
+					else
+					{
+						std::cerr << "Unknown format override: " << val << " using last override";
+						++errors;
+					}
 				}
 				else if (name == "B" || name=="no-break" || name=="no-break-on-error" )
 				{
@@ -364,7 +433,7 @@ public:
 				}
 				old = arg;
 				arg = ConvertData();
-				formatOveride = InputFormat::Unknown;
+				formatOveride = 0;
 			}
 
 			if( breakOnErrors && errors > 0 )

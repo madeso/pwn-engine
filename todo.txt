@@ -9,7 +9,6 @@
 --------------------------
 ------------- features:
 * tranform into vbos & vertex shaders (indexed vbo!)
- - upgrade file loading handling to easier add more formats
  - improve arguments handling so a better help can be displayed
  - an8 file loading
  - transform to cpu updated vbos

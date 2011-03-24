@@ -18,6 +18,7 @@
 #include <pwn/assert.h>
 #include <pwn/core/stringutils.h>
 #include <boost/lexical_cast.hpp>
+#include <boost/function.hpp>
 
 using namespace std;
 
@@ -313,20 +314,69 @@ bool IsArgument(const std::string& str)
 	return str[0] == '-' || str[1] == '/';
 }
 
-class app
+template <class Main>
+class ConsoleArguments
 {
 public:
-	app()
+	typedef boost::function<int (Main* main, ConsoleArguments* args)> Command;
+	typedef std::map<pwn::string, Command> CommandMap;
+	typedef boost::function<int (Main* main, ConsoleArguments* args, const pwn::string&)> CommandArg;
+	typedef std::map<pwn::string, CommandArg> CommandArgMap;
+
+	typedef std::map<pwn::string, std::vector<pwn::string> > AliasMap;
+	typedef std::map<pwn::string, pwn::string> DescriptionMap;
+
+	bool stopOnError;
+	bool stop;
+	pwn::string argv0;
+
+	ConsoleArguments()
 		: errors(0)
+		, stopOnError(false)
+		, stop(false)
 	{
 	}
-
-	void handle(int argc, char* argv[])
+	
+	void setCommand(const std::vector<pwn::string>& names, Command arg, const pwn::string& description)
 	{
-		ConvertData arg;
-		ConvertData old;
-		const InputFormat* formatOveride = 0;
-		bool breakOnErrors = true;
+		const pwn::string first = names[0];
+		descriptions[first] = description;
+		aliases[first] = names;
+
+		BOOST_FOREACH(pwn::string name, names)
+		{
+			Assert( has(name) == false );
+			cmd[name] = arg;
+		}
+	}
+
+	void setArgCommand(const std::vector<pwn::string>& names, CommandArg arg, const pwn::string& description)
+	{
+		const pwn::string first = names[0];
+		descriptions[first] = description;
+		aliases[first] = names;
+
+		BOOST_FOREACH(pwn::string name, names)
+		{
+			Assert( has(name) == false );
+			cmda[name] = arg;
+		}
+	}
+
+	void setMain(CommandArg arg)
+	{
+		cmdmain = arg;
+	}
+
+	bool has(const pwn::string& name) const
+	{
+		const bool missing = cmd.find(name) == cmd.end() && cmda.find(name)==cmda.end();
+		return !missing;
+	}
+
+	void handle(int argc, char* argv[], Main* main)
+	{
+		argv0 = argv[0];
 
 		for(int i=1; i<argc; ++i)
 		{
@@ -334,118 +384,226 @@ public:
 			{
 				const std::string name = pwn::core::TrimLeft(argv[i], "-/");
 				const std::string val = i+1<argc ? argv[i+1] : "";
-				if( name == "s" || name == "scale" )
+				CommandMap::iterator cmdi = cmd.find(name);
+				if( cmdi != cmd.end() )
 				{
-					arg.modelScale = boost::lexical_cast<float>(val);
-					arg.useModelScale = true;
-					++i;
-				}
-				else if ( name == "t" || name=="tex" || name == "texturedir" )
-				{
-					arg.texturedir = val;
-					++i;
-				}
-				else if (name == "a" || name=="anim" || name == "animdir" )
-				{
-					arg.animdir = val;
-					++i;
-				}
-				else if ( name == "o" || name=="out" || name == "outdir" )
-				{
-					arg.outdir = val;
-					++i;
-				}
-				else if ( name=="S" || name=="stat" || name == "showstat" )
-				{
-					arg.runStatistics = true;
-				}
-				else if ( name == "i" || name == "info" )
-				{
-					arg.meshInfo = true;
-				}
-				else if( name == "w" || name=="nowrite" )
-				{
-					arg.writeResult = false;
-				}
-				else if( name == "v" || name=="verbose" )
-				{
-					arg.verbose = true;
-				}
-				else if ( name == "k" || name == "keep" )
-				{
-					arg = old;
-				}
-				else if (name == "f" || name=="format" || name=="force" )
-				{
-					++i;
-					const InputFormat* sf = SuggestFormatData(val);
-					if( sf )
-					{
-						formatOveride = sf;
-					}
-					else
-					{
-						std::cerr << "Unknown format override: " << val << " using last override";
-						++errors;
-					}
-				}
-				else if (name == "B" || name=="no-break" || name=="no-break-on-error" )
-				{
-					breakOnErrors = false;
+					errors += cmdi->second(main, this);
 				}
 				else
 				{
-					std::cerr << "Unknown option " << name << std::endl;
-					++errors;
+					CommandArgMap::iterator cmdai = cmda.find(name);
+					if( cmdai != cmda.end() )
+					{
+						errors += cmdai->second(main, this, val);
+						++i;
+					}
+					else
+					{
+						std::cerr << "Unknown argument " << name << std::endl;
+						++errors;
+					}
 				}
 			}
 			else
 			{
-				const pwn::string file = argv[i];
-				pwn::string animationfile;
-				AnimationExtract animations;
-				try {
-					if( SuggestAnimationFile(file, &animationfile) )
-					{
-						animations = LoadAnimations(animationfile);
-					}
-					Convert(argv[0], arg, animations, file, formatOveride);
-				}
-				catch(const std::exception& ex)
-				{
-					std::cerr << "Error: " << ex.what() << std::endl;
-					++errors;
-				}
-				catch(const char* msg)
-				{
-					std::cerr << "Error: " << msg << std::endl;
-					++errors;
-				}
-				catch(const std::string& msg)
-				{
-					std::cerr << "Error: " << msg << std::endl;
-					++errors;
-				}
-				catch(...)
-				{
-					std::cerr << "Unknown error detected!" << std::endl;
-					++errors;
-				}
-				old = arg;
-				arg = ConvertData();
-				formatOveride = 0;
+				errors += cmdmain(main, this, argv[i]);
 			}
 
-			if( breakOnErrors && errors > 0 )
+			if( stopOnError && errors > 0)
 			{
-				std::cerr << "Errors detected, aborting" << std::endl;
+				std::cerr << "Errors encounted, halting.." << std::endl;
+				return;
+			}
+
+			if( stop )
+			{
 				return;
 			}
 		}
 	}
 
+	int getErrors() const
+	{
+		return errors;
+	}
+private:
+	CommandMap cmd;
+	CommandArgMap cmda;
+	CommandArg cmdmain;
+	AliasMap aliases;
+	DescriptionMap descriptions;
 	int errors;
 };
+
+class Strings
+{
+public:
+	Strings& operator<<(const pwn::string& s)
+	{
+		strings.push_back(s);
+		return *this;
+	}
+
+	operator std::vector<pwn::string>() const
+	{
+		return strings;
+	}
+	std::vector<pwn::string> strings;
+};
+
+class App
+{
+public:
+	ConvertData arg;
+	ConvertData old;
+	const InputFormat* formatOveride;
+	int errors;
+
+	App()
+		: formatOveride(0)
+		, errors(0)
+	{
+	}
+
+	void handle(int argc, char* argv[]);
+};
+
+int CommandArg_Scale(App* app, ConsoleArguments<App>* args, const pwn::string& val)
+{
+	app->arg.modelScale = boost::lexical_cast<float>(val);
+	app->arg.useModelScale = true;
+	return 0;
+}
+
+int CommandArg_TextureDir(App* app, ConsoleArguments<App>* args, const pwn::string& val)
+{
+	app->arg.texturedir = val;
+	return 0;
+}
+
+int CommandArg_AnimDir(App* app, ConsoleArguments<App>* args, const pwn::string& val)
+{
+	app->arg.animdir = val;
+	return 0;
+}
+
+int CommandArg_OutDir(App* app, ConsoleArguments<App>* args, const pwn::string& val)
+{
+	app->arg.outdir = val;
+	return 0;
+}
+
+int Command_RunStatistics(App* app, ConsoleArguments<App>* args)
+{
+	app->arg.runStatistics = true;
+	return 0;
+}
+
+int Command_MeshInfo(App* app, ConsoleArguments<App>* args)
+{
+	app->arg.meshInfo = true;
+	return 0;
+}
+
+int Command_DontWriteResult(App* app, ConsoleArguments<App>* args)
+{
+	app->arg.writeResult = false;
+	return 0;
+}
+
+int Command_Verbose(App* app, ConsoleArguments<App>* args)
+{
+	app->arg.verbose = true;
+	return 0;
+}
+int Command_Restore(App* app, ConsoleArguments<App>* args)
+{
+	app->arg = app->old;
+	return 0;
+}
+
+int CommandArg_ForceFormat(App* app, ConsoleArguments<App>* args, const pwn::string& val)
+{
+	const InputFormat* sf = SuggestFormatData(val);
+	if( sf )
+	{
+		app->formatOveride = sf;
+		return 0;
+	}
+	else
+	{
+		std::cerr << "Unknown format override: " << val << " using last override";
+		return 1;
+	}
+}
+int Command_DontStopOnErrors(App* app, ConsoleArguments<App>* args)
+{
+	args->stopOnError = false;
+	return 0;
+}
+
+int CommandArg_RunFile(App* app, ConsoleArguments<App>* args, const pwn::string& file)
+{
+	pwn::string animationfile;
+	AnimationExtract animations;
+	try
+	{
+		if( SuggestAnimationFile(file, &animationfile) )
+		{
+			animations = LoadAnimations(animationfile);
+		}
+		Convert(args->argv0, app->arg, animations, file, app->formatOveride);
+	}
+	catch(const std::exception& ex)
+	{
+		std::cerr << "Error: " << ex.what() << std::endl;
+		return 1;
+	}
+	catch(const char* msg)
+	{
+		std::cerr << "Error: " << msg << std::endl;
+		return 1;
+	}
+	catch(const std::string& msg)
+	{
+		std::cerr << "Error: " << msg << std::endl;
+		return 1;
+	}
+	catch(...)
+	{
+		std::cerr << "Unknown error detected!" << std::endl;
+		return 1;
+	}
+	app->old = app->arg;
+	app->arg = ConvertData();
+	app->formatOveride = 0;
+
+	return 0;
+}
+
+void App::handle(int argc, char* argv[])
+{
+	ConsoleArguments<App> args;
+
+	args.setArgCommand(Strings() << "scale" << "s", CommandArg_Scale, "scales the loaded mesh");
+	args.setArgCommand(Strings() << "texturedir" << "tex" << "t", CommandArg_TextureDir, "sets the texture dir that will be used when loading");
+	args.setArgCommand(Strings() << "animdir" << "anim" << "a", CommandArg_AnimDir, "sets the animation dir");
+	args.setArgCommand(Strings() << "outdir" << "out" << "o", CommandArg_OutDir, "sets the outdir where to place the result, defaults to meshdir");
+	args.setArgCommand(Strings() << "format" << "force" << "f", CommandArg_ForceFormat, "");
+	args.setArgCommand(Strings() << "run-file" << "run" << "F", CommandArg_RunFile, "forces a file to run, needed if the path starts with / or -");
+
+	args.setCommand(Strings() << "showstat" << "stat" << "S", Command_RunStatistics, "Show statistics for the mesh");
+	args.setCommand(Strings() << "info" << "i", Command_MeshInfo, "Show mesh informatio");
+	args.setCommand(Strings() << "nowrite" << "w", Command_DontWriteResult, "Only run logic, dont write the result");
+	args.setCommand(Strings() << "verbose" << "v", Command_Verbose, "Switch to verbose mode");
+	args.setCommand(Strings() << "keep" << "k", Command_Restore, "Keep the options for the last mesh");
+	args.setCommand(Strings() << "no-break-on-error" << "no-break" << "B", Command_DontStopOnErrors, "Forces convertion to run even after errors");
+
+	args.setMain(CommandArg_RunFile);
+
+	args.handle(argc, argv,this);
+	errors = args.getErrors();
+}
 
 int main(int argc, char* argv[])
 {
@@ -457,7 +615,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	app a;
+	App a;
 	a.handle(argc, argv);
 
 	return a.errors;

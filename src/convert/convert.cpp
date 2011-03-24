@@ -311,7 +311,7 @@ AnimationExtract LoadAnimations(const pwn::string& filename)
 bool IsArgument(const std::string& str)
 {
 	Assert(!str.empty());
-	return str[0] == '-' || str[1] == '/';
+	return str[0] == '-' || str[0] == '/';
 }
 
 template <class Main>
@@ -340,26 +340,28 @@ public:
 	void setCommand(const std::vector<pwn::string>& names, Command arg, const pwn::string& description)
 	{
 		const pwn::string first = names[0];
-		descriptions[first] = description;
-		aliases[first] = names;
+		commands.push_back(first);
 
 		BOOST_FOREACH(pwn::string name, names)
 		{
 			Assert( has(name) == false );
 			cmd[name] = arg;
+			descriptions[name] = description;
+			aliases[name] = names;
 		}
 	}
 
 	void setArgCommand(const std::vector<pwn::string>& names, CommandArg arg, const pwn::string& description)
 	{
 		const pwn::string first = names[0];
-		descriptions[first] = description;
-		aliases[first] = names;
+		commands.push_back(first);
 
 		BOOST_FOREACH(pwn::string name, names)
 		{
 			Assert( has(name) == false );
 			cmda[name] = arg;
+			descriptions[name] = description;
+			aliases[name] = names;
 		}
 	}
 
@@ -372,6 +374,50 @@ public:
 	{
 		const bool missing = cmd.find(name) == cmd.end() && cmda.find(name)==cmda.end();
 		return !missing;
+	}
+
+	void displayCommands()
+	{
+		BOOST_FOREACH(const pwn::string& n, commands)
+		{
+			cout << n << " ";
+		}
+		cout << std::endl;
+	}
+
+	const pwn::string displayAliases(const pwn::string& id) const
+	{
+		AliasMap::const_iterator it = aliases.find(id);
+		if( it == aliases.end() ) return "";
+		std::stringstream ss;
+		BOOST_FOREACH(const pwn::string& n, it->second)
+		{
+			ss << n << " ";
+		}
+		return ss.str();
+	}
+
+	const pwn::string displayDescription(const pwn::string& id) const
+	{
+		DescriptionMap::const_iterator it = descriptions.find(id);
+		if( it == descriptions.end() ) return "";
+		return it->second;
+	}
+
+	const pwn::string displayUsage(const pwn::string& name) const
+	{
+		if( cmd.find(name) != cmd.end() )
+		{
+			return name;
+		}
+		else if( cmda.find(name) != cmda.end() )
+		{
+			return name + " ARG";
+		}
+		else
+		{
+			return "";
+		}
 	}
 
 	void handle(int argc, char* argv[], Main* main)
@@ -432,6 +478,7 @@ private:
 	CommandArg cmdmain;
 	AliasMap aliases;
 	DescriptionMap descriptions;
+	std::vector<pwn::string> commands;
 	int errors;
 };
 
@@ -487,6 +534,27 @@ int CommandArg_AnimDir(App* app, ConsoleArguments<App>* args, const pwn::string&
 	return 0;
 }
 
+int CommandArg_DisplayHelp(App* app, ConsoleArguments<App>* args, const pwn::string& val)
+{
+	const pwn::string usage = args->displayUsage(val);
+
+	if( usage.empty() )
+	{
+		std::cerr << "Unknown command " << val << std::endl;
+		args->stop = true;
+		return 1;
+	}
+
+	std::cout << "Usage: " << usage << std::endl
+		<< "Aliases: ";
+	args->displayAliases(val);
+	std::cout << std::endl
+		<< "Description: " << args->displayDescription(val) << std::endl;
+
+	args->stop = true;
+	return 0;
+}
+
 int CommandArg_OutDir(App* app, ConsoleArguments<App>* args, const pwn::string& val)
 {
 	app->arg.outdir = val;
@@ -536,9 +604,17 @@ int CommandArg_ForceFormat(App* app, ConsoleArguments<App>* args, const pwn::str
 		return 1;
 	}
 }
+
 int Command_DontStopOnErrors(App* app, ConsoleArguments<App>* args)
 {
 	args->stopOnError = false;
+	return 0;
+}
+
+int Command_DisplayArguments(App* app, ConsoleArguments<App>* args)
+{
+	args->displayCommands();
+	args->stop = true;
 	return 0;
 }
 
@@ -592,12 +668,15 @@ void App::handle(int argc, char* argv[])
 	args.setArgCommand(Strings() << "format" << "force" << "f", CommandArg_ForceFormat, "");
 	args.setArgCommand(Strings() << "run-file" << "run" << "F", CommandArg_RunFile, "forces a file to run, needed if the path starts with / or -");
 
+	args.setArgCommand(Strings() << "more" << "help-about" << "H", CommandArg_DisplayHelp, "Shows help about a command");
+
 	args.setCommand(Strings() << "showstat" << "stat" << "S", Command_RunStatistics, "Show statistics for the mesh");
 	args.setCommand(Strings() << "info" << "i", Command_MeshInfo, "Show mesh informatio");
 	args.setCommand(Strings() << "nowrite" << "w", Command_DontWriteResult, "Only run logic, dont write the result");
 	args.setCommand(Strings() << "verbose" << "v", Command_Verbose, "Switch to verbose mode");
 	args.setCommand(Strings() << "keep" << "k", Command_Restore, "Keep the options for the last mesh");
 	args.setCommand(Strings() << "no-break-on-error" << "no-break" << "B", Command_DontStopOnErrors, "Forces convertion to run even after errors");
+	args.setCommand(Strings() << "help" << "h", Command_DisplayArguments, "Shows a list of commands");
 
 	args.setMain(CommandArg_RunFile);
 

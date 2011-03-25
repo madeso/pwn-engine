@@ -238,7 +238,8 @@ bool Convert(const pwn::string& argv0, const ConvertData& cd, const AnimationExt
 
 	if( cd.verbose ) cout << endl;
 
-	pwn::mesh::MoveTextures(&builder, cd.texturedir);
+	pwn::string texturedir = cd.texturedir == "@" ? SuggestTextureDirectory(inputfile) : cd.texturedir;
+	pwn::mesh::MoveTextures(&builder, texturedir);
 
 	pwn::mesh::Mesh mesh = builder.asMesh();
 	const pwn::uint32 validationErrors = mesh.validate(true);
@@ -426,33 +427,51 @@ public:
 
 		for(int i=1; i<argc; ++i)
 		{
-			if( IsArgument(argv[i]) )
+			try
 			{
-				const std::string name = pwn::core::TrimLeft(argv[i], "-/");
-				const std::string val = i+1<argc ? argv[i+1] : "";
-				CommandMap::iterator cmdi = cmd.find(name);
-				if( cmdi != cmd.end() )
+				if( IsArgument(argv[i]) )
 				{
-					errors += cmdi->second(main, this);
-				}
-				else
-				{
-					CommandArgMap::iterator cmdai = cmda.find(name);
-					if( cmdai != cmda.end() )
+					const std::string name = pwn::core::TrimLeft(argv[i], "-/");
+					const std::string val = i+1<argc ? argv[i+1] : "";
+					CommandMap::iterator cmdi = cmd.find(name);
+					if( cmdi != cmd.end() )
 					{
-						errors += cmdai->second(main, this, val);
-						++i;
+						errors += cmdi->second(main, this);
 					}
 					else
 					{
-						std::cerr << "Unknown argument " << name << std::endl;
-						++errors;
+						CommandArgMap::iterator cmdai = cmda.find(name);
+						if( cmdai != cmda.end() )
+						{
+							errors += cmdai->second(main, this, val);
+							++i;
+						}
+						else
+						{
+							std::cerr << "Unknown argument " << name << std::endl;
+							++errors;
+						}
 					}
 				}
+				else
+				{
+					errors += cmdmain(main, this, argv[i]);
+				}
 			}
-			else
+			catch(const std::string& err)
 			{
-				errors += cmdmain(main, this, argv[i]);
+				std::cerr << err << std::endl;
+				++errors;
+			}
+			catch(const char* err)
+			{
+				std::cerr << err << std::endl;
+				++errors;
+			}
+			catch(...)
+			{
+				std::cerr << "Unknown error" << std::endl;
+				++errors;
 			}
 
 			if( stopOnError && errors > 0)
@@ -660,7 +679,7 @@ void App::handle(int argc, char* argv[])
 	ConsoleArguments<App> args;
 
 	args.setArgCommand(Strings() << "scale" << "s", CommandArg_Scale, "scales the loaded mesh");
-	args.setArgCommand(Strings() << "texturedir" << "tex" << "t", CommandArg_TextureDir, "sets the texture dir that will be used when loading");
+	args.setArgCommand(Strings() << "texturedir" << "tex" << "t", CommandArg_TextureDir, "sets the texture dir that will be used when loading, @ means meshfilename");
 	args.setArgCommand(Strings() << "animdir" << "anim" << "a", CommandArg_AnimDir, "sets the animation dir");
 	args.setArgCommand(Strings() << "outdir" << "out" << "o", CommandArg_OutDir, "sets the outdir where to place the result, defaults to meshdir");
 	args.setArgCommand(Strings() << "format" << "force" << "f", CommandArg_ForceFormat, "");

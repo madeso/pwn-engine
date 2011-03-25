@@ -124,7 +124,7 @@ namespace pwn
 					{
 						T t;
 						fs.read( reinterpret_cast<char*>(&t), sizeof(T));
-						if( fs.eof() ) throw "end of file...";
+						if( fs.good() == false) throw "bad file";
 						return t;
 					}
 
@@ -143,6 +143,7 @@ namespace pwn
 					Runner(const std::string& path)
 						: fs(path.c_str(), std::ios::binary)
 					{
+						if( fs.good() == false ) throw "failed to open " + path;
 					}
 
 					void run()

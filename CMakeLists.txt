@@ -23,6 +23,12 @@ set(SFMLDIR $ENV{SFMLDIR})
 #set(GMOCK_CMAKE_DEBUG ON)
 #set(PHYSFS_DEBUG ON)
 
+# force visual studio and the like to only have debug and release builds
+if(CMAKE_CONFIGURATION_TYPES)
+	set(CMAKE_CONFIGURATION_TYPES Debug Release)
+	set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING "Reset the configurations to what we need" FORCE)
+ endif()
+
 find_package(GoogleMock)
 find_package(PhysFS)
 find_package(Boost COMPONENTS filesystem system)

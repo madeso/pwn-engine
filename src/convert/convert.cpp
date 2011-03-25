@@ -546,9 +546,7 @@ int CommandArg_DisplayHelp(App* app, ConsoleArguments<App>* args, const pwn::str
 	}
 
 	std::cout << "Usage: " << usage << std::endl
-		<< "Aliases: ";
-	args->displayAliases(val);
-	std::cout << std::endl
+		<< "Aliases: " << args->displayAliases(val) << std::endl
 		<< "Description: " << args->displayDescription(val) << std::endl;
 
 	args->stop = true;

@@ -12,6 +12,7 @@
 
 #include "WavefrontObj.hpp"
 #include "3ds.hpp"
+#include "An8.hpp"
 
 #include "MilkshapeAscii.hpp"
 #include "MilkshapeBinary.hpp"
@@ -108,6 +109,24 @@ public:
 	}
 };
 
+class InputFormat_An8
+	: public InputFormat
+{
+public:
+	~InputFormat_An8()
+	{
+	}
+	const std::string getName() const
+	{
+		return "anim8or";
+	}
+	void load(pwn::mesh::Builder* builder, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
+	{
+		pwn::convert::an8::read(builder, inputfile);
+		builder->buildNormals();
+	}
+};
+
 class InputFormat_Ms3d_binary
 	: public InputFormat
 {
@@ -132,6 +151,7 @@ const InputFormat* SuggestFormat(const pwn::string& ext)
 	else if( ext == ".3ds" ) return GetInputFormat<InputFormat_Studio3ds>();
 	else if( ext == ".txt" ) return GetInputFormat<InputFormat_Ms3d_ascii>();
 	else if( ext == ".ms3d" ) return GetInputFormat<InputFormat_Ms3d_binary>();
+	else if( ext == ".an8" ) return GetInputFormat<InputFormat_An8>();
 	else return 0;
 }
 

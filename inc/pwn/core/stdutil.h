@@ -24,6 +24,24 @@ namespace pwn
 			std::swap(*result, *last);
 			from->pop_back();
 		}
+
+		template<typename T>
+		class Vec
+		{
+		public:
+			Vec& operator<<(const T& t)
+			{
+				ts.push_back(t);
+				return *this;
+			}
+
+			operator std::vector<T>()
+			{
+				return ts;
+			}
+
+			std::vector<T> ts;
+		};
 	}
 }
 

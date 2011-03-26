@@ -1,7 +1,12 @@
 #include "An8.hpp"
 
 #include <vector>
+#include <map>
 #include <fstream>
+#include <boost/shared_ptr.hpp>
+#include <boost/lexical_cast.hpp>
+#include <pwn/core/stdutil.h>
+#include <pwn/number.h>
 
 namespace pwn
 {
@@ -203,7 +208,157 @@ namespace pwn
 				}
 			};
 
-			void read(pwn::mesh::Builder* builder, const pwn::string& file)
+			class TermReader
+			{
+			public:
+				TermReader(const std::vector<Term>& t)
+					: terms(t)
+					, index(0)
+					, count(t.size())
+				{
+				}
+
+				Term read()
+				{
+					if( eof() ) throw "end of file";
+					const Term t = terms[index];
+					++index;
+					return t;
+				}
+
+				bool peek(Term* term, unsigned int steps=1) const
+				{
+					if( index+steps >= count ) return false;
+					else
+					{
+						*term = terms[index+steps];
+						return true;
+					}
+				}
+
+				bool eof() const
+				{
+					return index >= count;
+				}
+
+			private:
+				std::vector<Term> terms;
+				std::size_t index;
+				std::size_t count;
+			};
+
+			class Child;
+			typedef boost::shared_ptr<Child> ChildPtr;
+
+			class Child
+			{
+			public:
+				explicit Child(const pwn::string& n="")
+					: name(n)
+				{
+				}
+
+				pwn::string getString(size_t i=0) const
+				{
+					return values[i];
+				}
+				pwn::real getNumber(size_t i=0) const
+				{
+					return boost::lexical_cast<pwn::real>(getString(i));
+				}
+
+				const pwn::string& getName() const
+				{
+					return name;
+				}
+
+				void addValue(const std::string& val)
+				{
+					values.push_back(val);
+				}
+
+				void addChild(ChildPtr child)
+				{
+					const pwn::string name = child->getName();
+					ChildMap::iterator r = childs.find(name);
+					
+					ChildList& list = (r != childs.end()) ? r->second // if we found one, get a reference to the list
+						: childs.insert(ChildMap::value_type(name, ChildList())).first->second; // if not create one and get the reference
+					list.push_back(child);
+				}
+				
+				ChildPtr getChild(const pwn::string& name)
+				{
+					ChildMap::iterator r = childs.find(name);
+					if( r == childs.end() ) throw "child not found";
+					if( r->second.size() != 1 ) throw "no unique child";
+					return r->second[0];
+				}
+
+				bool hasChild(const pwn::string& name) const
+				{
+					ChildMap::const_iterator r = childs.find(name);
+					return r != childs.end();
+				}
+
+				ChildPtr getChild(const std::vector<pwn::string>& names)
+				{
+					ChildPtr ch = getChild(names[0]);
+					for(std::size_t i=1; i<names.size(); ++i)
+					{
+						ch = ch->getChild(names[i]);
+					}
+					return ch;
+				}
+			private:
+				typedef std::vector<std::string> ValueList;
+				typedef std::vector<ChildPtr> ChildList;
+				typedef std::map<pwn::string, ChildList> ChildMap;
+
+				ChildMap childs;
+				ValueList values;
+				pwn::string name;
+			};
+
+			void ParseChildren(ChildPtr child, TermReader* tr)
+			{
+				Term t(Term::Begin);
+				bool searchValues = true;
+				while(tr->peek(&t) && t.type != Term::End)
+				{
+					switch(t.type)
+					{
+					case Term::Ident:
+						{
+							ChildPtr c(new Child(t.value));
+							if( tr->read().type != Term::Begin ) throw "Syntax error, expecting a BEGIN";
+							ParseChildren(c, tr);
+							if( tr->read().type != Term::End ) throw "Syntax error, expecting a END";
+						}
+						break;
+					case Term::Number:
+						if( searchValues == false ) throw "Syntax error, not expecting a Number";
+						child->addValue(t.value);
+						break;
+					case Term::String:
+						if( searchValues == false ) throw "Syntax error, not expecting a String";
+						child->addValue(t.value);
+						break;
+					case Term::Begin:
+						throw "Syntax error, not expecting a BEGIN";
+						break;
+					}
+				}
+			}
+
+			ChildPtr Parse(TermReader* tr)
+			{
+				ChildPtr ptr(new Child());
+				ParseChildren(ptr, tr);
+				return ptr;
+			}
+
+			ChildPtr Load(const pwn::string& file)
 			{
 				std::ifstream f(file.c_str());
 				if( f.good() == false ) throw "failed to open file";
@@ -214,6 +369,18 @@ namespace pwn
 					lex.on(c);
 				}
 				lex.complete();
+
+				TermReader tr(lex.terms);
+				return Parse(&tr);
+			}
+
+			typedef core::Vec<pwn::string> SVec;
+
+			void read(pwn::mesh::Builder* builder, const pwn::string& path)
+			{
+				ChildPtr file = Load(path);
+				const pwn::string version = file->getChild(SVec() << "header" << "version")->getString();
+				const pwn::string build = file->getChild(SVec() << "header" << "build")->getString();
 			}
 		}
 	}

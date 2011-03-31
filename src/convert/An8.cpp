@@ -600,21 +600,114 @@ namespace pwn
 				return r;
 			}
 
-			void read(pwn::mesh::Builder* builder, const pwn::string& path)
+			struct Color
 			{
-				ChildPtr file = Load(path);
-				const pwn::string objectName = "sphere";
+				pwn::math::vec3 rgb;
+				pwn::string texture;
+			};
 
+			Color ExtractColor(ChildPtr m)
+			{
+				Color c;
+				ChildPtr rgb = m->getChild("rgb");
+				c.rgb = pwn::math::vec3(rgb->getNumber(0)/255, rgb->getNumber(1)/255, rgb->getNumber(2)/255);
+				if( m->hasChild("texturename") )
+				{
+					c.texture = m->getChild("texturename")->getString(0);
+				}
+				return c;
+			}
+
+			struct Material
+			{
+				pwn::string name;
+				Color ambiant;
+				Color diffuse;
+				Color specular;
+			};
+
+			Material ExtractMaterial(ChildPtr ma)
+			{
+				Material m;
+				m.name = ma->getString(0);
+
+				ChildPtr s = ma->getChild("surface");
+				m.ambiant = ExtractColor(s->getChild("ambiant"));
+				m.diffuse = ExtractColor(s->getChild("diffuse"));
+				m.specular = ExtractColor(s->getChild("specular"));
+
+				return m;
+			}
+
+			struct Object
+			{
+				std::vector<Mesh> meshes;
+				std::vector<Material> materials;
+				pwn::string name;
+			};
+
+			Object ExtractObject(ChildPtr o)
+			{
+				Object r;
+				r.name = o->getString(0);
+				BOOST_FOREACH(ChildPtr m, o->getChilds("mesh"))
+				{
+					r.meshes.push_back(ExtractMesh(m));
+				}
+				BOOST_FOREACH(ChildPtr m, o->getChilds("material"))
+				{
+					r.materials.push_back(ExtractMaterial(m));
+				}
+				return r;
+			}
+
+			struct File
+			{
+				std::vector<Object> objects;
+				std::map<pwn::string, pwn::string> textures;
+
+				Object getObject(const pwn::string objectName) const
+				{
+					BOOST_FOREACH(const Object& o, objects)
+					{
+						if( o.name == objectName )
+						{
+							return o;
+						}
+					}
+					Throw(core::Str() << "Unable to find object " << objectName);
+					return Object();
+				}
+			};
+
+			std::map<pwn::string, pwn::string> ExtractTextures(ChildPtr file)
+			{
+				std::map<pwn::string, pwn::string> r;
+				BOOST_FOREACH(ChildPtr c, file->getChilds("texture"))
+				{
+					r[c->getString(0)] = c->getChild("file")->getString(0);
+				}
+				return r;
+			}
+
+			File ExtractFile(ChildPtr file)
+			{
+				File r;
+				r.textures = ExtractTextures(file);
 				BOOST_FOREACH(ChildPtr c, file->getChilds("object"))
 				{
-					if( c->getString(0) != objectName ) continue;
-					std::vector<Mesh> meshes;
-
-					BOOST_FOREACH(ChildPtr m, c->getChilds("mesh"))
-					{
-						meshes.push_back(ExtractMesh(m));
-					}
+					r.objects.push_back(ExtractObject(c));
 				}
+				return r;
+			}
+
+			void read(pwn::mesh::Builder* builder, const pwn::string& path)
+			{
+				const pwn::string objectName = "sphere";
+
+				File f = ExtractFile(Load(path));
+				Object o = f.getObject(objectName);
+				o.name = "";
 			}
 		}
 	}

@@ -645,9 +645,11 @@ namespace pwn
 				}
 			}
 
-			void read(pwn::mesh::Builder* builder, const pwn::string& file)
+			void read(BuilderList* builders, const pwn::string& file)
 			{
-				hidden::Load(builder, file);
+				mesh::Builder builder;
+				hidden::Load(&builder, file);
+				builders->push_back(builder);
 				//builder->mBuilder.buildNormals();
 				//pwn::mesh::BuildNormals(builder->mesh());
 			}

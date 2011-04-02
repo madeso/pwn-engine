@@ -2,12 +2,12 @@
 #define PWN_CONVERT_MILKSHAPE_ASCII_HPP
 
 #include <pwn/string.h>
+#include "convert.hpp"
 
 namespace pwn
 {
 	namespace mesh
 	{
-		class Builder;
 		class Animation;
 	}
 
@@ -17,7 +17,7 @@ namespace pwn
 		{
 			namespace ascii
 			{
-				void Read(pwn::mesh::Builder* builder, pwn::mesh::Animation* animation, const pwn::string& file);
+				void Read(BuilderList* builders, pwn::mesh::Animation* animation, const pwn::string& file);
 			}
 		}
 	}

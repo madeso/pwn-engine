@@ -11,6 +11,7 @@ namespace pwn
 	{
 		struct Entry
 		{
+			Entry(const mesh::Builder& b, const string& n="");
 			pwn::mesh::Builder builder;
 			pwn::string name;
 		};

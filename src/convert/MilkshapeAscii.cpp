@@ -5,6 +5,7 @@
 #include <boost/lexical_cast.hpp>
 #include <fstream>
 #include <pwn/mesh/mesh.h>
+#include "MilkshapeAscii.hpp"
 
 namespace pwn
 {
@@ -259,7 +260,7 @@ namespace pwn
 					}
 				};
 
-				void Read(pwn::mesh::Builder* builder, pwn::mesh::Animation* animation, const pwn::string& path)
+				void Read(BuilderList* builders, pwn::mesh::Animation* animation, const pwn::string& path)
 				{
 					std::ifstream f(path.c_str());
 					if( !f ) throw "failed to open file";
@@ -268,8 +269,10 @@ namespace pwn
 					while(std::getline(f, line)) lines.push_back(line);
 					Runner runner(lines, 1.0f);
 					runner.run();
-					MilkshapeCommon::ExtractMeshDefinition(runner.model, builder);
+					mesh::Builder builder;
+					MilkshapeCommon::ExtractMeshDefinition(runner.model, &builder);
 					*animation = MilkshapeCommon::ExtractAnimation(runner.model);
+					builders->push_back(builder);
 				}
 			}
 		}

@@ -168,10 +168,12 @@ namespace pwn
 				while( f.peek() == ' ') f.ignore();
 			}
 
-			void read(pwn::mesh::Builder* builder, const std::string& file, VoidVoidCallback& cb)
+			void read(BuilderList* builders, const std::string& file, VoidVoidCallback& cb)
 			{
 				std::ifstream f(file.c_str());
 				if( false == f.good() ) throw "missing obj file";
+
+				mesh::Builder builder;
 
 				pwn::string currentMaterial = "";
 
@@ -199,14 +201,14 @@ namespace pwn
 						pwn::string x = Read(f);
 						pwn::string y = Read(f);
 						pwn::string z = Read(f);
-						builder->addPosition(pwn::mesh::BPoint(pwn::math::vec3(creal(x), creal(y), creal(z)), math::vec4(-1, -1, -1, -1)));
+						builder.addPosition(pwn::mesh::BPoint(pwn::math::vec3(creal(x), creal(y), creal(z)), math::vec4(-1, -1, -1, -1)));
 					}
 					else if (command == "vt" )
 					{
 						pwn::string x = Read(f);
 						pwn::string y = Read(f);
 						//Assert(0 && "do we need to add a 1-y when adding a textcoord?");
-						builder->addTextCoord(pwn::math::vec2(creal(x), creal(y)));
+						builder.addTextCoord(pwn::math::vec2(creal(x), creal(y)));
 
 
 						SkipWhitespace(f);
@@ -222,7 +224,7 @@ namespace pwn
 						pwn::string x = Read(f);
 						pwn::string y = Read(f);
 						pwn::string z = Read(f);
-						builder->addNormal(pwn::math::GetNormalized(pwn::math::vec3(creal(x), creal(y), creal(z))));
+						builder.addNormal(pwn::math::GetNormalized(pwn::math::vec3(creal(x), creal(y), creal(z))));
 					}
 					else if ( command == "f" )
 					{
@@ -231,12 +233,12 @@ namespace pwn
 						while( pwn::string("-0123456789/").find(f.peek()) != pwn::string::npos )
 						{
 							faces.push_back(cFaceIndex(Read(f),
-								builder->positions.size(),
-								builder->normals.size(),
-								builder->texcoords.size()));
+								builder.positions.size(),
+								builder.normals.size(),
+								builder.texcoords.size()));
 							SkipWhitespace(f);
 						}
-						builder->addFace(builder->getMaterial(currentMaterial),faces);
+						builder.addFace(builder.getMaterial(currentMaterial),faces);
 					}
 					else if ( command == "usemtl" )
 					{
@@ -244,7 +246,7 @@ namespace pwn
 					}
 					else if ( command == "mtllib" )
 					{
-						LoadMaterialLibrary(builder, file, Read(f));
+						LoadMaterialLibrary(&builder, file, Read(f));
 					}
 					else if( command == "g" )
 					{
@@ -263,6 +265,8 @@ namespace pwn
 						throw e;
 					}
 				}
+
+				builders->push_back(builder);
 			}
 		}
 	}

@@ -2,14 +2,10 @@
 #define PWN_CONVERT_WAVEFRONT_OBJ_HPP
 
 #include <string>
+#include "convert.hpp"
 
 namespace pwn
 {
-	namespace mesh
-	{
-		class Builder;
-	}
-
 	namespace convert
 	{
 		namespace obj
@@ -18,7 +14,7 @@ namespace pwn
 			{
 				virtual void perform() = 0;
 			};
-			void read(pwn::mesh::Builder* builder, const std::string& file, VoidVoidCallback& cb);
+			void read(BuilderList* builders, const std::string& file, VoidVoidCallback& cb);
 		}
 	}
 }

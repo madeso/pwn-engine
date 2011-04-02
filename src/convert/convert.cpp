@@ -28,6 +28,12 @@ namespace pwn
 {
 	namespace convert
 	{
+		Entry::Entry(const mesh::Builder& b, const string& n)
+			: builder(b)
+			, name(n)
+		{
+		}
+
 		/** Writes a dot to std::out to display progress..
 		*/
 		struct WriteDotCallback : public pwn::convert::obj::VoidVoidCallback

@@ -776,14 +776,16 @@ namespace pwn
 				}
 			};
 
-			void read(pwn::mesh::Builder* builder, const pwn::string& path)
+			void read(BuilderList* builders, const pwn::string& path)
 			{
 				const pwn::string objectName = "sphere";
 
 				An8 a;
 				a.f = ExtractFile(Load(path));
 				a.o = a.f.getObject(objectName);
-				a.addToBuilder(builder);
+				mesh::Builder builder;
+				a.addToBuilder(&builder);
+				builders->push_back(builder);
 			}
 		}
 	}

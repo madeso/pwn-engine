@@ -4,6 +4,7 @@
 #include <boost/foreach.hpp>
 #include "MilkshapeCommon.hpp"
 #include <pwn/mesh/mesh.h>
+#include "MilkshapeBinary.hpp"
 
 namespace pwn
 {
@@ -338,7 +339,7 @@ namespace pwn
 					return model;
 				}
 
-				void Read(pwn::mesh::Builder* builder, pwn::mesh::Animation* animation, const string& meshpath)
+				void Read(BuilderList* builders, pwn::mesh::Animation* animation, const string& meshpath)
 				{
 					Model model;
 
@@ -346,8 +347,10 @@ namespace pwn
 					run.run();
 					model = ExtractModel(run);
 
-					MilkshapeCommon::ExtractMeshDefinition(model, builder);
+					mesh::Builder builder;
+					MilkshapeCommon::ExtractMeshDefinition(model, &builder);
 					*animation = MilkshapeCommon::ExtractAnimation(model);
+					builders->push_back(builder);
 				}
 			}
 		}

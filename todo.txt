@@ -23,8 +23,10 @@
 * console w/ lua/gamemonkey scripts
 * 3d debugging (wireframe, view skeleton, draw boundingbox, draw position, line etc)
 * add multiple textures and multiple instances to materials so that overiding & animating materials can be more easily supported
-* material effects, bump/normal map, animated textures, water
+ - material effects, bump/normal map, animated textures, water
 * start on component framework
+* gui code
+ - change key settings code
 * sound engine
 * level editor
 * scripting support for leveleditor, visual? point and click? gamemaker? labview? Google app inventor (http://en.wikipedia.org/wiki/Google_App_Inventor)?, http://en.wikipedia.org/wiki/Visual_programming_language
@@ -32,14 +34,18 @@
 * gui editor for components
 * character engine
  - character mechanics, modern approach to character animation, character scripting, animation state machines, animation blending
+ - test combo moves
+* rendering improvements
+ - ssao
+ - shadows
+ - improve rendering speed with portals
+* DEMO
 * find out if fse is needed, or if a scripting approach should be used instead
  - rewrite render.fse so that it doesn't use io code
  - scripting, settings & gui editor for fse
  - improve fse to support different "logical" paths
 * particle engine, check old notes
-* ssao
 * area support, camera effects(fse, shake...), scrips(enter, leave, onTick)
-* shadows
-* improve rendering speed with portals
 * ai base
 * pathfinding
+* option to blank/black out the other screen like xbmc does

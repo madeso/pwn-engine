@@ -9,6 +9,11 @@ namespace pwn
 		{
 		}
 
+		Rgba::Rgba(const Rgb& c, const real aa)
+			: r(c.r), g(c.g), b(c.b), a(aa)
+		{
+		}
+
 		Rgba::Rgba(const real ar, const real ag, const real ab)
 			: r(ar), g(ag), b(ab), a(1)
 		{

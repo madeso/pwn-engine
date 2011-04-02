@@ -7,9 +7,12 @@ namespace pwn
 {
 	namespace math
 	{
+		class Rgb;
+
 		class Rgba
 		{
 		public:
+			Rgba(const Rgb& rgb, const real a);
 			Rgba(const real r, const real g, const real b, const real a);
 			Rgba(const real r, const real g, const real b);
 			explicit Rgba(const real gray);

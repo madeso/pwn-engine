@@ -9,7 +9,8 @@
 #include <pwn/core/stdutil.h>
 #include <pwn/number.h>
 #include <pwn/core/str.h>
-#include <pwn/math/types.h>
+#include <pwn/math/operations.h>
+#include <pwn/mesh/builder.h>
 
 namespace pwn
 {
@@ -602,7 +603,11 @@ namespace pwn
 
 			struct Color
 			{
-				pwn::math::vec3 rgb;
+				Color()
+					: rgb(0,0,0)
+				{
+				}
+				pwn::math::Rgb rgb;
 				pwn::string texture;
 			};
 
@@ -610,7 +615,7 @@ namespace pwn
 			{
 				Color c;
 				ChildPtr rgb = m->getChild("rgb");
-				c.rgb = pwn::math::vec3(rgb->getNumber(0)/255, rgb->getNumber(1)/255, rgb->getNumber(2)/255);
+				c.rgb = pwn::math::Rgb(rgb->getNumber(0)/255, rgb->getNumber(1)/255, rgb->getNumber(2)/255);
 				if( m->hasChild("texturename") )
 				{
 					c.texture = m->getChild("texturename")->getString(0);
@@ -624,6 +629,7 @@ namespace pwn
 				Color ambiant;
 				Color diffuse;
 				Color specular;
+				//Color emissive;
 			};
 
 			Material ExtractMaterial(ChildPtr ma)
@@ -635,14 +641,17 @@ namespace pwn
 				m.ambiant = ExtractColor(s->getChild("ambiant"));
 				m.diffuse = ExtractColor(s->getChild("diffuse"));
 				m.specular = ExtractColor(s->getChild("specular"));
+				//m.emissive = ExtractColor(s->getChild("emissive"));
 
 				return m;
 			}
 
+			typedef std::map<pwn::string, Material> StringMaterialMap;
+
 			struct Object
 			{
 				std::vector<Mesh> meshes;
-				std::vector<Material> materials;
+				StringMaterialMap materials;
 				pwn::string name;
 			};
 
@@ -656,7 +665,8 @@ namespace pwn
 				}
 				BOOST_FOREACH(ChildPtr m, o->getChilds("material"))
 				{
-					r.materials.push_back(ExtractMaterial(m));
+					const Material mat = ExtractMaterial(m);
+					r.materials.insert( StringMaterialMap::value_type(mat.name, mat) );
 				}
 				return r;
 			}
@@ -701,13 +711,79 @@ namespace pwn
 				return r;
 			}
 
+			class An8
+			{
+			public:
+				File f;
+				Object o;
+
+				typedef std::map<pwn::string, int> NameIntMap;
+				NameIntMap boundedMaterials;
+
+				int getOrAddMaterial(pwn::mesh::Builder* builder, const pwn::string& name)
+				{
+					NameIntMap::iterator i = boundedMaterials.find(name);
+					if( i != boundedMaterials.end() )
+					{
+						return i->second;
+					}
+					const int m = addMaterial(builder, name);
+					boundedMaterials.insert( NameIntMap::value_type(name, m) );
+					return m;
+				}
+
+				int addMaterial(pwn::mesh::Builder* builder, const pwn::string& name)
+				{
+					StringMaterialMap::iterator i = o.materials.find(name);
+					if( i == o.materials.end() ) Throw(Str() << "mesh uses unknown material " << name);
+					pwn::mesh::Material m;
+					const real alpha = 0;
+					m.ambient = pwn::math::Rgba(i->second.ambiant.rgb, alpha);
+					m.diffuse = pwn::math::Rgba(i->second.diffuse.rgb, alpha);
+					m.specular = pwn::math::Rgba(i->second.specular.rgb, alpha);
+					//m.emission = pwn::math::Rgba(i->second.emissive.rgb, alpha);
+					m.setTexture_Diffuse(i->second.diffuse.texture);
+					return builder->addMaterial(name, m);
+				}
+
+				void addToBuilder(pwn::mesh::Builder* b)
+				{
+					int pointBase = 0;
+					int textureBase = 0;
+					BOOST_FOREACH(const Mesh& m, o.meshes)
+					{
+						const math::vec4 noBone(0,0,0,0);
+						BOOST_FOREACH(const math::vec3& xyz, m.points)
+						{
+							b->addPosition(xyz, noBone);
+						}
+						BOOST_FOREACH(const math::vec2& uv, m.textcoords)
+						{
+							b->addTextCoord(uv);
+						}
+						BOOST_FOREACH(const Face& f, m.faces)
+						{
+							std::vector<pwn::mesh::BTriangle::Vertex> verts;
+							BOOST_FOREACH(const Point& p, f.points)
+							{
+								verts.push_back(pwn::mesh::BTriangle::Vertex(pointBase+p.point, 0, textureBase + p.texture));
+							}
+							b->addFace(getOrAddMaterial(b, m.materials[f.material]), verts);
+						}
+						pointBase += m.points.size();
+						textureBase += m.textcoords.size();
+					}
+				}
+			};
+
 			void read(pwn::mesh::Builder* builder, const pwn::string& path)
 			{
 				const pwn::string objectName = "sphere";
 
-				File f = ExtractFile(Load(path));
-				Object o = f.getObject(objectName);
-				o.name = "";
+				An8 a;
+				a.f = ExtractFile(Load(path));
+				a.o = a.f.getObject(objectName);
+				a.addToBuilder(builder);
 			}
 		}
 	}

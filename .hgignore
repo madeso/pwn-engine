@@ -16,3 +16,9 @@ glob:dist/-Debug/*
 glob:dist/-Release/*
 glob:dist/build/*
 glob:build/*
+glob:dist/sphere-o.txt
+glob:dist/sphere.an8
+glob:dist/sphere.mtl
+glob:dist/sphere.obj
+glob:dist/sphere.txt
+glob:dist/sphere/ground3.jpg

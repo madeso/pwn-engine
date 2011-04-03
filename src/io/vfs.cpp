@@ -1,6 +1,9 @@
 #include "vfs.hpp"
 #include <pwn/io/io.h>
 #include <boost/scoped_array.hpp>
+#include <pwn/core/stringutils.h>
+#include <pwn/core/str.h>
+#include <pwn/core/stringseperator.h>
 
 namespace pwn
 {
@@ -19,6 +22,7 @@ namespace pwn
 		WriteTarget::WriteTarget(const pwn::string& argv0, const pwn::string& target)
 		{
 			if( 0 == PHYSFS_init(argv0.c_str()) ) Error("init");
+			if( 0 == PHYSFS_addToSearchPath(target.c_str(), 0) ) Error("adding to searchpath");
 			set(target);
 		}
 
@@ -38,7 +42,7 @@ namespace pwn
 		{
 			if( file != 0 ) return;
 			const pwn::string action = isLoading?"read":"write";
-			Error(action + " " + path);
+			Error(action + " " + path + " can see " + core::StringSeperator().array().iterate(GetFileListing("")).toString());
 		}
 
 		VirtualFile::~VirtualFile()
@@ -182,6 +186,24 @@ namespace pwn
 		void FileReader::handleString(pwn::string& value)
 		{
 			value = file->readString();
+		}
+
+		std::vector<pwn::string> GetFileListing(const pwn::string& dir)
+		{
+			std::vector<pwn::string> files;
+
+			const pwn::string SEPERATOR = "/";
+			const bool shouldAddSeperator = !core::EndsWith(dir, SEPERATOR);
+			const pwn::string sep = shouldAddSeperator ? SEPERATOR : "";
+
+			char **rc = PHYSFS_enumerateFiles( dir.c_str() );
+			for (char **i = rc; *i != NULL; i++)
+			{
+				files.push_back( core::Str() << dir << sep << *i );
+			}
+			PHYSFS_freeList(rc);
+
+			return files;
 		}
 	}
 }

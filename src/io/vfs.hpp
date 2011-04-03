@@ -14,6 +14,8 @@ namespace pwn
 {
 	namespace io
 	{
+		std::vector<pwn::string> GetFileListing(const pwn::string& dir);
+
 		class VirtualFile
 			: boost::noncopyable
 		{

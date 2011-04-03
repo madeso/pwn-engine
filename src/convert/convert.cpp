@@ -18,6 +18,7 @@
 #include "MilkshapeAscii.hpp"
 #include "MilkshapeBinary.hpp"
 #include <pwn/assert.h>
+#include <pwn/core/vec.h>
 #include <pwn/core/stringutils.h>
 #include <pwn/core/consolearguments.h>
 #include <boost/lexical_cast.hpp>
@@ -352,22 +353,6 @@ namespace pwn
 			return ae;
 		}
 
-		class Strings
-		{
-		public:
-			Strings& operator<<(const pwn::string& s)
-			{
-				strings.push_back(s);
-				return *this;
-			}
-
-			operator std::vector<pwn::string>() const
-			{
-				return strings;
-			}
-			std::vector<pwn::string> strings;
-		};
-
 		class App
 		{
 		public:
@@ -536,6 +521,8 @@ namespace pwn
 		void App::handle(int argc, char* argv[])
 		{
 			core::ConsoleArguments<App> args;
+
+			typedef core::Vec<pwn::string> Strings;
 
 			args.setArgCommand(Strings() << "scale" << "s", CommandArg_Scale, "scales the loaded mesh");
 			args.setArgCommand(Strings() << "texturedir" << "tex" << "t", CommandArg_TextureDir, "sets the texture dir that will be used when loading, @ means meshfilename");

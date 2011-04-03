@@ -17,4 +17,6 @@ set ( convert_src
 	WavefrontObj.hpp
 	convert.cpp
 	convert.hpp
+	inputformat.cpp
+	inputformat.hpp
 )

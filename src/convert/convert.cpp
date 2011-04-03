@@ -55,7 +55,7 @@ namespace pwn
 		public:
 			virtual ~InputFormat() {}
 			virtual const std::string getName() const = 0;
-			virtual void load(BuilderList* builders, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const = 0;
+			virtual void load(BuilderList* builders, const std::vector<pwn::string>& subobjects, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const = 0;
 		};
 
 		template<class IF>
@@ -76,7 +76,7 @@ namespace pwn
 			{
 				return "wavefront obj";
 			}
-			void load(BuilderList* builders, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
+			void load(BuilderList* builders, const std::vector<pwn::string>& subobjects, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
 			{
 				WriteDotCallback wdc(verbose);
 				pwn::convert::obj::read(builders, inputfile, wdc);
@@ -94,7 +94,7 @@ namespace pwn
 			{
 				return "3d studio";
 			}
-			void load(BuilderList* builders, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
+			void load(BuilderList* builders, const std::vector<pwn::string>& subobjects, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
 			{
 				pwn::convert::studio3ds::read(builders, inputfile);
 			}
@@ -111,7 +111,7 @@ namespace pwn
 			{
 				return "milkshape ascii";
 			}
-			void load(BuilderList* builders, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
+			void load(BuilderList* builders, const std::vector<pwn::string>& subobjects, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
 			{
 				pwn::convert::milkshape::ascii::Read(builders, animation, inputfile);
 			}
@@ -128,9 +128,9 @@ namespace pwn
 			{
 				return "anim8or";
 			}
-			void load(BuilderList* builders, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
+			void load(BuilderList* builders, const std::vector<pwn::string>& subobjects, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
 			{
-				pwn::convert::an8::read(builders, inputfile);
+				pwn::convert::an8::read(builders, subobjects, inputfile);
 			}
 		};
 
@@ -145,7 +145,7 @@ namespace pwn
 			{
 				return "milkshape binary";
 			}
-			void load(BuilderList* builders, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
+			void load(BuilderList* builders, const std::vector<pwn::string>& subobjects, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
 			{
 				pwn::convert::milkshape::binary::Read(builders, animation, inputfile);
 			}
@@ -178,14 +178,14 @@ namespace pwn
 		 Supports: 3ds, obj, milkshape binary & milkshape ascii.
 		 Add support for x, collada, md2, md3, md5, an8, ogre mesh, dxf & blender
 		*/
-		bool Load(BuilderList* builders, pwn::mesh::Animation* animation, const pwn::string& inputfile, const InputFormat* formatOveride, bool verbose)
+		bool Load(BuilderList* builders, const std::vector<pwn::string>& subobjects, pwn::mesh::Animation* animation, const pwn::string& inputfile, const InputFormat* formatOveride, bool verbose)
 		{
 			const InputFormat* fileFormat = SuggestFormat(inputfile, formatOveride);
 
 			if(fileFormat)
 			{
 				if( verbose ) cout << "reading " << inputfile << " (" << fileFormat->getName() << ").." << std::endl;
-				fileFormat->load(builders, animation, inputfile, verbose);
+				fileFormat->load(builders, subobjects, animation, inputfile, verbose);
 				return true;
 			}
 			else
@@ -242,14 +242,21 @@ namespace pwn
 			bool writeResult;
 		};
 
-		bool Convert(const pwn::string& argv0, const ConvertData& cd, const AnimationExtract& animationsToExtract, const pwn::string& ainputfile, const InputFormat* formatOveride)
+		pwn::string CombineFilename(const pwn::string& name, const pwn::string& object)
+		{
+			if( object.empty() ) return name;
+			else if( object == name ) return name;
+			else return name + "-" + object;
+		}
+
+		bool Convert(const pwn::string& argv0, const ConvertData& cd, const AnimationExtract& animationsToExtract, const std::vector<pwn::string>& subobjects, const pwn::string& ainputfile, const InputFormat* formatOveride)
 		{
 			const pwn::string inputfile = GetAbsolutePath(ainputfile);
 			const pwn::string outdir =
 				cd.outdir.empty() ? SuggestOutDirectory(inputfile) : cd.outdir;
 			BuilderList builders;
 			pwn::mesh::Animation animation;
-			if( Load(&builders, &animation, inputfile, formatOveride, cd.verbose) == false ) return false;
+			if( Load(&builders, subobjects, &animation, inputfile, formatOveride, cd.verbose) == false ) return false;
 
 			BOOST_FOREACH(Entry& e, builders)
 			{
@@ -294,27 +301,30 @@ namespace pwn
 				if( cd.writeResult )
 				{
 					if( cd.verbose ) cout << "writing.." << endl;
+
+					pwn::string fname = CombineFilename(boost::filesystem::path(inputfile).stem(), name);
+
 					pwn::io::WriteTarget wt(argv0, outdir);
-					pwn::io::Write(mesh, boost::filesystem::path(inputfile).replace_extension("mesh").filename());
-				}
+					pwn::io::Write(mesh, fname + ".mesh");
 
-				BOOST_FOREACH(const pwn::mesh::AnimationInformation& ai, animationsToExtract)
-				{
-					pwn::mesh::Animation ani;
-					animation.subanim(ai, &ani);
-
-					pwn::string adir = cd.animdir;
-					if( adir.empty() )
+					BOOST_FOREACH(const pwn::mesh::AnimationInformation& ai, animationsToExtract)
 					{
-						adir = (
-							boost::filesystem::path(outdir)
-							/ boost::filesystem::path(inputfile).replace_extension().filename()
-							)
-							.directory_string();
-					};
+						pwn::mesh::Animation ani;
+						animation.subanim(ai, &ani);
 
-					pwn::io::WriteTarget wt(argv0, adir);
-					pwn::io::Write(ani, boost::filesystem::path(ai.name).replace_extension("anim").filename());
+						pwn::string adir = cd.animdir;
+						if( adir.empty() )
+						{
+							adir = (
+								boost::filesystem::path(outdir)
+								/ fname
+								)
+								.directory_string();
+						};
+
+						pwn::io::WriteTarget wt(argv0, adir);
+						pwn::io::Write(ani, boost::filesystem::path(ai.name).replace_extension("anim").filename());
+					}
 				}
 			}
 
@@ -557,6 +567,7 @@ namespace pwn
 			ConvertData old;
 			const InputFormat* formatOveride;
 			int errors;
+			std::vector<pwn::string> subobjects;
 
 			App()
 				: formatOveride(0)
@@ -655,6 +666,12 @@ namespace pwn
 			}
 		}
 
+		int CommandArg_AddSubObject(App* app, ConsoleArguments<App>* args, const pwn::string& val)
+		{
+			app->subobjects.push_back(val);
+			return 0;
+		}
+
 		int Command_DontStopOnErrors(App* app, ConsoleArguments<App>* args)
 		{
 			args->stopOnError = false;
@@ -678,7 +695,7 @@ namespace pwn
 				{
 					animations = LoadAnimations(animationfile);
 				}
-				Convert(args->argv0, app->arg, animations, file, app->formatOveride);
+				Convert(args->argv0, app->arg, animations, app->subobjects, file, app->formatOveride);
 			}
 			catch(const std::exception& ex)
 			{
@@ -703,6 +720,7 @@ namespace pwn
 			app->old = app->arg;
 			app->arg = ConvertData();
 			app->formatOveride = 0;
+			app->subobjects.clear();
 
 			return 0;
 		}
@@ -717,6 +735,7 @@ namespace pwn
 			args.setArgCommand(Strings() << "outdir" << "out" << "o", CommandArg_OutDir, "sets the outdir where to place the result, defaults to meshdir");
 			args.setArgCommand(Strings() << "format" << "force" << "f", CommandArg_ForceFormat, "");
 			args.setArgCommand(Strings() << "run-file" << "run" << "F", CommandArg_RunFile, "forces a file to run, needed if the path starts with / or -");
+			args.setArgCommand(Strings() << "object" << "obj" << "O", CommandArg_AddSubObject, "adds a subobject to be converted, if not set all will be converted");
 
 			args.setArgCommand(Strings() << "more" << "help-about" << "H", CommandArg_DisplayHelp, "Shows help about a command");
 
@@ -733,8 +752,7 @@ namespace pwn
 			args.handle(argc, argv,this);
 			errors = args.getErrors();
 		}
-
-}
+	}
 }
 
 int main(int argc, char* argv[])

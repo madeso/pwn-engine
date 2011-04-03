@@ -742,7 +742,8 @@ namespace pwn
 					m.diffuse = pwn::math::Rgba(i->second.diffuse.rgb, alpha);
 					m.specular = pwn::math::Rgba(i->second.specular.rgb, alpha);
 					//m.emission = pwn::math::Rgba(i->second.emissive.rgb, alpha);
-					m.setTexture_Diffuse(i->second.diffuse.texture);
+					pwn::string texname = i->second.diffuse.texture;
+					m.setTexture_Diffuse(f.textures[texname]);
 					return builder->addMaterial(name, m);
 				}
 
@@ -752,7 +753,7 @@ namespace pwn
 					int textureBase = 0;
 					BOOST_FOREACH(const Mesh& m, o.meshes)
 					{
-						const math::vec4 noBone(0,0,0,0);
+						const math::vec4 noBone(-1,-1,-1,-1);
 						BOOST_FOREACH(const math::vec3& xyz, m.points)
 						{
 							b->addPosition(xyz, noBone);
@@ -776,16 +777,35 @@ namespace pwn
 				}
 			};
 
-			void read(BuilderList* builders, const pwn::string& path)
+			std::vector<pwn::string> ExtractObjectNames(const File& f)
 			{
-				const pwn::string objectName = "sphere";
+				std::vector<pwn::string> r;
+				BOOST_FOREACH(const Object& o, f.objects)
+				{
+					r.push_back(o.name);
+				}
+				return r;
+			}
 
-				An8 a;
-				a.f = ExtractFile(Load(path));
-				a.o = a.f.getObject(objectName);
-				mesh::Builder builder;
-				a.addToBuilder(&builder);
-				builders->push_back(builder);
+			void read(BuilderList* builders, const std::vector<pwn::string>& subobjects, const pwn::string& path)
+			{
+				File f = ExtractFile(Load(path));
+
+				std::vector<pwn::string> subs = subobjects;
+				if( subs.empty() )
+				{
+					subs = ExtractObjectNames(f);
+				}
+
+				BOOST_FOREACH(pwn::string& objectName, subs)
+				{
+					An8 a;
+					a.f = f;
+					a.o = a.f.getObject(objectName);
+					mesh::Builder builder;
+					a.addToBuilder(&builder);
+					builders->push_back(Entry(builder, objectName));
+				}
 			}
 		}
 	}

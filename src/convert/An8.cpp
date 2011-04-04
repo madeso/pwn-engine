@@ -769,7 +769,8 @@ namespace pwn
 							{
 								verts.push_back(pwn::mesh::BTriangle::Vertex(pointBase+p.point, 0, textureBase + p.texture));
 							}
-							b->addFace(getOrAddMaterial(b, m.materials[f.material]), verts);
+							std::vector<pwn::mesh::BTriangle::Vertex> toadd(verts.rbegin(), verts.rend());
+							b->addFace(getOrAddMaterial(b, m.materials[f.material]), toadd);
 						}
 						pointBase += m.points.size();
 						textureBase += m.textcoords.size();

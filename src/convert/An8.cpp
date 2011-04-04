@@ -737,7 +737,7 @@ namespace pwn
 					StringMaterialMap::iterator i = o.materials.find(name);
 					if( i == o.materials.end() ) Throw(Str() << "mesh uses unknown material " << name);
 					pwn::mesh::Material m;
-					const real alpha = 0;
+					const real alpha = 1;
 					m.ambient = pwn::math::Rgba(i->second.ambiant.rgb, alpha);
 					m.diffuse = pwn::math::Rgba(i->second.diffuse.rgb, alpha);
 					m.specular = pwn::math::Rgba(i->second.specular.rgb, alpha);

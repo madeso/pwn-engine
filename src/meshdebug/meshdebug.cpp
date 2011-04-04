@@ -1,6 +1,6 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/info_parser.hpp>
-
+#include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
 #include <string>
 #include <iostream>
@@ -32,6 +32,13 @@ namespace pwn
 			void handle(int argc, char* argv[]);
 		};
 
+		template<typename T>
+		T& operator<<(T& t, const math::Rgba& r)
+		{
+			t << "(" << r.r << " " << r.g << " " << r.b << " " << r.a << ")";
+			return t;
+		}
+
 		void DumpData(const mesh::Mesh& mesh, pwn::string target)
 		{
 			std::ofstream f(target.c_str());
@@ -39,11 +46,48 @@ namespace pwn
 
 			const mesh::VertexData& d = mesh.data();
 			f << d.getCount() << " points" << std::endl;
-
 			for(int i=0; i<d.getCount(); ++i)
 			{
 				mesh::Point p = d.getPoint(i);
-				f << i << std::endl << p.location << std::endl << p.textcoord << std::endl << p.bone << std::endl << std::endl;
+				f << i << std::endl << p.location << std::endl << p.normal << std::endl << p.textcoord << std::endl << p.bone << std::endl << std::endl;
+			}
+
+			f << "--------------------------------------------------------------------------------------" << std::endl << std::endl;
+
+			f << "bones" << std::endl;
+			BOOST_FOREACH(const pwn::mesh::Bone& b, mesh.getBones())
+			{
+				f << b.name << std::endl
+					<< b.rot << std::endl;
+				if( b.hasParent() )
+					f << b.getParent();
+				else 
+					f << "no parent";
+				f << std::endl << std::endl;
+			}
+
+			f << "--------------------------------------------------------------------------------------" << std::endl << std::endl;
+
+			f << "Faces: " << std::endl;
+			BOOST_FOREACH(const pwn::mesh::Mesh::TriangleMap::value_type& tm, mesh.getTriangles())
+			{
+				f << "using material: " << tm.first << std::endl
+					<< "---------------------------" << std::endl;
+				BOOST_FOREACH(const pwn::mesh::Triangle& t, tm.second)
+				{
+					f << t.v0 << std::endl
+						<< t.v1 << std::endl
+						<< t.v2 << std::endl
+						<< std::endl;
+				}
+			}
+
+			f << "--------------------------------------------------------------------------------------" << std::endl << std::endl;
+
+			f << "Materials: " << std::endl;
+			BOOST_FOREACH(const pwn::mesh::Material& m, mesh.getMaterials())
+			{
+				f << m.ambient << std::endl << m.diffuse << std::endl << m.specular << std::endl << m.emission << std::endl << m.shininess << std::endl << m.texture_diffuse << std::endl << std::endl;
 			}
 		}
 

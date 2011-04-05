@@ -430,7 +430,7 @@ namespace pwn
 						else
 						{
 							const math::vec3 pos = positions[c.location].location;
-							const math::vec2 text = texcoords[c.texture];
+							const math::vec2 text = texcoords.empty() ? math::vec2(0,0) : texcoords[c.texture];
 							const math::vec3 normal = normals.empty() == false ? normals[c.normal] : math::vec3(0,0,0);
 							Triangle::VertexIndex ind = posv.size();
 							posv.push_back(pos);

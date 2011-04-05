@@ -96,7 +96,7 @@ namespace pwn
 				Lexer()
 					: state(sNone)
 					, line(1)
-					, ignoreChar(false)
+					, ignoreChar(0)
 					, inComment(false)
 				{
 				}
@@ -159,7 +159,7 @@ namespace pwn
 						}
 						break;
 					case sString:
-						if( ignoreChar )
+						if( ignoreChar>0 || ignoreChar==-1 )
 						{
 							switch(c)
 							{
@@ -176,16 +176,27 @@ namespace pwn
 								memory += '\\';
 								break;
 							default:
-								Throw(Str() << "(" << line << ") unknown escape " << c);
+								if( IsNumber(c) )
+								{
+									if( ignoreChar == -1 )
+									{
+										ignoreChar = 3;
+									}
+								}
+								else
+								{
+									Throw(Str() << "(" << line << ") unknown escape " << c);
+								}
 								break;
 							}
-							ignoreChar = false;
+							if( ignoreChar == -1 ) ignoreChar = 0;
+							else --ignoreChar;
 						}
 						else
 						{
 							if( c == '\\' )
 							{
-								ignoreChar = true;
+								ignoreChar = -1;
 							}
 							else if ( c == '\"' )
 							{
@@ -269,7 +280,7 @@ namespace pwn
 
 				std::vector<Term> terms;
 			private:
-				bool ignoreChar;
+				int ignoreChar; // -1 means ignore one character and thats it, bigger than 0 is a countdown to stop ignoring, 0 means no ignore
 				State state;
 				pwn::string memory;
 
@@ -595,7 +606,10 @@ namespace pwn
 			{
 				Mesh r;
 				r.points = ExtractPoints(m->getChild("points"));
-				r.textcoords = ExtractTextcoords(m->getChild("texcoords"));
+				if( m->hasChild("texcoords") )
+				{
+					r.textcoords = ExtractTextcoords(m->getChild("texcoords"));
+				}
 				r.faces = ExtractFaces(m->getChild("faces"));
 				r.materials = ExtractMaterials(m->getChild("materiallist"));
 				return r;
@@ -605,6 +619,10 @@ namespace pwn
 			{
 				Color()
 					: rgb(0,0,0)
+				{
+				}
+				Color(const math::Rgba& r)
+					: rgb(r.r, r.g, r.b)
 				{
 				}
 				pwn::math::Rgb rgb;
@@ -629,7 +647,8 @@ namespace pwn
 				Color ambiant;
 				Color diffuse;
 				Color specular;
-				//Color emissive;
+				Color emissive;
+				real alpha;
 			};
 
 			Material ExtractMaterial(ChildPtr ma)
@@ -637,11 +656,14 @@ namespace pwn
 				Material m;
 				m.name = ma->getString(0);
 
+				const pwn::mesh::Material d;
+
 				ChildPtr s = ma->getChild("surface");
 				m.ambiant = ExtractColor(s->getChild("ambiant"));
 				m.diffuse = ExtractColor(s->getChild("diffuse"));
-				m.specular = ExtractColor(s->getChild("specular"));
-				//m.emissive = ExtractColor(s->getChild("emissive"));
+				m.specular = s->hasChild("specular") ? ExtractColor(s->getChild("specular")) : d.specular;
+				m.alpha = s->hasChild("alpha") ? s->getChild("alpha")->getNumber(0)/255.0f : 1.0f;
+				m.emissive = s->hasChild("emissive") ? ExtractColor(s->getChild("emissive")) : d.emission;
 
 				return m;
 			}
@@ -655,14 +677,23 @@ namespace pwn
 				pwn::string name;
 			};
 
+			void ExtractMeshOnObject(Object& r, ChildPtr o, const pwn::string& type)
+			{
+				if( o->hasChild(type) )
+				{
+					BOOST_FOREACH(ChildPtr m, o->getChilds(type))
+					{
+						r.meshes.push_back(ExtractMesh(m));
+					}
+				}
+			}
+
 			Object ExtractObject(ChildPtr o)
 			{
 				Object r;
 				r.name = o->getString(0);
-				BOOST_FOREACH(ChildPtr m, o->getChilds("mesh"))
-				{
-					r.meshes.push_back(ExtractMesh(m));
-				}
+				ExtractMeshOnObject(r, o, "mesh");
+				ExtractMeshOnObject(r, o, "subdivision");
 				BOOST_FOREACH(ChildPtr m, o->getChilds("material"))
 				{
 					const Material mat = ExtractMaterial(m);
@@ -693,9 +724,12 @@ namespace pwn
 			std::map<pwn::string, pwn::string> ExtractTextures(ChildPtr file)
 			{
 				std::map<pwn::string, pwn::string> r;
-				BOOST_FOREACH(ChildPtr c, file->getChilds("texture"))
+				if( file->hasChild("texture") )
 				{
-					r[c->getString(0)] = c->getChild("file")->getString(0);
+					BOOST_FOREACH(ChildPtr c, file->getChilds("texture"))
+					{
+						r[c->getString(0)] = c->getChild("file")->getString(0);
+					}
 				}
 				return r;
 			}
@@ -737,11 +771,11 @@ namespace pwn
 					StringMaterialMap::iterator i = o.materials.find(name);
 					if( i == o.materials.end() ) Throw(Str() << "mesh uses unknown material " << name);
 					pwn::mesh::Material m;
-					const real alpha = 1;
+					const real alpha = i->second.alpha;
 					m.ambient = pwn::math::Rgba(i->second.ambiant.rgb, alpha);
 					m.diffuse = pwn::math::Rgba(i->second.diffuse.rgb, alpha);
 					m.specular = pwn::math::Rgba(i->second.specular.rgb, alpha);
-					//m.emission = pwn::math::Rgba(i->second.emissive.rgb, alpha);
+					m.emission = pwn::math::Rgba(i->second.emissive.rgb, alpha);
 					pwn::string texname = i->second.diffuse.texture;
 					m.setTexture_Diffuse(f.textures[texname]);
 					return builder->addMaterial(name, m);

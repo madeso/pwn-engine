@@ -734,6 +734,45 @@ namespace pwn
 				return r;
 			}
 
+			math::quat ExtractQuaternion(ChildPtr c)
+			{
+				return math::quat(c->getNumber(0), c->getNumber(1), c->getNumber(2), c->getNumber(3));
+			}
+
+			math::mat44 ExtractBase(ChildPtr owner, const pwn::string& name)
+			{
+				if( owner->hasChild(name) == false) return math::mat44Identity();
+				ChildPtr c = owner->getChild(name);
+				ChildPtr o = c->getChild("origin");
+				const math::vec3 origin(o->getNumber(0), o->getNumber(1), o->getNumber(2));
+				const math::quat orientation = ExtractQuaternion( c->getChild("orientation") );
+				return math::mat44helper(math::mat44Identity()).rotate(orientation).translate(-origin).mat;
+			}
+
+			struct NamedObject
+			{
+				pwn::string name;
+				pwn::string object;
+				math::mat44 base;
+				std::vector<pwn::string> weightedby;
+			};
+
+			NamedObject ExtractNamedObject(ChildPtr n)
+			{
+				NamedObject r;
+				r.name = n->getString(0);
+				r.object = n->getChild("name")->getString(0);
+				r.base = ExtractBase(n, "base");
+				if( n->hasChild("weightedby") )
+				{
+					BOOST_FOREACH(ChildPtr c, n->getChilds("weightedby"))
+					{
+						r.weightedby.push_back(c->getString(0));
+					}
+				}
+				return r;
+			}
+
 			struct Bone
 			{
 				Bone()
@@ -746,12 +785,8 @@ namespace pwn
 				math::quat orientation;
 				Influence influence;
 				std::vector<Bone> childs;
+				std::vector<NamedObject> objects;
 			};
-
-			math::quat ExtractQuaternion(ChildPtr c)
-			{
-				return math::quat(c->getNumber(0), c->getNumber(1), c->getNumber(2), c->getNumber(3));
-			}
 
 			Bone ExtractBone(ChildPtr bone)
 			{
@@ -765,6 +800,13 @@ namespace pwn
 					BOOST_FOREACH(ChildPtr s, bone->getChilds("bone") )
 					{
 						r.childs.push_back(ExtractBone(s));
+					}
+				}
+				if( bone->hasChild("namedobject") )
+				{
+					BOOST_FOREACH(ChildPtr n, bone->getChilds("namedobject"))
+					{
+						r.objects.push_back(ExtractNamedObject(n));
 					}
 				}
 				return r;

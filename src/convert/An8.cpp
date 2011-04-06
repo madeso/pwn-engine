@@ -702,10 +702,93 @@ namespace pwn
 				return r;
 			}
 
+			struct Influence
+			{
+				Influence()
+					: center0(0)
+					, inRadius0(0)
+					, outRadius0(0)
+					, center1(0)
+					, inRadius1(0)
+					, outRadius1(0)
+
+				{
+				}
+				pwn::real center0; //The location along the bone of the center of the lower end of the influence volume.
+				pwn::real inRadius0; //The radius of the inner layer at center0.
+				pwn::real outRadius0; //The radius of the outer layer at center0.
+				pwn::real center1; //The location along the bone of the center of the uppper end of the influence volume.
+				pwn::real inRadius1; //The radius of the inner layer at center1.
+				pwn::real outRadius1; //The radius of the outer layer at center1.
+			};
+
+			Influence ExtractInfluence(ChildPtr c)
+			{
+				Influence r;
+				r.center0 = c->getNumber(0);
+				r.inRadius0 = c->getNumber(1);
+				r.outRadius0 = c->getNumber(2);
+				r.center1 = c->getNumber(3);
+				r.inRadius1 = c->getNumber(4);
+				r.outRadius1 = c->getNumber(5);
+				return r;
+			}
+
+			struct Bone
+			{
+				Bone()
+					: length(0)
+					, orientation( math::qIdentity() )
+				{
+				}
+				pwn::string name;
+				pwn::real length;
+				math::quat orientation;
+				Influence influence;
+				std::vector<Bone> childs;
+			};
+
+			math::quat ExtractQuaternion(ChildPtr c)
+			{
+				return math::quat(c->getNumber(0), c->getNumber(1), c->getNumber(2), c->getNumber(3));
+			}
+
+			Bone ExtractBone(ChildPtr bone)
+			{
+				Bone r;
+				r.name = bone->getString(0);
+				r.length = bone->getChild("length")->getNumber(0);
+				if( bone->hasChild("influence") ) r.influence = ExtractInfluence(bone->getChild("influence"));
+				if( bone->hasChild("orientation") ) r.orientation = ExtractQuaternion(bone->getChild("orientation"));
+				if( bone->hasChild("bone") )
+				{
+					BOOST_FOREACH(ChildPtr s, bone->getChilds("bone") )
+					{
+						r.childs.push_back(ExtractBone(s));
+					}
+				}
+				return r;
+			}
+
+			struct Figure
+			{
+				pwn::string name;
+				Bone root;
+			};
+
+			Figure ExtractFigure(ChildPtr fig)
+			{
+				Figure r;
+				r.name = fig->getString(0);
+				r.root = ExtractBone(fig->getChild("bone"));
+				return r;
+			}
+
 			struct File
 			{
 				std::vector<Object> objects;
 				std::map<pwn::string, pwn::string> textures;
+				std::vector<Figure> figures;
 
 				Object getObject(const pwn::string objectName) const
 				{
@@ -741,6 +824,13 @@ namespace pwn
 				BOOST_FOREACH(ChildPtr c, file->getChilds("object"))
 				{
 					r.objects.push_back(ExtractObject(c));
+				}
+				if( file->hasChild("figure") )
+				{
+					BOOST_FOREACH(ChildPtr c, file->getChilds("figure"))
+					{
+						r.figures.push_back(ExtractFigure(c));
+					}
 				}
 				return r;
 			}

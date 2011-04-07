@@ -826,11 +826,76 @@ namespace pwn
 				return r;
 			}
 
+			struct FloatKey
+			{
+				int frame;
+				pwn::real value;
+			};
+
+			FloatKey ExtractFloatKey(ChildPtr c)
+			{
+				FloatKey r;
+				r.frame = c->getInt(0);
+				r.value = c->getNumber(1);
+				return r;
+			}
+
+			std::vector<FloatKey> ExtractFloatTrack(ChildPtr c)
+			{
+				std::vector<FloatKey> r;
+				BOOST_FOREACH(ChildPtr fk, c->getChilds("floatkey"))
+				{
+					r.push_back(ExtractFloatKey(fk));
+				}
+				return r;
+			}
+
+			struct JointAngle
+			{
+				pwn::string bone;
+				pwn::string axis;
+				std::vector<FloatKey> keys;
+			};
+
+			JointAngle ExtractJointAngle(ChildPtr c)
+			{
+				JointAngle r;
+				r.bone = c->getString(0);
+				r.axis = c->getString(1);
+				if( c->hasChild("track") ) r.keys = ExtractFloatTrack(c->getChild("track"));
+				return r;
+			}
+
+			struct Sequence
+			{
+				pwn::string name;
+				pwn::string figure;
+				int frames;
+				std::vector<JointAngle> joints;
+			};
+
+			Sequence ExtractSequence(ChildPtr c)
+			{
+				Sequence r;
+				r.name = c->getString(0);
+				if( c->hasChild("figure") ) r.figure = c->getChild("figure")->getString(0);
+				r.frames = c->getChild("frames")->getInt(0);
+				if( c->hasChild("jointangle") )
+				{
+					BOOST_FOREACH(ChildPtr j, c->getChilds("jointangle"))
+					{
+						r.joints.push_back(ExtractJointAngle(j));
+					}
+				}
+				return r;
+			}
+
 			struct File
 			{
 				std::vector<Object> objects;
 				std::map<pwn::string, pwn::string> textures;
 				std::vector<Figure> figures;
+				std::vector<Sequence> sequences;
 
 				Object getObject(const pwn::string objectName) const
 				{
@@ -872,6 +937,13 @@ namespace pwn
 					BOOST_FOREACH(ChildPtr c, file->getChilds("figure"))
 					{
 						r.figures.push_back(ExtractFigure(c));
+					}
+				}
+				if( file->hasChild("sequence") )
+				{
+					BOOST_FOREACH(ChildPtr c, file->getChilds("sequence"))
+					{
+						r.sequences.push_back(ExtractSequence(c));
 					}
 				}
 				return r;

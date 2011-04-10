@@ -10,6 +10,7 @@
 ------------- features:
 * tranform into vbos & vertex shaders (indexed vbo!)
  - an8 file loading
+ - transform to triangle strips?
  - transform to cpu updated vbos
  - add material shaders
  - support loading vertex & fragment from different files & preprocessor

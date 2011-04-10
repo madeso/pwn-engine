@@ -12,6 +12,8 @@
 #include <pwn/math/operations.h>
 #include <pwn/mesh/builder.h>
 
+#include <set>
+
 namespace pwn
 {
 	namespace convert
@@ -786,6 +788,20 @@ namespace pwn
 				Influence influence;
 				std::vector<Bone> childs;
 				std::vector<NamedObject> objects;
+				
+				const Bone* getBone(const pwn::string& s) const
+				{
+					if( name == s ) return this;
+					else
+					{
+						BOOST_FOREACH(const Bone& b, childs)
+						{
+							if( b.name == s ) return &b;
+						}
+						Throw(core::Str() << "Unabled to find bone " << s);
+						return 0;
+					}
+				}
 			};
 
 			Bone ExtractBone(ChildPtr bone)
@@ -909,6 +925,19 @@ namespace pwn
 					Throw(core::Str() << "Unable to find object " << objectName);
 					return Object();
 				}
+
+				Figure getFigure(const pwn::string objectName) const
+				{
+					BOOST_FOREACH(const Figure& o, figures)
+					{
+						if( o.name == objectName )
+						{
+							return o;
+						}
+					}
+					Throw(core::Str() << "Unable to find figure " << objectName);
+					return Figure();
+				}
 			};
 
 			std::map<pwn::string, pwn::string> ExtractTextures(ChildPtr file)
@@ -949,30 +978,60 @@ namespace pwn
 				return r;
 			}
 
+			struct BoneIndexes
+			{
+				typedef std::map<const Bone*, mesh::BoneIndex> BoneIndexMap;
+				BoneIndexMap map;
+
+				void add(const Bone* b, mesh::BoneIndex i)
+				{
+					map.insert(BoneIndexMap::value_type(b,i));
+				}
+
+				mesh::BoneIndex get(const Bone* b) const
+				{
+					BoneIndexMap::const_iterator r = map.find(b);
+					if( r == map.end() ) Throw(Str() << "Bone " << b->name << " has not been registred");
+					return r->second;
+				}
+			};
+
+			struct BoneAssignment
+			{
+				const Bone* parent;
+				BoneIndexes* indexes;
+				std::vector<const Bone*> bones;
+			};
+
+			math::vec4 GetBoneAssignment(BoneAssignment* a, const math::vec3& xyz)
+			{
+				const math::vec4 noBone(-1,-1,-1,-1);
+				if( !a ) return noBone;
+			}
+
 			class An8
 			{
 			public:
 				File f;
-				Object o;
 
 				typedef std::map<pwn::string, int> NameIntMap;
 				NameIntMap boundedMaterials;
 
-				int getOrAddMaterial(pwn::mesh::Builder* builder, const pwn::string& name)
+				int getOrAddMaterial(const Object& o, pwn::mesh::Builder* builder, const pwn::string& name)
 				{
 					NameIntMap::iterator i = boundedMaterials.find(name);
 					if( i != boundedMaterials.end() )
 					{
 						return i->second;
 					}
-					const int m = addMaterial(builder, name);
+					const int m = addMaterial(o, builder, name);
 					boundedMaterials.insert( NameIntMap::value_type(name, m) );
 					return m;
 				}
 
-				int addMaterial(pwn::mesh::Builder* builder, const pwn::string& name)
+				int addMaterial(const Object& o, pwn::mesh::Builder* builder, const pwn::string& name)
 				{
-					StringMaterialMap::iterator i = o.materials.find(name);
+					StringMaterialMap::const_iterator i = o.materials.find(name);
 					if( i == o.materials.end() ) Throw(Str() << "mesh uses unknown material " << name);
 					pwn::mesh::Material m;
 					const real alpha = i->second.alpha;
@@ -985,16 +1044,17 @@ namespace pwn
 					return builder->addMaterial(name, m);
 				}
 
-				void addToBuilder(pwn::mesh::Builder* b)
+				void addToBuilder(const Object& o, pwn::mesh::Builder* b, math::mat44 mm, BoneAssignment* ba)
 				{
 					int pointBase = 0;
 					int textureBase = 0;
+					math::mat44helper mh(mm);
 					BOOST_FOREACH(const Mesh& m, o.meshes)
 					{
-						const math::vec4 noBone(-1,-1,-1,-1);
-						BOOST_FOREACH(const math::vec3& xyz, m.points)
+						BOOST_FOREACH(const math::vec3& v, m.points)
 						{
-							b->addPosition(xyz, noBone);
+							const math::vec3 xyz = mh.transform(v);
+							b->addPosition(xyz, GetBoneAssignment(ba, xyz));
 						}
 						BOOST_FOREACH(const math::vec2& uv, m.textcoords)
 						{
@@ -1008,42 +1068,124 @@ namespace pwn
 								verts.push_back(pwn::mesh::BTriangle::Vertex(pointBase+p.point, 0, textureBase + p.texture));
 							}
 							std::vector<pwn::mesh::BTriangle::Vertex> toadd(verts.rbegin(), verts.rend());
-							b->addFace(getOrAddMaterial(b, m.materials[f.material]), toadd);
+							b->addFace(getOrAddMaterial(o, b, m.materials[f.material]), toadd);
 						}
 						pointBase += m.points.size();
 						textureBase += m.textcoords.size();
 					}
 				}
+
+				void addToBuilder(const Figure& o, pwn::mesh::Builder* builder)
+				{
+					BoneIndexes bi;
+					walkBone(o.root, builder, 0, &bi, math::mat44Identity());
+				}
+
+				void walkBone(const Bone& b, pwn::mesh::Builder* builder, mesh::BoneIndex i, BoneIndexes* bi, const math::mat44& m)
+				{
+					bi->add(&b, i);
+					int x = 1;
+					BOOST_FOREACH(const Bone& c, b.childs)
+					{
+						walkBone(c, builder, i+x, bi, math::mat44helper(m).rotate(b.orientation).translate(math::vec3(0, b.length, 0)).mat);
+						++x;
+					}
+
+					BOOST_FOREACH(const NamedObject& n, b.objects)
+					{
+						BoneAssignment ba;
+						ba.parent = &b;
+						ba.indexes = bi;
+						BOOST_FOREACH(const pwn::string& bname, n.weightedby)
+						{
+							ba.bones.push_back(b.getBone(bname));
+						}
+						addToBuilder(f.getObject(n.object), builder, m*n.base, &ba);
+					}
+				}
 			};
 
-			std::vector<pwn::string> ExtractObjectNames(const File& f)
+			namespace
 			{
-				std::vector<pwn::string> r;
+				const pwn::string kObjectId = "!";
+				const pwn::string kFigureId = "@";
+			}
+
+			void ExtractObjectNames(const File& f, std::set<pwn::string>* s)
+			{
 				BOOST_FOREACH(const Object& o, f.objects)
 				{
-					r.push_back(o.name);
+					s->insert(kObjectId + o.name);
 				}
-				return r;
+			}
+
+			void RemoveObjectNames(const Bone& b, std::set<pwn::string>* s)
+			{
+				BOOST_FOREACH(const NamedObject& n, b.objects)
+				{
+					std::set<pwn::string>::const_iterator r = s->find(kObjectId + n.object);
+					if( r != s->end() )
+					{
+						s->erase(r);
+					}
+				}
+
+				BOOST_FOREACH(const Bone& c, b.childs)
+				{
+					RemoveObjectNames(c, s);
+				}
+			}
+
+			void ExtractFigureNames(const File& f, std::set<pwn::string>* s)
+			{
+				BOOST_FOREACH(const Figure& o, f.figures)
+				{
+					s->insert(kFigureId + o.name);
+					RemoveObjectNames(o.root, s);
+				}
 			}
 
 			void read(BuilderList* builders, const std::vector<pwn::string>& subobjects, const pwn::string& path)
 			{
 				File f = ExtractFile(Load(path));
 
-				std::vector<pwn::string> subs = subobjects;
+				std::set<pwn::string> subs;
+				BOOST_FOREACH(pwn::string s, subobjects)
+				{
+					subs.insert(s);
+				}
+				
 				if( subs.empty() )
 				{
-					subs = ExtractObjectNames(f);
+					ExtractObjectNames(f, &subs);
+					ExtractFigureNames(f, &subs);
 				}
 
-				BOOST_FOREACH(pwn::string& objectName, subs)
+				BOOST_FOREACH(pwn::string& name, subs)
 				{
-					An8 a;
-					a.f = f;
-					a.o = a.f.getObject(objectName);
-					mesh::Builder builder;
-					a.addToBuilder(&builder);
-					builders->push_back(Entry(builder, objectName));
+					const pwn::string id = name.substr(0, 1);
+					if( id == kObjectId )
+					{
+						const pwn::string objectName = name.substr(1);
+						An8 a;
+						a.f = f;
+						mesh::Builder builder;
+						a.addToBuilder(a.f.getObject(objectName), &builder, math::mat44Identity(), 0);
+						builders->push_back(Entry(builder, objectName));
+					}
+					else if( id == kFigureId )
+					{
+						const pwn::string figName = name.substr(1);
+						An8 a;
+						a.f = f;
+						mesh::Builder builder;
+						a.addToBuilder(a.f.getFigure(figName), &builder);
+						builders->push_back(Entry(builder, figName));
+					}
+					else
+					{
+						Throw(core::Str() << "Unknown type " << id << " from " << name);
+					}
 				}
 			}
 		}

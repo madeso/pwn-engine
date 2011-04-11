@@ -1003,10 +1003,74 @@ namespace pwn
 				std::vector<const Bone*> bones;
 			};
 
+			struct BoneAssignmentBuilder
+			{
+				typedef std::pair<mesh::BoneIndex, real> Ba;
+				struct BaCompare
+				{
+					bool operator()(const Ba& lhs, const Ba& rhs) const
+					{
+						return lhs.second > rhs.second;
+					}
+				};
+				typedef std::multiset<Ba, BaCompare> BaSet;
+				BaSet bas;
+				void add(mesh::BoneIndex i, real v)
+				{
+					bas.insert(Ba(i,v));
+				}
+				math::vec4 getAssignment(mesh::BoneIndex bi) const
+				{
+					if( bas.empty() )
+					{
+						return math::vec4(bi+0.5f, -1, -1, -1);
+					}
+					real sum = 0;
+					int index = 0;
+					Ba b[4];
+					BaSet bas = this->bas;
+					while(index<4 && !bas.empty())
+					{
+						BaSet::iterator i = bas.begin();
+						sum += i->second;
+						b[index] = *i;
+						bas.erase(i);
+						++index;
+					}
+					for(;index<4;++index)
+					{
+						// when evaluating, this should result in a assignment of -1 (nothing)
+						b[index] = Ba(0, -sum);
+					}
+
+					return math::vec4(C(b[0], sum), C(b[1], sum), C(b[2], sum), C(b[3], sum));
+				}
+				static real C(const Ba& b, real sum)
+				{
+					return b.first + b.second/sum;
+				}
+			};
+
+			real GetPossibleAssignment(const Bone* b, const math::vec3& xyz)
+			{
+				// todo
+				return -1;
+			}
+
 			math::vec4 GetBoneAssignment(BoneAssignment* a, const math::vec3& xyz)
 			{
 				const math::vec4 noBone(-1,-1,-1,-1);
 				if( !a ) return noBone;
+				BoneAssignmentBuilder bas;
+				BOOST_FOREACH(const Bone* b, a->bones)
+				{
+					const real ass = GetPossibleAssignment(b, xyz);
+					if( ass > 0 )
+					{
+						bas.add(a->indexes->get(b), ass);
+					}
+				}
+				return bas.getAssignment( a->indexes->get(a->parent) );
 			}
 
 			class An8

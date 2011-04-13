@@ -1051,9 +1051,77 @@ namespace pwn
 				}
 			};
 
+			class Ray
+			{
+			public:
+				Ray(const math::vec3& astart, const math::vec3& end)
+					: start(astart)
+					, dir(math::FromTo(astart, end))
+				{
+				}
+
+				math::vec3 getPoint(real t) const
+				{
+					return start + dir*t;
+				}
+
+				real project(const math::vec3& p) const
+				{
+					const math::vec3 d = math::FromTo(start, p);
+					return cml::dot(d, dir);
+				}
+
+				bool getDistance(const math::vec3& p, real* d) const
+				{
+					const real s = project(p);
+					if( d )
+					{
+						const math::vec3 c = getPoint(s);
+						*d = math::FromTo(c, p).length_squared();
+					}
+
+					return math::IsWithinInclusive(0, s, 1);
+				}
+
+			private:
+				math::vec3 start;
+				math::vec3 dir;
+			};
+
+			class Sphere
+			{
+			public:
+				Sphere(const math::vec3& c, const real r)
+					: center(c)
+					, radiuss(r*r)
+				{
+				}
+
+			private:
+				math::vec3 center;
+				real radiuss;
+			};
+
+			class Capsule
+			{
+			public:
+				Capsule(const math::vec3& pos, const math::vec3& length, real r1, real r2)
+				{
+				}
+			private:
+				math::vec3 pos;
+				math::vec3 dir;
+				real length;
+				real radius1;
+				real radius2;
+			};
+
 			real GetPossibleAssignment(const Bone* b, const math::vec3& xyz)
 			{
 				// todo
+				const Influence& i = b->influence;
+				Capsule inner(i.center0, i.inRadius0, i.outRadius0);
+				Capsule outer(i.center0, i.inRadius0, i.outRadius0);
 				return -1;
 			}
 

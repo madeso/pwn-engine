@@ -26,15 +26,19 @@
 * add multiple textures and multiple instances to materials so that overiding & animating materials can be more easily supported
  - material effects, bump/normal map, animated textures, water
 * start on component framework
+ - input component (with key binding support)
+ - script component
 * gui code
  - change key settings code
 * sound engine
 * level editor
 * scripting support for leveleditor, visual? point and click? gamemaker? labview? Google app inventor (http://en.wikipedia.org/wiki/Google_App_Inventor)?, http://en.wikipedia.org/wiki/Visual_programming_language
-* add physics to component framework
 * gui editor for components
+* add physics to component framework
 * character engine
- - character mechanics, modern approach to character animation, character scripting, animation state machines, animation blending
+ - character mechanics, animation state machines, modern approach to character animation, character scripting
+ - animation blending
+ - ragdoll
  - test combo moves
 * rendering improvements
  - ssao

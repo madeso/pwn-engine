@@ -788,6 +788,7 @@ namespace pwn
 				Influence influence;
 				std::vector<Bone> childs;
 				std::vector<NamedObject> objects;
+				math::mat44 xform;
 				
 				const Bone* getBone(const pwn::string& s) const
 				{
@@ -796,9 +797,9 @@ namespace pwn
 					{
 						BOOST_FOREACH(const Bone& b, childs)
 						{
-							if( b.name == s ) return &b;
+							const Bone* fb = b.getBone(s);
+							if( fb ) return fb;
 						}
-						Throw(core::Str() << "Unabled to find bone " << s);
 						return 0;
 					}
 				}
@@ -1156,8 +1157,12 @@ namespace pwn
 			{
 				// todo
 				const Influence& i = b->influence;
-				Capsule inner;
-				Capsule outer;
+				math::mat44helper h(b->xform);
+				Ray r(h.transform(math::vec3(0,0,0)), h.transform(math::vec3(0, 1, 0)));
+				const math::vec3 start = r.getPoint(i.center0);
+				const math::vec3 end = r.getPoint(i.center1);
+				Capsule inner(start, end, i.inRadius0, i.inRadius1);
+				Capsule outer(start, end, i.outRadius0, i.outRadius1);
 
 				real innerdist = 0;
 				real innerrange = 0;
@@ -1268,13 +1273,30 @@ namespace pwn
 					walkBone(o.root, builder, 0, &bi, math::mat44Identity());
 				}
 
-				void walkBone(const Bone& b, pwn::mesh::Builder* builder, mesh::BoneIndex i, BoneIndexes* bi, const math::mat44& m)
+				Figure& prepareFigure(Figure& f)
+				{
+					prepareBones(f.root, math::mat44Identity());
+					return f;
+				}
+
+				void prepareBones(Bone& b, const math::mat44& root)
+				{
+					const math::mat44 rotatedr = math::mat44helper(root).rotate(b.orientation).mat;
+					BOOST_FOREACH(Bone& c, b.childs)
+					{
+						prepareBones(c, math::mat44helper(rotatedr).translate(math::vec3(0, b.length, 0)).mat);
+					}
+					b.xform = rotatedr;
+				}
+
+				void walkBone(const Bone& b, pwn::mesh::Builder* builder, mesh::BoneIndex i, BoneIndexes* bi, const math::mat44& root)
 				{
 					bi->add(&b, i);
 					int x = 1;
+					const math::mat44 rotatedr = math::mat44helper(root).rotate(b.orientation).mat;
 					BOOST_FOREACH(const Bone& c, b.childs)
 					{
-						walkBone(c, builder, i+x, bi, math::mat44helper(m).rotate(b.orientation).translate(math::vec3(0, b.length, 0)).mat);
+						walkBone(c, builder, i+x, bi, math::mat44helper(rotatedr).translate(math::vec3(0, b.length, 0)).mat);
 						++x;
 					}
 
@@ -1287,7 +1309,7 @@ namespace pwn
 						{
 							ba.bones.push_back(b.getBone(bname));
 						}
-						addToBuilder(f.getObject(n.object), builder, m*n.base, &ba);
+						addToBuilder(f.getObject(n.object), builder, rotatedr*n.base, &ba);
 					}
 				}
 			};
@@ -1366,7 +1388,7 @@ namespace pwn
 						An8 a;
 						a.f = f;
 						mesh::Builder builder;
-						a.addToBuilder(a.f.getFigure(figName), &builder);
+						a.addToBuilder(a.prepareFigure(a.f.getFigure(figName)), &builder);
 						builders->push_back(Entry(builder, figName));
 					}
 					else

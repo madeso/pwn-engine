@@ -37,6 +37,10 @@ namespace pwn
 			else return -1;
 		}
 
+		const real Lerp(const real f, real scale, const real t)
+		{
+			return f + (t - f) * scale;
+		}
 
 		const real Curve(const real newValue, const real oldValue, const real smoothingValue)
 		{

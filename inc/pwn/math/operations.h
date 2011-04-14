@@ -21,6 +21,8 @@ namespace pwn
 		*/
 		const int Sign(const real r);
 
+		const real Lerp(const real f, real scale, const real t);
+
 		/** Performs a single interpolating step to transform a old value to a new value.
 		Larger smoothing values result in a smoother but less resposive path
 

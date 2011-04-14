@@ -11,7 +11,7 @@
 #include <pwn/core/str.h>
 #include <pwn/math/operations.h>
 #include <pwn/mesh/builder.h>
-
+#include <pwn/assert.h>
 #include <set>
 
 namespace pwn
@@ -1071,7 +1071,7 @@ namespace pwn
 					return cml::dot(d, dir);
 				}
 
-				bool getDistance(const math::vec3& p, real* d) const
+				bool getDistance(const math::vec3& p, real* d, real* os) const
 				{
 					const real s = project(p);
 					if( d )
@@ -1079,6 +1079,7 @@ namespace pwn
 						const math::vec3 c = getPoint(s);
 						*d = math::FromTo(c, p).length_squared();
 					}
+					if( os ) *os = s;
 
 					return math::IsWithinInclusive(0, s, 1);
 				}
@@ -1097,6 +1098,16 @@ namespace pwn
 				{
 				}
 
+				const real getRadiusSquared() const
+				{
+					return radiuss;
+				}
+
+				real getDistanceToCenterSquared(const math::vec3& p) const
+				{
+					return math::FromTo(center, p).length_squared();
+				}
+
 			private:
 				math::vec3 center;
 				real radiuss;
@@ -1105,24 +1116,68 @@ namespace pwn
 			class Capsule
 			{
 			public:
-				Capsule(const math::vec3& pos, const math::vec3& length, real r1, real r2)
+				Capsule(const math::vec3& astart, const math::vec3& aend, real r1, real r2)
+					: start(astart, r1)
+					, middle(astart, aend)
+					, end(aend, r2)
 				{
 				}
+
+				bool contains(const math::vec3& p, real* dist, real* range) const
+				{
+					real scale = 0;
+					real d = 0;
+					if( middle.getDistance(p, &d, &scale) )
+					{
+						*range = math::Lerp(start.getRadiusSquared(), scale, end.getRadiusSquared());
+						*dist = d;
+					}
+					else if( scale >= 1 )
+					{
+						*range = end.getRadiusSquared();
+						*dist = end.getDistanceToCenterSquared(p);
+					}
+					else
+					{
+						Assert(scale <= 0);
+						*range = start.getRadiusSquared();
+						*dist = start.getDistanceToCenterSquared(p);
+					}
+
+					return *dist < *range;
+				}
 			private:
-				math::vec3 pos;
-				math::vec3 dir;
-				real length;
-				real radius1;
-				real radius2;
+				Sphere start;
+				Ray middle;
+				Sphere end;
 			};
 
 			real GetPossibleAssignment(const Bone* b, const math::vec3& xyz)
 			{
 				// todo
 				const Influence& i = b->influence;
-				Capsule inner(i.center0, i.inRadius0, i.outRadius0);
-				Capsule outer(i.center0, i.inRadius0, i.outRadius0);
-				return -1;
+				Capsule inner;
+				Capsule outer;
+
+				real innerdist = 0;
+				real innerrange = 0;
+				if( true == inner.contains(xyz, &innerdist, &innerrange) ) return 1;
+				real outerdist = 0;
+				real outerrange = 0;
+				if( false == outer.contains(xyz, &outerdist, &outerrange) ) return 0;
+
+				Assert(innerrange < outerrange);
+				Assert(innerdist < outerrange);
+				Assert(innerdist > innerrange);
+				const real val = innerdist = innerrange;
+				Assert(val >= 0 );
+				const real range = outerrange - innerrange;
+				Assert(range > 0);
+				const real inf = val / range;
+
+				Assert(math::IsWithinInclusive(0, inf, 1));
+
+				return inf;
 			}
 
 			math::vec4 GetBoneAssignment(BoneAssignment* a, const math::vec3& xyz)

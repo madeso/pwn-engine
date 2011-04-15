@@ -1270,7 +1270,7 @@ namespace pwn
 				void addToBuilder(const Figure& o, pwn::mesh::Builder* builder)
 				{
 					BoneIndexes bi;
-					walkBone(o.root, builder, 0, &bi, math::mat44Identity());
+					walkBone(0, o.root, builder, 0, &bi, math::mat44Identity());
 				}
 
 				Figure& prepareFigure(Figure& f)
@@ -1289,14 +1289,20 @@ namespace pwn
 					b.xform = rotatedr;
 				}
 
-				void walkBone(const Bone& b, pwn::mesh::Builder* builder, mesh::BoneIndex i, BoneIndexes* bi, const math::mat44& root)
+				void walkBone(const Bone* parent, const Bone& b, pwn::mesh::Builder* builder, mesh::BoneIndex i, BoneIndexes* bi, const math::mat44& root)
 				{
+					mesh::Bone mb;
+					if( parent ) mb.setParent(bi->get(parent));
+					mb.setName(b.name);
+					mb.rot = b.orientation;
+					mb.pos = math::vec3(0, b.length, 0);
+					builder->addBone(mb);
 					bi->add(&b, i);
 					int x = 1;
 					const math::mat44 rotatedr = math::mat44helper(root).rotate(b.orientation).mat;
 					BOOST_FOREACH(const Bone& c, b.childs)
 					{
-						walkBone(c, builder, i+x, bi, math::mat44helper(rotatedr).translate(math::vec3(0, b.length, 0)).mat);
+						walkBone(&b, c, builder, i+x, bi, math::mat44helper(rotatedr).translate(math::vec3(0, b.length, 0)).mat);
 						++x;
 					}
 

@@ -44,7 +44,7 @@ namespace pwn
 			{
 				return "wavefront obj";
 			}
-			void load(BuilderList* builders, const std::vector<pwn::string>& subobjects, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
+			void load(BuilderList* builders, const std::vector<pwn::string>& subobjects, AnimationList* animation, const pwn::string& inputfile, bool verbose) const
 			{
 				WriteDotCallback wdc(verbose);
 				pwn::convert::obj::read(builders, inputfile, wdc);
@@ -62,7 +62,7 @@ namespace pwn
 			{
 				return "3d studio";
 			}
-			void load(BuilderList* builders, const std::vector<pwn::string>& subobjects, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
+			void load(BuilderList* builders, const std::vector<pwn::string>& subobjects, AnimationList* animation, const pwn::string& inputfile, bool verbose) const
 			{
 				pwn::convert::studio3ds::read(builders, inputfile);
 			}
@@ -79,7 +79,7 @@ namespace pwn
 			{
 				return "milkshape ascii";
 			}
-			void load(BuilderList* builders, const std::vector<pwn::string>& subobjects, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
+			void load(BuilderList* builders, const std::vector<pwn::string>& subobjects, AnimationList* animation, const pwn::string& inputfile, bool verbose) const
 			{
 				pwn::convert::milkshape::ascii::Read(builders, animation, inputfile);
 			}
@@ -96,7 +96,7 @@ namespace pwn
 			{
 				return "anim8or";
 			}
-			void load(BuilderList* builders, const std::vector<pwn::string>& subobjects, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
+			void load(BuilderList* builders, const std::vector<pwn::string>& subobjects, AnimationList* animation, const pwn::string& inputfile, bool verbose) const
 			{
 				pwn::convert::an8::read(builders, subobjects, inputfile);
 			}
@@ -113,7 +113,7 @@ namespace pwn
 			{
 				return "milkshape binary";
 			}
-			void load(BuilderList* builders, const std::vector<pwn::string>& subobjects, pwn::mesh::Animation* animation, const pwn::string& inputfile, bool verbose) const
+			void load(BuilderList* builders, const std::vector<pwn::string>& subobjects, AnimationList* animation, const pwn::string& inputfile, bool verbose) const
 			{
 				pwn::convert::milkshape::binary::Read(builders, animation, inputfile);
 			}

@@ -10,7 +10,6 @@
 ------------- features:
 * tranform into vbos & vertex shaders (indexed vbo!)
  - an8 file loading
- - transform to triangle strips?
  - make mesh file more compact: header and floatarray
  - transform to cpu updated vbos
  - add material shaders
@@ -23,7 +22,8 @@
 * improve display framework to support huds
  - font support
 * console w/ lua/gamemonkey scripts
-* 3d debugging (wireframe, view skeleton, draw boundingbox, draw position, line etc)
+* tweak system: http://www.antisphere.com/Wiki/tools:anttweakbar
+* 3d debugging (wireframe, view skeleton, draw boundingbox, draw position, line, sphere etc)
 * add multiple textures and multiple instances to materials so that overiding & animating materials can be more easily supported
  - material effects, bump/normal map, animated textures, water
 * start on component framework
@@ -53,5 +53,6 @@
 * particle engine, check old notes
 * area support, camera effects(fse, shake...), scrips(enter, leave, onTick)
 * ai base
-* pathfinding
+* pathfinding http://code.google.com/p/recastnavigation/
 * option to blank/black out the other screen like xbmc does
+* transform to triangle strips? not needed on modern hw, sorted trianglelist as strips might be faster

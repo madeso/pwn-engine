@@ -17,7 +17,7 @@ namespace pwn
 		{
 			namespace binary
 			{
-				void Read(BuilderList* builders, pwn::mesh::Animation* animation, const string& meshpath);
+				void Read(BuilderList* builders, AnimationList* animation, const string& meshpath);
 			}
 		}
 	}

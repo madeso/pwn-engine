@@ -31,6 +31,12 @@ namespace pwn
 		{
 		}
 
+		AnimationEntry::AnimationEntry(const mesh::Animation& a, const string& n)
+			: animation(a)
+			, name(n)
+		{
+		}
+
 		const InputFormat* SuggestFormat(const pwn::string& inputfile, const InputFormat* formatOveride)
 		{
 			if( formatOveride != 0 ) return formatOveride;
@@ -48,14 +54,14 @@ namespace pwn
 		 Supports: 3ds, obj, milkshape binary & milkshape ascii.
 		 Add support for x, collada, md2, md3, md5, an8, ogre mesh, dxf & blender
 		*/
-		bool Load(BuilderList* builders, const std::vector<pwn::string>& subobjects, pwn::mesh::Animation* animation, const pwn::string& inputfile, const InputFormat* formatOveride, bool verbose)
+		bool Load(BuilderList* builders, const std::vector<pwn::string>& subobjects, AnimationList* animations, const pwn::string& inputfile, const InputFormat* formatOveride, bool verbose)
 		{
 			const InputFormat* fileFormat = SuggestFormat(inputfile, formatOveride);
 
 			if(fileFormat)
 			{
 				if( verbose ) cout << "reading " << inputfile << " (" << fileFormat->getName() << ").." << std::endl;
-				fileFormat->load(builders, subobjects, animation, inputfile, verbose);
+				fileFormat->load(builders, subobjects, animations, inputfile, verbose);
 				return true;
 			}
 			else
@@ -119,14 +125,33 @@ namespace pwn
 			else return name + "-" + object;
 		}
 
-		bool Convert(const pwn::string& argv0, const ConvertData& cd, const AnimationExtract& animationsToExtract, const std::vector<pwn::string>& subobjects, const pwn::string& ainputfile, const InputFormat* formatOveride)
+		AnimationExtract LoadAnimations(const pwn::string& filename)
+		{
+			using boost::property_tree::ptree;
+
+			AnimationExtract ae;
+			ptree pt;
+			read_info(filename, pt);
+			BOOST_FOREACH(ptree::value_type &an, pt.get_child("animations"))
+			{
+				ptree anida = an.second;
+				const pwn::string name = anida.get<pwn::string>("name");
+				const pwn::uint32 start = anida.get<pwn::uint32>("start");
+				const pwn::uint32 end = anida.get<pwn::uint32>("end");
+				ae.push_back(pwn::mesh::AnimationInformation(start, end, name));
+			}
+
+			return ae;
+		}
+
+		bool Convert(const pwn::string& argv0, const ConvertData& cd, const std::vector<pwn::string>& subobjects, const pwn::string& ainputfile, const InputFormat* formatOveride)
 		{
 			const pwn::string inputfile = GetAbsolutePath(ainputfile);
 			const pwn::string outdir =
 				cd.outdir.empty() ? SuggestOutDirectory(inputfile) : cd.outdir;
 			BuilderList builders;
-			pwn::mesh::Animation animation;
-			if( Load(&builders, subobjects, &animation, inputfile, formatOveride, cd.verbose) == false ) return false;
+			AnimationList animations;
+			if( Load(&builders, subobjects, &animations, inputfile, formatOveride, cd.verbose) == false ) return false;
 
 			BOOST_FOREACH(Entry& e, builders)
 			{
@@ -136,13 +161,19 @@ namespace pwn
 				const string name = e.name;
 				pwn::mesh::Flatouter flatouter(builder);
 				flatouter.modify(&builder);
-				flatouter.modify(&animation);
+				BOOST_FOREACH(AnimationEntry& ae, animations)
+				{
+					flatouter.modify(&ae.animation);
+				}
 
 				if( cd.useModelScale )
 				{
 					if( cd.verbose ) cout << "scaling " << cd.modelScale << ".." << std::endl;
 					pwn::mesh::Scale(&builder, cd.modelScale);
-					animation.scale(cd.modelScale);
+					BOOST_FOREACH(AnimationEntry& ae, animations)
+					{
+						ae.animation.scale(cd.modelScale);
+					}
 				}
 
 				if( cd.verbose ) cout << endl;
@@ -177,11 +208,28 @@ namespace pwn
 					pwn::io::WriteTarget wt(argv0, outdir);
 					pwn::io::Write(mesh, fname + ".mesh");
 
-					BOOST_FOREACH(const pwn::mesh::AnimationInformation& ai, animationsToExtract)
-					{
-						pwn::mesh::Animation ani;
-						animation.subanim(ai, &ani);
+					AnimationList anis;
 
+					AnimationExtract animationsToExtract;
+					pwn::string animationfile;
+					if( SuggestAnimationFile(inputfile, &animationfile) )
+					{
+						animationsToExtract = LoadAnimations(animationfile);
+
+						BOOST_FOREACH(const pwn::mesh::AnimationInformation& ai, animationsToExtract)
+						{
+							pwn::mesh::Animation ani;
+							animations[0].animation.subanim(ai, &ani);
+							anis.push_back( AnimationEntry(ani, ai.name));
+						}
+					}
+					else
+					{
+						anis = animations;
+					}
+
+					BOOST_FOREACH(AnimationEntry& ae, anis)
+					{
 						pwn::string adir = cd.animdir;
 						if( adir.empty() )
 						{
@@ -193,7 +241,7 @@ namespace pwn
 						};
 
 						pwn::io::WriteTarget wt(argv0, adir);
-						pwn::io::Write(ani, boost::filesystem::path(ai.name).replace_extension("anim").filename());
+						pwn::io::Write(ae.animation, boost::filesystem::path(ae.name).replace_extension("anim").filename());
 					}
 				}
 			}
@@ -201,25 +249,6 @@ namespace pwn
 			if( cd.verbose ) cout << endl << "done." << endl;
 
 			return true;
-		}
-
-		AnimationExtract LoadAnimations(const pwn::string& filename)
-		{
-			using boost::property_tree::ptree;
-
-			AnimationExtract ae;
-			ptree pt;
-			read_info(filename, pt);
-			BOOST_FOREACH(ptree::value_type &an, pt.get_child("animations"))
-			{
-				ptree anida = an.second;
-				const pwn::string name = anida.get<pwn::string>("name");
-				const pwn::uint32 start = anida.get<pwn::uint32>("start");
-				const pwn::uint32 end = anida.get<pwn::uint32>("end");
-				ae.push_back(pwn::mesh::AnimationInformation(start, end, name));
-			}
-
-			return ae;
 		}
 
 		class App
@@ -349,15 +378,9 @@ namespace pwn
 
 		int CommandArg_RunFile(App* app, core::ConsoleArguments<App>* args, const pwn::string& file)
 		{
-			pwn::string animationfile;
-			AnimationExtract animations;
 			try
 			{
-				if( SuggestAnimationFile(file, &animationfile) )
-				{
-					animations = LoadAnimations(animationfile);
-				}
-				Convert(args->argv0, app->arg, animations, app->subobjects, file, app->formatOveride);
+				Convert(args->argv0, app->arg, app->subobjects, file, app->formatOveride);
 			}
 			catch(const std::exception& ex)
 			{

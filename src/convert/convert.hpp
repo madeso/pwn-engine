@@ -16,7 +16,15 @@ namespace pwn
 			pwn::string name;
 		};
 
+		struct AnimationEntry
+		{
+			AnimationEntry(const mesh::Animation& a, const string& n="");
+			pwn::mesh::Animation animation;
+			pwn::string name;
+		};
+
 		typedef std::vector<Entry> BuilderList;
+		typedef std::vector<AnimationEntry> AnimationList;
 	}
 }
 

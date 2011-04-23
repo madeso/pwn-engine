@@ -1360,7 +1360,7 @@ namespace pwn
 				}
 			}
 
-			void read(BuilderList* builders, const std::vector<pwn::string>& subobjects, const pwn::string& path)
+			void read(BuilderList* builders, const std::vector<pwn::string>& subobjects, AnimationList* animations, const pwn::string& path)
 			{
 				File f = ExtractFile(Load(path));
 
@@ -1402,6 +1402,8 @@ namespace pwn
 						Throw(core::Str() << "Unknown type " << id << " from " << name);
 					}
 				}
+
+
 			}
 		}
 	}

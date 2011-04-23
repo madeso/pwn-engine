@@ -11,7 +11,7 @@ namespace pwn
 	{
 		namespace an8
 		{
-			void read(BuilderList* builders, const std::vector<pwn::string>& subobjects, const pwn::string& file);
+			void read(BuilderList* builders, const std::vector<pwn::string>& subobjects, AnimationList* animations, const pwn::string& file);
 		}
 	}
 }

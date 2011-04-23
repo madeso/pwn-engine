@@ -96,9 +96,9 @@ namespace pwn
 			{
 				return "anim8or";
 			}
-			void load(BuilderList* builders, const std::vector<pwn::string>& subobjects, AnimationList* animation, const pwn::string& inputfile, bool verbose) const
+			void load(BuilderList* builders, const std::vector<pwn::string>& subobjects, AnimationList* animations, const pwn::string& inputfile, bool verbose) const
 			{
-				pwn::convert::an8::read(builders, subobjects, inputfile);
+				pwn::convert::an8::read(builders, subobjects, animations, inputfile);
 			}
 		};
 

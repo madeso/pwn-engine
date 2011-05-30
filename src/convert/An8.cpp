@@ -1037,6 +1037,7 @@ namespace pwn
 					int index = 0;
 					Ba b[4];
 					BaSet bas = this->bas;
+					const std::size_t basSize = bas.size();
 					while(index<4 && !bas.empty())
 					{
 						BaSet::iterator i = bas.begin();
@@ -1045,13 +1046,25 @@ namespace pwn
 						bas.erase(i);
 						++index;
 					}
+
+					Assert( sum > 0 );
+
 					for(;index<4;++index)
 					{
 						// when evaluating, this should result in a assignment of -1 (nothing)
 						b[index] = Ba(0, -sum);
 					}
 
-					return math::vec4(C(b[0], sum), C(b[1], sum), C(b[2], sum), C(b[3], sum));
+					// if size = 1, C() returns the influence becomes val/val=100%, index gets trashed and influence goes to zero, this is why there is this special case
+					if( basSize == 1 )
+					{
+						return math::vec4(b[0].first+0.5f, -1, -1, -1);
+					}
+					else
+					{
+						const math::vec4 r(C(b[0], sum), C(b[1], sum), C(b[2], sum), C(b[3], sum));
+						return r;
+					}
 				}
 				static real C(const Ba& b, real sum)
 				{
@@ -1485,7 +1498,16 @@ namespace pwn
 						}
 					}
 
-					bones.push_back(mesh::AnimationPerBone(afp, afr));
+					if( afp.empty() )
+					{
+						afp.push_back(mesh::FramePosition(0, b.bones[bone].pos));
+					}
+					if( afr.empty() )
+					{
+						afr.push_back(mesh::FrameRotation(0, b.bones[bone].rot));
+					}
+
+					bones[bone]= mesh::AnimationPerBone(afp, afr);
 				}
 
 				return mesh::Animation(bones);

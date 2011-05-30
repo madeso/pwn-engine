@@ -28,6 +28,8 @@ namespace pwn
 				{
 					vf.handleVector(animation.bones[i].fp);
 					vf.handleVector(animation.bones[i].fr);
+					if( animation.bones[i].fp.empty() ) throw "invalid position data";
+					if( animation.bones[i].fr.empty() ) throw "invalid rotation data";
 				}
 			}
 		};

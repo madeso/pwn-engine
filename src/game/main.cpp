@@ -73,8 +73,8 @@ public:
 
 		//world->actor_add( Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("fighter1.mesh", &tpool)) );
 
-		walk = LoadAnimation("dwarf1/Walk.anim");
-		turtle = Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("dwarf1.mesh", &tpool));
+		walk = LoadAnimation("posable_guy-posable guy skin/walk.anim");
+		turtle = Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("posable_guy-posable guy skin.mesh", &tpool));
 		world->actor_add(turtle);
 		world->actor_add(Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("sphere.mesh", &tpool)));
 

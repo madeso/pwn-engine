@@ -833,6 +833,13 @@ namespace pwn
 			{
 				pwn::string name;
 				Bone root;
+
+				Bone getBone(const pwn::string& name) const 
+				{
+					const Bone* bone = root.getBone(name);
+					if( bone == 0 ) throw "missing bone";
+					return *bone;
+				}
 			};
 
 			Figure ExtractFigure(ChildPtr fig)
@@ -1360,7 +1367,139 @@ namespace pwn
 				}
 			}
 
-			void read(BuilderList* builders, const std::vector<pwn::string>& subobjects, AnimationList* animations, const pwn::string& path)
+			struct An8KeyFrame
+			{
+				An8KeyFrame(int f, real av)
+					: frame(f)
+					, v(av)
+				{
+				}
+				int frame;
+				real v;
+			};
+
+			struct CompiledAn8Data
+			{
+				std::vector<An8KeyFrame> frames;
+
+				bool has(int f) const
+				{
+					const std::size_t size = frames.size();
+					for(std::size_t i=0; i<size; ++i)
+					{
+						if( frames[i].frame == f ) return true;
+					}
+					return false;
+				}
+
+				real get(int f) const
+				{
+					if( frames.empty() == true ) throw "invalid data";
+					const std::size_t size = frames.size();
+					for(std::size_t i=0; i<size; ++i)
+					{
+						if( frames[i].frame == f ) return frames[i].v;
+						if( frames[i].frame > f )
+						{
+							if( i == 0 ) return frames[i].v;
+							else return math::Remap(frames[i-1].frame, frames[i].frame, f, frames[i-1].v, frames[i].v);
+						}
+					}
+					return frames[size-1].v;
+				}
+			};
+
+			std::size_t GetBoneIndex(const mesh::Builder& b, const pwn::string name)
+			{
+				const std::size_t count = b.bones.size();
+				for(std::size_t i=0;i<count; ++i)
+				{
+					if( b.bones[i].getName() == name )
+						return i;
+				}
+				throw "unknown bone name, use shorter bone names= consider rewriting lookup?";
+			}
+
+			mesh::Animation ExtractSequence(const File& file, const mesh::Builder& b, const Sequence& s)
+			{
+				std::vector<CompiledAn8Data> cdata[3]; // x, y & z
+
+				// resize, so that we can index this as we please later on
+				for(int i=0;i<3; ++i)
+				{
+					cdata[i].resize(b.bones.size());
+				}
+
+				const Figure& figure = file.getFigure(s.figure);
+
+				BOOST_FOREACH(const JointAngle& ja, s.joints)
+				{
+					int diff = -1;
+					if("X" == ja.axis)
+					{
+						diff = 0;
+					}
+					else if("Y" == ja.axis)
+					{
+						diff = 1;
+					}
+					else if("Z" == ja.axis)
+					{
+						diff = 2;
+					}
+					else
+					{
+						throw "unknown axis";
+					}
+
+					const std::size_t index = GetBoneIndex(b, ja.bone);
+					CompiledAn8Data& data = cdata[diff][index];
+					const Bone b = figure.getBone(ja.bone);
+
+					BOOST_FOREACH(const FloatKey& fk, ja.keys)
+					{
+						data.frames.push_back( An8KeyFrame(fk.frame, fk.value) );
+					}
+
+					//math::vec3 originalOrientation = b.orientation;
+					//data.addFirst(originalOrientation[diff]);
+				}
+
+				const std::size_t numbones = b.bones.size();
+				std::vector<mesh::AnimationPerBone> bones(numbones);
+				for(int bone=0; bone<numbones; ++bone)
+				{
+					std::vector<mesh::FramePosition> afp;
+					std::vector<mesh::FrameRotation> afr;
+
+					for(int frame=0; frame<s.frames; ++frame)
+					{
+						if( cdata[0][bone].has(frame) || cdata[1][bone].has(frame) || cdata[2][bone].has(frame) )
+						{
+							const real x = cdata[0][bone].get(frame);
+							const real y = cdata[1][bone].get(frame);
+							const real z = cdata[2][bone].get(frame);
+							afp.push_back(mesh::FramePosition(frame, b.bones[bone].pos));
+							afr.push_back(mesh::FrameRotation(frame, math::cquat(x,y,z)));
+						}
+					}
+
+					bones.push_back(mesh::AnimationPerBone(afp, afr));
+				}
+
+				return mesh::Animation(bones);
+			}
+
+			void LoadAnimations(AnimationList* animations, const File& f, const mesh::Builder& builder)
+			{
+				BOOST_FOREACH(const Sequence& s, f.sequences)
+				{
+					mesh::Animation animation = ExtractSequence(f, builder, s);
+					animations->push_back(AnimationEntry(animation, s.name));
+				}
+			}
+
+			void read(BuilderList* builders, const std::vector<pwn::string>& subobjects, const pwn::string& path)
 			{
 				File f = ExtractFile(Load(path));
 
@@ -1395,15 +1534,15 @@ namespace pwn
 						a.f = f;
 						mesh::Builder builder;
 						a.addToBuilder(a.prepareFigure(a.f.getFigure(figName)), &builder);
-						builders->push_back(Entry(builder, figName));
+						Entry e(builder, figName);
+						LoadAnimations(&e.animations, f, builder);
+						builders->push_back(e);
 					}
 					else
 					{
 						Throw(core::Str() << "Unknown type " << id << " from " << name);
 					}
 				}
-
-
 			}
 		}
 	}

@@ -54,14 +54,14 @@ namespace pwn
 		 Supports: 3ds, obj, milkshape binary & milkshape ascii.
 		 Add support for x, collada, md2, md3, md5, an8, ogre mesh, dxf & blender
 		*/
-		bool Load(BuilderList* builders, const std::vector<pwn::string>& subobjects, AnimationList* animations, const pwn::string& inputfile, const InputFormat* formatOveride, bool verbose)
+		bool Load(BuilderList* builders, const std::vector<pwn::string>& subobjects, const pwn::string& inputfile, const InputFormat* formatOveride, bool verbose)
 		{
 			const InputFormat* fileFormat = SuggestFormat(inputfile, formatOveride);
 
 			if(fileFormat)
 			{
 				if( verbose ) cout << "reading " << inputfile << " (" << fileFormat->getName() << ").." << std::endl;
-				fileFormat->load(builders, subobjects, animations, inputfile, verbose);
+				fileFormat->load(builders, subobjects, inputfile, verbose);
 				return true;
 			}
 			else
@@ -150,8 +150,7 @@ namespace pwn
 			const pwn::string outdir =
 				cd.outdir.empty() ? SuggestOutDirectory(inputfile) : cd.outdir;
 			BuilderList builders;
-			AnimationList animations;
-			if( Load(&builders, subobjects, &animations, inputfile, formatOveride, cd.verbose) == false ) return false;
+			if( Load(&builders, subobjects, inputfile, formatOveride, cd.verbose) == false ) return false;
 
 			BOOST_FOREACH(Entry& e, builders)
 			{
@@ -161,7 +160,8 @@ namespace pwn
 				const string name = e.name;
 				pwn::mesh::Flatouter flatouter(builder);
 				flatouter.modify(&builder);
-				BOOST_FOREACH(AnimationEntry& ae, animations)
+				
+				BOOST_FOREACH(AnimationEntry& ae, e.animations)
 				{
 					flatouter.modify(&ae.animation);
 				}
@@ -170,7 +170,7 @@ namespace pwn
 				{
 					if( cd.verbose ) cout << "scaling " << cd.modelScale << ".." << std::endl;
 					pwn::mesh::Scale(&builder, cd.modelScale);
-					BOOST_FOREACH(AnimationEntry& ae, animations)
+					BOOST_FOREACH(AnimationEntry& ae, e.animations)
 					{
 						ae.animation.scale(cd.modelScale);
 					}
@@ -219,13 +219,13 @@ namespace pwn
 						BOOST_FOREACH(const pwn::mesh::AnimationInformation& ai, animationsToExtract)
 						{
 							pwn::mesh::Animation ani;
-							animations[0].animation.subanim(ai, &ani);
+							e.animations[0].animation.subanim(ai, &ani);
 							anis.push_back( AnimationEntry(ani, ai.name));
 						}
 					}
 					else
 					{
-						anis = animations;
+						anis = e.animations;
 					}
 
 					BOOST_FOREACH(AnimationEntry& ae, anis)

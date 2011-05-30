@@ -17,6 +17,29 @@ namespace pwn
 		real& Z(quat& q) { return q[2]; }
 		real& W(quat& q) { return q[3]; }
 
+		const quat cquat(const real ax, const real ay, const real az)
+		{
+			// http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/index.htm
+
+			const real heading = ay;
+			const real attitude = ax;
+			const real bank = az;
+
+			const real c1 = cos(heading / 2);
+			const real c2 = cos(attitude / 2);
+			const real c3 = cos(bank / 2);
+			const real s1 = sin(heading / 2);
+			const real s2 = sin(attitude / 2);
+			const real s3 = sin(bank / 2);
+
+			const real w = c1 * c2 * c3 - s1 * s2 * s3;
+			const real x = s1 * s2 * c3 + c1 * c2 * s3;
+			const real y = s1 * c2 * c3 + c1 * s2 * s3;
+			const real z = c1 * s2 * c3 - s1 * c2 * s3;
+
+			return quat(x, y, z, w);
+		}
+
 		const quat cquat(const AxisAngle& aa)
 		{
 			const real s = Sin( aa.angle * 0.5 );

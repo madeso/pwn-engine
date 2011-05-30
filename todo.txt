@@ -19,6 +19,7 @@
  - transform to gpu updated vbos
 * convert to lowercase-only filenames
 * improve math and rgb(a) library, memberfunctions, more syntactic sugar - still relevant?
+* read notes to get inspiration and remember old ideas
 * improve display framework to support huds
  - font support
 * console w/ lua/gamemonkey scripts
@@ -57,6 +58,8 @@
  - scripting, settings & gui editor for fse
  - improve fse to support different "logical" paths
 * particle engine, check old notes
+ - billboard, axis, line and point based
+ - trail billboards & fading alpha
 * area support, camera effects(fse, shake...), scrips(enter, leave, onTick)
 * ai base
 * pathfinding http://code.google.com/p/recastnavigation/

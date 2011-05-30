@@ -17,7 +17,7 @@ namespace pwn
 		{
 			namespace ascii
 			{
-				void Read(BuilderList* builders, AnimationList* animation, const pwn::string& file);
+				void Read(BuilderList* builders, const pwn::string& file);
 			}
 		}
 	}

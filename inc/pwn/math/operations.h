@@ -502,6 +502,10 @@ namespace pwn
 		*/
 		const quat cquat(const AxisAngle& aa);
 
+		/** construct from a x y z angle.
+		*/
+		const quat cquat(const real x, const real y, const real z);
+
 		const quat GetConjugate(const quat& q);
 
 		/** Linear interpolation.

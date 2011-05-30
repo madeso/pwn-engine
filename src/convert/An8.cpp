@@ -1394,7 +1394,8 @@ namespace pwn
 
 				real get(int f) const
 				{
-					if( frames.empty() == true ) throw "invalid data";
+					if( frames.empty() == true ) //throw "invalid data";
+						return 0;
 					const std::size_t size = frames.size();
 					for(std::size_t i=0; i<size; ++i)
 					{

@@ -159,7 +159,8 @@ namespace pwn
 		real AnimationPerBone::getLength() const
 		{
 			// get the time of the last frame
-			return fp[fp.size() - 1].getTime();
+			if( fp.empty() ) return 0;
+			else return fp[fp.size() - 1].getTime();
 		}
 
 		PosePerBone AnimationPerBone::getBonePose(real time) const

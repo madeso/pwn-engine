@@ -22,7 +22,7 @@ namespace pwn
 		WriteTarget::WriteTarget(const pwn::string& argv0, const pwn::string& target)
 		{
 			if( 0 == PHYSFS_init(argv0.c_str()) ) Error("init");
-			if( 0 == PHYSFS_addToSearchPath(target.c_str(), 0) ) Error("adding to searchpath");
+			if( 0 == PHYSFS_addToSearchPath(target.c_str(), 0) ) Error("adding to searchpath: " + target);
 			set(target);
 		}
 

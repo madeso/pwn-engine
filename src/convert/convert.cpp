@@ -205,8 +205,10 @@ namespace pwn
 
 					pwn::string fname = CombineFilename(boost::filesystem::path(inputfile).stem(), name);
 
-					pwn::io::WriteTarget wt(argv0, outdir);
-					pwn::io::Write(mesh, fname + ".mesh");
+					{
+						pwn::io::WriteTarget wt(argv0, outdir);
+						pwn::io::Write(mesh, fname + ".mesh");
+					}
 
 					AnimationList anis;
 
@@ -240,8 +242,10 @@ namespace pwn
 								.directory_string();
 						};
 
-						pwn::io::WriteTarget wt(argv0, adir);
-						pwn::io::Write(ae.animation, boost::filesystem::path(ae.name).replace_extension("anim").filename());
+						{
+							pwn::io::WriteTarget wt(argv0, adir);
+							pwn::io::Write(ae.animation, boost::filesystem::path(ae.name).replace_extension("anim").filename());
+						}
 					}
 				}
 			}

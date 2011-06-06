@@ -42,18 +42,34 @@ namespace pwn
 				ID id;
 			};
 
+			struct DebugCommand
+			{
+				DebugCommand();
+				DebugCommand(const math::mat44& mat, Poseable* pos);
+				math::mat44 mat;
+				Poseable* poseable;
+			};
+
 			void begin();
 			void add(MeshPtr mesh, MaterialPtr material, const math::mat44& mat, Poseable* pos);
+			void add(const math::mat44& mat, Poseable* pos);
 			void end(bool applyMaterials);
 
 			typedef std::vector<Command> CommandList;
+			typedef std::vector<DebugCommand> DebugCommandList;
 			void apply(MaterialPtr material, bool applyMaterials);
 
 		private:
+			enum DebugRenderType
+			{
+				kDebugRenderPoints, kDebugRenderLines
+			};
+			void render(DebugRenderType rt);
 			void render(const CommandList& commands, bool applyMaterials);
 			const bool useGlCommands;
 			CommandList transparent;
 			CommandList solid;
+			DebugCommandList debug;
 
 			Texture2* texture;
 			bool applied;

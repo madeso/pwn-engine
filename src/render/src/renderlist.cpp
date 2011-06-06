@@ -66,6 +66,18 @@ namespace pwn
 		}
 
 		// for resize(0) support
+		RenderList::DebugCommand::DebugCommand()
+			: mat( math::mat44Identity() )
+		{
+		}
+
+		RenderList::DebugCommand::DebugCommand(const math::mat44& m, Poseable* pos)
+			: mat(m)
+			, poseable(pos)
+		{
+		}
+
+		// for resize(0) support
 		RenderList::Command::Command()
 			: mat( math::mat44Identity() )
 		{
@@ -111,6 +123,7 @@ namespace pwn
 		{
 			transparent.resize(0);
 			solid.resize(0);
+			debug.resize(0);
 		}
 
 		void RenderList::add(MeshPtr mesh, MaterialPtr material, const math::mat44& mat, Poseable* pos)
@@ -123,6 +136,11 @@ namespace pwn
 			{
 				solid.push_back(Command(mesh, material, mat, pos));
 			}
+		}
+
+		void RenderList::add(const math::mat44& mat, Poseable* pos)
+		{
+			debug.push_back(DebugCommand(mat, pos));
 		}
 
 		void RenderList::render(const CommandList& commands, bool applyMaterials)
@@ -190,6 +208,74 @@ namespace pwn
 				if( applied )
 				{
 					glDisable(GL_TEXTURE_2D); pwnAssert_NoGLError();
+				}
+
+				// before rendering?
+				glDisable(GL_LIGHTING);
+				glDisable(GL_DEPTH_TEST);
+
+				render(kDebugRenderLines);
+				render(kDebugRenderPoints);
+
+				glEnable(GL_LIGHTING);
+				glEnable(GL_DEPTH_TEST);
+			}
+		}
+
+		void Debug_RenderLines(const mesh::CompiledPose& pose)
+		{
+			glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+			glLineWidth(2.0f);
+			glBegin(GL_LINES);
+			/*for (int i = 0; i < m_model->GetNumJoints(); i++)
+			{
+				ms3d_joint_t *joint = m_model->GetJoint(i);
+				if (joint->parentIndex == -1)
+				{
+					glVertex3f(joint->matGlobal[0][3], joint->matGlobal[1][3], joint->matGlobal[2][3]);
+					glVertex3f(joint->matGlobal[0][3], joint->matGlobal[1][3], joint->matGlobal[2][3]);
+				}
+				else
+				{
+					ms3d_joint_t *parentJoint = m_model->GetJoint(joint->parentIndex);
+					glVertex3f(joint->matGlobal[0][3], joint->matGlobal[1][3], joint->matGlobal[2][3]);
+					glVertex3f(parentJoint->matGlobal[0][3], parentJoint->matGlobal[1][3], parentJoint->matGlobal[2][3]);
+				}
+			}*/
+			glEnd();
+		}
+
+		void Debug_RenderPoints(const mesh::CompiledPose& pose)
+		{
+			glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
+			glPointSize(3.0f);
+			glBegin(GL_POINTS);
+			BOOST_FOREACH(const math::mat44& m, pose.transforms)
+			{
+				glVertex3f(m(0, 3), m(1, 3), m(2, 3));
+			}
+			glEnd();
+		}
+
+		void RenderList::render(DebugRenderType rt)
+		{
+			BOOST_FOREACH(const DebugCommand& c, debug)
+			{
+				if( useGlCommands )
+				{
+					glLoadMatrixf( c.mat.data()); pwnAssert_NoGLError();
+				}
+				if( rt == kDebugRenderLines )
+				{
+					Debug_RenderLines(c.poseable->pose);
+				}
+				else if( rt == kDebugRenderPoints )
+				{
+					Debug_RenderPoints(c.poseable->pose);
+				}
+				else
+				{
+					Assert(false);
 				}
 			}
 		}

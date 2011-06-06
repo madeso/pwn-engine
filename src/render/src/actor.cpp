@@ -35,6 +35,7 @@ namespace pwn
 			{
 				rl->add(p->mesh, p->material, mat, this);
 			}
+			rl->add(mat, this);
 		}
 
 		void Actor::setPose(const mesh::Pose& p)

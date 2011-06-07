@@ -66,8 +66,8 @@ namespace pwn
 									const real inf = mesh::GetBoneInfluence(val);
 									const mesh::BoneIndex boneIndex = mesh::GetBoneIndex(val);
 									infsum += inf;
-									normal += math::GetNormalized(math::cmat33(math::SetTransform(pose.transforms[boneIndex], math::vec3(0,0,0))) * point.normal);
-									vertex += math::cvec3(pose.transforms[boneIndex] * math::cvec4(point.location));
+									normal += math::GetNormalized(math::cmat33(math::SetTransform(pose.transforms[boneIndex].first, math::vec3(0,0,0))) * point.normal);
+									vertex += math::cvec3(pose.transforms[boneIndex].first * math::cvec4(point.location));
 								}
 								Assert(infsum > 0 );
 								const real inv = 1/infsum;

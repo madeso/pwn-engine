@@ -236,20 +236,20 @@ namespace pwn
 		CompiledPose::CompiledPose(const Pose& pose, const std::vector<Bone>& bones)
 		{
 			if (pose.bones.size() != bones.size()) throw "Invalid animation/mesh, bone count differs";
-			std::vector<math::mat44> result( pose.bones.size() );
+			std::vector<CompiledPoseData> result( pose.bones.size() );
 			for (std::size_t boneIndex = 0; boneIndex < pose.bones.size(); ++boneIndex)
 			{
 				const Bone& bone = bones[boneIndex];
 				// either it has no parents, or it's parent has already been precoessed
 				Assert( bone.hasParent()==false || boneIndex > bone.getParent() );
-				math::mat44 parent = bone.hasParent() ? result[bone.getParent()] : math::mat44Identity();
+				math::mat44 parent = bone.hasParent() ? result[bone.getParent()].first : math::mat44Identity();
 				const math::vec3 poseloc = pose.bones[boneIndex].location;
 				const math::quat poserot = pose.bones[boneIndex].rotation;
 
 				const math::mat44 anim = math::mat44helper(math::mat44Identity()).translate(poseloc).rotate(math::GetConjugate(poserot)).mat;
 				const math::mat44 skel = math::mat44helper(math::mat44Identity()).translate(bone.pos).rotate(math::GetConjugate(bone.rot)).mat;
 
-				result[boneIndex] = math::mat44helper(parent).mult(skel).mult(anim).mat;
+				result[boneIndex] = CompiledPoseData(math::mat44helper(parent).mult(skel).mult(anim).mat, bone.hasParent() ? bone.getParent() : -1);
 			}
 			transforms = result;
 		}

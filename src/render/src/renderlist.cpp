@@ -222,37 +222,55 @@ namespace pwn
 			}
 		}
 
+		math::vec3 V(const math::mat44& m)
+		{
+			//return math::vec3(m(0, 3), m(1, 3), m(2, 3));
+			return math::cvec3(m * math::vec4(0,0,0,2));
+		}
+
+		void glVertex(const math::vec3& v)
+		{
+			glVertex3fv(v.data());
+		}
+
+		void glVertex(const math::mat44& m)
+		{
+			glVertex(V(m));
+		}
+
 		void Debug_RenderLines(const mesh::CompiledPose& pose)
 		{
 			glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
 			glLineWidth(2.0f);
 			glBegin(GL_LINES);
-			/*for (int i = 0; i < m_model->GetNumJoints(); i++)
+			for (std::size_t i = 0; i < pose.transforms.size(); i++)
 			{
-				ms3d_joint_t *joint = m_model->GetJoint(i);
-				if (joint->parentIndex == -1)
+				const mesh::CompiledPoseData& joint = pose.transforms[i];
+				if (joint.second == -1)
 				{
-					glVertex3f(joint->matGlobal[0][3], joint->matGlobal[1][3], joint->matGlobal[2][3]);
-					glVertex3f(joint->matGlobal[0][3], joint->matGlobal[1][3], joint->matGlobal[2][3]);
+				//	glVertex3f(joint.first(0, 3), joint.first(1, 3), joint.first(2, 3));
+				//	glVertex3f(joint.first(0, 3), joint.first(1, 3), joint.first(2, 3));
 				}
 				else
 				{
-					ms3d_joint_t *parentJoint = m_model->GetJoint(joint->parentIndex);
-					glVertex3f(joint->matGlobal[0][3], joint->matGlobal[1][3], joint->matGlobal[2][3]);
-					glVertex3f(parentJoint->matGlobal[0][3], parentJoint->matGlobal[1][3], parentJoint->matGlobal[2][3]);
+					const mesh::CompiledPoseData& parentJoint = pose.transforms[joint.second];
+					glVertex(joint.first);
+					glVertex(parentJoint.first);
 				}
-			}*/
+			}
 			glEnd();
 		}
+
+		
 
 		void Debug_RenderPoints(const mesh::CompiledPose& pose)
 		{
 			glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
 			glPointSize(3.0f);
 			glBegin(GL_POINTS);
-			BOOST_FOREACH(const math::mat44& m, pose.transforms)
+			BOOST_FOREACH(const mesh::CompiledPoseData& m, pose.transforms)
 			{
-				glVertex3f(m(0, 3), m(1, 3), m(2, 3));
+				glVertex(m.first);
 			}
 			glEnd();
 		}

@@ -169,10 +169,12 @@ namespace pwn
 			std::vector<PosePerBone> bones;
 		};
 
+		typedef std::pair<math::mat44, int> CompiledPoseData;
+
 		class CompiledPose
 		{
 		public:
-			std::vector<math::mat44> transforms;
+			std::vector<CompiledPoseData> transforms;
 			CompiledPose();
 			CompiledPose(const Pose& pose, const std::vector<Bone>& def);
 		};

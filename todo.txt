@@ -9,7 +9,6 @@
 --------------------------
 ------------- features:
 * tranform into vbos & vertex shaders (indexed vbo!)
- - render bones!
  - an8 file loading
  - make mesh file more compact: header and floatarray
  - transform to cpu updated vbos

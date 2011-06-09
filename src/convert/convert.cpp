@@ -96,6 +96,23 @@ namespace pwn
 			return boost::filesystem::path(in).remove_filename().directory_string();
 		}
 
+		mesh::Animation ExtractDefaultAnimation(const mesh::Builder& builder)
+		{
+			std::vector<mesh::AnimationPerBone> apb;
+
+			BOOST_FOREACH(const mesh::Bone& bone, builder.bones)
+			{
+				mesh::AnimationPerBone a;
+				a.addRotation(0, bone.rot);
+				a.addRotation(1, bone.rot);
+				a.addPosition(0, bone.pos);
+				a.addPosition(1, bone.pos);
+				apb.push_back(a);
+			}
+
+			return mesh::Animation(apb);
+		}
+
 		struct ConvertData
 		{
 			ConvertData()
@@ -104,6 +121,7 @@ namespace pwn
 				, verbose(false)
 				, meshInfo(false)
 				, writeResult(true)
+				, writeDefaultAnimation(true)
 			{
 			}
 
@@ -116,6 +134,7 @@ namespace pwn
 			bool verbose;
 			bool meshInfo;
 			bool writeResult;
+			bool writeDefaultAnimation;
 		};
 
 		pwn::string CombineFilename(const pwn::string& name, const pwn::string& object)
@@ -180,6 +199,11 @@ namespace pwn
 
 				pwn::string texturedir = cd.texturedir == "@" ? SuggestTextureDirectory(inputfile) : cd.texturedir;
 				pwn::mesh::MoveTextures(&builder, texturedir);
+
+				if( cd.writeDefaultAnimation && e.builder.bones.empty() == false)
+				{
+					e.animations.push_back(AnimationEntry(ExtractDefaultAnimation(e.builder), "_default"));
+				}
 
 				pwn::mesh::Mesh mesh = builder.asMesh();
 				const pwn::uint32 validationErrors = mesh.validate(true);
@@ -317,6 +341,12 @@ namespace pwn
 			return 0;
 		}
 
+		int CommandArg_WriteDefaultAnim(App* app, core::ConsoleArguments<App>* args, const pwn::string& val)
+		{
+			app->arg.writeDefaultAnimation = val=="Y" || val =="y";
+			return 0;
+		}
+
 		int Command_RunStatistics(App* app, core::ConsoleArguments<App>* args)
 		{
 			app->arg.runStatistics = true;
@@ -429,6 +459,8 @@ namespace pwn
 			args.setArgCommand(Strings() << "object" << "obj" << "O", CommandArg_AddSubObject, "adds a subobject to be converted, if not set all will be converted");
 
 			args.setArgCommand(Strings() << "more" << "help-about" << "H", CommandArg_DisplayHelp, "Shows help about a command");
+
+			args.setArgCommand(Strings() << "default-anim" << "def" << "d", CommandArg_WriteDefaultAnim, "If Y or y, then the default animation is written (default y)");
 
 			args.setCommand(Strings() << "showstat" << "stat" << "S", Command_RunStatistics, "Show statistics for the mesh");
 			args.setCommand(Strings() << "info" << "i", Command_MeshInfo, "Show mesh informatio");

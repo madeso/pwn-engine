@@ -54,29 +54,34 @@ class EasyLoop : public Loop
 {
 private:
 	Animation walk;
+	Animation def;
 	boost::shared_ptr<Actor> turtle;
 	real pos;
 	fse::PipelinePtr simple;
 	fse::PipelinePtr normal;
 	boost::shared_ptr<SpotLight> light;
 	bool right;
+	bool defan;
 public:
 	pwn::render::ShaderPool tempShaderPool;
 
 	EasyLoop(Game* game)
 		: Loop(game)
 		, right(false)
+		, pos(0)
+		, defan(true)
 	{
 		World3::Ptr world( new WorldWithCameraBoundObject3(Actor::Create(Origo3(), qIdentity(), CreateCube(10, "_stars-texture.jpg", &tpool, 1, false) ),
 			World3::Create()) );
-		world->light_setAmbient( math::Rgba(0.7f) );
+		world->light_setAmbient( math::Rgba(1.0f) );
 
-		//world->actor_add( Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("fighter1.mesh", &tpool)) );
+		const string c = true ? "dwarf1" : "posable_guy-posable guy skin";
 
-		walk = LoadAnimation("posable_guy-posable guy skin/walk.anim");
-		turtle = Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("posable_guy-posable guy skin.mesh", &tpool));
+		def = LoadAnimation(c + "/_default.anim");
+		walk = LoadAnimation(c + "/walk.anim");
+		turtle = Actor::Create(point3(0,0,0), qIdentity(), LoadMesh(c+".mesh", &tpool));
 		world->actor_add(turtle);
-		world->actor_add(Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("sphere.mesh", &tpool)));
+		//world->actor_add(Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("sphere.mesh", &tpool)));
 
 		/*world->actor_add(
 			Actor::Create(point3(0,0,0), qIdentity(), LoadMesh("alien_chamber.mesh", &tpool))
@@ -113,6 +118,11 @@ public:
 		{
 			right = isDown;
 		}
+		else if (key == Key::E && isDown )
+		{
+			defan = !defan;
+			pos = 0;
+		}
 		else
 		{
 			dcam.onKey(key, isDown);
@@ -122,10 +132,11 @@ public:
 	void onUpdate(real delta)
 	{
 		Pose p;
-		pos = pwn::math::Wrap(0, pos+delta, walk.getLength());
-		walk.getPose(pos, &p);
+		const Animation& a = defan ? def : walk;
+		pos = pwn::math::Wrap(0, pos+delta, a.getLength());
+		a.getPose(pos, &p);
 		turtle->setPose(p);
-		dcam.update(delta, 3.0f, 10.0f);
+		dcam.update(delta, 30.0f, 10.0f);
 
 		if( !right )
 		{

@@ -738,7 +738,13 @@ namespace pwn
 
 			math::quat ExtractQuaternion(ChildPtr c)
 			{
-				return math::quat(c->getNumber(0), c->getNumber(1), c->getNumber(2), c->getNumber(3));
+				const real x = c->getNumber(0);
+				const real y = c->getNumber(1);
+				const real z = c->getNumber(2);
+				const real w = c->getNumber(3);
+
+				const math::quat q(x,y,z,w);
+				return math::GetNormalized(q);
 			}
 
 			math::mat44 ExtractBase(ChildPtr owner, const pwn::string& name)
@@ -781,6 +787,10 @@ namespace pwn
 					: length(0)
 					, orientation( math::qIdentity() )
 				{
+				}
+				math::vec3 vec() const
+				{
+					return math::vec3(0, length, 0);
 				}
 				pwn::string name;
 				pwn::real length;
@@ -1194,7 +1204,7 @@ namespace pwn
 				Assert(innerrange < outerrange);
 				Assert(innerdist < outerrange);
 				Assert(innerdist > innerrange);
-				const real val = innerdist = innerrange;
+				const real val = innerdist  - innerrange;
 				Assert(val >= 0 );
 				const real range = outerrange - innerrange;
 				Assert(range > 0);
@@ -1290,7 +1300,7 @@ namespace pwn
 				void addToBuilder(const Figure& o, pwn::mesh::Builder* builder)
 				{
 					BoneIndexes bi;
-					walkBone(0, o.root, builder, 0, &bi, math::mat44Identity());
+					walkBone(0, o.root, builder, &bi, math::mat44Identity());
 				}
 
 				Figure& prepareFigure(Figure& f)
@@ -1304,26 +1314,25 @@ namespace pwn
 					const math::mat44 rotatedr = math::mat44helper(root).rotate(b.orientation).mat;
 					BOOST_FOREACH(Bone& c, b.childs)
 					{
-						prepareBones(c, math::mat44helper(rotatedr).translate(math::vec3(0, b.length, 0)).mat);
+						prepareBones(c, math::mat44helper(rotatedr).translate(b.vec()).mat);
 					}
 					b.xform = rotatedr;
 				}
 
-				void walkBone(const Bone* parent, const Bone& b, pwn::mesh::Builder* builder, mesh::BoneIndex i, BoneIndexes* bi, const math::mat44& root)
+				void walkBone(const Bone* parent, const Bone& b, pwn::mesh::Builder* builder, BoneIndexes* bi, const math::mat44& root)
 				{
 					mesh::Bone mb;
 					if( parent ) mb.setParent(bi->get(parent));
 					mb.setName(b.name);
 					mb.rot = b.orientation;
-					mb.pos = math::vec3(0, b.length, 0);
+					mb.pos = b.vec();
+					const mesh::BoneIndex theid = builder->bones.size();
 					builder->addBone(mb);
-					bi->add(&b, i);
-					int x = 1;
+					bi->add(&b, theid);
 					const math::mat44 rotatedr = math::mat44helper(root).rotate(b.orientation).mat;
 					BOOST_FOREACH(const Bone& c, b.childs)
 					{
-						walkBone(&b, c, builder, i+x, bi, math::mat44helper(rotatedr).translate(math::vec3(0, b.length, 0)).mat);
-						++x;
+						walkBone(&b, c, builder, bi, math::mat44helper(rotatedr).translate(b.vec()).mat);
 					}
 
 					BOOST_FOREACH(const NamedObject& n, b.objects)

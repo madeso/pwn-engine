@@ -105,8 +105,8 @@ namespace pwn
 				mesh::AnimationPerBone a;
 				a.addRotation(0, bone.rot);
 				a.addRotation(1, bone.rot);
-				a.addPosition(0, bone.pos);
-				a.addPosition(1, bone.pos);
+				a.addPosition(0, bone.pos/1000);
+				a.addPosition(1, bone.pos/1000);
 				apb.push_back(a);
 			}
 
@@ -242,11 +242,21 @@ namespace pwn
 					{
 						animationsToExtract = LoadAnimations(animationfile);
 
-						BOOST_FOREACH(const pwn::mesh::AnimationInformation& ai, animationsToExtract)
+						BOOST_FOREACH(AnimationEntry& ae, e.animations)
 						{
-							pwn::mesh::Animation ani;
-							e.animations[0].animation.subanim(ai, &ani);
-							anis.push_back( AnimationEntry(ani, ai.name));
+							if( ae.name.empty() == false )
+							{
+								anis.push_back(ae);
+							}
+							else
+							{
+								BOOST_FOREACH(const pwn::mesh::AnimationInformation& ai, animationsToExtract)
+								{
+									pwn::mesh::Animation ani;
+									ae.animation.subanim(ai, &ani);
+									anis.push_back( AnimationEntry(ani, ai.name));
+								}
+							}
 						}
 					}
 					else

@@ -224,8 +224,8 @@ namespace pwn
 
 		math::vec3 V(const math::mat44& m)
 		{
-			//return math::vec3(m(0, 3), m(1, 3), m(2, 3));
-			return math::cvec3(m * math::vec4(0,0,0,2));
+			return math::vec3(m(0, 3), m(1, 3), m(2, 3));
+			//return math::cvec3(m * math::vec4(1,1,1,1));
 		}
 
 		void glVertex(const math::vec3& v)

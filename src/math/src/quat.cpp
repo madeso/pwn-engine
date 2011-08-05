@@ -19,35 +19,17 @@ namespace pwn
 
 		const quat cquat(const real ax, const real ay, const real az)
 		{
-			// http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/index.htm
-
-			const real heading = ay;
-			const real attitude = ax;
-			const real bank = az;
-
-			const real c1 = cos(heading / 2);
-			const real c2 = cos(attitude / 2);
-			const real c3 = cos(bank / 2);
-			const real s1 = sin(heading / 2);
-			const real s2 = sin(attitude / 2);
-			const real s3 = sin(bank / 2);
-
-			const real w = c1 * c2 * c3 - s1 * s2 * s3;
-			const real x = s1 * s2 * c3 + c1 * c2 * s3;
-			const real y = s1 * c2 * c3 + c1 * s2 * s3;
-			const real z = c1 * s2 * c3 - s1 * c2 * s3;
-
-			return quat(x, y, z, w);
+			quat q;
+			cml::quaternion_rotation_euler(q, ax, ay, az, cml::euler_order_xyz);
+			return q;
 		}
 
 		const quat cquat(const AxisAngle& aa)
 		{
-			const real s = Sin( aa.angle * 0.5 );
-
-			const quat q(aa.axis * s, Cos( aa.angle * PWN_MATH_VALUE(0.5)));
-			return GetNormalized(q);
+			quat q;
+			cml::quaternion_rotation_axis_angle(q, aa.axis, aa.angle.inRadians());
+			return q;
 		}
-
 
 		// ------------------------------------------------------
 
@@ -58,7 +40,7 @@ namespace pwn
 
 		const quat Lerp(const quat& f, const real scale, const quat& t)
 		{
-			return GetNormalized(f + scale * (t - f));
+			return cml::lerp(f, t, scale);
 		}
 
 		const quat Qlerp(const quat& f, const real scale, const quat& t)
@@ -69,17 +51,7 @@ namespace pwn
 
 		const quat Slerp(const quat& f, const real scale, const quat& t)
 		{
-			real d = dot(f, t);
-			if (d > PWN_MATH_VALUE(0.9995))
-			{
-				return Lerp(f, scale, t);
-			}
-			d = KeepWithin(-1, d, 1);
-			const Angle theta0 = Acos(d);
-			const Angle theta = theta0 * scale;
-
-			const quat q = GetNormalized(t - f * d);
-			return f * Cos(theta) + q * Sin(theta);
+			return cml::slerp(f, t, scale);
 		}
 
 		// forces the interpolatation to go the "short way"

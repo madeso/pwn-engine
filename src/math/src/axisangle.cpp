@@ -24,8 +24,10 @@ namespace pwn
 		const AxisAngle cAxisAngle(const quat& q)
 		{
 			Assert( W(q) <= 1 ); // if this happes, we should normalize, but this shouldnt happen
-			const vec3 axis = cvec3(q);
-			AxisAngle aa(axis, Acos(W(q))*PWN_MATH_VALUE(2.0));
+			vec3 axis;
+			real angle;
+			cml::quaternion_to_axis_angle(q, axis, angle);
+			AxisAngle aa(axis, Angle::FromRadians(angle));
 
 			return aa;
 		}

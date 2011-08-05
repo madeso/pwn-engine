@@ -105,8 +105,8 @@ namespace pwn
 				mesh::AnimationPerBone a;
 				a.addRotation(0, bone.rot);
 				a.addRotation(1, bone.rot);
-				a.addPosition(0, bone.pos/1000);
-				a.addPosition(1, bone.pos/1000);
+				a.addPosition(0, bone.pos);
+				a.addPosition(1, bone.pos);
 				apb.push_back(a);
 			}
 

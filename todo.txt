@@ -18,6 +18,8 @@
  - improve material system to send several textures to shaders
  - transform to gpu updated vbos
 * convert to lowercase-only filenames
+* custom vfs with lzo backend? http://www.oberhumer.com/opensource/lzo/
+* remove converter in favor of assimp? http://assimp.sourceforge.net/index.html
 * improve math and rgb(a) library, memberfunctions, more syntactic sugar - still relevant?
 * read notes to get inspiration and remember old ideas
 * improve display framework to support huds
@@ -72,3 +74,20 @@
 **************************************************** DEMO **********************************************************************
 
 * transform to triangle strips? not needed on modern hw, sorted trianglelist as strips might be faster
+
+Possible demos side by side (old notes):
+shaddows
+shaders
+skinning
+collision
+A* & killzone mod
+streaming
+multiplayer
+culling
+draw input
+gui demo, flash inspired?
+loading code
+octree & heightmap
+multitexture
+rendering scope
+physics test

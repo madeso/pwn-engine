@@ -40,7 +40,7 @@ namespace test
 		TestRotationFixture()
 			: start(mat44Identity())
 			, aa( RightHandAround(Up(), Angle::FromDegrees(-90)) )
-			, toTransform(0,0,5)
+			, toTransform(0,0,-5)
 			, result(5,0,0)
 		{
 		}
@@ -62,14 +62,22 @@ namespace test
 		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test,  r, result);
 	}
 
-
 	GTEST(TestCombined_RT)
 	{
 		vec3 r = mat44helper(mat44Identity())
 			.rotate(RightHandAround(Up(), Angle::FromDegrees(-90)))
-			.translate(vec3(0, 0, 5))
+			.translate(vec3(0, 0, -5))
 			.transform(vec3(0, 0, 0));
 		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, r, vec3(5, 0, 0));
+	}
+
+	GTEST(TestCombined2_RT)
+	{
+		vec3 r = mat44helper(mat44Identity())
+			.rotate(RightHandAround(Up(), Angle::FromDegrees(90)))
+			.translate(vec3(0, 0, -5))
+			.transform(vec3(0, 0, 0));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, r, vec3(-5, 0, 0));
 	}
 
 	GTEST(TestCombined_TR)

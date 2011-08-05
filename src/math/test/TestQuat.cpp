@@ -17,6 +17,13 @@ namespace test
 		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(1,2,3), cvec3(quat(4, vec3(1,2,3))));
 	}
 
+	GTEST(testEuclidianQuatExample)
+	{
+		const real k = 0.7071;
+		// http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/transforms/examples/index.htm
+		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, quat(0, k, 0, k), cquat(RightHandAround(Up(), Angle::FromDegrees(90))));
+	}
+
 	GTEST(testCommonRotation)
 	{
 		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, quatw(0, 1, 0, 0), cquat(RightHandAround(Right(), Angle::FromDegrees(180))));
@@ -108,6 +115,13 @@ namespace test
 		EXPECT_PRED_FORMAT2(::pwn::math::axisangle_equal_test, RightHandAround(Right(), Angle::FromDegrees(90)), cAxisAngle(cquat(RightHandAround(-Right(), Angle::FromDegrees(-90)))));
 	}
 
+	GTEST(checkQuatConjugate)
+	{
+		const quat a = cquat(RightHandAround(Up(), Angle::FromDegrees(90)));
+		const quat b = GetConjugate(cquat(RightHandAround(Up(), Angle::FromDegrees(-90))));
+		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, a, b);
+	}
+
 	struct Quat : ::testing::Test
 	{
 		quat qa;
@@ -140,4 +154,6 @@ namespace test
 	{
 		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, qa, SlerpShortway(qIdentity(), 0.5f, qb));
 	}
+
+
 }

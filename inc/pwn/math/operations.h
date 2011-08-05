@@ -422,10 +422,6 @@ namespace pwn
 									const real data8,  const real data9,  const real data10, const real data11,
 									const real data12, const real data13, const real data14, const real data15 );
 
-		/** matrix-multiplication.
-		*/
-		const mat44 operator* (const mat44& a, const mat44& b);
-
 		/** matrix-vector multiplication.
 		the "4th" element on the vector is ignored.
 		*/
@@ -453,7 +449,6 @@ namespace pwn
 		*/
 		const mat44 cmat44(const mat33& m);
 
-		vec3 RotateWithInverseMatrix(const vec3 vec, const mat44& mat);
 		vec3 TranslateWithInverseMatrix(const vec3 vec, const mat44& mat);
 
 		/** Syntax-sugar function-chainer helper-class for most common mat44 operations.

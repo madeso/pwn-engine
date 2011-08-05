@@ -227,6 +227,7 @@ namespace pwn
 		}
 		const vec3 In()
 		{
+			/// @todo in is negative, make positive!
 			return vec3(PWN_MATH_VALUE(0.0),PWN_MATH_VALUE(0.0),PWN_MATH_VALUE(-1.0));
 		}
 		const vec3 Up()

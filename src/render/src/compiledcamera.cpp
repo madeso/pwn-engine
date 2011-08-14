@@ -6,8 +6,10 @@ namespace pwn
 {
 	namespace render
 	{
+		using namespace pwn::math;
+
 		CompiledCamera::CompiledCamera(const Camera& camera)
-			: mat( math::cmat44(-camera.orientation) * math::cmat44(static_cast<math::vec3>(-camera.position.vec)) )
+			: mat( cmat44(-camera.orientation) * cmat44(vec3(-X(camera.position.vec), -Y(camera.position.vec), Z(camera.position.vec))) )
 		{
 		}
 	}

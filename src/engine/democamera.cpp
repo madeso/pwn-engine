@@ -67,9 +67,11 @@ namespace pwn
 
 			//camera.position.vec += vec3(mouse.x, mouse.y, 0);
 
-			const math::quat updown = math::cquat(math::RightHandAround(Right(camera.orientation), Angle::FromDegrees(Y(mouse)*sensitivity)));
+			const math::quat updown = math::cquat(math::RightHandAround(Right(), Angle::FromDegrees(Y(mouse)*sensitivity)));
 			const math::quat rightleft = math::cquat( math::RightHandAround(Up(), Angle::FromDegrees(-X(mouse)*sensitivity)));
-			camera.orientation = math::Combine(camera.orientation, rightleft * updown);
+			
+			camera.orientation = math::Combine(camera.orientation, rightleft, math::TransformSpace::Local);
+			camera.orientation = math::Combine(camera.orientation, updown, math::TransformSpace::Parent);
 
 			mouse = vec2(0,0);
 

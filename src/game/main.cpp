@@ -98,8 +98,6 @@ public:
 		simple = fse::Pipeline::Create("fse/simple-test.xml", &tempShaderPool);
 		normal = fse::Pipeline::Create("fse/normal.xml", &tempShaderPool);
 		dcam.camera.pipeline = normal;
-		//dcam.camera.position = point3(-20,20,-40);
-		//dcam.camera.orientation = qLookAt(dcam.camera.position.vec, vec3(0,0,0), Up());
 
 		display.widget_add( wid );
 	}

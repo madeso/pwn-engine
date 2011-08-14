@@ -116,9 +116,21 @@ namespace pwn
 			return cvec3(r);
 		}
 
+		const quat Combine(const quat& current, const quat& extra, TransformSpace::Type ts)
+		{
+			switch(ts)
+			{
+			case TransformSpace::Local:
+				return GetNormalized(current * extra);
+			case TransformSpace::Parent:
+			default:
+				return GetNormalized(extra * current);
+			}
+		}
+
 		const quat Combine(const quat& current, const quat& extra)
 		{
-			return GetNormalized(extra * current);
+			return Combine(current, extra, TransformSpace::Parent);
 		}
 
 		const quat qIdentity()

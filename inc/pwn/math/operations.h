@@ -562,19 +562,17 @@ namespace pwn
 		*/
 		const vec3 RotateAroundOrigo(const quat& q, const vec3& v);
 
-		namespace TransformSpace
-		{
-			enum Type
-			{
-				Parent, Local
-			};
-		}
-
-		/** returns the combined rotations
+		/** returns the combined rotations using local transformation
 		*/
-		const quat Combine(const quat& current, const quat& extra, TransformSpace::Type ts);
+		const quat Combine_Local(const quat& current, const quat& extra);
 
-		/// transformspace parent
+		/** returns the combined rotations using parent transformation
+		*/
+		const quat Combine_Parent(const quat& current, const quat& extra);
+
+		/** returns the combined rotations using parent transformation.
+		* @see Combine_Parent
+		*/
 		const quat Combine(const quat& current, const quat& extra);
 
 		//const quat cquat(const Euler& e); // todo: add construct from angle function?

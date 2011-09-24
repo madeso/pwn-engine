@@ -42,17 +42,24 @@ namespace pwn
 				ID id;
 			};
 
+			enum DebugRenderType
+			{
+				kUndefined, kDebugRenderPoints, kDebugRenderLines, kDebugRenderMatrix
+			};
+
 			struct DebugCommand
 			{
 				DebugCommand();
-				DebugCommand(const math::mat44& mat, Poseable* pos);
+				DebugCommand(const math::mat44& mat, Poseable* pos, DebugRenderType dc);
 				math::mat44 mat;
 				Poseable* poseable;
+				DebugRenderType type;
 			};
 
 			void begin();
 			void add(MeshPtr mesh, MaterialPtr material, const math::mat44& mat, Poseable* pos);
 			void add(const math::mat44& mat, Poseable* pos);
+			void add(const math::mat44& mat);
 			void end(bool applyMaterials);
 
 			typedef std::vector<Command> CommandList;
@@ -60,11 +67,7 @@ namespace pwn
 			void apply(MaterialPtr material, bool applyMaterials);
 
 		private:
-			enum DebugRenderType
-			{
-				kDebugRenderPoints, kDebugRenderLines
-			};
-			void render(DebugRenderType rt);
+			void render_debug();
 			void render(const CommandList& commands, bool applyMaterials);
 			const bool useGlCommands;
 			CommandList transparent;

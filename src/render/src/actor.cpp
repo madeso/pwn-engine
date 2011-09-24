@@ -29,7 +29,7 @@ namespace pwn
 		{
 			if( model == 0 ) return; // abort if no model available
 
-			const math::mat44 mat = cam.mat * math::cmat44(location.vec) * math::cmat44(rotation);
+			const math::mat44 mat = cam.generateMatrix(location.vec, rotation);
 
 			BOOST_FOREACH(ActorDef::PartPtr p, model->parts)
 			{

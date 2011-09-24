@@ -68,12 +68,15 @@ namespace pwn
 		// for resize(0) support
 		RenderList::DebugCommand::DebugCommand()
 			: mat( math::mat44Identity() )
+			, poseable(0)
+			, type(kUndefined)
 		{
 		}
 
-		RenderList::DebugCommand::DebugCommand(const math::mat44& m, Poseable* pos)
+		RenderList::DebugCommand::DebugCommand(const math::mat44& m, Poseable* pos, DebugRenderType dc)
 			: mat(m)
 			, poseable(pos)
+			, type(dc)
 		{
 		}
 
@@ -97,7 +100,6 @@ namespace pwn
 				// todo: calculate a better id
 				const uint64 texture = material->texture ? material->texture->sid() : 0;
 				const uint64 distance =  CompressDistance(material->hasTransperency, 0, math::Z(math::cvec3(mat)), 100); // todo: use the camera frustrum
-
 
 				if( material->hasTransperency )
 				{
@@ -140,7 +142,13 @@ namespace pwn
 
 		void RenderList::add(const math::mat44& mat, Poseable* pos)
 		{
-			debug.push_back(DebugCommand(mat, pos));
+			debug.push_back(DebugCommand(mat, pos, kDebugRenderPoints));
+			debug.push_back(DebugCommand(mat, pos, kDebugRenderLines));
+		}
+
+		void RenderList::add(const math::mat44& mat)
+		{
+			debug.push_back(DebugCommand(mat, 0, kDebugRenderMatrix));
 		}
 
 		void RenderList::render(const CommandList& commands, bool applyMaterials)
@@ -214,8 +222,7 @@ namespace pwn
 				glDisable(GL_LIGHTING);
 				glDisable(GL_DEPTH_TEST);
 
-				render(kDebugRenderLines);
-				render(kDebugRenderPoints);
+				render_debug();
 
 				glEnable(GL_LIGHTING);
 				glEnable(GL_DEPTH_TEST);
@@ -275,7 +282,21 @@ namespace pwn
 			glEnd();
 		}
 
-		void RenderList::render(DebugRenderType rt)
+		void Debug_RenderMatrix()
+		{
+			const real d = 10;
+			math::vec3 o(0,0,0);
+			glBegin(GL_LINES);
+			glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+			glVertex(math::vec3(d,0,0)); glVertex(o);
+			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glVertex(math::vec3(0,d,0)); glVertex(o);
+			glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+			glVertex(math::vec3(0,0,d)); glVertex(o);
+			glEnd();
+		}
+
+		void RenderList::render_debug()
 		{
 			BOOST_FOREACH(const DebugCommand& c, debug)
 			{
@@ -283,6 +304,7 @@ namespace pwn
 				{
 					glLoadMatrixf( c.mat.data()); pwnAssert_NoGLError();
 				}
+				const DebugRenderType rt = c.type;
 				if( rt == kDebugRenderLines )
 				{
 					Debug_RenderLines(c.poseable->pose);
@@ -290,6 +312,10 @@ namespace pwn
 				else if( rt == kDebugRenderPoints )
 				{
 					Debug_RenderPoints(c.poseable->pose);
+				}
+				else if ( rt == kDebugRenderMatrix )
+				{
+					Debug_RenderMatrix();
 				}
 				else
 				{

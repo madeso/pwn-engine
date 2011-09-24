@@ -13,6 +13,9 @@
 
 #include "opengl_debug.hpp"
 
+// for in
+#include <pwn/math/operations.h>
+
 namespace pwn
 {
 	namespace render
@@ -72,6 +75,7 @@ namespace pwn
 				glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient.data());
 
 				list.begin();
+				list.add(r.compiled.generateMatrix(r.camera.position.vec + math::In(r.camera.orientation)*10, r.camera.orientation));
 				BOOST_FOREACH(ActorPtr a, actors)
 				{
 					a->render(&list, r.compiled);
@@ -92,7 +96,8 @@ namespace pwn
 					}
 				}
 
-				list.end( lights.empty() == false ); // apply materials if there are lightds
+				// todo: shouldnt we always enable materials? there might be ambiant light and should be really optimize for pure darkness?
+				list.end( lights.empty() == false ); // apply materials if there are lights
 
 				// rendering is done, disable all lights again
 				for(int i=GL_LIGHT0; i<id; ++i)

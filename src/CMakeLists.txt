@@ -1,6 +1,7 @@
 add_subdirectory(assert)
 add_subdirectory(convert)
 add_subdirectory(core)
+add_subdirectory(demos)
 add_subdirectory(engine)
 add_subdirectory(game)
 add_subdirectory(io)

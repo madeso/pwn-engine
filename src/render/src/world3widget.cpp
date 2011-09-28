@@ -4,6 +4,7 @@
 #include <pwn/render/RenderArgs.h>
 #include <pwn/render/compiledcamera.h>
 #include <pwn/render/fse/Pipeline.h>
+#include <pwn/assert.h>
 
 #include "opengl_debug.hpp"
 
@@ -37,8 +38,11 @@ namespace pwn
 
 			// todo: test for mask occlusion and possible render to a temporary texture
 			RenderArgs ra(camera, x, y, w, h, AspectOf(rect));
-			//world->render(ra);
-			camera.pipeline->render(world.get(), ra);
+			Assert(camera.pipeline);
+			if( camera.pipeline )
+			{
+				camera.pipeline->render(world.get(), ra);
+			}
 			glDisable(GL_DEPTH_TEST); pwnAssert_NoGLError();
 		}
 	}

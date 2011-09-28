@@ -70,7 +70,7 @@ namespace pwn
 			const math::quat updown = math::cquat(math::RightHandAround(Right(), Angle::FromDegrees(Y(mouse)*sensitivity)));
 			const math::quat rightleft = math::cquat( math::RightHandAround(Up(), Angle::FromDegrees(-X(mouse)*sensitivity)));
 			
-			camera.orientation = math::Combine_Local(camera.orientation, rightleft);
+			//camera.orientation = math::Combine_Local(camera.orientation, rightleft);
 			camera.orientation = math::Combine_Parent(camera.orientation, updown);
 
 			mouse = vec2(0,0);

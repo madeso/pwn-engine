@@ -75,34 +75,39 @@ namespace pwn
 			return t.conjugate();
 		}
 
+		const vec3 RotateAroundOrigoNorm(const quat& q, const vec3& v)
+		{
+			return GetNormalized(RotateAroundOrigo(q, v));
+		}
+
 		const vec3 In(const quat& q)
 		{
-			return RotateAroundOrigo(q, In());
+			return RotateAroundOrigoNorm(q, In());
 		}
 
 		const vec3 Right(const quat& q)
 		{
-			return RotateAroundOrigo(q, Right());
+			return RotateAroundOrigoNorm(q, Right());
 		}
 
 		const vec3 Up(const quat& q)
 		{
-			return RotateAroundOrigo(q, Up());
+			return RotateAroundOrigoNorm(q, Up());
 		}
 
 		const vec3 Out(const quat& q)
 		{
-			return RotateAroundOrigo(q, Out());
+			return RotateAroundOrigoNorm(q, Out());
 		}
 
 		const vec3 Left(const quat& q)
 		{
-			return RotateAroundOrigo(q, Left());
+			return RotateAroundOrigoNorm(q, Left());
 		}
 
 		const vec3 Down(const quat& q)
 		{
-			return RotateAroundOrigo(q, Down());
+			return RotateAroundOrigoNorm(q, Down());
 		}
 
 		const vec3 RightUpIn(const quat& q, const vec3& v)

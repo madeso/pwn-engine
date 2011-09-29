@@ -33,7 +33,10 @@ namespace pwn
 		{
 			glMatrixMode(GL_PROJECTION); pwnAssert_NoGLError();
 			glLoadIdentity(); pwnAssert_NoGLError();
+			pwn::math::mat44 m;
+			cml::matrix_perspective_xfov_RH(m, cml::rad(camera.fov), aspect, camera.znear, camera.zfar, cml::z_clip_neg_one);
 			gluPerspective(camera.fov, aspect, camera.znear, camera.zfar); pwnAssert_NoGLError();
+			//glLoadMatrixf(m.data());
 			glClear(GL_DEPTH_BUFFER_BIT); pwnAssert_NoGLError();
 
 			glEnable(GL_DEPTH_TEST); pwnAssert_NoGLError();

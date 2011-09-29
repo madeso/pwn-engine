@@ -53,23 +53,26 @@ private:
 	VfsTexturePool2 tpool;
 	fse::PipelinePtr pipe;
 	pwn::render::ShaderPool tempShaderPool;
+
+	bool followcam;
+	boost::shared_ptr<World3Widget > wid;
 public:
 
 	EasyLoop(Game* game)
 		: Loop(game)
 		, pos(0)
 		, cam(point3(0,0,0), qIdentity(), 45, 0.1f, 1000)
+		, followcam(false)
 	{
 		World3::Ptr world( new WorldWithCameraBoundObject3(Actor::Create(Origo3(), qIdentity(), CreateCube(10, "_stars-texture.jpg", &tpool, 1, false) ),
 			World3::Create()) );
 		world->light_setAmbient( math::Rgba(1.0f) );
 
-		object = Actor::Create(point3(0,0,-5), qIdentity(), CreateCube(1, "crate01a.jpg", &tpool, 1, true));
+		object = Actor::Create(point3(0,0,5), qIdentity(), CreateCube(1, "crate01a.jpg", &tpool, 1, true));
 		world->actor_add(object);
 
-		boost::shared_ptr<World3Widget > wid( new World3Widget( Dock::Fill(), world ) );
+		wid.reset(new World3Widget( Dock::Fill(), world ) );
 		cam.pipeline = fse::Pipeline::Create("fse/normal.xml", &tempShaderPool);
-		wid->updateCamera(cam);
 		display.widget_add( wid );
 	}
 
@@ -88,10 +91,15 @@ public:
 	void onUpdate(real delta)
 	{
 		//dcam.update(delta, 30.0f, 10.0f);
+		if( followcam )
+		{
+			cam.lookAt(object->location);
+		}
 	}
 
 	void onRender()
 	{
+		wid->updateCamera(cam);
 		defaultRender();
 	}
 

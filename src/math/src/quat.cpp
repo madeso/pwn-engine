@@ -158,7 +158,7 @@ namespace pwn
 		const quat qLookInDirection(const vec3& adir, const vec3& up)
 		{
 			quat ret;
-			quaternion_rotation_aim_at(ret, adir, vec3(0,0,0), up);
+			quaternion_rotation_aim_at(ret, vec3(0,0,0), adir, up);
 			return ret;
 		}
 	}

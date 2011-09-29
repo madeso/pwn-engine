@@ -4,6 +4,7 @@
 
 set ( engine_src
 	democamera.cpp
+	democontrols.cpp
 	display.cpp
 	display.hpp
 	game.cpp

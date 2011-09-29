@@ -12,10 +12,12 @@ namespace pwn
 		class Camera
 		{
 		public:
-			Camera(math::point3 position, math::quat orientation, real fov, real znear, real zfar);
+			Camera(const math::point3& position, const math::quat& orientation, real fov, real znear, real zfar);
+			void lookAt(const math::point3& p);
 
 			math::point3 position;
 			math::quat orientation;
+			/// in degrees
 			real fov;
 			real znear;
 			real zfar;

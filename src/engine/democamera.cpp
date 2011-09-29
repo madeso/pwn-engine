@@ -60,8 +60,8 @@ namespace pwn
 		void DemoCamera::update(const real delta, const real speed, const real sensitivity)
 		{
 			using namespace pwn::math;
-			const vec3 movement = multi(forwardState, backwardState) * In(camera.orientation)
-				+ multi(rightState, leftState) * Right(camera.orientation)
+			const vec3 movement = multi(forwardState, backwardState) * In(camera.rotation)
+				+ multi(rightState, leftState) * Right(camera.rotation)
 				+ multi(upState, downState) * Up();
 			camera.position.vec += movement * delta * speed;
 
@@ -70,8 +70,8 @@ namespace pwn
 			const math::quat updown = math::cquat(math::RightHandAround(Right(), Angle::FromDegrees(Y(mouse)*sensitivity)));
 			const math::quat rightleft = math::cquat( math::RightHandAround(Up(), Angle::FromDegrees(-X(mouse)*sensitivity)));
 			
-			//camera.orientation = math::Combine_Local(camera.orientation, rightleft);
-			camera.orientation = math::Combine_Parent(camera.orientation, updown);
+			//camera.rotation = math::Combine_Local(camera.rotation, rightleft);
+			camera.rotation = math::Combine_Parent(camera.rotation, updown);
 
 			mouse = vec2(0,0);
 

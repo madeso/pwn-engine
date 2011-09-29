@@ -28,9 +28,9 @@ namespace pwn
 				buffer = fbo;
 			}
 
-			void BufferReference::bindTexture(int location)
+			void BufferReference::bindTexture(int position)
 			{
-				buffer->bindTexture(location);
+				buffer->bindTexture(position);
 			}
 
 			void BufferReference::updateTexture(Provider& a, World3* world, const RenderArgs& r)

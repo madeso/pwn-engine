@@ -16,6 +16,7 @@
 #include <pwn/render/worldwithcameraboundobject3.h>
 #include <pwn/render/fse/Pipeline.h>
 #include <pwn/render/light.h>
+#include <pwn/engine/democontrols.h>
 
 #include <pwn/render/shaderpool.h>
 
@@ -56,6 +57,7 @@ private:
 
 	bool followcam;
 	boost::shared_ptr<World3Widget > wid;
+	DemoControls ctrl;
 public:
 
 	EasyLoop(Game* game)
@@ -84,16 +86,16 @@ public:
 		}
 		else
 		{
-			//dcam.onKey(key, isDown);
+			ctrl.onKey(key, isDown);
 		}
 	}
 
 	void onUpdate(real delta)
 	{
-		//dcam.update(delta, 30.0f, 10.0f);
+		ctrl.update(&object->position, &object->rotation, delta, 10.0f, 10.0f);
 		if( followcam )
 		{
-			cam.lookAt(object->location);
+			cam.lookAt(object->position);
 		}
 	}
 
@@ -105,10 +107,8 @@ public:
 
 	void onMouse(const math::vec2 movement)
 	{
-		//dcam.onMouse(movement);
+		ctrl.onMouse(movement);
 	}
-
-	
 };
 
 int main(int, char** argv)

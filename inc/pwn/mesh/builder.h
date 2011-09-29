@@ -22,9 +22,9 @@ namespace pwn
 		class BPoint
 		{
 		public:
-			BPoint(const math::vec3& location, math::vec4 bone);
+			BPoint(const math::vec3& position, math::vec4 bone);
 
-			math::vec3 location;
+			math::vec3 position;
 			math::vec4 bone;
 		};
 
@@ -34,7 +34,7 @@ namespace pwn
 			typedef pwn::uint32 index;
 			struct Vertex
 			{
-				index location;
+				index position;
 				index texture;
 				index normal;
 

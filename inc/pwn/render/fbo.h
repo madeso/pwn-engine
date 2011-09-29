@@ -26,7 +26,7 @@ namespace pwn
 		{
 		public:
 			Fbo(int w, int h, bool mipmap);
-			void bindTexture(int location);
+			void bindTexture(int position);
 			int getWidth() const;
 			int getHeight() const;
 			int getId() const;

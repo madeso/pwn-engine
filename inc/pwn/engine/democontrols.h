@@ -11,8 +11,8 @@ namespace pwn
 		class DemoControls
 		{
 		public:
-			DemoCamera();
-			~DemoCamera();
+			DemoControls();
+			~DemoControls();
 
 			Key::Code forward;
 			Key::Code backward;
@@ -23,7 +23,7 @@ namespace pwn
 
 			bool onKey(Key::Code key, bool newState);
 			void onMouse(const math::vec2 movement);
-			void update(math::point3* position, math::quat* orientation, const real delta, const real speed, const real sensitivity);
+			void update(math::point3* position, math::quat* rotation, const real delta, const real speed, const real sensitivity);
 		private:
 			bool forwardState;
 			bool backwardState;

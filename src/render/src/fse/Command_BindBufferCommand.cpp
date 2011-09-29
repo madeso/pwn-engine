@@ -13,7 +13,7 @@ namespace pwn
 		{
 			BindBufferCommand::BindBufferCommand(const core::Ptree& el, Provider* prov)
 				: Command(el, prov)
-				, location( el.get("location", -1) )
+				, position( el.get("position", -1) )
 				, name( el.get<string>("buffer") )
 			{
 			}
@@ -24,7 +24,7 @@ namespace pwn
 
 			void BindBufferCommand::apply()
 			{
-				buffer->bindTexture(location);
+				buffer->bindTexture(position);
 			}
 
 			std::vector<Provider*> BindBufferCommand::getDependencies()
@@ -36,7 +36,7 @@ namespace pwn
 
 			const string BindBufferCommand::toString() const
 			{
-				return core::Str() << Command::toString() << " who binds buffer " << name << " to " << location;
+				return core::Str() << Command::toString() << " who binds buffer " << name << " to " << position;
 			}
 
 			void BindBufferCommand::doLink(Linker* user)

@@ -75,7 +75,7 @@ namespace pwn
 				glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient.data());
 
 				list.begin();
-				list.add(r.compiled.generateMatrix(r.camera.position.vec + math::Left(r.camera.orientation)*4 + math::In(r.camera.orientation)*10, r.camera.orientation));
+				list.add(r.compiled.generateMatrix(r.camera.position.vec + math::Left(r.camera.rotation)*4 + math::In(r.camera.rotation)*10, r.camera.rotation));
 				BOOST_FOREACH(ActorPtr a, actors)
 				{
 					a->render(&list, r.compiled);

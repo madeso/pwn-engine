@@ -77,12 +77,12 @@ namespace pwn
 		struct Point
 		{
 			Point();
-			Point(const math::vec3& location, math::vec4 bone);
-			Point(const math::vec3& location, math::vec3 normal, math::vec2 textcoord, math::vec4 bone);
+			Point(const math::vec3& position, math::vec4 bone);
+			Point(const math::vec3& position, math::vec3 normal, math::vec2 textcoord, math::vec4 bone);
 			bool hasBone() const;
 			math::vec4 getBone() const;
 
-			math::vec3 location;
+			math::vec3 position;
 			math::vec3 normal;
 			math::vec2 textcoord;
 			math::vec4 bone;
@@ -104,12 +104,12 @@ namespace pwn
 		{
 		public:
 			FramePosition();
-			FramePosition(real time, const math::vec3& location);
+			FramePosition(real time, const math::vec3& position);
 			string toString() const;
 
 			math::vec3 value() const;
 
-			math::vec3 location;
+			math::vec3 position;
 		};
 
 		math::vec3 Interpolate(const FramePosition& from, real current, const FramePosition& to);
@@ -134,7 +134,7 @@ namespace pwn
 			PosePerBone();
 			PosePerBone(math::vec3 l, math::quat r);
 
-			math::vec3 location;
+			math::vec3 position;
 			math::quat rotation;
 
 			string toString() const;

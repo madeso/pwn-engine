@@ -56,10 +56,10 @@ namespace pwn
 			glDeleteTextures(1, &text); pwnAssert_NoGLError();
 		}
 
-		void Image::bind(int location) const
+		void Image::bind(int position) const
 		{
-			Assert(location >= 0);
-			glActiveTexture(GL_TEXTURE0 + location); pwnAssert_NoGLError();
+			Assert(position >= 0);
+			glActiveTexture(GL_TEXTURE0 + position); pwnAssert_NoGLError();
 			glBindTexture(GL_TEXTURE_2D, text); pwnAssert_NoGLError();
 		}
 
@@ -85,9 +85,9 @@ namespace pwn
 		{
 		}
 
-		void Texture2::bind(int location) const
+		void Texture2::bind(int position) const
 		{
-			texture->bind(location);
+			texture->bind(position);
 		}
 
 		const uint32 Texture2::sid() const

@@ -17,7 +17,7 @@ namespace pwn
 		{
 			BOOST_FOREACH(BPoint& p, mesh->positions)
 			{
-				p.location += dir;
+				p.position += dir;
 			}
 
 			return mesh;
@@ -27,7 +27,7 @@ namespace pwn
 		{
 			BOOST_FOREACH(BPoint& p, mesh->positions)
 			{
-				p.location *= scale;
+				p.position *= scale;
 			}
 
 			BOOST_FOREACH(Bone& b, mesh->bones)
@@ -55,7 +55,7 @@ namespace pwn
 			BTriangle::Vertex v(BTriangle::index p, BTriangle::index t)
 			{
 				BTriangle::Vertex vt;
-				vt.location = p;
+				vt.position = p;
 				vt.texture = t;
 				return vt;
 			}
@@ -138,7 +138,7 @@ namespace pwn
 		// ==================================================================================================================================
 
 		BPoint::BPoint(const math::vec3& alocation, math::vec4 abone)
-			: location(alocation)
+			: position(alocation)
 			, bone(abone)
 		{
 		}
@@ -146,14 +146,14 @@ namespace pwn
 		// ==================================================================================================================================
 
 		BTriangle::Vertex::Vertex()
-			: location(0)
+			: position(0)
 			, texture(0)
 			, normal(0)
 		{
 		}
 
 		BTriangle::Vertex::Vertex(index vertex, index anormal, index textureCoordinate)
-			: location(vertex)
+			: position(vertex)
 			, texture(textureCoordinate)
 			, normal(anormal)
 		{
@@ -289,9 +289,9 @@ namespace pwn
 			{
 				BOOST_FOREACH(BTriangle& t, tr.second)
 				{
-					const vec3 p0 = positions[t[0].location].location;
-					const vec3 p1 = positions[t[1].location].location;
-					const vec3 p2 = positions[t[2].location].location;
+					const vec3 p0 = positions[t[0].position].position;
+					const vec3 p1 = positions[t[1].position].position;
+					const vec3 p2 = positions[t[2].position].position;
 
 					const vec3 d0 = math::FromTo(p1, p0);
 					const vec3 d1 = math::FromTo(p1, p2);
@@ -300,8 +300,8 @@ namespace pwn
 
 					for(int i=0; i<3; ++i)
 					{
-						vertexNormalsSum[t[i].location] += faceNormal;
-						t[i].normal = t[i].location;
+						vertexNormalsSum[t[i].position] += faceNormal;
+						t[i].normal = t[i].position;
 					}
 				}
 			}
@@ -347,7 +347,7 @@ namespace pwn
 					if( p.hasBone() == false) continue;
 					const math::vec4 bone = p.getBone();
 
-					vec3 location(0,0,0);
+					vec3 position(0,0,0);
 					vec3 normal(0,0,0);
 
 					real insum = 0;
@@ -359,24 +359,24 @@ namespace pwn
 						const real in = GetBoneInfluence(x);
 						insum += in;
 						Data& data = bdp[GetBoneIndex(x)];
-						location += in * TranslateWithInverseMatrix(p.location, data.globalskel);
+						position += in * TranslateWithInverseMatrix(p.position, data.globalskel);
 						normal += in * GetNormalized(TranslateWithInverseMatrix(p.normal, math::SetTransform(data.globalskel, math::vec3(0,0,0))));
 					}
 					const real inv = 1/insum;
-					mesh->setLocationNormal(i, inv*location, GetNormalized(math::vec3(inv*normal)));
+					mesh->setLocationNormal(i, inv*position, GetNormalized(math::vec3(inv*normal)));
 				}
 			}
 		}
 
 		struct Combo
 		{
-			Triangle::VertexIndex location;
+			Triangle::VertexIndex position;
 			Triangle::VertexIndex texture;
 			Triangle::VertexIndex normal;
 			math::vec4 boneIndex;
 
 			Combo(const BTriangle::Vertex& v, math::vec4 bi)
-				: location(v.location)
+				: position(v.position)
 				, texture(v.texture)
 				, normal(v.normal)
 				, boneIndex(bi)
@@ -387,7 +387,7 @@ namespace pwn
 		bool operator<(const Combo& lhs, const Combo& rhs)
 		{
 #define TEST(x) if( lhs.x != rhs.x ) return lhs.x < rhs.x
-			TEST(location);
+			TEST(position);
 			else TEST(texture);
 			else TEST(normal);
 			else TEST(boneIndex);
@@ -420,7 +420,7 @@ namespace pwn
 					// get combinations, add if not existing
 					for(int i=0; i<3; ++i)
 					{
-						const math::vec4 boneIndex = positions[sourceTriangle[i].location].bone;
+						const math::vec4 boneIndex = positions[sourceTriangle[i].position].bone;
 						const Combo c(sourceTriangle[i], boneIndex);
 						ComboMap::iterator result = combinations.find(c);
 						if( result != combinations.end() )
@@ -429,7 +429,7 @@ namespace pwn
 						}
 						else
 						{
-							const math::vec3 pos = positions[c.location].location;
+							const math::vec3 pos = positions[c.position].position;
 							const math::vec2 text = texcoords.empty() ? math::vec2(0,0) : texcoords[c.texture];
 							const math::vec3 normal = normals.empty() == false ? normals[c.normal] : math::vec3(0,0,0);
 							Triangle::VertexIndex ind = posv.size();

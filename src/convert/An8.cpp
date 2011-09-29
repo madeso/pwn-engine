@@ -716,10 +716,10 @@ namespace pwn
 
 				{
 				}
-				pwn::real center0; //The location along the bone of the center of the lower end of the influence volume.
+				pwn::real center0; //The position along the bone of the center of the lower end of the influence volume.
 				pwn::real inRadius0; //The radius of the inner layer at center0.
 				pwn::real outRadius0; //The radius of the outer layer at center0.
-				pwn::real center1; //The location along the bone of the center of the uppper end of the influence volume.
+				pwn::real center1; //The position along the bone of the center of the uppper end of the influence volume.
 				pwn::real inRadius1; //The radius of the inner layer at center1.
 				pwn::real outRadius1; //The radius of the outer layer at center1.
 			};
@@ -753,8 +753,8 @@ namespace pwn
 				ChildPtr c = owner->getChild(name);
 				ChildPtr o = c->getChild("origin");
 				const math::vec3 origin(o->getNumber(0), o->getNumber(1), o->getNumber(2));
-				const math::quat orientation = ExtractQuaternion( c->getChild("orientation") );
-				return math::mat44helper(math::mat44Identity()).rotate(orientation).translate(-origin).mat;
+				const math::quat rotation = ExtractQuaternion( c->getChild("rotation") );
+				return math::mat44helper(math::mat44Identity()).rotate(rotation).translate(-origin).mat;
 			}
 
 			struct NamedObject
@@ -785,7 +785,7 @@ namespace pwn
 			{
 				Bone()
 					: length(0)
-					, orientation( math::qIdentity() )
+					, rotation( math::qIdentity() )
 				{
 				}
 				math::vec3 vec() const
@@ -794,7 +794,7 @@ namespace pwn
 				}
 				pwn::string name;
 				pwn::real length;
-				math::quat orientation;
+				math::quat rotation;
 				Influence influence;
 				std::vector<Bone> childs;
 				std::vector<NamedObject> objects;
@@ -821,7 +821,7 @@ namespace pwn
 				r.name = bone->getString(0);
 				r.length = bone->getChild("length")->getNumber(0);
 				if( bone->hasChild("influence") ) r.influence = ExtractInfluence(bone->getChild("influence"));
-				if( bone->hasChild("orientation") ) r.orientation = ExtractQuaternion(bone->getChild("orientation"));
+				if( bone->hasChild("rotation") ) r.rotation = ExtractQuaternion(bone->getChild("rotation"));
 				if( bone->hasChild("bone") )
 				{
 					BOOST_FOREACH(ChildPtr s, bone->getChilds("bone") )
@@ -1311,7 +1311,7 @@ namespace pwn
 
 				void prepareBones(Bone& b, const math::mat44& root)
 				{
-					const math::mat44 rotatedr = math::mat44helper(root).rotate(b.orientation).mat;
+					const math::mat44 rotatedr = math::mat44helper(root).rotate(b.rotation).mat;
 					BOOST_FOREACH(Bone& c, b.childs)
 					{
 						prepareBones(c, math::mat44helper(rotatedr).translate(b.vec()).mat);
@@ -1324,12 +1324,12 @@ namespace pwn
 					mesh::Bone mb;
 					if( parent ) mb.setParent(bi->get(parent));
 					mb.setName(b.name);
-					mb.rot = b.orientation;
+					mb.rot = b.rotation;
 					mb.pos = b.vec();
 					const mesh::BoneIndex theid = builder->bones.size();
 					builder->addBone(mb);
 					bi->add(&b, theid);
-					const math::mat44 rotatedr = math::mat44helper(root).rotate(b.orientation).mat;
+					const math::mat44 rotatedr = math::mat44helper(root).rotate(b.rotation).mat;
 					BOOST_FOREACH(const Bone& c, b.childs)
 					{
 						walkBone(&b, c, builder, bi, math::mat44helper(rotatedr).translate(b.vec()).mat);
@@ -1484,7 +1484,7 @@ namespace pwn
 						data.frames.push_back( An8KeyFrame(fk.frame, fk.value) );
 					}
 
-					//math::vec3 originalOrientation = b.orientation;
+					//math::vec3 originalOrientation = b.rotation;
 					//data.addFirst(originalOrientation[diff]);
 				}
 

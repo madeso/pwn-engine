@@ -28,7 +28,7 @@ namespace pwn
 				void doBind(Binder* bd);
 
 			private:
-				const int location;
+				const int position;
 				const string name;
 				BufferReferencePtr buffer;
 				TargetPtr targ;

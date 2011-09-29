@@ -139,7 +139,7 @@ public:
 		if( !right )
 		{
 			light->position = dcam.camera.position.vec;
-			light->direction = dcam.camera.orientation;
+			light->direction = dcam.camera.rotation;
 		}
 	}
 

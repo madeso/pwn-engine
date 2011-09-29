@@ -12,13 +12,13 @@ namespace pwn
 		}
 
 		Point::Point(const math::vec3& alocation, math::vec4 abone)
-			: location(alocation)
+			: position(alocation)
 			, bone(abone)
 		{
 		}
 
 		Point::Point(const math::vec3& alocation, math::vec3 anormal, math::vec2 atextcoord, math::vec4 abone)
-			: location(alocation)
+			: position(alocation)
 			, normal(anormal)
 			, textcoord(atextcoord)
 			, bone(abone)

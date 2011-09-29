@@ -62,9 +62,9 @@ namespace pwn
 			Bind(0);
 		}
 
-		void Fbo::bindTexture(int location)
+		void Fbo::bindTexture(int position)
 		{
-			texture->bind(location);
+			texture->bind(position);
 		}
 
 		int Fbo::getWidth() const

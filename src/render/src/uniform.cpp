@@ -15,9 +15,9 @@ namespace pwn
 			if( var == -1 ) throw static_cast<string>(core::Str() << name << " is not a recognized uniform");
 		}
 
-		void Uniform::bindUniform(int location)
+		void Uniform::bindUniform(int position)
 		{
-			glUniform1i(var, location);
+			glUniform1i(var, position);
 			pwnAssert_NoGLError();
 		}
 

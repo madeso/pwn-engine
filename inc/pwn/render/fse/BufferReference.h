@@ -23,7 +23,7 @@ namespace pwn
 
 			public:
 				void setBuffer(FboPtr fbo);
-				void bindTexture(int location);
+				void bindTexture(int position);
 				void updateTexture(Provider& a, World3* world, const RenderArgs& ra); /// < Calls doProvide
 				int getWidth() const;
 				int getHeight() const;

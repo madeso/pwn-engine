@@ -19,7 +19,7 @@ namespace pwn
 		{
 		public:
 			Uniform(Shader* sh, const string& name);
-			void bindUniform(int location);
+			void bindUniform(int position);
 			void bindUniform(float value);
 			void bindUniform(const math::vec2& v);
 			int getLocation() const;

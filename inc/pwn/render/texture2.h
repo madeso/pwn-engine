@@ -23,7 +23,7 @@ namespace pwn
 		public:
 			Image(bool alpha, int width, int height, const byte* bitmapData, bool mipmap, int format, real anistropy, bool compress);
 			~Image();
-			void bind(int location) const;
+			void bind(int position) const;
 
 			unsigned int getId() const;
 
@@ -41,7 +41,7 @@ namespace pwn
 			Texture2(core::IdPool* pool, bool useGlTexture);
 			~Texture2();
 
-			void bind(int location) const;
+			void bind(int position) const;
 			const uint32 sid() const; ///< sort id
 			void setImage(Image* img);
 		private:

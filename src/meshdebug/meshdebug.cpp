@@ -49,7 +49,7 @@ namespace pwn
 			for(int i=0; i<d.getCount(); ++i)
 			{
 				mesh::Point p = d.getPoint(i);
-				f << i << std::endl << p.location << std::endl << p.normal << std::endl << p.textcoord << std::endl << p.bone << std::endl << std::endl;
+				f << i << std::endl << p.position << std::endl << p.normal << std::endl << p.textcoord << std::endl << p.bone << std::endl << std::endl;
 			}
 
 			f << "--------------------------------------------------------------------------------------" << std::endl << std::endl;

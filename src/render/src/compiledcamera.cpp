@@ -9,7 +9,7 @@ namespace pwn
 		using namespace pwn::math;
 
 		CompiledCamera::CompiledCamera(const Camera& camera)
-			: mat( cmat44(-camera.orientation) * cmat44(RightHandAround(Up(), Angle::FromDegrees(180))) * cmat44(vec3(-X(camera.position.vec), -Y(camera.position.vec), Z(camera.position.vec))) )
+			: mat( cmat44(-camera.rotation) * cmat44(RightHandAround(Up(), Angle::FromDegrees(180))) * cmat44(vec3(-X(camera.position.vec), -Y(camera.position.vec), Z(camera.position.vec))) )
 		{
 		}
 

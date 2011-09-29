@@ -24,31 +24,31 @@ namespace pwn
 
 		FramePosition::FramePosition()
 			: Timed(0)
-			, location(math::Origo3().vec)
+			, position(math::Origo3().vec)
 		{
 		}
 
 		FramePosition::FramePosition(real time, const math::vec3& loc)
 			: Timed(time)
-			, location(loc)
+			, position(loc)
 		{
 		}
 
 		math::vec3 FramePosition::value() const
 		{
-			return location;
+			return position;
 		}
 
 		string FramePosition::toString() const
 		{
-			return core::Str() << getTime() << " " << location;
+			return core::Str() << getTime() << " " << position;
 		}
 
 		math::vec3 Interpolate(const FramePosition& from, real current, const FramePosition& to)
 		{
 			real scale = math::To01(from.getTime(), current, to.getTime());
 			if (math::IsWithinInclusive(0, scale, 1) == false) throw "invalid scale";
-			return math::Lerp(from.location, scale, to.location);
+			return math::Lerp(from.position, scale, to.position);
 		}
 
 		FrameRotation::FrameRotation()
@@ -81,20 +81,20 @@ namespace pwn
 		}
 
 		PosePerBone::PosePerBone()
-			: location(math::Origo3().vec)
+			: position(math::Origo3().vec)
 			, rotation(math::qIdentity())
 		{
 		}
 
 		PosePerBone::PosePerBone(math::vec3 l, math::quat r)
-			: location(l)
+			: position(l)
 			, rotation(r)
 		{
 		}
 
 		string PosePerBone::toString() const
 		{
-			return core::Str() << location << ": " << math::cAxisAngle(rotation);
+			return core::Str() << position << ": " << math::cAxisAngle(rotation);
 		}
 
 
@@ -225,7 +225,7 @@ namespace pwn
 			for(std::size_t i=0; i<fp.size(); ++i)
 			{
 				FramePosition& f = fp[i];
-				f.location *= scale;
+				f.position *= scale;
 			}
 		}
 
@@ -243,7 +243,7 @@ namespace pwn
 				// either it has no parents, or it's parent has already been precoessed
 				Assert( bone.hasParent()==false || boneIndex > bone.getParent() );
 				math::mat44 parent = bone.hasParent() ? result[bone.getParent()].first : math::mat44Identity();
-				const math::vec3 poseloc = pose.bones[boneIndex].location;
+				const math::vec3 poseloc = pose.bones[boneIndex].position;
 				const math::quat poserot = pose.bones[boneIndex].rotation;
 
 				const math::mat44 anim = math::mat44helper(math::mat44Identity()).translate(poseloc).rotate(math::GetConjugate(poserot)).mat;

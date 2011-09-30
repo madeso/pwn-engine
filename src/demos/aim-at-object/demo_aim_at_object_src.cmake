@@ -2,6 +2,6 @@
 # do not edit, since this file might get overwritten
 # delete the comment where this file is included to remove the autogeneration
 
-set ( game_src
-	game.cpp
+set ( demo_aim_at_object_src
+	demo-aim-at-object.cpp
 )

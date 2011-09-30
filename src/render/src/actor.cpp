@@ -16,6 +16,7 @@ namespace pwn
 			: position(position)
 			, rotation(rotation)
 			, model(model)
+			, debug(false)
 		{
 		}
 
@@ -27,9 +28,14 @@ namespace pwn
 
 		void Actor::render(RenderList* rl, const CompiledCamera& cam)
 		{
-			if( model == 0 ) return; // abort if no model available
-
 			const math::mat44 mat = cam.generateMatrix(position.vec, rotation);
+
+			if( debug ) 
+			{
+				rl->add(mat);
+			}
+
+			if( model == 0 ) return; // abort if no model available
 
 			BOOST_FOREACH(ActorDef::PartPtr p, model->parts)
 			{

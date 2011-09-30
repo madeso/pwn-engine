@@ -35,6 +35,7 @@ namespace pwn
 			boost::shared_ptr<ActorDef> model;
 			math::point3 position;
 			math::quat rotation;
+			bool debug; /// true if should display debug information
 		};
 	}
 }

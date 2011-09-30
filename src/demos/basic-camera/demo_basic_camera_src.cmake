@@ -3,5 +3,5 @@
 # delete the comment where this file is included to remove the autogeneration
 
 set ( demo_basic_camera_src
-	main.cpp
+	demo-basic-camera.cpp
 )

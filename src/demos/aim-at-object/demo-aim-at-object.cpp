@@ -63,14 +63,14 @@ public:
 	EasyLoop(Game* game)
 		: Loop(game)
 		, pos(0)
-		, cam(point3(0,0,0), qIdentity(), 45, 0.1f, 1000)
+		, cam(point3(4,4,4), qIdentity(), 45, 0.1f, 1000)
 		, followcam(false)
 	{
 		World3::Ptr world( new WorldWithCameraBoundObject3(Actor::Create(Origo3(), qIdentity(), CreateCube(10, "_stars-texture.jpg", &tpool, 1, false) ),
 			World3::Create()) );
 		world->light_setAmbient( math::Rgba(1.0f) );
 
-		object = Actor::Create(point3(0,0,5), qIdentity(), CreateCube(1, "crate01a.jpg", &tpool, 1, true));
+		object = Actor::Create(point3(0,0,15), qIdentity(), CreateCube(1, "crate01a.jpg", &tpool, 1, true));
 		object->debug = true;
 		world->actor_add(object);
 

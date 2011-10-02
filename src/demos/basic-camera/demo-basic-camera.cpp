@@ -51,12 +51,12 @@ public:
 			World3::Create()) );
 		world->light_setAmbient( math::Rgba(1.0f) );
 
-		boost::shared_ptr<Actor> object = Actor::Create(point3(0,0,5), qIdentity(), CreateCube(1, "crate01a.jpg", &tpool, 1, true));
+		boost::shared_ptr<Actor> object = Actor::Create(point3(0,0,15), qIdentity(), CreateCube(1, "crate01a.jpg", &tpool, 1, true));
 		object->debug = true;
 		world->actor_add(object);
 
 		wid.reset(new World3Widget( Dock::Fill(), world ) );
-		Camera cam(point3(0,0,0), qIdentity(), 45, 0.1f, 1000);
+		Camera cam(point3(4,4,4), qIdentity(), 45, 0.1f, 1000);
 		cam.pipeline = fse::Pipeline::Create("fse/normal.xml", &tempShaderPool);
 		wid->updateCamera(cam);
 		display.widget_add( wid );

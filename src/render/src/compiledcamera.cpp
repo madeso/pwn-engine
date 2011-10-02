@@ -8,8 +8,19 @@ namespace pwn
 	{
 		using namespace pwn::math;
 
+		math::mat44 G()
+		{
+			//return cmat44(RightHandAround(Up(), Angle::FromDegrees(180)));
+			math::mat44 m;
+			cml::matrix_scale(m, 1.f, 1.f, -1.f);
+			return m;
+		}
+
+		const math::mat44 fixOpenGlNegativeZ = G();
+
 		CompiledCamera::CompiledCamera(const Camera& camera)
-			: mat( cmat44(-camera.rotation) * cmat44(RightHandAround(Up(), Angle::FromDegrees(180))) * cmat44(vec3(-X(camera.position.vec), -Y(camera.position.vec), Z(camera.position.vec))) )
+			// : mat( fixOpenGlNegativeZ * cmat44(vec3(-X(camera.position.vec), -Y(camera.position.vec), Z(camera.position.vec))) * cmat44(-camera.rotation) )
+			: mat( fixOpenGlNegativeZ * cmat44(camera.position.vec) * cmat44(camera.rotation) )
 		{
 		}
 

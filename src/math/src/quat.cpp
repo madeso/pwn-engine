@@ -158,7 +158,9 @@ namespace pwn
 		const quat qLookInDirection(const vec3& adir, const vec3& up)
 		{
 			quat ret;
-			quaternion_rotation_aim_at(ret, vec3(0,0,0), adir, up);
+			mat44 mat;
+			cml::matrix_look_at_LH(mat, vec3(0,0,0), adir, up);
+			cml::quaternion_rotation_matrix(ret,mat);
 			return ret;
 		}
 	}

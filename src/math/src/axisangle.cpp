@@ -34,7 +34,7 @@ namespace pwn
 
 		const AxisAngle RightHandAround(const vec3& axis, const Angle& angle)
 		{
-			return AxisAngle(axis, angle);
+			return AxisAngle(axis, Angle::FromRadians(-angle.inRadians()));
 		}
 	}
 }

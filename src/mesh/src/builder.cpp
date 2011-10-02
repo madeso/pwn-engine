@@ -252,13 +252,13 @@ namespace pwn
 		{
 			if( reverse )
 			{
-				addTriangle(material, BTriangle(v2, v1, v0) );
-				addTriangle(material, BTriangle(v3, v2, v0) );
+				addTriangle(material, BTriangle(v0, v1, v2) );
+				addTriangle(material, BTriangle(v0, v2, v3) );
 			}
 			else
 			{
-				addTriangle(material, BTriangle(v0, v1, v2) );
-				addTriangle(material, BTriangle(v0, v2, v3) );
+				addTriangle(material, BTriangle(v2, v1, v0) );
+				addTriangle(material, BTriangle(v3, v2, v0) );
 			}
 		}
 

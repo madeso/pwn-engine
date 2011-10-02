@@ -36,6 +36,8 @@ namespace pwn
 			pwn::math::mat44 m;
 			cml::matrix_perspective_xfov_RH(m, cml::rad(camera.fov), aspect, camera.znear, camera.zfar, cml::z_clip_neg_one);
 			gluPerspective(camera.fov, aspect, camera.znear, camera.zfar); pwnAssert_NoGLError();
+			//glRotatef(180, 0,1,0);
+			//glScalef(1,1,-1);
 			//glLoadMatrixf(m.data());
 			glClear(GL_DEPTH_BUFFER_BIT); pwnAssert_NoGLError();
 

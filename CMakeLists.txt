@@ -4,6 +4,15 @@ project(pwn)
 set(pwn_version_major 1)
 set(pwn_version_minor 0)
 
+option (PWN_USE_FOLDERS "Use solution folders" OFF)
+
+if(PWN_USE_FOLDERS)
+	set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+	message("Using project folders")
+else()
+	set_property(GLOBAL PROPERTY USE_FOLDERS OFF)
+endif()
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake-modules")
 
 set(Boost_USE_STATIC_LIBS ON)

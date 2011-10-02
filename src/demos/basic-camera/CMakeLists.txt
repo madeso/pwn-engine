@@ -5,3 +5,4 @@ source_group("" FILES ${demo_basic_camera_src})
 
 add_executable(pwn-demo-basic-camera WIN32 ${demo_basic_camera_src})
 target_link_libraries(pwn-demo-basic-camera pwn-math pwn-io pwn-render pwn-engine ${Boost_LIBRARIES} ${SFML_MAIN_LIBS})
+set_target_properties(pwn-demo-basic-camera PROPERTIES FOLDER "demo")

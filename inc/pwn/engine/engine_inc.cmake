@@ -5,6 +5,7 @@
 set ( engine_inc
 	../../inc/pwn/engine/democamera.h
 	../../inc/pwn/engine/democontrols.h
+	../../inc/pwn/engine/demomovement.h
 	../../inc/pwn/engine/game.h
 	../../inc/pwn/engine/key.h
 	../../inc/pwn/engine/loop.h

@@ -30,7 +30,7 @@ namespace pwn
 		{
 			const math::mat44 mat = cam.generateMatrix(position.vec, rotation);
 
-			if( debug ) 
+			if( debug )
 			{
 				rl->add(mat);
 			}

@@ -268,7 +268,7 @@ namespace pwn
 			glEnd();
 		}
 
-		
+
 
 		void Debug_RenderPoints(const mesh::CompiledPose& pose)
 		{

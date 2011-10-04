@@ -5,6 +5,7 @@
 set ( engine_src
 	democamera.cpp
 	democontrols.cpp
+	demomovement.cpp
 	display.cpp
 	display.hpp
 	game.cpp

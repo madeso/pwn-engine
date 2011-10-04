@@ -23,7 +23,7 @@ namespace pwn
 		{
 		public:
 			int errors;
-			
+
 			App()
 				: errors(0)
 			{
@@ -61,7 +61,7 @@ namespace pwn
 					<< b.rot << std::endl;
 				if( b.hasParent() )
 					f << b.getParent();
-				else 
+				else
 					f << "no parent";
 				f << std::endl << std::endl;
 			}

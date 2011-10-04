@@ -174,12 +174,12 @@ namespace pwn
 			BOOST_FOREACH(Entry& e, builders)
 			{
 				mesh::Builder& builder = e.builder;
-				//if( builder.normals.empty() ) 
+				//if( builder.normals.empty() )
 				builder.buildNormals();
 				const string name = e.name;
 				pwn::mesh::Flatouter flatouter(builder);
 				flatouter.modify(&builder);
-				
+
 				BOOST_FOREACH(AnimationEntry& ae, e.animations)
 				{
 					flatouter.modify(&ae.animation);

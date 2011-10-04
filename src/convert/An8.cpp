@@ -155,7 +155,7 @@ namespace pwn
 						{
 							// ignore parantesis
 						}
-						else 
+						else
 						{
 							Throw(Str() << "(" << line << ") not a known sign " << c);
 						}
@@ -389,12 +389,12 @@ namespace pwn
 				{
 					const pwn::string name = child->getName();
 					ChildMap::iterator r = childs.find(name);
-					
+
 					ChildList& list = (r != childs.end()) ? r->second // if we found one, get a reference to the list
 						: childs.insert(ChildMap::value_type(name, ChildList())).first->second; // if not create one and get the reference
 					list.push_back(child);
 				}
-				
+
 				ChildPtr getChild(const pwn::string& name)
 				{
 					ChildMap::iterator r = childs.find(name);
@@ -526,7 +526,7 @@ namespace pwn
 				}
 				return r;
 			}
-			enum 
+			enum
 			{
 				SF_SHOW_BACK=1, SF_HAS_NORMALS=2, SF_HAS_TEXTURE=4
 			};
@@ -588,7 +588,7 @@ namespace pwn
 			std::vector<pwn::string> ExtractMaterials(ChildPtr materials)
 			{
 				std::vector<pwn::string> r;
-				
+
 				BOOST_FOREACH(ChildPtr m, materials->getChilds("materialname"))
 				{
 					r.push_back(m->getString());
@@ -799,7 +799,7 @@ namespace pwn
 				std::vector<Bone> childs;
 				std::vector<NamedObject> objects;
 				math::mat44 xform;
-				
+
 				const Bone* getBone(const pwn::string& s) const
 				{
 					if( name == s ) return this;
@@ -844,7 +844,7 @@ namespace pwn
 				pwn::string name;
 				Bone root;
 
-				Bone getBone(const pwn::string& name) const 
+				Bone getBone(const pwn::string& name) const
 				{
 					const Bone* bone = root.getBone(name);
 					if( bone == 0 ) throw "missing bone";
@@ -1540,7 +1540,7 @@ namespace pwn
 				{
 					subs.insert(s);
 				}
-				
+
 				if( subs.empty() )
 				{
 					ExtractObjectNames(f, &subs);

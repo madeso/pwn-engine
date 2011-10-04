@@ -31,7 +31,7 @@ namespace pwn
 				, stop(false)
 			{
 			}
-			
+
 			void setCommand(const std::vector<pwn::string>& names, Command arg, const pwn::string& description)
 			{
 				const pwn::string first = names[0];

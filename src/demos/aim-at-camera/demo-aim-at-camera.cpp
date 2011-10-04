@@ -16,7 +16,7 @@
 #include <pwn/render/worldwithcameraboundobject3.h>
 #include <pwn/render/fse/Pipeline.h>
 #include <pwn/render/light.h>
-#include <pwn/engine/democontrols.h>
+#include <pwn/engine/demomovement.h>
 
 #include <pwn/render/shaderpool.h>
 
@@ -55,16 +55,14 @@ private:
 	fse::PipelinePtr pipe;
 	pwn::render::ShaderPool tempShaderPool;
 
-	bool followcam;
 	boost::shared_ptr<World3Widget > wid;
-	DemoControls ctrl;
+	DemoMovement ctrl;
 public:
 
 	EasyLoop(Game* game)
 		: Loop(game)
 		, pos(0)
-		, cam(point3(4,4,4), qIdentity(), 45, 0.1f, 1000)
-		, followcam(false)
+		, cam(point3(0,0,0), qIdentity(), 45, 0.1f, 1000)
 	{
 		World3::Ptr world( new WorldWithCameraBoundObject3(Actor::Create(Origo3(), qIdentity(), CreateCube(10, "_stars-texture.jpg", &tpool, 1, false) ),
 			World3::Create()) );
@@ -77,6 +75,8 @@ public:
 		wid.reset(new World3Widget( Dock::Fill(), world ) );
 		cam.pipeline = fse::Pipeline::Create("fse/normal.xml", &tempShaderPool);
 		display.widget_add( wid );
+
+		ctrl.localUp = true;
 	}
 
 	void onKey(Key::Code key, bool isDown)
@@ -84,10 +84,6 @@ public:
 		if( key == Key::Escape && isDown )
 		{
 			stop();
-		}
-		if( key == Key::Return && isDown )
-		{
-			followcam = !followcam;
 		}
 		else
 		{
@@ -97,11 +93,9 @@ public:
 
 	void onUpdate(real delta)
 	{
-		ctrl.update(&object->position, &object->rotation, delta, 10.0f, 10.0f);
-		if( followcam )
-		{
-			cam.lookAt(object->position);
-		}
+		ctrl.update(&object->position, object->rotation, delta, 10.0f);
+		object->rotation = qLookAt(object->position.vec, cam.position.vec, Up());
+		cam.lookAt(object->position);
 	}
 
 	void onRender()
@@ -112,7 +106,6 @@ public:
 
 	void onMouse(const math::vec2 movement)
 	{
-		ctrl.onMouse(movement);
 	}
 };
 

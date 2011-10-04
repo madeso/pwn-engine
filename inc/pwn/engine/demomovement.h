@@ -1,5 +1,5 @@
-#ifndef PWN_ENGINE_DEMOCONTROLS
-#define PWN_ENGINE_DEMOCONTROLS
+#ifndef PWN_ENGINE_DEMOMOVEMENT
+#define PWN_ENGINE_DEMOMOVEMENT
 
 #include <pwn/engine/key.h>
 #include <pwn/math/types.h>
@@ -8,11 +8,11 @@ namespace pwn
 {
 	namespace engine
 	{
-		class DemoControls
+		class DemoMovement
 		{
 		public:
-			DemoControls();
-			~DemoControls();
+			DemoMovement();
+			~DemoMovement();
 
 			Key::Code forward;
 			Key::Code backward;
@@ -21,9 +21,10 @@ namespace pwn
 			Key::Code up;
 			Key::Code down;
 
+			bool localUp;
+
 			bool onKey(Key::Code key, bool newState);
-			void onMouse(const math::vec2 movement);
-			void update(math::point3* position, math::quat* rotation, const real delta, const real speed, const real sensitivity);
+			void update(math::point3* position, const math::quat& rotation, const real delta, const real speed);
 		private:
 			bool forwardState;
 			bool backwardState;
@@ -31,8 +32,6 @@ namespace pwn
 			bool rightState;
 			bool upState;
 			bool downState;
-
-			math::vec2 mouse;
 		};
 	}
 }

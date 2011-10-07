@@ -80,6 +80,22 @@ namespace pwn
 		{
 		}
 
+		RenderList::LineCommand::LineCommand()
+			: width(1)
+			, color(1)
+			, from(0,0,0)
+			, to(1,1,1)
+		{
+		}
+
+		RenderList::LineCommand::LineCommand(real w, const math::Rgba& c, const math::vec3& f, const math::vec3& t)
+			: width(w)
+			, color(c)
+			, from(f)
+			, to(t)
+		{
+		}
+
 		// for resize(0) support
 		RenderList::Command::Command()
 			: mat( math::mat44Identity() )
@@ -126,6 +142,7 @@ namespace pwn
 			transparent.resize(0);
 			solid.resize(0);
 			debug.resize(0);
+			lines.resize(0);
 		}
 
 		void RenderList::add(MeshPtr mesh, MaterialPtr material, const math::mat44& mat, Poseable* pos)
@@ -144,6 +161,11 @@ namespace pwn
 		{
 			debug.push_back(DebugCommand(mat, pos, kDebugRenderPoints));
 			debug.push_back(DebugCommand(mat, pos, kDebugRenderLines));
+		}
+
+		void RenderList::add(real width, const math::Rgba& color, const math::vec3& from, const math::vec3& to)
+		{
+			lines.push_back(LineCommand(width, color, from, to));
 		}
 
 		void RenderList::add(const math::mat44& mat)
@@ -220,6 +242,9 @@ namespace pwn
 
 				// before rendering?
 				glDisable(GL_LIGHTING);
+
+				render_lines();
+
 				glDisable(GL_DEPTH_TEST);
 
 				render_debug();
@@ -307,20 +332,46 @@ namespace pwn
 				const DebugRenderType rt = c.type;
 				if( rt == kDebugRenderLines )
 				{
-					Debug_RenderLines(c.poseable->pose);
+					if( useGlCommands )
+					{
+						Debug_RenderLines(c.poseable->pose);
+					}
 				}
 				else if( rt == kDebugRenderPoints )
 				{
-					Debug_RenderPoints(c.poseable->pose);
+					if( useGlCommands )
+					{
+						Debug_RenderPoints(c.poseable->pose);
+					}
 				}
 				else if ( rt == kDebugRenderMatrix )
 				{
-					Debug_RenderMatrix();
+					if( useGlCommands ) 
+					{
+						Debug_RenderMatrix();
+					}
 				}
 				else
 				{
 					Assert(false);
 				}
+			}
+		}
+
+		void RenderList::render_lines()
+		{
+			BOOST_FOREACH(const LineCommand& l, lines)
+			{
+				if( useGlCommands )
+				{
+					glLoadIdentity();
+				}
+				
+				glLineWidth(l.width);
+				glColor4f(l.color.r, l.color.g, l.color.b, l.color.a);
+				glBegin(GL_LINES);
+				glVertex(l.from);
+				glVertex(l.to);
 			}
 		}
 

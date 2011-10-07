@@ -159,7 +159,7 @@ namespace pwn
 		{
 			quat ret;
 			mat44 mat;
-			cml::matrix_look_at_LH(mat, vec3(0,0,0), adir, up);
+			cml::matrix_look_at_LH(mat, vec3(0,0,0), 20*adir, up);
 			cml::quaternion_rotation_matrix(ret,mat);
 			return ret;
 		}

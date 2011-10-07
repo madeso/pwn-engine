@@ -18,6 +18,7 @@ namespace pwn
 			explicit CompiledCamera(const Camera& camera);
 
 			math::mat44 generateMatrix(const math::vec3& pos, const math::quat& rot) const;
+			math::mat44 generateMatrix(const math::vec3& pos) const;
 
 			const math::mat44 mat;
 		};

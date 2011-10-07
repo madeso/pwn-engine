@@ -14,6 +14,7 @@ namespace pwn
 	{
 		class Actor;
 		class Light;
+		class Lines;
 		class RenderArgs;
 
 		/** A world is a list of actors to be rendered.
@@ -26,9 +27,13 @@ namespace pwn
 
 			typedef boost::shared_ptr<Actor> ActorPtr;
 			typedef boost::shared_ptr<Light> LightPtr;
+			typedef boost::shared_ptr<Lines> LinesPtr;
 
 			virtual void actor_add(ActorPtr actor) = 0;
 			virtual void actor_remove(ActorPtr actor) = 0;
+
+			virtual void lines_add(LinesPtr lines) = 0;
+			virtual void lines_remove(LinesPtr lines) = 0;
 
 			virtual void light_add(LightPtr light) = 0;
 			virtual void light_remove(LightPtr light) = 0;

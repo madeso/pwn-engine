@@ -9,7 +9,7 @@ namespace pwn
 {
 	namespace engine
 	{
-		class DemoControls : DemoMovement
+		class DemoControls : public DemoMovement
 		{
 		public:
 			DemoControls();

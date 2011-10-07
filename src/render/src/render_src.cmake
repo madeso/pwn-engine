@@ -17,6 +17,7 @@ set ( render_src
 	engine.cpp
 	fbo.cpp
 	light.cpp
+	lines.cpp
 	material.cpp
 	opengl_debug.hpp
 	part.cpp

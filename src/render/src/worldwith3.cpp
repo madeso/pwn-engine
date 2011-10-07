@@ -24,6 +24,15 @@ namespace pwn
 			world->actor_remove(actor);
 		}
 
+		void WorldWith3::lines_add(LinesPtr lines)
+		{
+			world->lines_add(lines);
+		}
+		void WorldWith3::lines_remove(LinesPtr lines)
+		{
+			world->lines_remove(lines);
+		}
+
 		void WorldWith3::light_add(LightPtr light)
 		{
 			world->light_add(light);

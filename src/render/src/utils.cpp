@@ -1,5 +1,7 @@
 #include <pwn/render/utils.h>
 #include <pwn/string.h>
+#include <pwn/render/lines.h>
+#include <pwn/math/operations.h>
 
 #include "opengl_debug.hpp"
 
@@ -29,6 +31,25 @@ namespace pwn
 			glTexCoord2f(1, 0); glVertex2f(w, h); // bottom right
 			glTexCoord2f(1, 1); glVertex2f(w, 0); // top right
 			glEnd(); pwnAssert_NoGLError();
+		}
+
+		void SetupGrid(World3::Ptr world, int halfCount, real swidth, real fwidth, int mod, real size)
+		{
+			Lines::Ptr small = Lines::Create(swidth);
+			Lines::Ptr fat = Lines::Create(fwidth);
+
+			real dist = 20;
+
+			for(int i=-halfCount; i<halfCount; ++i)
+			{
+				const real d = dist * i;
+				Lines::Ptr lines = (i % mod == mod-1)?fat:small;
+				lines->add(math::Left()*-size + math::In()*d, math::Left()*size + math::In()*d);
+				lines->add(math::In()*-size + math::Left()*d, math::In()*size + math::Left()*d);
+			}
+
+			world->lines_add(small);
+			world->lines_add(fat);
 		}
 	}
 

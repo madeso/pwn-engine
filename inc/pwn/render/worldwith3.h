@@ -18,6 +18,9 @@ namespace pwn
 			virtual void actor_add(ActorPtr actor);
 			virtual void actor_remove(ActorPtr actor);
 
+			virtual void lines_add(LinesPtr lines);
+			virtual void lines_remove(LinesPtr lines);
+
 			virtual void light_add(LightPtr light);
 			virtual void light_remove(LightPtr light);
 			virtual void light_setAmbient(const math::Rgba& ambient);

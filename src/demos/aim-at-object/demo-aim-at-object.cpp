@@ -17,6 +17,7 @@
 #include <pwn/render/fse/Pipeline.h>
 #include <pwn/render/light.h>
 #include <pwn/engine/democontrols.h>
+#include <pwn/render/utils.h>
 
 #include <pwn/render/shaderpool.h>
 
@@ -66,9 +67,10 @@ public:
 		, cam(point3(4,4,4), qIdentity(), 45, 0.1f, 1000)
 		, followcam(false)
 	{
-		World3::Ptr world( new WorldWithCameraBoundObject3(Actor::Create(Origo3(), qIdentity(), CreateCube(10, "_stars-texture.jpg", &tpool, 1, false) ),
+		World3::Ptr world( new WorldWithCameraBoundObject3(Actor::Create(Origo3(), qIdentity(), CreateCube(10, "gray.png", &tpool, 1, false) ),
 			World3::Create()) );
 		world->light_setAmbient( math::Rgba(1.0f) );
+		SetupGrid(world, 10, 1, 3, 2, 100);
 
 		object = Actor::Create(point3(0,0,15), qIdentity(), CreateCube(1, "crate01a.jpg", &tpool, 1, true));
 		object->debug = true;

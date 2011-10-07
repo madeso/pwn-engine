@@ -364,14 +364,16 @@ namespace pwn
 			{
 				if( useGlCommands )
 				{
-					glLoadIdentity();
-				}
+					glLoadIdentity(); pwnAssert_NoGLError();
 				
-				glLineWidth(l.width);
-				glColor4f(l.color.r, l.color.g, l.color.b, l.color.a);
-				glBegin(GL_LINES);
-				glVertex(l.from);
-				glVertex(l.to);
+					glLineWidth(l.width); pwnAssert_NoGLError();
+					glColor4f(l.color.r, l.color.g, l.color.b, l.color.a); pwnAssert_NoGLError();
+					glBegin(GL_LINES);
+						glVertex(l.from);
+						glVertex(l.to);
+					glEnd();
+					pwnAssert_NoGLError();
+				}
 			}
 		}
 

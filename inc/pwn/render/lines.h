@@ -17,8 +17,9 @@ namespace pwn
 		class Lines
 		{
 		public:
-			Lines();
-			static boost::shared_ptr<Lines> Create();
+			typedef boost::shared_ptr<Lines> Ptr;
+			Lines(real w);
+			static Ptr Create(real w);
 			void render(RenderList* rl, const CompiledCamera& camera);
 
 			real width;

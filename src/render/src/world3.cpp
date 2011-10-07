@@ -1,5 +1,6 @@
 #include <pwn/render/world3.h>
 #include <pwn/render/actor.h>
+#include <pwn/render/lines.h>
 #include <pwn/render/light.h>
 #include <pwn/render/renderlist.h>
 #include <pwn/render/RenderArgs.h>
@@ -50,6 +51,18 @@ namespace pwn
 				actors.erase(res);
 			}
 
+			void lines_add(LinesPtr line)
+			{
+				lines.push_back(line);
+			}
+
+			void lines_remove(LinesPtr line)
+			{
+				LinesList::iterator res = std::find(lines.begin(), lines.end(), line);
+				if( res == lines.end() ) return;
+				lines.erase(res);
+			}
+
 			void light_add(LightPtr light)
 			{
 				lights.push_back(light);
@@ -78,6 +91,11 @@ namespace pwn
 				BOOST_FOREACH(ActorPtr a, actors)
 				{
 					a->render(&list, r.compiled);
+				}
+
+				BOOST_FOREACH(LinesPtr l, lines)
+				{
+					l->render(&list, r.compiled);
 				}
 
 				int id = GL_LIGHT0; pwnAssert_NoGLError();
@@ -113,6 +131,9 @@ namespace pwn
 
 			typedef std::vector<LightPtr> LightList;
 			LightList lights;
+
+			typedef std::vector<LinesPtr> LinesList;
+			LinesList lines;
 
 			math::Rgba ambient;
 		};

@@ -58,7 +58,7 @@ private:
 
 	bool followcam;
 	boost::shared_ptr<World3Widget > wid;
-	DemoControls ctrl;
+	DemoMovement ctrl;
 public:
 
 	EasyLoop(Game* game)
@@ -99,7 +99,8 @@ public:
 
 	void onUpdate(real delta)
 	{
-		ctrl.update(&object->position, &object->rotation, delta, 10.0f, 10.0f);
+		ctrl.update(&object->position, object->rotation, delta, 10.0f);
+		//ctrl.update(&object->position, &object->rotation, delta, 10.0f, 10.0f);
 		if( followcam )
 		{
 			cam.lookAt(object->position);
@@ -114,7 +115,7 @@ public:
 
 	void onMouse(const math::vec2 movement)
 	{
-		ctrl.onMouse(movement);
+		//ctrl.onMouse(movement);
 	}
 };
 

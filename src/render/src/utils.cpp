@@ -43,7 +43,7 @@ namespace pwn
 			for(int i=-halfCount; i<halfCount; ++i)
 			{
 				const real d = dist * i;
-				Lines::Ptr lines = (i % mod == mod-1)?fat:small;
+				Lines::Ptr lines = (abs(i) % mod == mod-1)?fat:small;
 				lines->add(math::Left()*-size + math::In()*d, math::Left()*size + math::In()*d);
 				lines->add(math::In()*-size + math::Left()*d, math::In()*size + math::Left()*d);
 			}

@@ -346,7 +346,7 @@ namespace pwn
 				}
 				else if ( rt == kDebugRenderMatrix )
 				{
-					if( useGlCommands ) 
+					if( useGlCommands )
 					{
 						Debug_RenderMatrix();
 					}
@@ -365,7 +365,7 @@ namespace pwn
 				if( useGlCommands )
 				{
 					glLoadIdentity(); pwnAssert_NoGLError();
-				
+
 					glLineWidth(l.width); pwnAssert_NoGLError();
 					glColor4f(l.color.r, l.color.g, l.color.b, l.color.a); pwnAssert_NoGLError();
 					glBegin(GL_LINES);

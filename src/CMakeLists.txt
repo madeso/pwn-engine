@@ -1,4 +1,5 @@
 add_subdirectory(assert)
+add_subdirectory(component)
 add_subdirectory(convert)
 add_subdirectory(core)
 add_subdirectory(demos)

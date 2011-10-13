@@ -17,6 +17,7 @@
 #include <pwn/render/fse/Pipeline.h>
 #include <pwn/render/light.h>
 #include <pwn/engine/demomovement.h>
+#include <pwn/render/utils.h>
 
 #include <pwn/render/shaderpool.h>
 
@@ -62,11 +63,12 @@ public:
 	EasyLoop(Game* game)
 		: Loop(game)
 		, pos(0)
-		, cam(point3(0,0,0), qIdentity(), 45, 0.1f, 1000)
+		, cam(point3(10,10,10), qIdentity(), 45, 0.1f, 1000)
 	{
-		World3::Ptr world( new WorldWithCameraBoundObject3(Actor::Create(Origo3(), qIdentity(), CreateCube(10, "_stars-texture.jpg", &tpool, 1, false) ),
+		World3::Ptr world( new WorldWithCameraBoundObject3(Actor::Create(Origo3(), qIdentity(), CreateCube(10, "gray.png", &tpool, 1, false) ),
 			World3::Create()) );
 		world->light_setAmbient( math::Rgba(1.0f) );
+		SetupGrid(world, 10, 1, 3, 2, 100);
 
 		object = Actor::Create(point3(0,0,15), qIdentity(), CreateCube(1, "crate01a.jpg", &tpool, 1, true));
 		object->debug = true;
@@ -76,7 +78,7 @@ public:
 		cam.pipeline = fse::Pipeline::Create("fse/normal.xml", &tempShaderPool);
 		display.widget_add( wid );
 
-		ctrl.localUp = true;
+		//ctrl.localUp = true;
 	}
 
 	void onKey(Key::Code key, bool isDown)
@@ -94,8 +96,8 @@ public:
 	void onUpdate(real delta)
 	{
 		ctrl.update(&object->position, object->rotation, delta, 10.0f);
-		object->rotation = qLookAt(object->position.vec, cam.position.vec, Up());
 		cam.lookAt(object->position);
+		object->rotation = qLookInDirection(Up(), Right());// qLookAt(cam.position.vec, object->position.vec, Up());
 	}
 
 	void onRender()

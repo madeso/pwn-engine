@@ -4,5 +4,6 @@
 
 set ( core_src
 	StringUtils.cpp
+	enum.cpp
 	idpool.cpp
 )

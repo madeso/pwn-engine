@@ -3,6 +3,7 @@
 # delete the comment where this file is included to remove the autogeneration
 
 set ( core_test
+	TestEnum.cpp
 	TestStdUtil.cpp
 	TestStringUtils.cpp
 	idpooltest.cpp

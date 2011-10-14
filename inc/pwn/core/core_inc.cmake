@@ -6,6 +6,7 @@ set ( core_inc
 	../../../inc/pwn/core/StringSeperator.h
 	../../../inc/pwn/core/config.h
 	../../../inc/pwn/core/consolearguments.h
+	../../../inc/pwn/core/enum.h
 	../../../inc/pwn/core/idpool.h
 	../../../inc/pwn/core/map.h
 	../../../inc/pwn/core/pool.h

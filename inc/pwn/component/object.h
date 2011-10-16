@@ -9,10 +9,16 @@
 
 namespace pwn
 {
+	namespace core
+	{
+		class EnumValue;
+	}
+
 	namespace component
 	{
 		class Property;
 		class Component;
+		class EventArgs;
 
 		class PropertyMap
 			: boost::noncopyable
@@ -36,7 +42,7 @@ namespace pwn
 			~ComponentList();
 
 			void add(boost::shared_ptr<Component> component);
-			void onEvent();
+			void onEvent(const core::EnumValue& type, const EventArgs& args);
 			void removePendingComponents();
 		private:
 			typedef std::vector<boost::shared_ptr<Component> > List;
@@ -49,6 +55,9 @@ namespace pwn
 		public:
 			Object();
 			~Object();
+
+			void add(boost::shared_ptr<Component> component);
+			void onEvent(const core::EnumValue& type, const EventArgs& args);
 		private:
 			PropertyMap properties;
 			ComponentList components;

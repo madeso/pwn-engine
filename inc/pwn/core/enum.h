@@ -43,6 +43,7 @@ namespace pwn
 			const size_t toValue() const;
 			bool operator==(const EnumValue& other) const;
 			bool operator!=(const EnumValue& other) const;
+			bool operator<(const EnumValue& other) const;
 		private:
 			EnumType* type;
 			size_t value;

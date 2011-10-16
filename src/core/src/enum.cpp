@@ -132,6 +132,11 @@ namespace pwn
 		{
 			return !(*this==other);
 		}
+		bool EnumValue::operator<(const EnumValue& other) const
+		{
+			Assert(type == other.type);
+			return value < other.value;
+		}
 		std::ostream& operator<<(std::ostream& s, const EnumValue& v)
 		{
 			s << v.toString();

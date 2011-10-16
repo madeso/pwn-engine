@@ -56,13 +56,13 @@ namespace pwn
 			list.push_back(component);
 		}
 
-		void ComponentList::onEvent()
+		void ComponentList::onEvent(const core::EnumValue& type, const EventArgs& args)
 		{
 			BOOST_FOREACH(boost::shared_ptr<Component> c, list)
 			{
 				if( c->shouldBeRemoved() == false )
 				{
-					c->onEvent();
+					c->onEvent(type, args);
 				}
 			}
 		}
@@ -89,6 +89,16 @@ namespace pwn
 
 		Object::~Object()
 		{
+		}
+
+		void Object::add(boost::shared_ptr<Component> component)
+		{
+			components.add(component);
+		}
+
+		void Object::onEvent(const core::EnumValue& type, const EventArgs& args)
+		{
+			components.onEvent(type, args);
 		}
 	}
 }

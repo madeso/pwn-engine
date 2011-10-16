@@ -13,6 +13,7 @@ namespace pwn
 			boost::shared_ptr<Property> CreateReal(real r);
 			boost::shared_ptr<Property> CreateVec3(const math::vec3& v);
 			boost::shared_ptr<Property> CreateQuat(const math::quat& q);
+			boost::shared_ptr<Property> CreateEvent(const core::EnumValue& e);
 		}
 	}
 }

@@ -1,4 +1,5 @@
 #include <pwn/component/propertystd.h>
+#include <pwn/core/enum.h>
 
 namespace pwn
 {
@@ -42,6 +43,10 @@ namespace pwn
 					{
 						throw InvalidType();
 					}
+					const core::EnumValue getEvent() const
+					{
+						throw InvalidType();
+					}
 
 					string& refString()
 					{
@@ -76,6 +81,10 @@ namespace pwn
 					{
 						throw InvalidType();
 					}
+					void setEvent(const core::EnumValue& e)
+					{
+						throw InvalidType();
+					}
 				};
 
 				//////////////////////////////////////////////////////////////////////////////////////////////
@@ -104,6 +113,10 @@ namespace pwn
 						throw InvalidType();
 					}
 					const math::quat getQuat() const
+					{
+						throw InvalidType();
+					}
+					const core::EnumValue getEvent() const
 					{
 						throw InvalidType();
 					}
@@ -141,6 +154,10 @@ namespace pwn
 					{
 						throw InvalidType();
 					}
+					void setEvent(const core::EnumValue& e)
+					{
+						throw InvalidType();
+					}
 				};
 
 				//////////////////////////////////////////////////////////////////////////////////////////////
@@ -169,6 +186,10 @@ namespace pwn
 						return v;
 					}
 					const math::quat getQuat() const
+					{
+						throw InvalidType();
+					}
+					const core::EnumValue getEvent() const
 					{
 						throw InvalidType();
 					}
@@ -206,6 +227,10 @@ namespace pwn
 					{
 						throw InvalidType();
 					}
+					void setEvent(const core::EnumValue& e)
+					{
+						throw InvalidType();
+					}
 				};
 
 				//////////////////////////////////////////////////////////////////////////////////////////////
@@ -236,6 +261,10 @@ namespace pwn
 					const math::quat getQuat() const
 					{
 						return v;
+					}
+					const core::EnumValue getEvent() const
+					{
+						throw InvalidType();
 					}
 
 					string& refString()
@@ -271,6 +300,83 @@ namespace pwn
 					{
 						v = q;
 					}
+					void setEvent(const core::EnumValue& e)
+					{
+						throw InvalidType();
+					}
+				};
+
+				//////////////////////////////////////////////////////////////////////////////////////////////
+				// String property
+
+				class PropertyEvent
+					: public Property
+				{
+				public:
+					core::EnumValue e;
+					PropertyEvent(const core::EnumValue& v)
+						: e(v)
+					{
+					}
+
+					const string getString() const
+					{
+						throw InvalidType();
+					}
+					const real getReal() const
+					{
+						throw InvalidType();
+					}
+					const math::vec3 getVec3() const
+					{
+						throw InvalidType();
+					}
+					const math::quat getQuat() const
+					{
+						throw InvalidType();
+					}
+					const core::EnumValue getEvent() const
+					{
+						return e;
+					}
+
+					string& refString()
+					{
+						throw InvalidType();
+					}
+					real& refReal()
+					{
+						throw InvalidType();
+					}
+					math::vec3& refVec3()
+					{
+						throw InvalidType();
+					}
+					math::quat& refQuat()
+					{
+						throw InvalidType();
+					}
+
+					void setString(const string& s)
+					{
+						throw InvalidType();
+					}
+					void setReal(real r)
+					{
+						throw InvalidType();
+					}
+					void setVec3(const math::vec3& a)
+					{
+						throw InvalidType();
+					}
+					void setQuat(const math::quat& q)
+					{
+						throw InvalidType();
+					}
+					void setEvent(const core::EnumValue& v)
+					{
+						e = v;
+					}
 				};
 
 				template<typename Prop, typename Base>
@@ -296,6 +402,10 @@ namespace pwn
 			boost::shared_ptr<Property> CreateQuat(const math::quat& q)
 			{
 				return CreateProperty<PropertyQuat>(q);
+			}
+			boost::shared_ptr<Property> CreateEvent(const core::EnumValue& e)
+			{
+				return CreateProperty<PropertyEvent>(e);
 			}
 		}
 	}

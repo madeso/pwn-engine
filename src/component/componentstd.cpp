@@ -1,19 +1,8 @@
 #include <pwn/component/componentstd.h>
 #include <pwn/component/component.h>
 #include <pwn/component/eventargs.h>
-
-#include <functional>
-#include <boost/bind.hpp>
-
-#define BEGIN_EVENT_TABLE() namespace { template<class X> void RegisterCallbacks(X* x) {
-#define REGISTER_CALLBACK(e,f) x->addCallback(::pwn::component::EventArgs::Type().toEnum(#e),boost::bind(std::mem_fun(&X::f), x, _1))
-#define END_EVENT_TABLE() } }
-#define DECLARE_CALLBACK() void registerCallbacks()
-#define IMPLEMENT_CALLBACK(X) void X::registerCallbacks() { RegisterCallbacks(this); }
-
-BEGIN_EVENT_TABLE()
-	REGISTER_CALLBACK(Update, onUpdate);
-END_EVENT_TABLE()
+#include <pwn/component/property.h>
+#include <pwn/component/componentdef.h>
 
 namespace pwn
 {
@@ -23,19 +12,39 @@ namespace pwn
 			: public Component
 		{
 		public:
+			ComponentTimeout(const ComponentArgs& args)
+				: time(locals.getReal())
+				, ev(args.get("event")->getEvent())
+			{
+				time = args.get("time")->getReal();
+			}
+
 			void onUpdate(const EventArgs& a)
 			{
+				const real delta = a[0].getReal();
+				time -= delta;
+				if( time < delta )
+				{
+					markForRemoval();
+					sendObjectEvent(ev, EventArgs());
+				}
 			}
 
 			DECLARE_CALLBACK();
 
-			static boost::shared_ptr<Component> Create()
+			static boost::shared_ptr<Component> Create(const ComponentArgs& args)
 			{
-				boost::shared_ptr<Component> c(new ComponentTimeout());
+				boost::shared_ptr<Component> c(new ComponentTimeout(args));
 				return c;
 			}
 		private:
+			core::EnumValue ev;
+			real& time;
 		};
+
+		BEGIN_EVENT_TABLE(ComponentTimeout)
+			REGISTER_CALLBACK(Update, onUpdate);
+		END_EVENT_TABLE()
 
 		IMPLEMENT_CALLBACK(ComponentTimeout)
 	}

@@ -24,6 +24,9 @@ namespace pwn
 
 			size_t count() const;
 
+			Property& operator[](size_t index);
+			const Property& operator[](size_t index) const;
+
 			static core::EnumType& Type();
 		private:
 			typedef std::vector<boost::shared_ptr<Property> > List;

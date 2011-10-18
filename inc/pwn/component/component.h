@@ -21,7 +21,7 @@ namespace pwn
 		class PropertyList
 		{
 		public:
-			real& getReal();
+			real& refReal();
 		};
 
 		class Component
@@ -55,10 +55,9 @@ namespace pwn
 	}
 }
 
-#define BEGIN_EVENT_TABLE(X) namespace { template<class C> void RegisterEvents_##X(C* c) {
-#define REGISTER_CALLBACK(e,f) c->addCallback(::pwn::component::EventArgs::Type().toEnum(#e),boost::bind(std::mem_fun(&C::f), c, _1))
-#define END_EVENT_TABLE() } }
+#define BEGIN_EVENT_TABLE(X) void X::registerCallbacks() { typedef X C;
+#define REGISTER_CALLBACK(e,f) addCallback(::pwn::component::EventArgs::Type().toEnum(#e),boost::bind(std::mem_fun(&C::f), this, _1))
+#define END_EVENT_TABLE() }
 #define DECLARE_CALLBACK() void registerCallbacks()
-#define IMPLEMENT_CALLBACK(X) void X::registerCallbacks() { RegisterEvents_##X(this); }
 
 #endif

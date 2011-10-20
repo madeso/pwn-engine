@@ -413,26 +413,27 @@ namespace pwn
 
 		bool operator<(const Combo& lhs, const Combo& rhs)
 		{
-#define TEST(x) if( lhs.x != rhs.x ) return lhs.x < rhs.x
-			TEST(position);
-			else
+			if(lhs.position != rhs.position)
 			{
-				TEST(texture);
+				return lhs.position < rhs.position;
 			}
-			else
+			else if(lhs.texture != rhs.texture)
 			{
-				TEST(normal);
+				return lhs.texture < rhs.texture;
 			}
-			else
+			else if(lhs.normal != rhs.normal)
 			{
-				TEST(boneIndex);
+				return lhs.normal < rhs.normal;
+			}
+			else if(lhs.boneIndex != rhs.boneIndex)
+			{
+				return lhs.boneIndex < rhs.boneIndex;
 			}
 			else
 			{
 				// all equal
 				return false;
 			}
-#undef TEST
 		}
 
 		Mesh Builder::asMesh() const

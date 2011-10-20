@@ -28,7 +28,8 @@ namespace pwn
 						return fbo;
 					}
 
-					int width; int height;
+					int width;
+					int height;
 				};
 
 				template<typename T>
@@ -49,8 +50,8 @@ namespace pwn
 			}
 
 			FboPool::FboPool(int width, int height)
-				: pool( CreateFboFunc(width, height) )
-				, map( GetFromPoolFunc<FboPtr>(&pool) )
+				: pool(CreateFboFunc(width, height))
+				, map(GetFromPoolFunc<FboPtr>(&pool))
 			{
 			}
 
@@ -75,14 +76,20 @@ namespace pwn
 				public:
 					ShaderLoader(Linker* link, ShaderPool* s)
 						: linker(link),
-						pool(s)
+						  pool(s)
 					{}
 
 					ShaderPtr operator()(const string& id)
 					{
 						ShaderPtr shader = linker->getShaderOrNull(id);
-						if( shader.get() ) return shader;
-						else return pool->getFromFile(id);
+						if(shader.get())
+						{
+							return shader;
+						}
+						else
+						{
+							return pool->getFromFile(id);
+						}
 					}
 				private:
 					Linker* linker;
@@ -91,7 +98,7 @@ namespace pwn
 			}
 
 			Binder::Binder(Linker* linker, ShaderPool* pool)
-				: shaders( ShaderLoader(linker, pool) )
+				: shaders(ShaderLoader(linker, pool))
 			{
 			}
 
@@ -106,13 +113,19 @@ namespace pwn
 
 			ShaderPtr Binder::getShaderOrNull(const string& shadername)
 			{
-				if (shadername.empty()) return ShaderPtr();
-				else return shaders.get(shadername);
+				if(shadername.empty())
+				{
+					return ShaderPtr();
+				}
+				else
+				{
+					return shaders.get(shadername);
+				}
 			}
 
 			void Binder::reference(BufferReferencePtr br)
 			{
-				if (references.find(br) != references.end())
+				if(references.find(br) != references.end())
 				{
 					throw FseException(br->getName() + " already addd to " + toString());
 				}
@@ -128,15 +141,15 @@ namespace pwn
 
 					void add(const string& s)
 					{
-						map[s] = countsOf(s)+1;
+						map[s] = countsOf(s) + 1;
 					}
 
 					unsigned int countsOf(const string& s) const
 					{
 						const Map::const_iterator f = map.find(s);
-						return f!=map.end()
-							? f->second
-							: 0;
+						return f != map.end()
+						       ? f->second
+						       : 0;
 					}
 				private:
 					Map map;
@@ -157,7 +170,7 @@ namespace pwn
 					FboPtr buff = allocate(b->getName());
 					b->setBuffer(buff);
 					usages.add(b->getName());
-					if (usages.countsOf(b->getName()) == sc.countsOf(b->getName()))
+					if(usages.countsOf(b->getName()) == sc.countsOf(b->getName()))
 					{
 						release(buff);
 					}
@@ -181,9 +194,9 @@ namespace pwn
 			FboCreatorPtr Binder::getCreator(Size size)
 			{
 				CreatorMap::iterator result = creators.find(size);
-				if (result == creators.end())
+				if(result == creators.end())
 				{
-					FboCreatorPtr c( new FboPool(size.width, size.height) );
+					FboCreatorPtr c(new FboPool(size.width, size.height));
 					creators[size] = c;
 					return c;
 				}
@@ -196,8 +209,8 @@ namespace pwn
 			void Binder::release(FboPtr buff)
 			{
 				getCreator(
-					Size(buff->getWidth(), buff->getHeight())
-					)->release(buff);
+				   Size(buff->getWidth(), buff->getHeight())
+				)->release(buff);
 			}
 
 			string Binder::toString() const
@@ -209,12 +222,15 @@ namespace pwn
 			{
 				AssociationMap::const_iterator r = associations.find(name);
 
-				if (r == associations.end())
+				if(r == associations.end())
 				{
 					throw FseException(name + " is missing a defined size");
 				}
 
-				else return r->second;
+				else
+				{
+					return r->second;
+				}
 			}
 		}
 	}

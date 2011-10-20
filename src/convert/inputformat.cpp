@@ -29,7 +29,10 @@ namespace pwn
 
 			void perform()
 			{
-				if( verbose ) std::cout << ".";
+				if(verbose)
+				{
+					std::cout << ".";
+				}
 			}
 		};
 
@@ -121,12 +124,30 @@ namespace pwn
 
 		const InputFormat* SuggestFormat(const pwn::string& ext)
 		{
-			if( ext == ".obj" ) return GetInputFormat<InputFormat_Obj>();
-			else if( ext == ".3ds" ) return GetInputFormat<InputFormat_Studio3ds>();
-			else if( ext == ".txt" ) return GetInputFormat<InputFormat_Ms3d_ascii>();
-			else if( ext == ".ms3d" ) return GetInputFormat<InputFormat_Ms3d_binary>();
-			else if( ext == ".an8" ) return GetInputFormat<InputFormat_An8>();
-			else return 0;
+			if(ext == ".obj")
+			{
+				return GetInputFormat<InputFormat_Obj>();
+			}
+			else if(ext == ".3ds")
+			{
+				return GetInputFormat<InputFormat_Studio3ds>();
+			}
+			else if(ext == ".txt")
+			{
+				return GetInputFormat<InputFormat_Ms3d_ascii>();
+			}
+			else if(ext == ".ms3d")
+			{
+				return GetInputFormat<InputFormat_Ms3d_binary>();
+			}
+			else if(ext == ".an8")
+			{
+				return GetInputFormat<InputFormat_An8>();
+			}
+			else
+			{
+				return 0;
+			}
 		}
 	}
 }

@@ -11,9 +11,9 @@ namespace test
 
 	GTEST(TestColumnMajor)
 	{
-		mat33 m = mat33_FromColMajor(0,1,2,
-				3,4,5,
-				6,7,8);
+		mat33 m = mat33_FromColMajor(0, 1, 2,
+		                             3, 4, 5,
+		                             6, 7, 8);
 
 		EXPECT_REAL_EQ(m(0, 0), 0);
 		EXPECT_REAL_EQ(m(1, 0), 1);
@@ -31,9 +31,9 @@ namespace test
 	GTEST(TestRowMajor)
 	{
 		mat33 m(
-							0,1,2,
-							3,4,5,
-							6,7,8 );
+		   0, 1, 2,
+		   3, 4, 5,
+		   6, 7, 8);
 		EXPECT_REAL_EQ(m(0, 0), 0);
 		EXPECT_REAL_EQ(m(0, 1), 1);
 		EXPECT_REAL_EQ(m(0, 2), 2);

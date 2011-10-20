@@ -37,15 +37,18 @@ namespace pwn
 			PhysFsStarter(const pwn::string& argv0)
 				: deinitInDestructor(false)
 			{
-				Assert(gPhysFsCreated()==false);
+				Assert(gPhysFsCreated() == false);
 				const int result = PHYSFS_init(argv0.c_str());
 				deinitInDestructor = true;
-				if( result == 0) ThrowPhysFsError();
+				if(result == 0)
+				{
+					ThrowPhysFsError();
+				}
 			}
 
 			~PhysFsStarter()
 			{
-				if( deinitInDestructor )
+				if(deinitInDestructor)
 				{
 					PHYSFS_deinit();
 				}
@@ -57,7 +60,7 @@ namespace pwn
 			const pwn::string GetParent(const pwn::string& app)
 			{
 				// system_complete solves relative paths we get from argv[0] and physfs seems give bad folders and data when it revieves them
-				return boost::filesystem::system_complete(boost::filesystem::path(app).parent_path().parent_path() / "dummy.exe" ).file_string();
+				return boost::filesystem::system_complete(boost::filesystem::path(app).parent_path().parent_path() / "dummy.exe").file_string();
 			}
 		}
 
@@ -70,7 +73,10 @@ namespace pwn
 					const pwn::string parentdir = GetParent(argv0);
 					PhysFsStarter start(parentdir);
 					const int result = PHYSFS_setSaneConfig(company.c_str(), app.c_str(), "vfs", 0, 0); // ignore cd-rom, append archives to search-list
-					if( result == 0 ) ThrowPhysFsError();
+					if(result == 0)
+					{
+						ThrowPhysFsError();
+					}
 
 					start.deinitInDestructor = false;
 				}
@@ -94,10 +100,10 @@ namespace pwn
 			std::vector<pwn::string> FilesSeen(const pwn::string& dir)
 			{
 				std::vector<pwn::string> files;
-				char **rc = PHYSFS_enumerateFiles(dir.c_str());
-				char **i;
+				char** rc = PHYSFS_enumerateFiles(dir.c_str());
+				char** i;
 
-				for (i = rc; *i != NULL; i++)
+				for(i = rc; *i != NULL; i++)
 				{
 					files.push_back(*i);
 				}

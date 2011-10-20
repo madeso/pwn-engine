@@ -11,7 +11,7 @@ namespace pwn
 
 		const IdPool::ID IdPool::generate()
 		{
-			if( released.empty())
+			if(released.empty())
 			{
 				const ID value = current;
 				++current;
@@ -31,7 +31,7 @@ namespace pwn
 		}
 
 		Id::Id(IdPool* pool)
-			: value( pool->generate() )
+			: value(pool->generate())
 			, pool(pool)
 		{
 		}

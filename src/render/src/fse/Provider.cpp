@@ -38,8 +38,14 @@ namespace pwn
 
 			void Provider::setId(const string& aid)
 			{
-				if (id.empty() ) id = aid;
-				else throw FseException("Unable to change id from " + id + " to " + aid);
+				if(id.empty())
+				{
+					id = aid;
+				}
+				else
+				{
+					throw FseException("Unable to change id from " + id + " to " + aid);
+				}
 			}
 
 			const string Provider::getId() const
@@ -49,7 +55,7 @@ namespace pwn
 
 			void Provider::provide(World3* world, const RenderArgs& ra)
 			{
-				if (autocallCommands)
+				if(autocallCommands)
 				{
 					callCommands();
 				}
@@ -64,7 +70,7 @@ namespace pwn
 
 			void Provider::link(Linker* linker)
 			{
-				if (false == targetname.empty())
+				if(false == targetname.empty())
 				{
 					try
 					{
@@ -89,11 +95,11 @@ namespace pwn
 			void Provider::bind(Binder* bd, ShaderPool* pool)
 			{
 				const string file = shaderdata.data();
-				if( file.empty() )
+				if(file.empty())
 				{
 					boost::optional<const core::Ptree&> source = shaderdata.get_child_optional("source");
 
-					if( source )
+					if(source)
 					{
 						shader = pool->getFromSource(source.get(), core::Str() << this->file << ":" << id);
 					}
@@ -126,7 +132,7 @@ namespace pwn
 				{
 					c->link(linker);
 
-					BOOST_FOREACH(Provider* p, c->getDependencies())
+					BOOST_FOREACH(Provider * p, c->getDependencies())
 					{
 						providers.push_back(p);
 					}
@@ -158,7 +164,7 @@ namespace pwn
 				, file(afile)
 			{
 				// foreach (const core::Ptree& e in Xml.Elements(el))
-				BOOST_FOREACH (const core::Ptree::value_type& e, el.get_child("commands"))
+				BOOST_FOREACH(const core::Ptree::value_type & e, el.get_child("commands"))
 				{
 					const string& type = e.first;
 					const core::Ptree& data = e.second;

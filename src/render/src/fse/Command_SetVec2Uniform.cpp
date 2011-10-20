@@ -10,8 +10,8 @@ namespace pwn
 		{
 			SetVec2Uniform::SetVec2Uniform(const core::Ptree& el, Provider* p)
 				: Command(el, p)
-				, uniformName( el.get<string>("uniform") )
-				, vec( el.get("x", 0.0f), el.get("y", 0.0f) )
+				, uniformName(el.get<string>("uniform"))
+				, vec(el.get("x", 0.0f), el.get("y", 0.0f))
 				, provider(p)
 			{
 			}

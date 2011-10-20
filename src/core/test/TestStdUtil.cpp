@@ -28,7 +28,7 @@ namespace test
 	{
 		const std::size_t before = vec.size();
 		SwapBackAndEraseObject(4, &vec);
-		EXPECT_EQ(before-1, vec.size());
+		EXPECT_EQ(before - 1, vec.size());
 	}
 
 	TEST_F(fix, testSwapBackAndErase_order)

@@ -19,13 +19,13 @@ namespace pwn
 
 		boost::shared_ptr<Lines> Lines::Create(real w)
 		{
-			boost::shared_ptr<Lines> l( new Lines(w) );
+			boost::shared_ptr<Lines> l(new Lines(w));
 			return l;
 		}
 
 		void Lines::render(RenderList* rl, const CompiledCamera& cam)
 		{
-			BOOST_FOREACH(const Line& l, lines)
+			BOOST_FOREACH(const Line & l, lines)
 			{
 				rl->add(width, color, math::cvec3(cam.generateMatrix(l.from)), math::cvec3(cam.generateMatrix(l.to)));
 			}

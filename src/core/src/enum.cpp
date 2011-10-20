@@ -16,22 +16,22 @@ namespace pwn
 
 		EnumType::~EnumType()
 		{
-			Assert(isAdding==false);
-			Assert(createdButNotAddedList.empty()==true);
+			Assert(isAdding == false);
+			Assert(createdButNotAddedList.empty() == true);
 		}
 
 		const string& EnumType::toString(size_t v) const
 		{
 			Assert(v < nextIndex);
 			List::const_iterator f = list.find(v);
-			if( f != list.end() )
+			if(f != list.end())
 			{
 				return f->second;
 			}
 			else
 			{
 				List::const_iterator i = createdButNotAddedList.find(v);
-				if( i == createdButNotAddedList.end() )
+				if(i == createdButNotAddedList.end())
 				{
 					throw "unknown index";
 				}
@@ -45,14 +45,14 @@ namespace pwn
 		const EnumValue EnumType::toEnum(const string& name)
 		{
 			Map::const_iterator r = map.find(name);
-			if( r == map.end() )
+			if(r == map.end())
 			{
-				if( isAdding )
+				if(isAdding)
 				{
 					const size_t id = nextIndex;
 					++nextIndex;
 					createdButNotAddedList.insert(List::value_type(id, name));
-					createdButNotAddedMap.insert(Map::value_type(name,id));
+					createdButNotAddedMap.insert(Map::value_type(name, id));
 					map.insert(Map::value_type(name, id));
 					return EnumValue(this, id);
 				}
@@ -69,9 +69,9 @@ namespace pwn
 
 		void EnumType::addEnum(const string& name)
 		{
-			Assert(isAdding==true);
+			Assert(isAdding == true);
 			Map::const_iterator r = map.find(name);
-			if( r == map.end() )
+			if(r == map.end())
 			{
 				const size_t id = nextIndex;
 				++nextIndex;
@@ -81,7 +81,7 @@ namespace pwn
 			else
 			{
 				Map::const_iterator f = createdButNotAddedMap.find(name);
-				if( f == createdButNotAddedMap.end() )
+				if(f == createdButNotAddedMap.end())
 				{
 					throw "enum already added";
 				}
@@ -99,9 +99,9 @@ namespace pwn
 
 		void EnumType::stopAdding()
 		{
-			Assert(isAdding==true);
+			Assert(isAdding == true);
 			isAdding = false;
-			Assert(createdButNotAddedList.empty()==true);// if this isn't empty, some enums have not been added or misspelling has occured, see throw above
+			Assert(createdButNotAddedList.empty() == true); // if this isn't empty, some enums have not been added or misspelling has occured, see throw above
 		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -130,7 +130,7 @@ namespace pwn
 		}
 		bool EnumValue::operator!=(const EnumValue& other) const
 		{
-			return !(*this==other);
+			return !(*this == other);
 		}
 		bool EnumValue::operator<(const EnumValue& other) const
 		{

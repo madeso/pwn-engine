@@ -20,7 +20,10 @@ namespace pwn
 		boost::shared_ptr<Component> ComponentCreator::create(const ID& name, const PropertyMap& props, const ComponentArgs& args) const
 		{
 			Functions::const_iterator r = functions.find(name);
-			if( r == functions.end() ) throw "unknown component";
+			if(r == functions.end())
+			{
+				throw "unknown component";
+			}
 			return r->second(props, args);
 		}
 
@@ -46,7 +49,7 @@ namespace pwn
 			{
 				const real delta = a[0].getReal();
 				time -= delta;
-				if( time < delta )
+				if(time < delta)
 				{
 					markForRemoval();
 					sendObjectEvent(ev, EventArgs());
@@ -69,24 +72,24 @@ namespace pwn
 			REGISTER_CALLBACK(Update, onUpdate);
 		END_EVENT_TABLE()
 
-		// 
+		//
 
 		class ComponentReboundingHealth
 			: public Component
 		{
 		public:
 			ComponentReboundingHealth(const PropertyMap& props, const ComponentArgs& args)
-				: health( props.get("health")->refReal() )
-				, currentPauseTime( locals.refReal() )
-				, regenPower( args.get("regen")->getReal() )
-				, waitTime( args.get("wait")->getReal() )
+				: health(props.get("health")->refReal())
+				, currentPauseTime(locals.refReal())
+				, regenPower(args.get("regen")->getReal())
+				, waitTime(args.get("wait")->getReal())
 			{
 			}
 
 			void onUpdate(const EventArgs& args)
 			{
 				const real delta = args[0].getReal();
-				if( currentPauseTime <= 0 )
+				if(currentPauseTime <= 0)
 				{
 					health += regenPower * delta;
 				}
@@ -103,7 +106,7 @@ namespace pwn
 
 			static boost::shared_ptr<Component> Create(const PropertyMap& props, const ComponentArgs& args)
 			{
-				boost::shared_ptr<Component> c(new ComponentReboundingHealth(props,args));
+				boost::shared_ptr<Component> c(new ComponentReboundingHealth(props, args));
 				return c;
 			}
 

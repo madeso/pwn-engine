@@ -11,15 +11,18 @@ namespace pwn
 		{
 			TargetPtr Targets_Create(const string& name, const core::Ptree& data)
 			{
-				if (name == "buffer")
+				if(name == "buffer")
 				{
 					return TargetPtr(new BufferTarget(data));
 				}
-				else if (name == "form")
+				else if(name == "form")
 				{
 					return TargetPtr(new FormTarget());
 				}
-				else throw FseException(name + " is not a known target");
+				else
+				{
+					throw FseException(name + " is not a known target");
+				}
 			}
 		}
 	}

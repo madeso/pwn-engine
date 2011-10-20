@@ -39,7 +39,7 @@ namespace pwn
 
 		const point3 Origo3()
 		{
-			return point3(PWN_MATH_VALUE(0.0),PWN_MATH_VALUE(0.0),PWN_MATH_VALUE(0.0));
+			return point3(PWN_MATH_VALUE(0.0), PWN_MATH_VALUE(0.0), PWN_MATH_VALUE(0.0));
 		}
 
 		const real DistanceBetween(const point3& from, const point3& to)
@@ -56,32 +56,32 @@ namespace pwn
 
 		const point3 operator+(const point3& lhs, const direction3& rhs)
 		{
-			return point3(lhs.vec+rhs.vec);
+			return point3(lhs.vec + rhs.vec);
 		}
 
 		const point3 operator+(const direction3& lhs, const point3& rhs)
 		{
-			return point3(lhs.vec+rhs.vec);
+			return point3(lhs.vec + rhs.vec);
 		}
 
 		const point3 operator-(const point3& lhs, const direction3& rhs)
 		{
-			return point3(lhs.vec-rhs.vec);
+			return point3(lhs.vec - rhs.vec);
 		}
 
 		const point3 operator-(const direction3& lhs, const point3& rhs)
 		{
-			return point3(lhs.vec-rhs.vec);
+			return point3(lhs.vec - rhs.vec);
 		}
 
 		const point3 operator*(const point3& lhs, const real rhs)
 		{
-			return point3(lhs.vec*rhs);
+			return point3(lhs.vec * rhs);
 		}
 
 		const point3 operator*(const real lhs, const point3& rhs)
 		{
-			return point3(lhs*rhs.vec);
+			return point3(lhs * rhs.vec);
 		}
 	}
 }

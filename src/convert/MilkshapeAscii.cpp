@@ -33,7 +33,7 @@ namespace pwn
 				// removes " at start and end
 				string Cleanup(string p)
 				{
-					return p.substr(1, p.size()-2);
+					return p.substr(1, p.size() - 2);
 				}
 				class Runner : boost::noncopyable
 				{
@@ -52,30 +52,36 @@ namespace pwn
 
 					void run()
 					{
-						while (currentLine < mLines.size())
+						while(currentLine < mLines.size())
 						{
 							string l = readLine();
 
-							if (StartsWith(l, "//")) continue;
-							if( Trim(l) == "" ) continue;
+							if(StartsWith(l, "//"))
+							{
+								continue;
+							}
+							if(Trim(l) == "")
+							{
+								continue;
+							}
 							std::vector<string> cmd = SplitString(l, ":");
-							if (cmd[0] == "Frames")
+							if(cmd[0] == "Frames")
 							{
 								readFrameCount(cmd);
 							}
-							else if (cmd[0] == "Frame")
+							else if(cmd[0] == "Frame")
 							{
 								readCurrentFrame(cmd);
 							}
-							else if (cmd[0] == "Meshes")
+							else if(cmd[0] == "Meshes")
 							{
 								readMeshes(cmd);
 							}
-							else if (cmd[0] == "Materials")
+							else if(cmd[0] == "Materials")
 							{
 								readMaterials(cmd);
 							}
-							else if (cmd[0] == "Bones")
+							else if(cmd[0] == "Bones")
 							{
 								readBones(cmd);
 							}
@@ -86,7 +92,7 @@ namespace pwn
 					void readBones(const std::vector<string>& cmd)
 					{
 						int bonecount = intParse(cmd[1]);
-						for (int boneId = 0; boneId < bonecount; ++boneId)
+						for(int boneId = 0; boneId < bonecount; ++boneId)
 						{
 							Bone& bone = model.newBone();
 							bone.name = Cleanup(readLine());
@@ -110,7 +116,7 @@ namespace pwn
 					{
 						string textcount = readLine();
 						int count = intParse(textcount);
-						for (int frameId = 0; frameId < count; ++frameId)
+						for(int frameId = 0; frameId < count; ++frameId)
 						{
 							std::vector<string> data = SplitString(readLine(), " ");
 							RotationKey key = bone.newRotationKey();
@@ -125,7 +131,7 @@ namespace pwn
 					{
 						string textcount = readLine();
 						int count = intParse(textcount);
-						for (int frameId = 0; frameId < count; ++frameId)
+						for(int frameId = 0; frameId < count; ++frameId)
 						{
 							std::vector<string> data = SplitString(readLine(), " ");
 							PositionKey key = bone.newPositionKey();
@@ -163,7 +169,7 @@ namespace pwn
 					{
 						// number of meshes
 						int meshcount = intParse(cmd[1]);
-						for (int meshId = 0; meshId < meshcount; ++meshId)
+						for(int meshId = 0; meshId < meshcount; ++meshId)
 						{
 							readSingleMesh();
 						}
@@ -180,21 +186,21 @@ namespace pwn
 
 						string vertexline = readLine();
 						int vertexcount = intParse(vertexline);
-						for (int vertex = 0; vertex < vertexcount; ++vertex)
+						for(int vertex = 0; vertex < vertexcount; ++vertex)
 						{
 							readSingleVertex(mesh);
 						}
 
 						string normalline = readLine();
 						int normalcount = intParse(vertexline);
-						for (int normal = 0; normal < normalcount; ++normal)
+						for(int normal = 0; normal < normalcount; ++normal)
 						{
 							readSingleNormal(mesh);
 						}
 
 						string triline = readLine();
 						int tricount = intParse(triline);
-						for (int tri = 0; tri < tricount; ++tri)
+						for(int tri = 0; tri < tricount; ++tri)
 						{
 							readSingleTriangle(mesh);
 						}
@@ -243,7 +249,10 @@ namespace pwn
 
 					const string readLine()
 					{
-						if( mLines.size() <= currentLine ) throw "file is too short...";
+						if(mLines.size() <= currentLine)
+						{
+							throw "file is too short...";
+						}
 						string line = mLines[currentLine];
 						++currentLine;
 						return line;
@@ -263,10 +272,16 @@ namespace pwn
 				void Read(BuilderList* builders, const pwn::string& path)
 				{
 					std::ifstream f(path.c_str());
-					if( !f ) throw "failed to open file";
+					if(!f)
+					{
+						throw "failed to open file";
+					}
 					std::vector<string> lines;
 					string line;
-					while(std::getline(f, line)) lines.push_back(line);
+					while(std::getline(f, line))
+					{
+						lines.push_back(line);
+					}
 					Runner runner(lines, 1.0f);
 					runner.run();
 					mesh::Builder builder;

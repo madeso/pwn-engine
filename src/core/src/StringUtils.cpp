@@ -1,6 +1,6 @@
 #ifdef _MSC_VER
-	// 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-	#define _CRT_SECURE_NO_WARNINGS
+// 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+#define _CRT_SECURE_NO_WARNINGS
 #endif
 
 #include <pwn/core/stringutils.h>
@@ -35,26 +35,29 @@ namespace pwn
 			return temp;
 		}
 
-		pwn::string TrimRight(const pwn::string& stringToTrim,const pwn::string& trimCharacters)
+		pwn::string TrimRight(const pwn::string& stringToTrim, const pwn::string& trimCharacters)
 		{
-			return pwn::string(stringToTrim).erase(stringToTrim.find_last_not_of(trimCharacters)+1);
+			return pwn::string(stringToTrim).erase(stringToTrim.find_last_not_of(trimCharacters) + 1);
 		}
 
-		pwn::string TrimLeft(const pwn::string& stringToTrim,const pwn::string& trimCharacters)
+		pwn::string TrimLeft(const pwn::string& stringToTrim, const pwn::string& trimCharacters)
 		{
-			return pwn::string(stringToTrim).erase(0,stringToTrim.find_first_not_of(trimCharacters));
+			return pwn::string(stringToTrim).erase(0, stringToTrim.find_first_not_of(trimCharacters));
 		}
 
-		pwn::string Trim(const pwn::string& stringToTrim,const pwn::string& trimCharacters)
+		pwn::string Trim(const pwn::string& stringToTrim, const pwn::string& trimCharacters)
 		{
-			return TrimRight( TrimLeft(stringToTrim, trimCharacters), trimCharacters);
+			return TrimRight(TrimLeft(stringToTrim, trimCharacters), trimCharacters);
 		}
 
 		bool StartsWith(const pwn::string stringToTest, const pwn::string& start)
 		{
 			const pwn::string::size_type length = start.length();
 			const pwn::string::size_type otherLength = stringToTest.length();
-			if( otherLength < length ) return false;
+			if(otherLength < length)
+			{
+				return false;
+			}
 			const pwn::string actualStart = stringToTest.substr(0, length);
 			return start == actualStart;
 		}
@@ -62,8 +65,11 @@ namespace pwn
 		{
 			const pwn::string::size_type length = end.length();
 			const pwn::string::size_type otherLength = stringToTest.length();
-			if( otherLength < length ) return false;
-			const pwn::string actualEnd = stringToTest.substr(otherLength-length, length);
+			if(otherLength < length)
+			{
+				return false;
+			}
+			const pwn::string actualEnd = stringToTest.substr(otherLength - length, length);
 			return end == actualEnd;
 		}
 
@@ -79,7 +85,8 @@ namespace pwn
 		{
 			std::size_t index = string->find(toFind);
 			const std::size_t findLength = toFind.length();
-			while (index!=pwn::string::npos) {
+			while(index != pwn::string::npos)
+			{
 				string->erase(index, findLength);
 				string->insert(index, toReplace);
 				index = string->find(toFind, index);
@@ -95,8 +102,8 @@ namespace pwn
 
 		void Copy(pwn::tchar* dst, const pwn::string& src, const pwn::string::size_type count)
 		{
-			strncpy(dst, src.c_str(), count-1);
-			dst[count-1] = 0;
+			strncpy(dst, src.c_str(), count - 1);
+			dst[count - 1] = 0;
 		}
 	}
 }

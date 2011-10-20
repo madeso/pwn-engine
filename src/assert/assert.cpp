@@ -21,13 +21,14 @@ namespace pwn
 
 		bool ShouldBreak(const std::string& expression)
 		{
-			switch( AA() )
+			switch(AA())
 			{
-			case AlwaysBreak: return true;
-			case AlwaysThrow:
-				throw expression;
-			default:
-				throw "invalid assert state, bug?";
+				case AlwaysBreak:
+					return true;
+				case AlwaysThrow:
+					throw expression;
+				default:
+					throw "invalid assert state, bug?";
 			}
 		}
 

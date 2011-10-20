@@ -47,7 +47,10 @@ namespace pwn
 		math::vec3 Interpolate(const FramePosition& from, real current, const FramePosition& to)
 		{
 			real scale = math::To01(from.getTime(), current, to.getTime());
-			if (math::IsWithinInclusive(0, scale, 1) == false) throw "invalid scale";
+			if(math::IsWithinInclusive(0, scale, 1) == false)
+			{
+				throw "invalid scale";
+			}
 			return math::Lerp(from.position, scale, to.position);
 		}
 
@@ -76,7 +79,10 @@ namespace pwn
 		math::quat Interpolate(const FrameRotation& from, real current, const FrameRotation& to)
 		{
 			real scale = math::To01(from.getTime(), current, to.getTime());
-			if (math::IsWithinInclusive(0, scale, 1) == false) throw "invalid scale";
+			if(math::IsWithinInclusive(0, scale, 1) == false)
+			{
+				throw "invalid scale";
+			}
 			return math::SlerpShortway(from.rotation, scale, to.rotation);
 		}
 
@@ -102,19 +108,19 @@ namespace pwn
 		template<typename T, typename R>
 		R Get(const std::vector<T>& da, real current)
 		{
-			Assert( false == da.empty() );
+			Assert(false == da.empty());
 
-			if( current < da[0].getTime() )
+			if(current < da[0].getTime())
 			{
 				return da[0].value();
 			}
 
-			for (std::size_t i = 1; i < da.size(); ++i)
+			for(std::size_t i = 1; i < da.size(); ++i)
 			{
-				if (math::IsWithinInclusive(da[i-1].getTime(), current, da[i].getTime()))
+				if(math::IsWithinInclusive(da[i - 1].getTime(), current, da[i].getTime()))
 				{
 					//return da[i-1].value();
-					return Interpolate(da[i-1], current, da[i]);
+					return Interpolate(da[i - 1], current, da[i]);
 				}
 			}
 
@@ -159,15 +165,21 @@ namespace pwn
 		real AnimationPerBone::getLength() const
 		{
 			// get the time of the last frame
-			if( fp.empty() ) return 0;
-			else return fp[fp.size() - 1].getTime();
+			if(fp.empty())
+			{
+				return 0;
+			}
+			else
+			{
+				return fp[fp.size() - 1].getTime();
+			}
 		}
 
 		PosePerBone AnimationPerBone::getBonePose(real time) const
 		{
 			const PosePerBone p(
-				Interpolate(time, fp),
-				Interpolate(time, fr) );
+			   Interpolate(time, fp),
+			   Interpolate(time, fr));
 			return p;
 		}
 
@@ -178,13 +190,13 @@ namespace pwn
 			bool first = true;
 			real last = -1;
 
-			for(std::size_t i=0; i<data.size(); ++i)
+			for(std::size_t i = 0; i < data.size(); ++i)
 			{
 				const T& fp = data[i];
-				if (math::IsWithinInclusive(start, fp.getTime(), end))
+				if(math::IsWithinInclusive(start, fp.getTime(), end))
 				{
-					real mark = fp.getTime()-start;
-					if (first && math::IsZero(mark)==false)
+					real mark = fp.getTime() - start;
+					if(first && math::IsZero(mark) == false)
 					{
 						v->push_back(T(0, Interpolate(start, data)));
 					}
@@ -195,17 +207,20 @@ namespace pwn
 				}
 			}
 
-			if (first)
+			if(first)
 			{
 				v->push_back(T(0, Interpolate(start, data)));
 			}
 
-			if (math::IsEqual(length, last)==false )
+			if(math::IsEqual(length, last) == false)
 			{
 				v->push_back(T(length, Interpolate(end, data)));
 			}
 
-			if (v->size() < 2 ) throw "Data error, need atleast 2 keyframes per animation";
+			if(v->size() < 2)
+			{
+				throw "Data error, need atleast 2 keyframes per animation";
+			}
 		}
 
 		void AnimationPerBone::sub(int start, int end, AnimationPerBone* out) const
@@ -222,7 +237,7 @@ namespace pwn
 
 		void AnimationPerBone::scale(real scale)
 		{
-			for(std::size_t i=0; i<fp.size(); ++i)
+			for(std::size_t i = 0; i < fp.size(); ++i)
 			{
 				FramePosition& f = fp[i];
 				f.position *= scale;
@@ -235,13 +250,16 @@ namespace pwn
 
 		CompiledPose::CompiledPose(const Pose& pose, const std::vector<Bone>& bones)
 		{
-			if (pose.bones.size() != bones.size()) throw "Invalid animation/mesh, bone count differs";
-			std::vector<CompiledPoseData> result( pose.bones.size() );
-			for (std::size_t boneIndex = 0; boneIndex < pose.bones.size(); ++boneIndex)
+			if(pose.bones.size() != bones.size())
+			{
+				throw "Invalid animation/mesh, bone count differs";
+			}
+			std::vector<CompiledPoseData> result(pose.bones.size());
+			for(std::size_t boneIndex = 0; boneIndex < pose.bones.size(); ++boneIndex)
 			{
 				const Bone& bone = bones[boneIndex];
 				// either it has no parents, or it's parent has already been precoessed
-				Assert( bone.hasParent()==false || boneIndex > bone.getParent() );
+				Assert(bone.hasParent() == false || boneIndex > bone.getParent());
 				math::mat44 parent = bone.hasParent() ? result[bone.getParent()].first : math::mat44Identity();
 				const math::vec3 poseloc = pose.bones[boneIndex].position;
 				const math::quat poserot = pose.bones[boneIndex].rotation;
@@ -264,7 +282,7 @@ namespace pwn
 		real CalculateLength(const std::vector<AnimationPerBone>& bones)
 		{
 			real length = 0;
-			for(std::size_t i=0; i<bones.size(); ++i)
+			for(std::size_t i = 0; i < bones.size(); ++i)
 			{
 				const AnimationPerBone& ab = bones[i];
 				length = math::Max(length, ab.getLength());
@@ -278,7 +296,7 @@ namespace pwn
 		}
 
 		Animation::Animation(const std::vector<AnimationPerBone>& abones)
-			: length( CalculateLength(abones) )
+			: length(CalculateLength(abones))
 			, bones(abones)
 		{
 		}
@@ -287,7 +305,7 @@ namespace pwn
 		{
 			std::vector<PosePerBone> bd;
 			bd.resize(bones.size());
-			for(std::size_t i=0; i<bones.size(); ++i)
+			for(std::size_t i = 0; i < bones.size(); ++i)
 			{
 				const AnimationPerBone& ab = bones[i];
 				bd[i] = ab.getBonePose(time);
@@ -303,7 +321,7 @@ namespace pwn
 		void Animation::subanim(int start, int end, Animation* out) const
 		{
 			std::vector<AnimationPerBone> bd(bones.size());
-			for(std::size_t i=0; i<bones.size(); ++i)
+			for(std::size_t i = 0; i < bones.size(); ++i)
 			{
 				const AnimationPerBone& ab = bones[i];
 				ab.sub(start, end, &bd[i]);
@@ -319,7 +337,7 @@ namespace pwn
 
 		void Animation::scale(real scale)
 		{
-			for(std::size_t i=0; i<bones.size(); ++i)
+			for(std::size_t i = 0; i < bones.size(); ++i)
 			{
 				AnimationPerBone& ab = bones[i];
 				ab.scale(scale);

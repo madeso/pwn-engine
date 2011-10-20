@@ -30,7 +30,7 @@ namespace test
 	{
 		EXPECT_REAL_EQ(90, (Angle::FromDegrees(90) + Angle::FromDegrees(0)).inDegrees());
 		EXPECT_REAL_EQ(45, (Angle::FromDegrees(0) + Angle::FromDegrees(45)).inDegrees());
-		EXPECT_REAL_EQ(360+90, (Angle::FromDegrees(360) + Angle::FromDegrees(90)).inDegrees());
+		EXPECT_REAL_EQ(360 + 90, (Angle::FromDegrees(360) + Angle::FromDegrees(90)).inDegrees());
 	}
 
 	GTEST(testWrap)
@@ -50,8 +50,8 @@ namespace test
 		EXPECT_REAL_EQ(0, Angle::FromRadians(0).inRadians());
 		EXPECT_REAL_EQ(HalfPi(), Angle::FromDegrees(90).inRadians());
 		EXPECT_REAL_EQ(180, Angle::FromRadians(Pi()).inDegrees());
-		EXPECT_REAL_EQ(30, Angle::FromRadians(Pi()/6).inDegrees());
-		EXPECT_REAL_EQ(60, Angle::FromRadians(Pi()/3).inDegrees());
+		EXPECT_REAL_EQ(30, Angle::FromRadians(Pi() / 6).inDegrees());
+		EXPECT_REAL_EQ(60, Angle::FromRadians(Pi() / 3).inDegrees());
 	}
 
 	real kOneOverSqrt2()
@@ -64,7 +64,7 @@ namespace test
 	}
 	real kSqrt3Over2()
 	{
-		return Sqrt(3)/2;
+		return Sqrt(3) / 2;
 	}
 
 	GTEST(testSin)

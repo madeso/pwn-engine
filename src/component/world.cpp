@@ -28,7 +28,7 @@ namespace pwn
 
 		void World::update(real delta)
 		{
-			sendEvent(events::Update, EventArgs()<<property::CreateReal(delta));
+			sendEvent(events::Update, EventArgs() << property::CreateReal(delta));
 		}
 
 		void World::render()
@@ -38,7 +38,7 @@ namespace pwn
 
 		void World::sendEvent(const core::EnumValue& type, const EventArgs& args)
 		{
-			BOOST_FOREACH(ObjectPtr& o, objects)
+			BOOST_FOREACH(ObjectPtr & o, objects)
 			{
 				o->onEvent(type, args);
 			}

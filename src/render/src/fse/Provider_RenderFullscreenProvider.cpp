@@ -38,7 +38,7 @@ namespace pwn
 			const string RenderFullscreenProvider::toString() const
 			{
 				// todo: add shader to description?
-				return Provider::toString() + " renders fullscreen with " + ( shader.get()?"shader":" no shader" );
+				return Provider::toString() + " renders fullscreen with " + (shader.get() ? "shader" : " no shader");
 			}
 		}
 	}

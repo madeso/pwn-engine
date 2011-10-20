@@ -16,10 +16,10 @@
 #include <iostream>
 namespace
 {
-    void OutputDebugStringA(const std::string& s)
-    {
-        std::cout << s << std::endl;
-    }
+	void OutputDebugStringA(const std::string& s)
+	{
+		std::cout << s << std::endl;
+	}
 }
 #endif
 
@@ -33,19 +33,19 @@ namespace pwn
 			const GLenum err = glGetError();
 			switch(err)
 			{
-			case GL_NO_ERROR:
-				break;
+				case GL_NO_ERROR:
+					break;
 #define PRINT(x) OutputDebugStringA("--> Pwn detected a open gl error: " x"!\n")
 #define ERR(x) case x: PRINT(#x); break;
-			ERR(GL_INVALID_ENUM)
-			ERR(GL_INVALID_VALUE)
-			ERR(GL_INVALID_OPERATION)
-			ERR(GL_STACK_OVERFLOW)
-			ERR(GL_STACK_UNDERFLOW)
-			ERR(GL_OUT_OF_MEMORY)
-//				ERR(GL_TABLE_TOO_LARGE)
-			default:
-				PRINT("UNKNOWN");
+					ERR(GL_INVALID_ENUM)
+					ERR(GL_INVALID_VALUE)
+					ERR(GL_INVALID_OPERATION)
+					ERR(GL_STACK_OVERFLOW)
+					ERR(GL_STACK_UNDERFLOW)
+					ERR(GL_OUT_OF_MEMORY)
+					//				ERR(GL_TABLE_TOO_LARGE)
+				default:
+					PRINT("UNKNOWN");
 
 #undef PRINT
 #undef ERR
@@ -67,7 +67,7 @@ namespace pwn
 
 		// for resize(0) support
 		RenderList::DebugCommand::DebugCommand()
-			: mat( math::mat44Identity() )
+			: mat(math::mat44Identity())
 			, poseable(0)
 			, type(kUndefined)
 		{
@@ -83,8 +83,8 @@ namespace pwn
 		RenderList::LineCommand::LineCommand()
 			: width(1)
 			, color(1)
-			, from(0,0,0)
-			, to(1,1,1)
+			, from(0, 0, 0)
+			, to(1, 1, 1)
 		{
 		}
 
@@ -98,7 +98,7 @@ namespace pwn
 
 		// for resize(0) support
 		RenderList::Command::Command()
-			: mat( math::mat44Identity() )
+			: mat(math::mat44Identity())
 		{
 		}
 
@@ -107,7 +107,7 @@ namespace pwn
 			const uint32 CompressDistance(bool reverse, const real znear, const real dist, const real zfar)
 			{
 				const real value = pwn::math::KeepWithin(0, pwn::math::To01(znear, dist, zfar), 1);
-				const real v = reverse ? 1-value : value;
+				const real v = reverse ? 1 - value : value;
 				return static_cast<uint32>(v * std::numeric_limits<uint32>::max());
 			}
 
@@ -117,7 +117,7 @@ namespace pwn
 				const uint64 texture = material->texture ? material->texture->sid() : 0;
 				const uint64 distance =  CompressDistance(material->hasTransperency, 0, math::Z(math::cvec3(mat)), 100); // todo: use the camera frustrum
 
-				if( material->hasTransperency )
+				if(material->hasTransperency)
 				{
 					return (distance << 32) | texture;
 				}
@@ -133,7 +133,7 @@ namespace pwn
 			, material(material)
 			, mat(mat)
 			, poseable(pos)
-			, id( CalcId(mesh, material, mat) )
+			, id(CalcId(mesh, material, mat))
 		{
 		}
 
@@ -147,7 +147,7 @@ namespace pwn
 
 		void RenderList::add(MeshPtr mesh, MaterialPtr material, const math::mat44& mat, Poseable* pos)
 		{
-			if( material->hasTransperency )
+			if(material->hasTransperency)
 			{
 				transparent.push_back(Command(mesh, material, mat, pos));
 			}
@@ -175,11 +175,12 @@ namespace pwn
 
 		void RenderList::render(const CommandList& commands, bool applyMaterials)
 		{
-			BOOST_FOREACH(const RenderList::Command& c, commands)
+			BOOST_FOREACH(const RenderList::Command & c, commands)
 			{
-				if( useGlCommands )
+				if(useGlCommands)
 				{
-					glLoadMatrixf( c.mat.data()); pwnAssert_NoGLError();
+					glLoadMatrixf(c.mat.data());
+					pwnAssert_NoGLError();
 				}
 				apply(c.material, applyMaterials);
 				c.mesh->render(c.poseable->pose);
@@ -193,51 +194,62 @@ namespace pwn
 
 		void RenderList::end(bool applyMaterials)
 		{
-			if( useGlCommands )
+			if(useGlCommands)
 			{
-				glMatrixMode( GL_MODELVIEW ); pwnAssert_NoGLError();
-				glLoadIdentity(); pwnAssert_NoGLError();
+				glMatrixMode(GL_MODELVIEW);
+				pwnAssert_NoGLError();
+				glLoadIdentity();
+				pwnAssert_NoGLError();
 			}
 
 			applied = false;
 			texture = 0;
 
 			// todo: send correct commands to gl
-			if( useGlCommands )
+			if(useGlCommands)
 			{
-				glAlphaFunc ( GL_GREATER, 0.2f ); pwnAssert_NoGLError();
+				glAlphaFunc(GL_GREATER, 0.2f);
+				pwnAssert_NoGLError();
 
-				glEnable ( GL_ALPHA_TEST ); pwnAssert_NoGLError();
+				glEnable(GL_ALPHA_TEST);
+				pwnAssert_NoGLError();
 			}
 
 			std::sort(solid.begin(), solid.end(), CommandSort);
 			render(solid, applyMaterials);
 			std::sort(transparent.begin(), transparent.end(), CommandSort);
 
-			if( useGlCommands )
+			if(useGlCommands)
 			{
-				glDisable(GL_ALPHA_TEST); pwnAssert_NoGLError();
+				glDisable(GL_ALPHA_TEST);
+				pwnAssert_NoGLError();
 
-				glEnable(GL_BLEND); pwnAssert_NoGLError();
+				glEnable(GL_BLEND);
+				pwnAssert_NoGLError();
 
-				glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA); pwnAssert_NoGLError();
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				pwnAssert_NoGLError();
 
 				// disable depth-write
-				glDepthMask(GL_FALSE); pwnAssert_NoGLError();
+				glDepthMask(GL_FALSE);
+				pwnAssert_NoGLError();
 			}
 
 			render(transparent, applyMaterials);
 
-			if( useGlCommands )
+			if(useGlCommands)
 			{
 				// enable depth.write again
-				glDepthMask(GL_TRUE); pwnAssert_NoGLError();
+				glDepthMask(GL_TRUE);
+				pwnAssert_NoGLError();
 
-				glDisable(GL_BLEND); pwnAssert_NoGLError();
+				glDisable(GL_BLEND);
+				pwnAssert_NoGLError();
 
-				if( applied )
+				if(applied)
 				{
-					glDisable(GL_TEXTURE_2D); pwnAssert_NoGLError();
+					glDisable(GL_TEXTURE_2D);
+					pwnAssert_NoGLError();
 				}
 
 				// before rendering?
@@ -275,13 +287,13 @@ namespace pwn
 			glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
 			glLineWidth(2.0f);
 			glBegin(GL_LINES);
-			for (std::size_t i = 0; i < pose.transforms.size(); i++)
+			for(std::size_t i = 0; i < pose.transforms.size(); i++)
 			{
 				const mesh::CompiledPoseData& joint = pose.transforms[i];
-				if (joint.second == -1)
+				if(joint.second == -1)
 				{
-				//	glVertex3f(joint.first(0, 3), joint.first(1, 3), joint.first(2, 3));
-				//	glVertex3f(joint.first(0, 3), joint.first(1, 3), joint.first(2, 3));
+					//	glVertex3f(joint.first(0, 3), joint.first(1, 3), joint.first(2, 3));
+					//	glVertex3f(joint.first(0, 3), joint.first(1, 3), joint.first(2, 3));
 				}
 				else
 				{
@@ -300,7 +312,7 @@ namespace pwn
 			glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
 			glPointSize(3.0f);
 			glBegin(GL_POINTS);
-			BOOST_FOREACH(const mesh::CompiledPoseData& m, pose.transforms)
+			BOOST_FOREACH(const mesh::CompiledPoseData & m, pose.transforms)
 			{
 				glVertex(m.first);
 			}
@@ -310,43 +322,47 @@ namespace pwn
 		void Debug_RenderMatrix()
 		{
 			const real d = 10;
-			math::vec3 o(0,0,0);
+			math::vec3 o(0, 0, 0);
 			glBegin(GL_LINES);
 			glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-			glVertex(math::vec3(d,0,0)); glVertex(o);
+			glVertex(math::vec3(d, 0, 0));
+			glVertex(o);
 			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-			glVertex(math::vec3(0,d,0)); glVertex(o);
+			glVertex(math::vec3(0, d, 0));
+			glVertex(o);
 			glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-			glVertex(math::vec3(0,0,d)); glVertex(o);
+			glVertex(math::vec3(0, 0, d));
+			glVertex(o);
 			glEnd();
 		}
 
 		void RenderList::render_debug()
 		{
-			BOOST_FOREACH(const DebugCommand& c, debug)
+			BOOST_FOREACH(const DebugCommand & c, debug)
 			{
-				if( useGlCommands )
+				if(useGlCommands)
 				{
-					glLoadMatrixf( c.mat.data()); pwnAssert_NoGLError();
+					glLoadMatrixf(c.mat.data());
+					pwnAssert_NoGLError();
 				}
 				const DebugRenderType rt = c.type;
-				if( rt == kDebugRenderLines )
+				if(rt == kDebugRenderLines)
 				{
-					if( useGlCommands )
+					if(useGlCommands)
 					{
 						Debug_RenderLines(c.poseable->pose);
 					}
 				}
-				else if( rt == kDebugRenderPoints )
+				else if(rt == kDebugRenderPoints)
 				{
-					if( useGlCommands )
+					if(useGlCommands)
 					{
 						Debug_RenderPoints(c.poseable->pose);
 					}
 				}
-				else if ( rt == kDebugRenderMatrix )
+				else if(rt == kDebugRenderMatrix)
 				{
-					if( useGlCommands )
+					if(useGlCommands)
 					{
 						Debug_RenderMatrix();
 					}
@@ -360,17 +376,20 @@ namespace pwn
 
 		void RenderList::render_lines()
 		{
-			BOOST_FOREACH(const LineCommand& l, lines)
+			BOOST_FOREACH(const LineCommand & l, lines)
 			{
-				if( useGlCommands )
+				if(useGlCommands)
 				{
-					glLoadIdentity(); pwnAssert_NoGLError();
+					glLoadIdentity();
+					pwnAssert_NoGLError();
 
-					glLineWidth(l.width); pwnAssert_NoGLError();
-					glColor4f(l.color.r, l.color.g, l.color.b, l.color.a); pwnAssert_NoGLError();
+					glLineWidth(l.width);
+					pwnAssert_NoGLError();
+					glColor4f(l.color.r, l.color.g, l.color.b, l.color.a);
+					pwnAssert_NoGLError();
 					glBegin(GL_LINES);
-						glVertex(l.from);
-						glVertex(l.to);
+					glVertex(l.from);
+					glVertex(l.to);
 					glEnd();
 					pwnAssert_NoGLError();
 				}
@@ -379,29 +398,35 @@ namespace pwn
 
 		void RenderList::apply(MaterialPtr material, bool applyMaterials)
 		{
-			if( useGlCommands )
+			if(useGlCommands)
 			{
-				if( applyMaterials )
+				if(applyMaterials)
 				{
 					const GLenum face = GL_FRONT;
-					glMaterialfv(face, GL_AMBIENT, material->ambient.data()); pwnAssert_NoGLError();
-					glMaterialfv(face, GL_DIFFUSE, material->diffuse.data()); pwnAssert_NoGLError();
-					glMaterialfv(face, GL_SPECULAR, material->specular.data()); pwnAssert_NoGLError();
-					glMaterialfv(face, GL_EMISSION, material->emission.data()); pwnAssert_NoGLError();
-					glMaterialf(face, GL_SHININESS, material->shininess); pwnAssert_NoGLError();
+					glMaterialfv(face, GL_AMBIENT, material->ambient.data());
+					pwnAssert_NoGLError();
+					glMaterialfv(face, GL_DIFFUSE, material->diffuse.data());
+					pwnAssert_NoGLError();
+					glMaterialfv(face, GL_SPECULAR, material->specular.data());
+					pwnAssert_NoGLError();
+					glMaterialfv(face, GL_EMISSION, material->emission.data());
+					pwnAssert_NoGLError();
+					glMaterialf(face, GL_SHININESS, material->shininess);
+					pwnAssert_NoGLError();
 				}
 				else
 				{
-					glColor4f( material->diffuse.red(), material->diffuse.green(), material->diffuse.blue(), material->diffuse.alpha() );
+					glColor4f(material->diffuse.red(), material->diffuse.green(), material->diffuse.blue(), material->diffuse.alpha());
 					pwnAssert_NoGLError();
 				}
-				if( material->texture.get() )
+				if(material->texture.get())
 				{
-					if( applied == false )
+					if(applied == false)
 					{
-						glEnable(GL_TEXTURE_2D); pwnAssert_NoGLError();
+						glEnable(GL_TEXTURE_2D);
+						pwnAssert_NoGLError();
 					}
-					if( material->texture.get() != texture )
+					if(material->texture.get() != texture)
 					{
 						material->texture->bind(0);
 					}
@@ -410,9 +435,10 @@ namespace pwn
 				}
 				else
 				{
-					if( applied )
+					if(applied)
 					{
-						glDisable(GL_TEXTURE_2D); pwnAssert_NoGLError();
+						glDisable(GL_TEXTURE_2D);
+						pwnAssert_NoGLError();
 					}
 					applied = false;
 				}

@@ -39,7 +39,7 @@ namespace pwn
 
 				BOOST_FOREACH(pwn::string name, names)
 				{
-					Assert( has(name) == false );
+					Assert(has(name) == false);
 					cmd[name] = arg;
 					descriptions[name] = description;
 					aliases[name] = names;
@@ -53,7 +53,7 @@ namespace pwn
 
 				BOOST_FOREACH(pwn::string name, names)
 				{
-					Assert( has(name) == false );
+					Assert(has(name) == false);
 					cmda[name] = arg;
 					descriptions[name] = description;
 					aliases[name] = names;
@@ -67,13 +67,13 @@ namespace pwn
 
 			bool has(const pwn::string& name) const
 			{
-				const bool missing = cmd.find(name) == cmd.end() && cmda.find(name)==cmda.end();
+				const bool missing = cmd.find(name) == cmd.end() && cmda.find(name) == cmda.end();
 				return !missing;
 			}
 
 			void displayCommands()
 			{
-				BOOST_FOREACH(const pwn::string& n, commands)
+				BOOST_FOREACH(const pwn::string & n, commands)
 				{
 					cout << n << " ";
 				}
@@ -83,9 +83,12 @@ namespace pwn
 			const pwn::string displayAliases(const pwn::string& id) const
 			{
 				AliasMap::const_iterator it = aliases.find(id);
-				if( it == aliases.end() ) return "";
+				if(it == aliases.end())
+				{
+					return "";
+				}
 				std::stringstream ss;
-				BOOST_FOREACH(const pwn::string& n, it->second)
+				BOOST_FOREACH(const pwn::string & n, it->second)
 				{
 					ss << n << " ";
 				}
@@ -95,17 +98,20 @@ namespace pwn
 			const pwn::string displayDescription(const pwn::string& id) const
 			{
 				DescriptionMap::const_iterator it = descriptions.find(id);
-				if( it == descriptions.end() ) return "";
+				if(it == descriptions.end())
+				{
+					return "";
+				}
 				return it->second;
 			}
 
 			const pwn::string displayUsage(const pwn::string& name) const
 			{
-				if( cmd.find(name) != cmd.end() )
+				if(cmd.find(name) != cmd.end())
 				{
 					return name;
 				}
-				else if( cmda.find(name) != cmda.end() )
+				else if(cmda.find(name) != cmda.end())
 				{
 					return name + " ARG";
 				}
@@ -119,23 +125,23 @@ namespace pwn
 			{
 				argv0 = argv[0];
 
-				for(int i=1; i<argc; ++i)
+				for(int i = 1; i < argc; ++i)
 				{
 					try
 					{
-						if( IsArgument(argv[i]) )
+						if(IsArgument(argv[i]))
 						{
 							const std::string name = pwn::core::TrimLeft(argv[i], "-/");
-							const std::string val = i+1<argc ? argv[i+1] : "";
+							const std::string val = i + 1 < argc ? argv[i + 1] : "";
 							CommandMap::iterator cmdi = cmd.find(name);
-							if( cmdi != cmd.end() )
+							if(cmdi != cmd.end())
 							{
 								errors += cmdi->second(main, this);
 							}
 							else
 							{
 								CommandArgMap::iterator cmdai = cmda.find(name);
-								if( cmdai != cmda.end() )
+								if(cmdai != cmda.end())
 								{
 									errors += cmdai->second(main, this, val);
 									++i;
@@ -168,13 +174,13 @@ namespace pwn
 						++errors;
 					}
 
-					if( stopOnError && errors > 0)
+					if(stopOnError && errors > 0)
 					{
 						std::cerr << "Errors encounted, halting.." << std::endl;
 						return;
 					}
 
-					if( stop )
+					if(stop)
 					{
 						return;
 					}

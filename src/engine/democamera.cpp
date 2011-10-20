@@ -31,14 +31,17 @@ namespace pwn
 		bool DemoCamera::onKey(Key::Code key, bool newState)
 		{
 #define HANDLEKEY(k) if( k == key ) { k##State=newState; return true; }
-			      HANDLEKEY(forward )
-			else HANDLEKEY( backward )
-			else HANDLEKEY( left )
-			else HANDLEKEY( right )
-			else HANDLEKEY( up )
-			else HANDLEKEY( down )
+			HANDLEKEY(forward)
+			else HANDLEKEY(backward)
+				else HANDLEKEY(left)
+					else HANDLEKEY(right)
+						else HANDLEKEY(up)
+							else HANDLEKEY(down)
 #undef HANDLEKEY
-			else return false;
+								else
+								{
+									return false;
+								}
 		}
 
 		void DemoCamera::onMouse(const math::vec2 movement)
@@ -51,8 +54,14 @@ namespace pwn
 			pwn::real multi(bool pos, bool neg)
 			{
 				pwn::real v = 0;
-				if( pos ) v+=1;
-				if( neg ) v-=1;
+				if(pos)
+				{
+					v += 1;
+				}
+				if(neg)
+				{
+					v -= 1;
+				}
 				return v;
 			}
 		}
@@ -61,19 +70,19 @@ namespace pwn
 		{
 			using namespace pwn::math;
 			const vec3 movement = multi(forwardState, backwardState) * In(camera.rotation)
-				+ multi(rightState, leftState) * Right(camera.rotation)
-				+ multi(upState, downState) * Up();
+			                      + multi(rightState, leftState) * Right(camera.rotation)
+			                      + multi(upState, downState) * Up();
 			camera.position.vec += movement * delta * speed;
 
 			//camera.position.vec += vec3(mouse.x, mouse.y, 0);
 
-			const math::quat updown = math::cquat(math::RightHandAround(Right(), Angle::FromDegrees(Y(mouse)*sensitivity)));
-			const math::quat rightleft = math::cquat( math::RightHandAround(Up(), Angle::FromDegrees(-X(mouse)*sensitivity)));
+			const math::quat updown = math::cquat(math::RightHandAround(Right(), Angle::FromDegrees(Y(mouse) * sensitivity)));
+			const math::quat rightleft = math::cquat(math::RightHandAround(Up(), Angle::FromDegrees(-X(mouse) * sensitivity)));
 
 			//camera.rotation = math::Combine_Local(camera.rotation, rightleft);
 			camera.rotation = math::Combine_Parent(camera.rotation, updown);
 
-			mouse = vec2(0,0);
+			mouse = vec2(0, 0);
 
 			world->updateCamera(camera);
 		}

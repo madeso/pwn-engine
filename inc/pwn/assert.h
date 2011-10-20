@@ -19,8 +19,8 @@ namespace pwn
 	{
 		enum AssertAction
 		{
-			  AlwaysBreak
-			, AlwaysThrow
+		   AlwaysBreak
+		   , AlwaysThrow
 		};
 
 		bool kFalse();

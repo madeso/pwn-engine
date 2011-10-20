@@ -13,8 +13,8 @@ namespace pwn
 		{
 			BindBufferCommand::BindBufferCommand(const core::Ptree& el, Provider* prov)
 				: Command(el, prov)
-				, position( el.get("position", -1) )
-				, name( el.get<string>("buffer") )
+				, position(el.get("position", -1))
+				, name(el.get<string>("buffer"))
 			{
 			}
 

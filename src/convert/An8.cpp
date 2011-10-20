@@ -24,7 +24,7 @@ namespace pwn
 			{
 				enum Type
 				{
-					Unknown, Number, String, Ident, Begin, End
+				   Unknown, Number, String, Ident, Begin, End
 				};
 
 				Term()
@@ -66,24 +66,27 @@ namespace pwn
 
 				switch(t.type)
 				{
-				case Term::Number:
-					str << "NUMBER " << t.value;
-					break;
-				case Term::String:
-					str << "STRING " << t.value;
-					break;
-				case Term::Ident:
-					str << " " << t.value;
-					break;
-				case Term::Begin:
-					str << "BEGIN";
-					break;
-				case Term::End:
-					str << "END";
-					break;
+					case Term::Number:
+						str << "NUMBER " << t.value;
+						break;
+					case Term::String:
+						str << "STRING " << t.value;
+						break;
+					case Term::Ident:
+						str << " " << t.value;
+						break;
+					case Term::Begin:
+						str << "BEGIN";
+						break;
+					case Term::End:
+						str << "END";
+						break;
 				}
 
-				if( t.line != 0 ) str << " @ " << t.line;
+				if(t.line != 0)
+				{
+					str << " @ " << t.line;
+				}
 
 				str << ")";
 				return str;
@@ -105,173 +108,194 @@ namespace pwn
 
 				enum State
 				{
-					sNone, sIdent, sString, sNumber, sNumberWithoutDot
+				   sNone, sIdent, sString, sNumber, sNumberWithoutDot
 				};
 
 				void on(char c)
 				{
-					if( c == '\n' ) ++line;
-					if( inComment )
+					if(c == '\n')
+					{
+						++line;
+					}
+					if(inComment)
 					{
 						// todo: improve /**/ comment parsing
-						if( c == '/' ) inComment = false;
+						if(c == '/')
+						{
+							inComment = false;
+						}
 						return;
 					}
 					switch(state)
 					{
-					case sNone:
-						if( IsWhitespace(c) ) return;
-						if( IsLetter(c) )
-						{
-							memory += c;
-							state = sIdent;
-						}
-						else if( IsNumber(c) || c=='-')
-						{
-							memory += c;
-							state = sNumber;
-						}
-						else if( c == '{' )
-						{
-							terms.push_back(Term(Term::Begin, line));
-						}
-						else if( c == '}' )
-						{
-							terms.push_back(Term(Term::End, line));
-						}
-						else if ( c == '\"' )
-						{
-							state = sString;
-						}
-						else if ( c == '/' )
-						{
-							inComment = true;
-						}
-						else if ( c == '(' )
-						{
-							// ignore parantesis
-						}
-						else if ( c == ')' )
-						{
-							// ignore parantesis
-						}
-						else
-						{
-							Throw(Str() << "(" << line << ") not a known sign " << c);
-						}
-						break;
-					case sString:
-						if( ignoreChar>0 || ignoreChar==-1 )
-						{
-							switch(c)
+						case sNone:
+							if(IsWhitespace(c))
 							{
-							case 't':
-								memory += '\t';
-								break;
-							case 'n':
-								memory += '\n';
-								break;
-							case '\"':
-								memory += '\"';
-								break;
-							case '\\':
-								memory += '\\';
-								break;
-							default:
-								if( IsNumber(c) )
-								{
-									if( ignoreChar == -1 )
-									{
-										ignoreChar = 3;
-									}
-								}
-								else
-								{
-									Throw(Str() << "(" << line << ") unknown escape " << c);
-								}
-								break;
+								return;
 							}
-							if( ignoreChar == -1 ) ignoreChar = 0;
-							else --ignoreChar;
-						}
-						else
-						{
-							if( c == '\\' )
+							if(IsLetter(c))
 							{
-								ignoreChar = -1;
+								memory += c;
+								state = sIdent;
 							}
-							else if ( c == '\"' )
+							else if(IsNumber(c) || c == '-')
 							{
-								terms.push_back(Term(Term::String, memory, line));
-								memory.clear();
-								state = sNone;
+								memory += c;
+								state = sNumber;
+							}
+							else if(c == '{')
+							{
+								terms.push_back(Term(Term::Begin, line));
+							}
+							else if(c == '}')
+							{
+								terms.push_back(Term(Term::End, line));
+							}
+							else if(c == '\"')
+							{
+								state = sString;
+							}
+							else if(c == '/')
+							{
+								inComment = true;
+							}
+							else if(c == '(')
+							{
+								// ignore parantesis
+							}
+							else if(c == ')')
+							{
+								// ignore parantesis
 							}
 							else
 							{
+								Throw(Str() << "(" << line << ") not a known sign " << c);
+							}
+							break;
+						case sString:
+							if(ignoreChar > 0 || ignoreChar == -1)
+							{
+								switch(c)
+								{
+									case 't':
+										memory += '\t';
+										break;
+									case 'n':
+										memory += '\n';
+										break;
+									case '\"':
+										memory += '\"';
+										break;
+									case '\\':
+										memory += '\\';
+										break;
+									default:
+										if(IsNumber(c))
+										{
+											if(ignoreChar == -1)
+											{
+												ignoreChar = 3;
+											}
+										}
+										else
+										{
+											Throw(Str() << "(" << line << ") unknown escape " << c);
+										}
+										break;
+								}
+								if(ignoreChar == -1)
+								{
+									ignoreChar = 0;
+								}
+								else
+								{
+									--ignoreChar;
+								}
+							}
+							else
+							{
+								if(c == '\\')
+								{
+									ignoreChar = -1;
+								}
+								else if(c == '\"')
+								{
+									terms.push_back(Term(Term::String, memory, line));
+									memory.clear();
+									state = sNone;
+								}
+								else
+								{
+									memory += c;
+								}
+							}
+							break;
+						case sNumber:
+							if(IsNumber(c))
+							{
 								memory += c;
 							}
-						}
-						break;
-					case sNumber:
-						if( IsNumber(c) )
-						{
-							memory += c;
-						}
-						else if( c == '.' )
-						{
-							memory += '.';
-							state = sNumberWithoutDot;
-						}
-						else
-						{
-							terms.push_back(Term(Term::Number, memory, line));
-							memory.clear();
-							state = sNone;
-							on(c);
-						}
-						break;
-					case sNumberWithoutDot:
-						if( IsNumber(c) )
-						{
-							memory += c;
-						}
-						else
-						{
-							terms.push_back(Term(Term::Number, memory, line));
-							memory.clear();
-							state = sNone;
-							on(c);
-						}
-						break;
-					case sIdent:
-						if( IsLetter(c) || IsNumber(c) )
-						{
-							memory += c;
-						}
-						else
-						{
-							terms.push_back(Term(Term::Ident, memory, line));
-							memory.clear();
-							state = sNone;
-							on(c);
-						}
-						break;
-					default:
-						Throw(Str() << "(" << line << ") Internal error: unknown lexer state " << state);
+							else if(c == '.')
+							{
+								memory += '.';
+								state = sNumberWithoutDot;
+							}
+							else
+							{
+								terms.push_back(Term(Term::Number, memory, line));
+								memory.clear();
+								state = sNone;
+								on(c);
+							}
+							break;
+						case sNumberWithoutDot:
+							if(IsNumber(c))
+							{
+								memory += c;
+							}
+							else
+							{
+								terms.push_back(Term(Term::Number, memory, line));
+								memory.clear();
+								state = sNone;
+								on(c);
+							}
+							break;
+						case sIdent:
+							if(IsLetter(c) || IsNumber(c))
+							{
+								memory += c;
+							}
+							else
+							{
+								terms.push_back(Term(Term::Ident, memory, line));
+								memory.clear();
+								state = sNone;
+								on(c);
+							}
+							break;
+						default:
+							Throw(Str() << "(" << line << ") Internal error: unknown lexer state " << state);
 					}
 				}
 
 				void complete()
 				{
-					if( state == sNone ) return;
-					if( state == sString ) throw "(eof) invalid string syntax";
-					if( state == sNumber || state == sNumberWithoutDot )
+					if(state == sNone)
+					{
+						return;
+					}
+					if(state == sString)
+					{
+						throw "(eof) invalid string syntax";
+					}
+					if(state == sNumber || state == sNumberWithoutDot)
 					{
 						terms.push_back(Term(Term::Number, memory, line));
 						memory.clear();
 						state = sNone;
 					}
-					if( state == sIdent )
+					if(state == sIdent)
 					{
 						terms.push_back(Term(Term::Ident, memory, line));
 						memory.clear();
@@ -315,19 +339,25 @@ namespace pwn
 
 				Term read()
 				{
-					if( eof() ) throw "end of file";
+					if(eof())
+					{
+						throw "end of file";
+					}
 					const Term t = terms[index];
 					++index;
 					return t;
 				}
 
-				bool peek(Term* term, unsigned int asteps=1) const
+				bool peek(Term* term, unsigned int asteps = 1) const
 				{
-					const unsigned int steps = asteps -1;
-					if( index+steps >= count ) return false;
+					const unsigned int steps = asteps - 1;
+					if(index + steps >= count)
+					{
+						return false;
+					}
 					else
 					{
-						*term = terms[index+steps];
+						*term = terms[index + steps];
 						return true;
 					}
 				}
@@ -353,20 +383,20 @@ namespace pwn
 				typedef std::vector<ChildPtr> ChildList;
 				typedef std::map<pwn::string, ChildList> ChildMap;
 
-				explicit Child(const pwn::string& n="")
+				explicit Child(const pwn::string& n = "")
 					: name(n)
 				{
 				}
 
-				pwn::string getString(size_t i=0) const
+				pwn::string getString(size_t i = 0) const
 				{
 					return values[i];
 				}
-				pwn::real getNumber(size_t i=0) const
+				pwn::real getNumber(size_t i = 0) const
 				{
 					return boost::lexical_cast<pwn::real>(getString(i));
 				}
-				int getInt(size_t i=0) const
+				int getInt(size_t i = 0) const
 				{
 					return boost::lexical_cast<int>(getString(i));
 				}
@@ -391,29 +421,41 @@ namespace pwn
 					ChildMap::iterator r = childs.find(name);
 
 					ChildList& list = (r != childs.end()) ? r->second // if we found one, get a reference to the list
-						: childs.insert(ChildMap::value_type(name, ChildList())).first->second; // if not create one and get the reference
+					                  : childs.insert(ChildMap::value_type(name, ChildList())).first->second; // if not create one and get the reference
 					list.push_back(child);
 				}
 
 				ChildPtr getChild(const pwn::string& name)
 				{
 					ChildMap::iterator r = childs.find(name);
-					if( r == childs.end() ) Throw(Str() << "child not found: " << name);
-					if( r->second.size() != 1 ) Throw(Str() << "no unique child when searching for " << name);
+					if(r == childs.end())
+					{
+						Throw(Str() << "child not found: " << name);
+					}
+					if(r->second.size() != 1)
+					{
+						Throw(Str() << "no unique child when searching for " << name);
+					}
 					return r->second[0];
 				}
 
 				const ChildList& getChilds(const pwn::string& name) const
 				{
 					ChildMap::const_iterator r = childs.find(name);
-					if( r == childs.end() ) Throw(Str() << "childs not found: " << name);
+					if(r == childs.end())
+					{
+						Throw(Str() << "childs not found: " << name);
+					}
 					return r->second;
 				}
 
 				ChildList& getChilds(const pwn::string& name)
 				{
 					ChildMap::iterator r = childs.find(name);
-					if( r == childs.end() ) Throw(Str() << "childs not found: " << name);
+					if(r == childs.end())
+					{
+						Throw(Str() << "childs not found: " << name);
+					}
 					return r->second;
 				}
 
@@ -426,7 +468,7 @@ namespace pwn
 				ChildPtr getChild(const std::vector<pwn::string>& names)
 				{
 					ChildPtr ch = getChild(names[0]);
-					for(std::size_t i=1; i<names.size(); ++i)
+					for(std::size_t i = 1; i < names.size(); ++i)
 					{
 						ch = ch->getChild(names[i]);
 					}
@@ -447,10 +489,10 @@ namespace pwn
 					t = tr->read();
 					switch(t.type)
 					{
-					case Term::Ident:
+						case Term::Ident:
 						{
 							Term next;
-							if( tr->peek(&next) && next.type != Term::Begin)
+							if(tr->peek(&next) && next.type != Term::Begin)
 							{
 								child->addValue(t.value);
 							}
@@ -458,25 +500,37 @@ namespace pwn
 							{
 								ChildPtr c(new Child(t.value));
 								const Term start = tr->read();
-								if( start.type != Term::Begin ) Throw(Str() << "Syntax error, expecting a BEGIN got " << start);
+								if(start.type != Term::Begin)
+								{
+									Throw(Str() << "Syntax error, expecting a BEGIN got " << start);
+								}
 								ParseChildren(c, tr);
 								const Term end = tr->read();
-								if( end.type != Term::End ) Throw(Str() << "Syntax error, expecting a END got " << end);
+								if(end.type != Term::End)
+								{
+									Throw(Str() << "Syntax error, expecting a END got " << end);
+								}
 								child->addChild(c);
 							}
 						}
 						break;
-					case Term::Number:
-						if( searchValues == false ) Throw(Str() << "Syntax error, not expecting a Number, got " << tr);
-						child->addValue(t.value);
-						break;
-					case Term::String:
-						if( searchValues == false ) Throw(Str() << "Syntax error, not expecting a String, got " << tr);
-						child->addValue(t.value);
-						break;
-					case Term::Begin:
-						Throw(Str() << "Syntax error, not expecting a BEGIN, got " << tr);
-						break;
+						case Term::Number:
+							if(searchValues == false)
+							{
+								Throw(Str() << "Syntax error, not expecting a Number, got " << tr);
+							}
+							child->addValue(t.value);
+							break;
+						case Term::String:
+							if(searchValues == false)
+							{
+								Throw(Str() << "Syntax error, not expecting a String, got " << tr);
+							}
+							child->addValue(t.value);
+							break;
+						case Term::Begin:
+							Throw(Str() << "Syntax error, not expecting a BEGIN, got " << tr);
+							break;
 					}
 				}
 			}
@@ -491,10 +545,13 @@ namespace pwn
 			ChildPtr Load(const pwn::string& file)
 			{
 				std::ifstream f(file.c_str());
-				if( f.good() == false ) Throw(Str() << "failed to open file: " << file);
+				if(f.good() == false)
+				{
+					Throw(Str() << "failed to open file: " << file);
+				}
 				char c;
 				Lexer lex;
-				while( f >> std::noskipws >> c)
+				while(f >> std::noskipws >> c)
 				{
 					lex.on(c);
 				}
@@ -510,9 +567,9 @@ namespace pwn
 			{
 				std::vector<pwn::math::vec3> r;
 				const size_t count = points->getValueCount();
-				for(size_t i=0; i<count; i+=3)
+				for(size_t i = 0; i < count; i += 3)
 				{
-					r.push_back( pwn::math::vec3(points->getNumber(i), points->getNumber(i+1), points->getNumber(i+2)) );
+					r.push_back(pwn::math::vec3(points->getNumber(i), points->getNumber(i + 1), points->getNumber(i + 2)));
 				}
 				return r;
 			}
@@ -520,15 +577,15 @@ namespace pwn
 			{
 				std::vector<pwn::math::vec2> r;
 				const size_t count = points->getValueCount();
-				for(size_t i=0; i<count; i+=2)
+				for(size_t i = 0; i < count; i += 2)
 				{
-					r.push_back( pwn::math::vec2(points->getNumber(i), points->getNumber(i+1)) );
+					r.push_back(pwn::math::vec2(points->getNumber(i), points->getNumber(i + 1)));
 				}
 				return r;
 			}
 			enum
 			{
-				SF_SHOW_BACK=1, SF_HAS_NORMALS=2, SF_HAS_TEXTURE=4
+			   SF_SHOW_BACK = 1, SF_HAS_NORMALS = 2, SF_HAS_TEXTURE = 4
 			};
 
 			struct Point
@@ -549,27 +606,28 @@ namespace pwn
 			{
 				std::vector<Face> r;
 				const size_t count = faces->getValueCount();
-				for(size_t i=0; i<count;)
+				for(size_t i = 0; i < count;)
 				{
 					const int points = faces->getInt(i);
-					const int flags = faces->getInt(i+1);
-					const int materialId = faces->getInt(i+2);
-					const int normalIndex = faces->getInt(i+3);
-					i+= 4;
+					const int flags = faces->getInt(i + 1);
+					const int materialId = faces->getInt(i + 2);
+					const int normalIndex = faces->getInt(i + 3);
+					i += 4;
 					Face f;
 					f.material = materialId;
 					f.normalIndex = normalIndex;
-					for(int p=0;p<points;++p)
+					for(int p = 0; p < points; ++p)
 					{
-						const int point = faces->getInt(i);++i;
+						const int point = faces->getInt(i);
+						++i;
 						int normal = -1;
 						int texture = -1;
-						if(flags & SF_HAS_NORMALS )
+						if(flags & SF_HAS_NORMALS)
 						{
 							normal = faces->getInt(i);
 							++i;
 						}
-						if(flags & SF_HAS_TEXTURE )
+						if(flags & SF_HAS_TEXTURE)
 						{
 							texture = faces->getInt(i);
 							++i;
@@ -608,7 +666,7 @@ namespace pwn
 			{
 				Mesh r;
 				r.points = ExtractPoints(m->getChild("points"));
-				if( m->hasChild("texcoords") )
+				if(m->hasChild("texcoords"))
 				{
 					r.textcoords = ExtractTextcoords(m->getChild("texcoords"));
 				}
@@ -620,7 +678,7 @@ namespace pwn
 			struct Color
 			{
 				Color()
-					: rgb(0,0,0)
+					: rgb(0, 0, 0)
 				{
 				}
 				Color(const math::Rgba& r)
@@ -635,8 +693,8 @@ namespace pwn
 			{
 				Color c;
 				ChildPtr rgb = m->getChild("rgb");
-				c.rgb = pwn::math::Rgb(rgb->getNumber(0)/255, rgb->getNumber(1)/255, rgb->getNumber(2)/255);
-				if( m->hasChild("texturename") )
+				c.rgb = pwn::math::Rgb(rgb->getNumber(0) / 255, rgb->getNumber(1) / 255, rgb->getNumber(2) / 255);
+				if(m->hasChild("texturename"))
 				{
 					c.texture = m->getChild("texturename")->getString(0);
 				}
@@ -664,7 +722,7 @@ namespace pwn
 				m.ambiant = ExtractColor(s->getChild("ambiant"));
 				m.diffuse = ExtractColor(s->getChild("diffuse"));
 				m.specular = s->hasChild("specular") ? ExtractColor(s->getChild("specular")) : d.specular;
-				m.alpha = s->hasChild("alpha") ? s->getChild("alpha")->getNumber(0)/255.0f : 1.0f;
+				m.alpha = s->hasChild("alpha") ? s->getChild("alpha")->getNumber(0) / 255.0f : 1.0f;
 				m.emissive = s->hasChild("emissive") ? ExtractColor(s->getChild("emissive")) : d.emission;
 
 				return m;
@@ -681,7 +739,7 @@ namespace pwn
 
 			void ExtractMeshOnObject(Object& r, ChildPtr o, const pwn::string& type)
 			{
-				if( o->hasChild(type) )
+				if(o->hasChild(type))
 				{
 					BOOST_FOREACH(ChildPtr m, o->getChilds(type))
 					{
@@ -699,7 +757,7 @@ namespace pwn
 				BOOST_FOREACH(ChildPtr m, o->getChilds("material"))
 				{
 					const Material mat = ExtractMaterial(m);
-					r.materials.insert( StringMaterialMap::value_type(mat.name, mat) );
+					r.materials.insert(StringMaterialMap::value_type(mat.name, mat));
 				}
 				return r;
 			}
@@ -743,17 +801,20 @@ namespace pwn
 				const real z = c->getNumber(2);
 				const real w = c->getNumber(3);
 
-				const math::quat q(x,y,z,w);
+				const math::quat q(x, y, z, w);
 				return math::GetNormalized(q);
 			}
 
 			math::mat44 ExtractBase(ChildPtr owner, const pwn::string& name)
 			{
-				if( owner->hasChild(name) == false) return math::mat44Identity();
+				if(owner->hasChild(name) == false)
+				{
+					return math::mat44Identity();
+				}
 				ChildPtr c = owner->getChild(name);
 				ChildPtr o = c->getChild("origin");
 				const math::vec3 origin(o->getNumber(0), o->getNumber(1), o->getNumber(2));
-				const math::quat rotation = ExtractQuaternion( c->getChild("rotation") );
+				const math::quat rotation = ExtractQuaternion(c->getChild("rotation"));
 				return math::mat44helper(math::mat44Identity()).rotate(rotation).translate(-origin).mat;
 			}
 
@@ -771,7 +832,7 @@ namespace pwn
 				r.name = n->getString(0);
 				r.object = n->getChild("name")->getString(0);
 				r.base = ExtractBase(n, "base");
-				if( n->hasChild("weightedby") )
+				if(n->hasChild("weightedby"))
 				{
 					BOOST_FOREACH(ChildPtr c, n->getChilds("weightedby"))
 					{
@@ -785,7 +846,7 @@ namespace pwn
 			{
 				Bone()
 					: length(0)
-					, rotation( math::qIdentity() )
+					, rotation(math::qIdentity())
 				{
 				}
 				math::vec3 vec() const
@@ -802,13 +863,19 @@ namespace pwn
 
 				const Bone* getBone(const pwn::string& s) const
 				{
-					if( name == s ) return this;
+					if(name == s)
+					{
+						return this;
+					}
 					else
 					{
-						BOOST_FOREACH(const Bone& b, childs)
+						BOOST_FOREACH(const Bone & b, childs)
 						{
 							const Bone* fb = b.getBone(s);
-							if( fb ) return fb;
+							if(fb)
+							{
+								return fb;
+							}
 						}
 						return 0;
 					}
@@ -820,16 +887,22 @@ namespace pwn
 				Bone r;
 				r.name = bone->getString(0);
 				r.length = bone->getChild("length")->getNumber(0);
-				if( bone->hasChild("influence") ) r.influence = ExtractInfluence(bone->getChild("influence"));
-				if( bone->hasChild("rotation") ) r.rotation = ExtractQuaternion(bone->getChild("rotation"));
-				if( bone->hasChild("bone") )
+				if(bone->hasChild("influence"))
 				{
-					BOOST_FOREACH(ChildPtr s, bone->getChilds("bone") )
+					r.influence = ExtractInfluence(bone->getChild("influence"));
+				}
+				if(bone->hasChild("rotation"))
+				{
+					r.rotation = ExtractQuaternion(bone->getChild("rotation"));
+				}
+				if(bone->hasChild("bone"))
+				{
+					BOOST_FOREACH(ChildPtr s, bone->getChilds("bone"))
 					{
 						r.childs.push_back(ExtractBone(s));
 					}
 				}
-				if( bone->hasChild("namedobject") )
+				if(bone->hasChild("namedobject"))
 				{
 					BOOST_FOREACH(ChildPtr n, bone->getChilds("namedobject"))
 					{
@@ -847,7 +920,10 @@ namespace pwn
 				Bone getBone(const pwn::string& name) const
 				{
 					const Bone* bone = root.getBone(name);
-					if( bone == 0 ) throw "missing bone";
+					if(bone == 0)
+					{
+						throw "missing bone";
+					}
 					return *bone;
 				}
 			};
@@ -896,7 +972,10 @@ namespace pwn
 				JointAngle r;
 				r.bone = c->getString(0);
 				r.axis = c->getString(1);
-				if( c->hasChild("track") ) r.keys = ExtractFloatTrack(c->getChild("track"));
+				if(c->hasChild("track"))
+				{
+					r.keys = ExtractFloatTrack(c->getChild("track"));
+				}
 				return r;
 			}
 
@@ -912,9 +991,12 @@ namespace pwn
 			{
 				Sequence r;
 				r.name = c->getString(0);
-				if( c->hasChild("figure") ) r.figure = c->getChild("figure")->getString(0);
+				if(c->hasChild("figure"))
+				{
+					r.figure = c->getChild("figure")->getString(0);
+				}
 				r.frames = c->getChild("frames")->getInt(0);
-				if( c->hasChild("jointangle") )
+				if(c->hasChild("jointangle"))
 				{
 					BOOST_FOREACH(ChildPtr j, c->getChilds("jointangle"))
 					{
@@ -933,9 +1015,9 @@ namespace pwn
 
 				Object getObject(const pwn::string objectName) const
 				{
-					BOOST_FOREACH(const Object& o, objects)
+					BOOST_FOREACH(const Object & o, objects)
 					{
-						if( o.name == objectName )
+						if(o.name == objectName)
 						{
 							return o;
 						}
@@ -946,9 +1028,9 @@ namespace pwn
 
 				Figure getFigure(const pwn::string objectName) const
 				{
-					BOOST_FOREACH(const Figure& o, figures)
+					BOOST_FOREACH(const Figure & o, figures)
 					{
-						if( o.name == objectName )
+						if(o.name == objectName)
 						{
 							return o;
 						}
@@ -961,7 +1043,7 @@ namespace pwn
 			std::map<pwn::string, pwn::string> ExtractTextures(ChildPtr file)
 			{
 				std::map<pwn::string, pwn::string> r;
-				if( file->hasChild("texture") )
+				if(file->hasChild("texture"))
 				{
 					BOOST_FOREACH(ChildPtr c, file->getChilds("texture"))
 					{
@@ -979,14 +1061,14 @@ namespace pwn
 				{
 					r.objects.push_back(ExtractObject(c));
 				}
-				if( file->hasChild("figure") )
+				if(file->hasChild("figure"))
 				{
 					BOOST_FOREACH(ChildPtr c, file->getChilds("figure"))
 					{
 						r.figures.push_back(ExtractFigure(c));
 					}
 				}
-				if( file->hasChild("sequence") )
+				if(file->hasChild("sequence"))
 				{
 					BOOST_FOREACH(ChildPtr c, file->getChilds("sequence"))
 					{
@@ -1003,13 +1085,16 @@ namespace pwn
 
 				void add(const Bone* b, mesh::BoneIndex i)
 				{
-					map.insert(BoneIndexMap::value_type(b,i));
+					map.insert(BoneIndexMap::value_type(b, i));
 				}
 
 				mesh::BoneIndex get(const Bone* b) const
 				{
 					BoneIndexMap::const_iterator r = map.find(b);
-					if( r == map.end() ) Throw(Str() << "Bone " << b->name << " has not been registred");
+					if(r == map.end())
+					{
+						Throw(Str() << "Bone " << b->name << " has not been registred");
+					}
 					return r->second;
 				}
 			};
@@ -1035,20 +1120,20 @@ namespace pwn
 				BaSet bas;
 				void add(mesh::BoneIndex i, real v)
 				{
-					bas.insert(Ba(i,v));
+					bas.insert(Ba(i, v));
 				}
 				math::vec4 getAssignment(mesh::BoneIndex bi) const
 				{
-					if( bas.empty() )
+					if(bas.empty())
 					{
-						return math::vec4(bi+0.5f, -1, -1, -1);
+						return math::vec4(bi + 0.5f, -1, -1, -1);
 					}
 					real sum = 0;
 					int index = 0;
 					Ba b[4];
 					BaSet bas = this->bas;
 					const std::size_t basSize = bas.size();
-					while(index<4 && !bas.empty())
+					while(index < 4 && !bas.empty())
 					{
 						BaSet::iterator i = bas.begin();
 						sum += i->second;
@@ -1057,18 +1142,18 @@ namespace pwn
 						++index;
 					}
 
-					Assert( sum > 0 );
+					Assert(sum > 0);
 
-					for(;index<4;++index)
+					for(; index < 4; ++index)
 					{
 						// when evaluating, this should result in a assignment of -1 (nothing)
 						b[index] = Ba(0, -sum);
 					}
 
 					// if size = 1, C() returns the influence becomes val/val=100%, index gets trashed and influence goes to zero, this is why there is this special case
-					if( basSize == 1 )
+					if(basSize == 1)
 					{
-						return math::vec4(b[0].first+0.5f, -1, -1, -1);
+						return math::vec4(b[0].first + 0.5f, -1, -1, -1);
 					}
 					else
 					{
@@ -1078,7 +1163,7 @@ namespace pwn
 				}
 				static real C(const Ba& b, real sum)
 				{
-					return b.first + b.second/sum;
+					return b.first + b.second / sum;
 				}
 			};
 
@@ -1093,7 +1178,7 @@ namespace pwn
 
 				math::vec3 getPoint(real t) const
 				{
-					return start + dir*t;
+					return start + dir * t;
 				}
 
 				real project(const math::vec3& p) const
@@ -1105,12 +1190,15 @@ namespace pwn
 				bool getDistance(const math::vec3& p, real* d, real* os) const
 				{
 					const real s = project(p);
-					if( d )
+					if(d)
 					{
 						const math::vec3 c = getPoint(s);
 						*d = math::FromTo(c, p).length_squared();
 					}
-					if( os ) *os = s;
+					if(os)
+					{
+						*os = s;
+					}
 
 					return math::IsWithinInclusive(0, s, 1);
 				}
@@ -1125,7 +1213,7 @@ namespace pwn
 			public:
 				Sphere(const math::vec3& c, const real r)
 					: center(c)
-					, radiuss(r*r)
+					, radiuss(r* r)
 				{
 				}
 
@@ -1158,12 +1246,12 @@ namespace pwn
 				{
 					real scale = 0;
 					real d = 0;
-					if( middle.getDistance(p, &d, &scale) )
+					if(middle.getDistance(p, &d, &scale))
 					{
 						*range = math::Lerp(start.getRadiusSquared(), scale, end.getRadiusSquared());
 						*dist = d;
 					}
-					else if( scale >= 1 )
+					else if(scale >= 1)
 					{
 						*range = end.getRadiusSquared();
 						*dist = end.getDistanceToCenterSquared(p);
@@ -1188,7 +1276,7 @@ namespace pwn
 				// todo
 				const Influence& i = b->influence;
 				math::mat44helper h(b->xform);
-				Ray r(h.transform(math::vec3(0,0,0)), h.transform(math::vec3(0, 1, 0)));
+				Ray r(h.transform(math::vec3(0, 0, 0)), h.transform(math::vec3(0, 1, 0)));
 				const math::vec3 start = r.getPoint(i.center0);
 				const math::vec3 end = r.getPoint(i.center1);
 				Capsule inner(start, end, i.inRadius0, i.inRadius1);
@@ -1196,16 +1284,22 @@ namespace pwn
 
 				real innerdist = 0;
 				real innerrange = 0;
-				if( true == inner.contains(xyz, &innerdist, &innerrange) ) return 1;
+				if(true == inner.contains(xyz, &innerdist, &innerrange))
+				{
+					return 1;
+				}
 				real outerdist = 0;
 				real outerrange = 0;
-				if( false == outer.contains(xyz, &outerdist, &outerrange) ) return 0;
+				if(false == outer.contains(xyz, &outerdist, &outerrange))
+				{
+					return 0;
+				}
 
 				Assert(innerrange < outerrange);
 				Assert(innerdist < outerrange);
 				Assert(innerdist > innerrange);
 				const real val = innerdist  - innerrange;
-				Assert(val >= 0 );
+				Assert(val >= 0);
 				const real range = outerrange - innerrange;
 				Assert(range > 0);
 				const real inf = val / range;
@@ -1217,18 +1311,21 @@ namespace pwn
 
 			math::vec4 GetBoneAssignment(BoneAssignment* a, const math::vec3& xyz)
 			{
-				const math::vec4 noBone(-1,-1,-1,-1);
-				if( !a ) return noBone;
+				const math::vec4 noBone(-1, -1, -1, -1);
+				if(!a)
+				{
+					return noBone;
+				}
 				BoneAssignmentBuilder bas;
-				BOOST_FOREACH(const Bone* b, a->bones)
+				BOOST_FOREACH(const Bone * b, a->bones)
 				{
 					const real ass = GetPossibleAssignment(b, xyz);
-					if( ass > 0 )
+					if(ass > 0)
 					{
 						bas.add(a->indexes->get(b), ass);
 					}
 				}
-				return bas.getAssignment( a->indexes->get(a->parent) );
+				return bas.getAssignment(a->indexes->get(a->parent));
 			}
 
 			class An8
@@ -1242,19 +1339,22 @@ namespace pwn
 				int getOrAddMaterial(const Object& o, pwn::mesh::Builder* builder, const pwn::string& name)
 				{
 					NameIntMap::iterator i = boundedMaterials.find(name);
-					if( i != boundedMaterials.end() )
+					if(i != boundedMaterials.end())
 					{
 						return i->second;
 					}
 					const int m = addMaterial(o, builder, name);
-					boundedMaterials.insert( NameIntMap::value_type(name, m) );
+					boundedMaterials.insert(NameIntMap::value_type(name, m));
 					return m;
 				}
 
 				int addMaterial(const Object& o, pwn::mesh::Builder* builder, const pwn::string& name)
 				{
 					StringMaterialMap::const_iterator i = o.materials.find(name);
-					if( i == o.materials.end() ) Throw(Str() << "mesh uses unknown material " << name);
+					if(i == o.materials.end())
+					{
+						Throw(Str() << "mesh uses unknown material " << name);
+					}
 					pwn::mesh::Material m;
 					const real alpha = i->second.alpha;
 					m.ambient = pwn::math::Rgba(i->second.ambiant.rgb, alpha);
@@ -1271,23 +1371,23 @@ namespace pwn
 					int pointBase = 0;
 					int textureBase = 0;
 					math::mat44helper mh(mm);
-					BOOST_FOREACH(const Mesh& m, o.meshes)
+					BOOST_FOREACH(const Mesh & m, o.meshes)
 					{
-						BOOST_FOREACH(const math::vec3& v, m.points)
+						BOOST_FOREACH(const math::vec3 & v, m.points)
 						{
 							const math::vec3 xyz = mh.transform(v);
 							b->addPosition(xyz, GetBoneAssignment(ba, xyz));
 						}
-						BOOST_FOREACH(const math::vec2& uv, m.textcoords)
+						BOOST_FOREACH(const math::vec2 & uv, m.textcoords)
 						{
 							b->addTextCoord(uv);
 						}
-						BOOST_FOREACH(const Face& f, m.faces)
+						BOOST_FOREACH(const Face & f, m.faces)
 						{
 							std::vector<pwn::mesh::BTriangle::Vertex> verts;
-							BOOST_FOREACH(const Point& p, f.points)
+							BOOST_FOREACH(const Point & p, f.points)
 							{
-								verts.push_back(pwn::mesh::BTriangle::Vertex(pointBase+p.point, 0, textureBase + p.texture));
+								verts.push_back(pwn::mesh::BTriangle::Vertex(pointBase + p.point, 0, textureBase + p.texture));
 							}
 							std::vector<pwn::mesh::BTriangle::Vertex> toadd(verts.rbegin(), verts.rend());
 							b->addFace(getOrAddMaterial(o, b, m.materials[f.material]), toadd);
@@ -1312,7 +1412,7 @@ namespace pwn
 				void prepareBones(Bone& b, const math::mat44& root)
 				{
 					const math::mat44 rotatedr = math::mat44helper(root).rotate(b.rotation).mat;
-					BOOST_FOREACH(Bone& c, b.childs)
+					BOOST_FOREACH(Bone & c, b.childs)
 					{
 						prepareBones(c, math::mat44helper(rotatedr).translate(b.vec()).mat);
 					}
@@ -1322,7 +1422,10 @@ namespace pwn
 				void walkBone(const Bone* parent, const Bone& b, pwn::mesh::Builder* builder, BoneIndexes* bi, const math::mat44& root)
 				{
 					mesh::Bone mb;
-					if( parent ) mb.setParent(bi->get(parent));
+					if(parent)
+					{
+						mb.setParent(bi->get(parent));
+					}
 					mb.setName(b.name);
 					mb.rot = b.rotation;
 					mb.pos = b.vec();
@@ -1330,21 +1433,21 @@ namespace pwn
 					builder->addBone(mb);
 					bi->add(&b, theid);
 					const math::mat44 rotatedr = math::mat44helper(root).rotate(b.rotation).mat;
-					BOOST_FOREACH(const Bone& c, b.childs)
+					BOOST_FOREACH(const Bone & c, b.childs)
 					{
 						walkBone(&b, c, builder, bi, math::mat44helper(rotatedr).translate(b.vec()).mat);
 					}
 
-					BOOST_FOREACH(const NamedObject& n, b.objects)
+					BOOST_FOREACH(const NamedObject & n, b.objects)
 					{
 						BoneAssignment ba;
 						ba.parent = &b;
 						ba.indexes = bi;
-						BOOST_FOREACH(const pwn::string& bname, n.weightedby)
+						BOOST_FOREACH(const pwn::string & bname, n.weightedby)
 						{
 							ba.bones.push_back(b.getBone(bname));
 						}
-						addToBuilder(f.getObject(n.object), builder, rotatedr*n.base, &ba);
+						addToBuilder(f.getObject(n.object), builder, rotatedr * n.base, &ba);
 					}
 				}
 			};
@@ -1357,7 +1460,7 @@ namespace pwn
 
 			void ExtractObjectNames(const File& f, std::set<pwn::string>* s)
 			{
-				BOOST_FOREACH(const Object& o, f.objects)
+				BOOST_FOREACH(const Object & o, f.objects)
 				{
 					s->insert(kObjectId + o.name);
 				}
@@ -1365,16 +1468,16 @@ namespace pwn
 
 			void RemoveObjectNames(const Bone& b, std::set<pwn::string>* s)
 			{
-				BOOST_FOREACH(const NamedObject& n, b.objects)
+				BOOST_FOREACH(const NamedObject & n, b.objects)
 				{
 					std::set<pwn::string>::const_iterator r = s->find(kObjectId + n.object);
-					if( r != s->end() )
+					if(r != s->end())
 					{
 						s->erase(r);
 					}
 				}
 
-				BOOST_FOREACH(const Bone& c, b.childs)
+				BOOST_FOREACH(const Bone & c, b.childs)
 				{
 					RemoveObjectNames(c, s);
 				}
@@ -1382,7 +1485,7 @@ namespace pwn
 
 			void ExtractFigureNames(const File& f, std::set<pwn::string>* s)
 			{
-				BOOST_FOREACH(const Figure& o, f.figures)
+				BOOST_FOREACH(const Figure & o, f.figures)
 				{
 					s->insert(kFigureId + o.name);
 					RemoveObjectNames(o.root, s);
@@ -1407,38 +1510,54 @@ namespace pwn
 				bool has(int f) const
 				{
 					const std::size_t size = frames.size();
-					for(std::size_t i=0; i<size; ++i)
+					for(std::size_t i = 0; i < size; ++i)
 					{
-						if( frames[i].frame == f ) return true;
+						if(frames[i].frame == f)
+						{
+							return true;
+						}
 					}
 					return false;
 				}
 
 				real get(int f) const
 				{
-					if( frames.empty() == true ) //throw "invalid data";
-						return 0;
-					const std::size_t size = frames.size();
-					for(std::size_t i=0; i<size; ++i)
+					if(frames.empty() == true)   //throw "invalid data";
 					{
-						if( frames[i].frame == f ) return frames[i].v;
-						if( frames[i].frame > f )
+						return 0;
+					}
+					const std::size_t size = frames.size();
+					for(std::size_t i = 0; i < size; ++i)
+					{
+						if(frames[i].frame == f)
 						{
-							if( i == 0 ) return frames[i].v;
-							else return math::Remap(frames[i-1].frame, frames[i].frame, f, frames[i-1].v, frames[i].v);
+							return frames[i].v;
+						}
+						if(frames[i].frame > f)
+						{
+							if(i == 0)
+							{
+								return frames[i].v;
+							}
+							else
+							{
+								return math::Remap(frames[i - 1].frame, frames[i].frame, f, frames[i - 1].v, frames[i].v);
+							}
 						}
 					}
-					return frames[size-1].v;
+					return frames[size - 1].v;
 				}
 			};
 
 			std::size_t GetBoneIndex(const mesh::Builder& b, const pwn::string name)
 			{
 				const std::size_t count = b.bones.size();
-				for(std::size_t i=0;i<count; ++i)
+				for(std::size_t i = 0; i < count; ++i)
 				{
-					if( b.bones[i].getName() == name )
+					if(b.bones[i].getName() == name)
+					{
 						return i;
+					}
 				}
 				throw "unknown bone name, use shorter bone names= consider rewriting lookup?";
 			}
@@ -1448,14 +1567,14 @@ namespace pwn
 				std::vector<CompiledAn8Data> cdata[3]; // x, y & z
 
 				// resize, so that we can index this as we please later on
-				for(int i=0;i<3; ++i)
+				for(int i = 0; i < 3; ++i)
 				{
 					cdata[i].resize(b.bones.size());
 				}
 
 				const Figure& figure = file.getFigure(s.figure);
 
-				BOOST_FOREACH(const JointAngle& ja, s.joints)
+				BOOST_FOREACH(const JointAngle & ja, s.joints)
 				{
 					int diff = -1;
 					if("X" == ja.axis)
@@ -1479,9 +1598,9 @@ namespace pwn
 					CompiledAn8Data& data = cdata[diff][index];
 					const Bone b = figure.getBone(ja.bone);
 
-					BOOST_FOREACH(const FloatKey& fk, ja.keys)
+					BOOST_FOREACH(const FloatKey & fk, ja.keys)
 					{
-						data.frames.push_back( An8KeyFrame(fk.frame, fk.value) );
+						data.frames.push_back(An8KeyFrame(fk.frame, fk.value));
 					}
 
 					//math::vec3 originalOrientation = b.rotation;
@@ -1490,33 +1609,33 @@ namespace pwn
 
 				const std::size_t numbones = b.bones.size();
 				std::vector<mesh::AnimationPerBone> bones(numbones);
-				for(int bone=0; bone<numbones; ++bone)
+				for(int bone = 0; bone < numbones; ++bone)
 				{
 					std::vector<mesh::FramePosition> afp;
 					std::vector<mesh::FrameRotation> afr;
 
-					for(int frame=0; frame<s.frames; ++frame)
+					for(int frame = 0; frame < s.frames; ++frame)
 					{
-						if( cdata[0][bone].has(frame) || cdata[1][bone].has(frame) || cdata[2][bone].has(frame) )
+						if(cdata[0][bone].has(frame) || cdata[1][bone].has(frame) || cdata[2][bone].has(frame))
 						{
 							const real x = cdata[0][bone].get(frame);
 							const real y = cdata[1][bone].get(frame);
 							const real z = cdata[2][bone].get(frame);
 							afp.push_back(mesh::FramePosition(frame, b.bones[bone].pos));
-							afr.push_back(mesh::FrameRotation(frame, math::cquat(x,y,z)));
+							afr.push_back(mesh::FrameRotation(frame, math::cquat(x, y, z)));
 						}
 					}
 
-					if( afp.empty() )
+					if(afp.empty())
 					{
 						afp.push_back(mesh::FramePosition(0, b.bones[bone].pos));
 					}
-					if( afr.empty() )
+					if(afr.empty())
 					{
 						afr.push_back(mesh::FrameRotation(0, b.bones[bone].rot));
 					}
 
-					bones[bone]= mesh::AnimationPerBone(afp, afr);
+					bones[bone] = mesh::AnimationPerBone(afp, afr);
 				}
 
 				return mesh::Animation(bones);
@@ -1524,7 +1643,7 @@ namespace pwn
 
 			void LoadAnimations(AnimationList* animations, const File& f, const mesh::Builder& builder)
 			{
-				BOOST_FOREACH(const Sequence& s, f.sequences)
+				BOOST_FOREACH(const Sequence & s, f.sequences)
 				{
 					mesh::Animation animation = ExtractSequence(f, builder, s);
 					animations->push_back(AnimationEntry(animation, s.name));
@@ -1541,16 +1660,16 @@ namespace pwn
 					subs.insert(s);
 				}
 
-				if( subs.empty() )
+				if(subs.empty())
 				{
 					ExtractObjectNames(f, &subs);
 					ExtractFigureNames(f, &subs);
 				}
 
-				BOOST_FOREACH(pwn::string& name, subs)
+				BOOST_FOREACH(pwn::string & name, subs)
 				{
 					const pwn::string id = name.substr(0, 1);
-					if( id == kObjectId )
+					if(id == kObjectId)
 					{
 						const pwn::string objectName = name.substr(1);
 						An8 a;
@@ -1559,7 +1678,7 @@ namespace pwn
 						a.addToBuilder(a.f.getObject(objectName), &builder, math::mat44Identity(), 0);
 						builders->push_back(Entry(builder, objectName));
 					}
-					else if( id == kFigureId )
+					else if(id == kFigureId)
 					{
 						const pwn::string figName = name.substr(1);
 						An8 a;

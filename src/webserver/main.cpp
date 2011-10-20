@@ -7,7 +7,7 @@
 class Request
 {
 public:
-	Request(mg_connection *conn)
+	Request(mg_connection* conn)
 		: conn(conn)
 	{
 	}
@@ -15,9 +15,15 @@ public:
 	const std::string getVariable(const std::string& name, const std::string& def) const
 	{
 		char* val = mg_get_var(conn, name.c_str());
-		if( val == 0 ) return def;
+		if(val == 0)
+		{
+			return def;
+		}
 		const std::string res = val;
-		if( val ) free(val);
+		if(val)
+		{
+			free(val);
+		}
 		return res;
 	}
 
@@ -38,21 +44,21 @@ public:
 	virtual void response(const Request& req, std::stringstream& stream) = 0;
 };
 
-static void bar(struct mg_connection *conn, const struct mg_requst_info *ri, void *data)
+static void bar(struct mg_connection* conn, const struct mg_requst_info* ri, void* data)
 {
 	Page* page = reinterpret_cast<Page*>(data);
 
 	mg_printf(conn, "%s",
-		"HTTP/1.1 200 OK\r\n"
-		"Content-Type: text/html\r\n"
-		"Connection: close\r\n\r\n");
+	          "HTTP/1.1 200 OK\r\n"
+	          "Content-Type: text/html\r\n"
+	          "Connection: close\r\n\r\n");
 
 	std::stringstream ss;
 	page->response(Request(conn), ss);
 
 	// Output HTML page
 	mg_printf(conn,
-		"%s", ss.str().c_str());
+	          "%s", ss.str().c_str());
 }
 
 class Server
@@ -82,10 +88,10 @@ public:
 	void response(const Request& req, std::stringstream& stream)
 	{
 		stream << "<html><body>"
-			<< "Hello " << req.getVariable("name", "unknown person") << "! I hope you feel great"
-			<< "<br>[<a href=\"counter1\">counter1</a>] "
-			<< "[<a href=\"counter2\">counter2</a>]"
-			<< "</body></html>";
+		       << "Hello " << req.getVariable("name", "unknown person") << "! I hope you feel great"
+		       << "<br>[<a href=\"counter1\">counter1</a>] "
+		       << "[<a href=\"counter2\">counter2</a>]"
+		       << "</body></html>";
 	}
 };
 
@@ -97,8 +103,14 @@ public:
 	{
 		stream << "<html><body>";
 		stream << "Hello, counter is <b>" << count << "</b>! I hope this works";
-		if( count > 2 ) { stream << "<br/>Yes it does!"; }
-		if( count <3 ) stream << "<br>[<a href=\"hello?name=my%20creator\">Bakk</a>]";
+		if(count > 2)
+		{
+			stream << "<br/>Yes it does!";
+		}
+		if(count < 3)
+		{
+			stream << "<br>[<a href=\"hello?name=my%20creator\">Bakk</a>]";
+		}
 		stream << "</body></html>";
 		++count;
 	}
@@ -119,9 +131,9 @@ void main()
 {
 	Server server("12345");
 	std::vector<PagePtr> container;
-	add(server, container, "/hello", new SamplePage() );
-	add(server, container, "/counter1", new CounterPage() );
-	add(server, container, "/counter2", new CounterPage() );
+	add(server, container, "/hello", new SamplePage());
+	add(server, container, "/counter1", new CounterPage());
+	add(server, container, "/counter2", new CounterPage());
 	// Now Mongoose is up, running and configured.
 	// Serve until somebody terminates us
 	std::cin.get();

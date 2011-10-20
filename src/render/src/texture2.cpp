@@ -10,14 +10,16 @@ namespace pwn
 		real GetMaxAnistropy()
 		{
 			GLfloat anisotropy = 1;
-			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &anisotropy); pwnAssert_NoGLError();
+			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &anisotropy);
+			pwnAssert_NoGLError();
 			return anisotropy;
 		}
 
 		Image::Image(bool alpha, int width, int height, const byte* bitmapData, bool mipmap, int format, real anistropy, bool compress)
 			: text(0)
 		{
-			glGenTextures(1, &text); pwnAssert_NoGLError();
+			glGenTextures(1, &text);
+			pwnAssert_NoGLError();
 			bind(0);
 			const bool supportCompress = GLEW_ARB_texture_compression || GLEW_VERSION_1_3;
 			const bool doCompress = compress && supportCompress;
@@ -27,24 +29,32 @@ namespace pwn
 
 			//glEnable(GL_TEXTURE_2D); // might help on certain gfx cards
 
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); pwnAssert_NoGLError();
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); pwnAssert_NoGLError();
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			pwnAssert_NoGLError();
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			pwnAssert_NoGLError();
 
-			const GLint minFilter = mipmap? GL_LINEAR_MIPMAP_LINEAR: GL_LINEAR;
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); pwnAssert_NoGLError();
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter); pwnAssert_NoGLError();
+			const GLint minFilter = mipmap ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			pwnAssert_NoGLError();
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+			pwnAssert_NoGLError();
 
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, anistropy); pwnAssert_NoGLError();
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, anistropy);
+			pwnAssert_NoGLError();
 
 			const int gmipmap = mipmap ? GL_TRUE : GL_FALSE;
-			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, gmipmap); pwnAssert_NoGLError();
-			glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, bitmapData); pwnAssert_NoGLError();
+			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, gmipmap);
+			pwnAssert_NoGLError();
+			glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, bitmapData);
+			pwnAssert_NoGLError();
 
-			if( doCompress )
+			if(doCompress)
 			{
 				GLint result = GL_FALSE;
-				glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_COMPRESSED, &result);  pwnAssert_NoGLError();
-				if( result != GL_TRUE )
+				glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_COMPRESSED, &result);
+				pwnAssert_NoGLError();
+				if(result != GL_TRUE)
 				{
 					throw "failed to compress image";
 				}
@@ -53,14 +63,17 @@ namespace pwn
 
 		Image::~Image()
 		{
-			glDeleteTextures(1, &text); pwnAssert_NoGLError();
+			glDeleteTextures(1, &text);
+			pwnAssert_NoGLError();
 		}
 
 		void Image::bind(int position) const
 		{
 			Assert(position >= 0);
-			glActiveTexture(GL_TEXTURE0 + position); pwnAssert_NoGLError();
-			glBindTexture(GL_TEXTURE_2D, text); pwnAssert_NoGLError();
+			glActiveTexture(GL_TEXTURE0 + position);
+			pwnAssert_NoGLError();
+			glBindTexture(GL_TEXTURE_2D, text);
+			pwnAssert_NoGLError();
 		}
 
 		unsigned int Image::getId() const
@@ -97,7 +110,7 @@ namespace pwn
 
 		void Texture2::setImage(Image* img)
 		{
-			texture.reset( img );
+			texture.reset(img);
 		}
 
 		void Load(Texture2* tex, uint32 width, uint32 height, const byte* pixels, const Engine& eng)

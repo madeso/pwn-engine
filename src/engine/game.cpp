@@ -8,7 +8,7 @@ namespace pwn
 	namespace engine
 	{
 		Game::Game()
-			: imp( new GameImp() )
+			: imp(new GameImp())
 		{
 		}
 

@@ -42,17 +42,23 @@ namespace pwn
 
 				int Model::boneId(string bone)
 				{
-					if (bone == "") return -1;
-					for (unsigned int i = 0; i < bones.size(); ++i)
+					if(bone == "")
 					{
-						if (bones[i].name == bone) return i;
+						return -1;
+					}
+					for(unsigned int i = 0; i < bones.size(); ++i)
+					{
+						if(bones[i].name == bone)
+						{
+							return i;
+						}
 					}
 					throw "Failed to find a match for " + bone;
 				}
 
 				void Model::mapBonesToId()
 				{
-					BOOST_FOREACH(Bone& b, bones)
+					BOOST_FOREACH(Bone & b, bones)
 					{
 						b.parentId = boneId(b.parentName);
 					}
@@ -85,8 +91,8 @@ namespace pwn
 
 				Vertex::Vertex()
 					: flags(0)
-					, uv(0,0)
-					, pos(0,0,0)
+					, uv(0, 0)
+					, pos(0, 0, 0)
 					, bone(0)
 				{
 				}
@@ -97,7 +103,7 @@ namespace pwn
 				}*/
 
 				Normal::Normal()
-					: norm(0,0,0)
+					: norm(0, 0, 0)
 				{
 				}
 
@@ -191,33 +197,39 @@ namespace pwn
 
 						bool added = false;
 
-						BOOST_FOREACH(const milkshape::common::Bone& b , model.bones)
+						BOOST_FOREACH(const milkshape::common::Bone & b , model.bones)
 						{
 							AnimationPerBone a =  AnimationPerBone();
 
 							// -1 = milkshape animations start at 1, pwn start at 0
-							BOOST_FOREACH(const PositionKey& pk , b.positions)
+							BOOST_FOREACH(const PositionKey & pk , b.positions)
 							{
-								a.addPosition(pk.time-1,  math::vec3(pk.x, pk.y, pk.z));
+								a.addPosition(pk.time - 1,  math::vec3(pk.x, pk.y, pk.z));
 								added = true;
 							}
-							BOOST_FOREACH(const RotationKey& rk , b.rotations)
+							BOOST_FOREACH(const RotationKey & rk , b.rotations)
 							{
-								a.addRotation(rk.time-1, makeQuat( math::vec3(rk.x, rk.y, rk.z)));
+								a.addRotation(rk.time - 1, makeQuat(math::vec3(rk.x, rk.y, rk.z)));
 								added = true;
 							}
 
 							ani.push_back(a);
 						}
 
-						if (added) return  Animation(ani);
-						else throw "no animations found";
+						if(added)
+						{
+							return  Animation(ani);
+						}
+						else
+						{
+							throw "no animations found";
+						}
 					}
 
 					void ExtractMeshDefinition(const Model& model, pwn::mesh::Builder* builder)
 					{
 						int id = 0;
-						BOOST_FOREACH(const Material& mat, model.materials)
+						BOOST_FOREACH(const Material & mat, model.materials)
 						{
 							mesh::Material smat;
 							smat.setTexture_Diffuse(mat.diffuseTexture);
@@ -225,18 +237,18 @@ namespace pwn
 							++id;
 						}
 
-						BOOST_FOREACH (Bone b , model.bones)
+						BOOST_FOREACH(Bone b , model.bones)
 						{
 							mesh::Bone bn;
 							bn.pos =  math::vec3(b.x, b.y, b.z);
-							bn.rot = makeQuat( math::vec3(b.rx, b.ry, b.rz));
-							if( b.parentId == -1 )
+							bn.rot = makeQuat(math::vec3(b.rx, b.ry, b.rz));
+							if(b.parentId == -1)
 							{
 								// bone defaults to no parent, dont do anything
 							}
 							else
 							{
-								bn.setParent( b.parentId);
+								bn.setParent(b.parentId);
 							}
 							bn.setName(b.name);
 							builder->addBone(bn);
@@ -246,7 +258,7 @@ namespace pwn
 						int vbase = 0;
 						int nadded = 0;
 						int nbase = 0;
-						BOOST_FOREACH (Mesh me , model.meshes)
+						BOOST_FOREACH(Mesh me , model.meshes)
 						{
 							vbase += vadded;
 							vadded = 0;
@@ -254,27 +266,27 @@ namespace pwn
 							nadded = 0;
 
 							//def.selectMaterial("m" + me.materialId);
-							BOOST_FOREACH (Vertex v , me.vertices)
+							BOOST_FOREACH(Vertex v , me.vertices)
 							{
-								const math::vec4 boneIndex(v.bone+0.5f, -1,-1,-1);
+								const math::vec4 boneIndex(v.bone + 0.5f, -1, -1, -1);
 								builder->addPosition(pwn::mesh::BPoint(v.pos, boneIndex));
 								builder->addTextCoord(math::vec2(math::X(v.uv), math::Y(v.uv)));
 								++vadded;
 							}
 
-							BOOST_FOREACH (Normal n , me.normals)
+							BOOST_FOREACH(Normal n , me.normals)
 							{
 								builder->addNormal(n.norm);
 								++nadded;
 							}
 
-							BOOST_FOREACH (Tri tr , me.tris)
+							BOOST_FOREACH(Tri tr , me.tris)
 							{
 								builder->addTriangle(me.materialId, mesh::BTriangle(
-									  mesh::BTriangle::Vertex::Create_VN_T(vbase + tr.v1, nbase + tr.n1)
-									, mesh::BTriangle::Vertex::Create_VN_T(vbase + tr.v2, nbase + tr.n2)
-									, mesh::BTriangle::Vertex::Create_VN_T(vbase + tr.v3, nbase + tr.n3)
-									));
+								                        mesh::BTriangle::Vertex::Create_VN_T(vbase + tr.v1, nbase + tr.n1)
+								                        , mesh::BTriangle::Vertex::Create_VN_T(vbase + tr.v2, nbase + tr.n2)
+								                        , mesh::BTriangle::Vertex::Create_VN_T(vbase + tr.v3, nbase + tr.n3)
+								                     ));
 							}
 						}
 					}
@@ -286,14 +298,14 @@ namespace pwn
 						// FIXME: rescale the inputs to 1/2 angle
 						const real ascale = 0.5f;
 						ang = angles[2] * ascale;
-						const real sy = math::Sin( math::Angle::FromRadians(ang));
-						const real cy = math::Cos( math::Angle::FromRadians(ang));
+						const real sy = math::Sin(math::Angle::FromRadians(ang));
+						const real cy = math::Cos(math::Angle::FromRadians(ang));
 						ang = angles[1] * ascale;
-						const real sp = math::Sin( math::Angle::FromRadians(ang));
-						const real cp = math::Cos( math::Angle::FromRadians(ang));
+						const real sp = math::Sin(math::Angle::FromRadians(ang));
+						const real cp = math::Cos(math::Angle::FromRadians(ang));
 						ang = angles[0] * ascale;
-						const real sr = math::Sin( math::Angle::FromRadians(ang));
-						const real cr = math::Cos( math::Angle::FromRadians(ang));
+						const real sr = math::Sin(math::Angle::FromRadians(ang));
+						const real cr = math::Cos(math::Angle::FromRadians(ang));
 
 						real x = sr * cp * cy - cr * sp * sy; // X
 						real y = cr * sp * cy + sr * cp * sy; // Y

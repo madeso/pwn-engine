@@ -47,7 +47,10 @@ namespace pwn
 			void actor_remove(ActorPtr actor)
 			{
 				ActorList::iterator res = std::find(actors.begin(), actors.end(), actor);
-				if( res == actors.end() ) return;
+				if(res == actors.end())
+				{
+					return;
+				}
 				actors.erase(res);
 			}
 
@@ -59,7 +62,10 @@ namespace pwn
 			void lines_remove(LinesPtr line)
 			{
 				LinesList::iterator res = std::find(lines.begin(), lines.end(), line);
-				if( res == lines.end() ) return;
+				if(res == lines.end())
+				{
+					return;
+				}
 				lines.erase(res);
 			}
 
@@ -71,7 +77,10 @@ namespace pwn
 			void light_remove(LightPtr light)
 			{
 				LightList::iterator res = std::find(lights.begin(), lights.end(), light);
-				if( res == lights.end() ) return;
+				if(res == lights.end())
+				{
+					return;
+				}
 				lights.erase(res);
 			}
 
@@ -98,26 +107,30 @@ namespace pwn
 					l->render(&list, r.compiled);
 				}
 
-				int id = GL_LIGHT0; pwnAssert_NoGLError();
+				int id = GL_LIGHT0;
+				pwnAssert_NoGLError();
 
-				glLoadMatrixf( r.compiled.mat.data() );  pwnAssert_NoGLError();
+				glLoadMatrixf(r.compiled.mat.data());
+				pwnAssert_NoGLError();
 
-				if( lights.empty() == false )
+				if(lights.empty() == false)
 				{
-					glEnable(GL_LIGHTING); pwnAssert_NoGLError();
+					glEnable(GL_LIGHTING);
+					pwnAssert_NoGLError();
 					BOOST_FOREACH(LightPtr l, lights)
 					{
-						glEnable(id); pwnAssert_NoGLError();
+						glEnable(id);
+						pwnAssert_NoGLError();
 						l->apply(id);
 						++id;
 					}
 				}
 
 				// todo: shouldnt we always enable materials? there might be ambiant light and should be really optimize for pure darkness?
-				list.end( lights.empty() == false ); // apply materials if there are lights
+				list.end(lights.empty() == false);   // apply materials if there are lights
 
 				// rendering is done, disable all lights again
-				for(int i=GL_LIGHT0; i<id; ++i)
+				for(int i = GL_LIGHT0; i < id; ++i)
 				{
 					glDisable(i);
 				}

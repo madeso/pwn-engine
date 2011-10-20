@@ -19,8 +19,8 @@ namespace pwn
 		const math::mat44 fixOpenGlNegativeZ = G();
 
 		CompiledCamera::CompiledCamera(const Camera& camera)
-			// : mat( fixOpenGlNegativeZ * cmat44(vec3(-X(camera.position.vec), -Y(camera.position.vec), Z(camera.position.vec))) * cmat44(-camera.rotation) )
-			: mat( fixOpenGlNegativeZ * cmat44(-camera.rotation) * cmat44(vec3(-camera.position.vec)) )
+		// : mat( fixOpenGlNegativeZ * cmat44(vec3(-X(camera.position.vec), -Y(camera.position.vec), Z(camera.position.vec))) * cmat44(-camera.rotation) )
+			: mat(fixOpenGlNegativeZ* cmat44(-camera.rotation) * cmat44(vec3(-camera.position.vec)))
 		{
 		}
 

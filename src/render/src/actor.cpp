@@ -22,7 +22,7 @@ namespace pwn
 
 		boost::shared_ptr<Actor> Actor::Create(const math::point3& position, const math::quat& rotation, boost::shared_ptr<ActorDef> model)
 		{
-			boost::shared_ptr<Actor> a( new Actor(position, rotation, model) );
+			boost::shared_ptr<Actor> a(new Actor(position, rotation, model));
 			return a;
 		}
 
@@ -30,12 +30,15 @@ namespace pwn
 		{
 			const math::mat44 mat = cam.generateMatrix(position.vec, rotation);
 
-			if( debug )
+			if(debug)
 			{
 				rl->add(mat);
 			}
 
-			if( model == 0 ) return; // abort if no model available
+			if(model == 0)
+			{
+				return;   // abort if no model available
+			}
 
 			BOOST_FOREACH(ActorDef::PartPtr p, model->parts)
 			{

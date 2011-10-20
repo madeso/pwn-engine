@@ -14,7 +14,7 @@ namespace test
 
 	GTEST(testVecOp)
 	{
-		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(1,2,3), cvec3(quat(4, vec3(1,2,3))));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, vec3(1, 2, 3), cvec3(quat(4, vec3(1, 2, 3))));
 	}
 
 	/*GTEST(testEuclidianQuatExample)
@@ -52,35 +52,35 @@ namespace test
 	GTEST(testLocalAxis)
 	{
 		quat q = qIdentity();
-		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, Right(), Right(q) );
-		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, Up(), Up(q) );
-		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, In(), In(q) );
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, Right(), Right(q));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, Up(), Up(q));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, In(), In(q));
 
 		q = cquat(RightHandAround(Up(), Angle::FromDegrees(90)));
-		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, In(), Right(q) );
-		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, Up(), Up(q) );
-		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, Left(), In(q) );
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, In(), Right(q));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, Up(), Up(q));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, Left(), In(q));
 
 		q = cquat(RightHandAround(Right(), Angle::FromDegrees(90)));
-		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, Right(), Right(q) );
-		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, Out(), Up(q) );
-		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, Up(), In(q) );
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, Right(), Right(q));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, Out(), Up(q));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, Up(), In(q));
 
 		q = cquat(RightHandAround(In(), Angle::FromDegrees(90)));
-		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, Down(), Right(q) );
-		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, Right(), Up(q) );
-		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, In(), In(q) );
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, Down(), Right(q));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, Right(), Up(q));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, In(), In(q));
 	}
 
 	GTEST(testLook)
 	{
-		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, cquat(RightHandAround(Up(), Angle::FromDegrees(-90))), qLookAt(vec3(0,0,0), vec3(5,0,0), Up()) );
-		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, cquat(RightHandAround(Up(), Angle::FromDegrees(-90))),  qLookAt(vec3(0,0,0), vec3(2,0,0), Up()) );
-		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, cquat(RightHandAround(Up(), Angle::FromDegrees(-90))),  qLookAt(vec3(0,0,0), vec3(0.25f,0,0), Up()) );
+		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, cquat(RightHandAround(Up(), Angle::FromDegrees(-90))), qLookAt(vec3(0, 0, 0), vec3(5, 0, 0), Up()));
+		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, cquat(RightHandAround(Up(), Angle::FromDegrees(-90))),  qLookAt(vec3(0, 0, 0), vec3(2, 0, 0), Up()));
+		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, cquat(RightHandAround(Up(), Angle::FromDegrees(-90))),  qLookAt(vec3(0, 0, 0), vec3(0.25f, 0, 0), Up()));
 
-		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, cquat(RightHandAround(Up(), Angle::FromDegrees(180))),  qLookInDirection(vec3(0,0,-9), Up()) );
-		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, cquat(RightHandAround(Up(), Angle::FromDegrees(-90))),  qLookInDirection(vec3(3,0,0), Up()) );
-		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, cquat(RightHandAround(Up(), Angle::FromDegrees(90))),  qLookInDirection(vec3(-5,0,0), Up()) );
+		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, cquat(RightHandAround(Up(), Angle::FromDegrees(180))),  qLookInDirection(vec3(0, 0, -9), Up()));
+		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, cquat(RightHandAround(Up(), Angle::FromDegrees(-90))),  qLookInDirection(vec3(3, 0, 0), Up()));
+		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, cquat(RightHandAround(Up(), Angle::FromDegrees(90))),  qLookInDirection(vec3(-5, 0, 0), Up()));
 
 		// todo: add more test where up != Up()
 	}
@@ -88,15 +88,15 @@ namespace test
 	GTEST(testCombine)
 	{
 		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, cquat(RightHandAround(Up(), Angle::FromDegrees(90))),
-			 Combine(cquat(RightHandAround(Up(), Angle::FromDegrees(90))), qIdentity()));
+		                    Combine(cquat(RightHandAround(Up(), Angle::FromDegrees(90))), qIdentity()));
 
 		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, cquat(RightHandAround(Up(), Angle::FromDegrees(90))),
-			 Combine(qIdentity(), cquat(RightHandAround(Up(), Angle::FromDegrees(90)))) );
+		                    Combine(qIdentity(), cquat(RightHandAround(Up(), Angle::FromDegrees(90)))));
 
 		EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test,  Combine(cquat(RightHandAround(Up(), Angle::FromDegrees(-90))),
-			                       cquat(RightHandAround(Out(), Angle::FromDegrees(90)))),
-			  Combine(cquat(RightHandAround(Right(), Angle::FromDegrees(90))),
-			               cquat(RightHandAround(Up(), Angle::FromDegrees(-90)))));
+		                    cquat(RightHandAround(Out(), Angle::FromDegrees(90)))),
+		                    Combine(cquat(RightHandAround(Right(), Angle::FromDegrees(90))),
+		                            cquat(RightHandAround(Up(), Angle::FromDegrees(-90)))));
 	}
 
 	GTEST(verifyTestAxisAngle)

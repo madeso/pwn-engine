@@ -60,8 +60,11 @@ namespace pwn
 						byte* getBytes(std::size_t size)
 						{
 							const std::size_t newPosition = size + mPosition;
-							if( newPosition > mLength ) throw "not enough data in buffer...";
-							byte* result = mBytes+mPosition;
+							if(newPosition > mLength)
+							{
+								throw "not enough data in buffer...";
+							}
+							byte* result = mBytes + mPosition;
 							mPosition = newPosition;
 							return result;
 						}
@@ -74,8 +77,12 @@ namespace pwn
 							do
 							{
 								read(&c, 1);
-								if( c!= 0) s << c;
-							} while(c != 0 );
+								if(c != 0)
+								{
+									s << c;
+								}
+							}
+							while(c != 0);
 							return s.str();
 						}
 
@@ -150,16 +157,19 @@ namespace pwn
 						static BinaryChunkPtr SelectChunk(int id, std::vector<BinaryChunkPtr>& s)
 						{
 							BinaryChunkPtr c = SelectChunkOrNull(id, s);
-							if (c.get() == 0) throw "Missing required chunk";
+							if(c.get() == 0)
+							{
+								throw "Missing required chunk";
+							}
 							return c;
 						}
 
 						static std::vector<BinaryChunkPtr> IterateChunks(int id, std::vector<BinaryChunkPtr> s)
 						{
 							std::vector<BinaryChunkPtr> res;
-							BOOST_FOREACH(BinaryChunkPtr& c, s)
+							BOOST_FOREACH(BinaryChunkPtr & c, s)
 							{
-								if (c->id == id)
+								if(c->id == id)
 								{
 									res.push_back(c);
 								}
@@ -169,16 +179,19 @@ namespace pwn
 
 						static BinaryChunkPtr SelectChunkOrNull(int id, std::vector<BinaryChunkPtr>& s)
 						{
-							BOOST_FOREACH(BinaryChunkPtr& c, s)
+							BOOST_FOREACH(BinaryChunkPtr & c, s)
 							{
-								if (c->id == id) return c;
+								if(c->id == id)
+								{
+									return c;
+								}
 							}
 							return BinaryChunkPtr();
 						}
 
 						static void ReadFromBinary(std::vector<BinaryChunkPtr>& chunks, Binary& b)
 						{
-							while (b.Continue())
+							while(b.Continue())
 							{
 								int id = b.int2();
 								int count = b.int4();
@@ -236,40 +249,74 @@ namespace pwn
 						{
 							switch(id)
 							{
-							case MAIN_CHUNK : return "MAIN_CHUNK";
-							case EDITOR_3D_CHUNK : return "EDITOR_3D_CHUNK";
-							case OBJECT_BLOCK : return "OBJECT_BLOCK";
-							case TRIANGULAR_MESH : return "TRIANGULAR_MESH";
-							case VERTICES_LIST : return "VERTICES_LIST";
-							case FACES_DESCRIPTION : return "FACES_DESCRIPTION";
-							case FACES_MATERIAL : return "FACES_MATERIAL";
-							case MAPPING_COORDINATES_LIST : return "MAPPING_COORDINATES_LIST";
-							case SMOOTHING_GROUP_LIST : return "SMOOTHING_GROUP_LIST";
-							case LOCAL_COORDINATES_SYSTEM : return "LOCAL_COORDINATES_SYSTEM";
-							case LIGHT : return "LIGHT";
-							case SPOTLIGHT : return "SPOTLIGHT";
-							case CAMERA : return "CAMERA";
-							case MATERIAL_BLOCK : return "MATERIAL_BLOCK";
-							case MATERIAL_NAME : return "MATERIAL_NAME";
-							case AMBIENT_COLOR : return "AMBIENT_COLOR";
-							case DIFFUSE_COLOR : return "DIFFUSE_COLOR";
-							case SPECULAR_COLOR : return "SPECULAR_COLOR";
-							case TEXTURE_MAP_1 : return "TEXTURE_MAP_1";
-							case BUMP_MAP : return "BUMP_MAP";
-							case REFLECTION_MAP : return "REFLECTION_MAP";
-							case MAPPING_FILENAME : return "MAPPING_FILENAME";
-							case MAPPING_PARAMETERS : return "MAPPING_PARAMETERS";
-							case KEYFRAMER_CHUNK : return "KEYFRAMER_CHUNK";
-							case MESH_INFORMATION_BLOCK : return "MESH_INFORMATION_BLOCK";
-							case SPOT_LIGHT_INFORMATION_BLOCK : return "SPOT_LIGHT_INFORMATION_BLOCK";
-							case FRAMES: return "FRAMES (START AND END)";
-							case OBJECT_NAME : return "OBJECT_NAME";
-							case OBJECT_PIVOT_POINT : return "OBJECT_PIVOT_POINT";
-							case POSITION_TRACK : return "POSITION_TRACK";
-							case ROTATION_TRACK : return "ROTATION_TRACK";
-							case SCALE_TRACK : return "SCALE_TRACK";
-							case HIERARCHY_POSITION : return "HIERARCHY_POSITION";
-							default: return "???";
+								case MAIN_CHUNK :
+									return "MAIN_CHUNK";
+								case EDITOR_3D_CHUNK :
+									return "EDITOR_3D_CHUNK";
+								case OBJECT_BLOCK :
+									return "OBJECT_BLOCK";
+								case TRIANGULAR_MESH :
+									return "TRIANGULAR_MESH";
+								case VERTICES_LIST :
+									return "VERTICES_LIST";
+								case FACES_DESCRIPTION :
+									return "FACES_DESCRIPTION";
+								case FACES_MATERIAL :
+									return "FACES_MATERIAL";
+								case MAPPING_COORDINATES_LIST :
+									return "MAPPING_COORDINATES_LIST";
+								case SMOOTHING_GROUP_LIST :
+									return "SMOOTHING_GROUP_LIST";
+								case LOCAL_COORDINATES_SYSTEM :
+									return "LOCAL_COORDINATES_SYSTEM";
+								case LIGHT :
+									return "LIGHT";
+								case SPOTLIGHT :
+									return "SPOTLIGHT";
+								case CAMERA :
+									return "CAMERA";
+								case MATERIAL_BLOCK :
+									return "MATERIAL_BLOCK";
+								case MATERIAL_NAME :
+									return "MATERIAL_NAME";
+								case AMBIENT_COLOR :
+									return "AMBIENT_COLOR";
+								case DIFFUSE_COLOR :
+									return "DIFFUSE_COLOR";
+								case SPECULAR_COLOR :
+									return "SPECULAR_COLOR";
+								case TEXTURE_MAP_1 :
+									return "TEXTURE_MAP_1";
+								case BUMP_MAP :
+									return "BUMP_MAP";
+								case REFLECTION_MAP :
+									return "REFLECTION_MAP";
+								case MAPPING_FILENAME :
+									return "MAPPING_FILENAME";
+								case MAPPING_PARAMETERS :
+									return "MAPPING_PARAMETERS";
+								case KEYFRAMER_CHUNK :
+									return "KEYFRAMER_CHUNK";
+								case MESH_INFORMATION_BLOCK :
+									return "MESH_INFORMATION_BLOCK";
+								case SPOT_LIGHT_INFORMATION_BLOCK :
+									return "SPOT_LIGHT_INFORMATION_BLOCK";
+								case FRAMES:
+									return "FRAMES (START AND END)";
+								case OBJECT_NAME :
+									return "OBJECT_NAME";
+								case OBJECT_PIVOT_POINT :
+									return "OBJECT_PIVOT_POINT";
+								case POSITION_TRACK :
+									return "POSITION_TRACK";
+								case ROTATION_TRACK :
+									return "ROTATION_TRACK";
+								case SCALE_TRACK :
+									return "SCALE_TRACK";
+								case HIERARCHY_POSITION :
+									return "HIERARCHY_POSITION";
+								default:
+									return "???";
 							}
 						}
 					};
@@ -277,13 +324,13 @@ namespace pwn
 
 					real& RefMat(mat44& m, int c, int r)
 					{
-						return m(c,r);
+						return m(c, r);
 					}
 
 					struct LocalCoordinateSystemChunk
 					{
 						LocalCoordinateSystemChunk()
-							: mat( mat44Identity() )
+							: mat(mat44Identity())
 						{
 						}
 
@@ -291,16 +338,19 @@ namespace pwn
 
 						static mat44 GetMatrix(BinaryChunkPtr c)
 						{
-							if( c.get() )
+							if(c.get())
 							{
-								if (c->id != ChunkId::LOCAL_COORDINATES_SYSTEM) throw "not a coordsys";
+								if(c->id != ChunkId::LOCAL_COORDINATES_SYSTEM)
+								{
+									throw "not a coordsys";
+								}
 
 								Binary b = c->getBinary();
 								mat44 lmat;
 
-								for (int j = 0; j < 4; j++)
+								for(int j = 0; j < 4; j++)
 								{
-									for (int i = 0; i < 3; i++)
+									for(int i = 0; i < 3; i++)
 									{
 										RefMat(lmat, i, j) = b.rfloat();
 									}
@@ -335,11 +385,14 @@ namespace pwn
 						std::vector<int> faces;
 						FaceMaterialChunk& load(BinaryChunkPtr c)
 						{
-							if (c->id != ChunkId::FACES_MATERIAL) throw "not a face material chunk";
+							if(c->id != ChunkId::FACES_MATERIAL)
+							{
+								throw "not a face material chunk";
+							}
 							Binary b = c->getBinary();
 							name = b.ReadString();
 							int count = b.int2();
-							for (int i = 0; i < count; ++i)
+							for(int i = 0; i < count; ++i)
 							{
 								faces.push_back(b.int2());
 							}
@@ -373,15 +426,18 @@ namespace pwn
 
 						void load(BinaryChunkPtr c)
 						{
-							if (c->id != ChunkId::TRIANGULAR_MESH) throw "Not a trimesh";
+							if(c->id != ChunkId::TRIANGULAR_MESH)
+							{
+								throw "Not a trimesh";
+							}
 							std::vector<BinaryChunkPtr> chunks = c->SubChunks();
-							points = ParsePoints( BinaryChunk::SelectChunk(ChunkId::VERTICES_LIST, chunks) );
+							points = ParsePoints(BinaryChunk::SelectChunk(ChunkId::VERTICES_LIST, chunks));
 							mapping = ParseMapping(BinaryChunk::SelectChunk(ChunkId::MAPPING_COORDINATES_LIST, chunks));
 							std::vector<BinaryChunkPtr> facechunks;
 							faces = ParseFaces(BinaryChunk::SelectChunk(ChunkId::FACES_DESCRIPTION, chunks), facechunks);
-							BOOST_FOREACH(const BinaryChunkPtr& bc, BinaryChunk::IterateChunks(ChunkId::FACES_MATERIAL, facechunks))
+							BOOST_FOREACH(const BinaryChunkPtr & bc, BinaryChunk::IterateChunks(ChunkId::FACES_MATERIAL, facechunks))
 							{
-								facematerials.push_back( FaceMaterialChunk().load(bc) );
+								facematerials.push_back(FaceMaterialChunk().load(bc));
 							}
 							coordsys.load(BinaryChunk::SelectChunkOrNull(ChunkId::LOCAL_COORDINATES_SYSTEM, chunks));
 						}
@@ -392,7 +448,7 @@ namespace pwn
 							int facecount = b.int2();
 
 							std::vector<Poly> res;
-							for (int i = 0; i < facecount; ++i)
+							for(int i = 0; i < facecount; ++i)
 							{
 								int x = b.int2();
 								int y = b.int2();
@@ -411,7 +467,7 @@ namespace pwn
 							int mapcount = b.int2();
 
 							std::vector<vec2> res;
-							for (int i = 0; i < mapcount; ++i)
+							for(int i = 0; i < mapcount; ++i)
 							{
 								float x = b.rfloat();
 								float y = b.rfloat();
@@ -428,7 +484,7 @@ namespace pwn
 
 							std::vector<vec3> res;
 
-							for (int i = 0; i < points; ++i)
+							for(int i = 0; i < points; ++i)
 							{
 								float x = b.rfloat();
 								float z = -b.rfloat();
@@ -458,22 +514,22 @@ namespace pwn
 
 						void load(BinaryChunkPtr c)
 						{
-							if (c.get() != 0)
+							if(c.get() != 0)
 							{
 								Binary b = c->getBinary();
 								const int type = b.int2();
 								const int size = b.int4();
 								switch(type)
 								{
-								case ChunkId::COLOR_RGB:
-								case ChunkId::COLOR_TRU:
-								case ChunkId::COLOR_TRUG:
-									red = b.int1() / 255.0f;
-									green = b.int1() / 255.0f;
-									blue = b.int1() / 255.0f;
-									break;
-								default:
-									throw "Unknown color...";
+									case ChunkId::COLOR_RGB:
+									case ChunkId::COLOR_TRU:
+									case ChunkId::COLOR_TRUG:
+										red = b.int1() / 255.0f;
+										green = b.int1() / 255.0f;
+										blue = b.int1() / 255.0f;
+										break;
+									default:
+										throw "Unknown color...";
 								}
 							}
 							else
@@ -498,14 +554,20 @@ namespace pwn
 
 						ObjectChunk& load(BinaryChunkPtr c)
 						{
-							if (c->id != ChunkId::OBJECT_BLOCK) throw "Not a object block";
+							if(c->id != ChunkId::OBJECT_BLOCK)
+							{
+								throw "Not a object block";
+							}
 
 							std::vector<BinaryChunkPtr> chunks;
 							Binary b = c->getBinary();
 							name = b.ReadString();
 							BinaryChunk::ReadFromBinary(chunks, b);
 							BinaryChunkPtr tm = BinaryChunk::SelectChunk(ChunkId::TRIANGULAR_MESH, chunks);
-							if (tm.get() == 0) throw "Missing a trimesh chunk";
+							if(tm.get() == 0)
+							{
+								throw "Missing a trimesh chunk";
+							}
 							trimesh.load(tm);
 
 							return *this;
@@ -523,13 +585,16 @@ namespace pwn
 
 						MaterialChunk& load(BinaryChunkPtr c)
 						{
-							if (c->id != ChunkId::MATERIAL_BLOCK) throw "Not a material chunk";
+							if(c->id != ChunkId::MATERIAL_BLOCK)
+							{
+								throw "Not a material chunk";
+							}
 							std::vector<BinaryChunkPtr> chunks = c->SubChunks();
 
-							name.load(BinaryChunk::SelectChunk(ChunkId::MATERIAL_NAME, chunks) );
-							ambient.load(BinaryChunk::SelectChunkOrNull(ChunkId::AMBIENT_COLOR, chunks) );
-							diffuse.load(BinaryChunk::SelectChunkOrNull(ChunkId::DIFFUSE_COLOR, chunks) );
-							specular.load(BinaryChunk::SelectChunkOrNull(ChunkId::SPECULAR_COLOR, chunks) );
+							name.load(BinaryChunk::SelectChunk(ChunkId::MATERIAL_NAME, chunks));
+							ambient.load(BinaryChunk::SelectChunkOrNull(ChunkId::AMBIENT_COLOR, chunks));
+							diffuse.load(BinaryChunk::SelectChunkOrNull(ChunkId::DIFFUSE_COLOR, chunks));
+							specular.load(BinaryChunk::SelectChunkOrNull(ChunkId::SPECULAR_COLOR, chunks));
 							texture.load(BinaryChunk::SelectChunk(ChunkId::TEXTURE_MAP_1, chunks)->getSub(ChunkId::MAPPING_FILENAME));
 
 							return *this;
@@ -546,16 +611,19 @@ namespace pwn
 
 						void load(BinaryChunkPtr c)
 						{
-							if (c->id != ChunkId::EDITOR_3D_CHUNK) throw "Not a 3d editor chunk";
+							if(c->id != ChunkId::EDITOR_3D_CHUNK)
+							{
+								throw "Not a 3d editor chunk";
+							}
 							std::vector<BinaryChunkPtr> chunks = c->SubChunks();
 
-							BOOST_FOREACH(const BinaryChunkPtr& oc , BinaryChunk::IterateChunks(ChunkId::OBJECT_BLOCK, chunks))
+							BOOST_FOREACH(const BinaryChunkPtr & oc , BinaryChunk::IterateChunks(ChunkId::OBJECT_BLOCK, chunks))
 							{
-								objects.push_back( ObjectChunk().load(oc) );
+								objects.push_back(ObjectChunk().load(oc));
 							}
-							BOOST_FOREACH (const BinaryChunkPtr& mc , BinaryChunk::IterateChunks(ChunkId::MATERIAL_BLOCK, chunks))
+							BOOST_FOREACH(const BinaryChunkPtr & mc , BinaryChunk::IterateChunks(ChunkId::MATERIAL_BLOCK, chunks))
 							{
-								materials.push_back( MaterialChunk().load(mc));
+								materials.push_back(MaterialChunk().load(mc));
 							}
 						}
 					};
@@ -567,9 +635,15 @@ namespace pwn
 
 						void load(BinaryChunkPtr c)
 						{
-							if (c->id != ChunkId::MAIN_CHUNK) throw "Not a main chunk";
+							if(c->id != ChunkId::MAIN_CHUNK)
+							{
+								throw "Not a main chunk";
+							}
 							BinaryChunkPtr ed = c->getSub(ChunkId::EDITOR_3D_CHUNK);
-							if (ed.get() == 0) throw "Missing 3d editor chunk";
+							if(ed.get() == 0)
+							{
+								throw "Missing 3d editor chunk";
+							}
 							editor.load(ed);
 						}
 					};
@@ -577,7 +651,7 @@ namespace pwn
 
 					static void ParseChunk(pwn::mesh::Builder* builder, MainChunk& main)
 					{
-						BOOST_FOREACH(MaterialChunk& chunk, main.editor.materials)
+						BOOST_FOREACH(MaterialChunk & chunk, main.editor.materials)
 						{
 							pwn::mesh::Material mat;
 
@@ -591,9 +665,9 @@ namespace pwn
 						BOOST_FOREACH(ObjectChunk chunk , main.editor.objects)
 						{
 							pwn::mesh::BTriangle::index ibase = builder->positions.size();
-							for (std::size_t i = 0; i < chunk.trimesh.points.size(); ++i)
+							for(std::size_t i = 0; i < chunk.trimesh.points.size(); ++i)
 							{
-								builder->addPosition( pwn::mesh::BPoint(chunk.trimesh.coordsys.translate(chunk.trimesh.points[i]), 0) );
+								builder->addPosition(pwn::mesh::BPoint(chunk.trimesh.coordsys.translate(chunk.trimesh.points[i]), 0));
 								builder->addTextCoord(chunk.trimesh.mapping[i]);
 							}
 							BOOST_FOREACH(FaceMaterialChunk fmc , chunk.trimesh.facematerials)
@@ -608,11 +682,11 @@ namespace pwn
 									const pwn::mesh::BTriangle::index c = ibase + p.c;
 
 									builder->addTriangle(material, pwn::mesh::BTriangle(
-												  pwn::mesh::BTriangle::Vertex(a, 0, a)
-												, pwn::mesh::BTriangle::Vertex(b, 0, b)
-												, pwn::mesh::BTriangle::Vertex(c, 0, c)
-											)
-										);
+									                        pwn::mesh::BTriangle::Vertex(a, 0, a)
+									                        , pwn::mesh::BTriangle::Vertex(b, 0, b)
+									                        , pwn::mesh::BTriangle::Vertex(c, 0, c)
+									                     )
+									                    );
 								}
 							}
 						}
@@ -625,17 +699,23 @@ namespace pwn
 						std::ifstream f;
 
 						f.open(filename.c_str(), std::ios::binary);
-						if( f.good() == false ) throw "failed to open 3ds file";
+						if(f.good() == false)
+						{
+							throw "failed to open 3ds file";
+						}
 						f.seekg(0, std::ios::end);
 						const std::streamsize length = f.tellg();
-						boost::scoped_array<byte> bytes( new byte[length] );
+						boost::scoped_array<byte> bytes(new byte[length]);
 						f.seekg(0, std::ios::beg);
 						f.read(bytes.get(), length);
 
 						Binary b(bytes.get(), length);
 						BinaryChunk::ReadFromBinary(chunks, b);
 
-						if (chunks.size() != 1) throw "Unknown or damaged 3ds file";
+						if(chunks.size() != 1)
+						{
+							throw "Unknown or damaged 3ds file";
+						}
 
 						MainChunk main;
 						main.load(chunks[0]);

@@ -27,7 +27,7 @@ namespace pwn
 			explicit Soil(ubyte* pixels)
 				: pixels(pixels)
 			{
-				if( pixels == 0)
+				if(pixels == 0)
 				{
 					const pwn::string error = SOIL_last_result();
 					throw "Failed to load b/c " + error;
@@ -46,11 +46,11 @@ namespace pwn
 		{
 			boost::scoped_array<byte> memory;
 			const std::size_t size = File(PHYSFS_openRead(filename.c_str())).loadToMemory(&memory);
-			boost::shared_ptr<render::Texture2> tex( new render::Texture2(pool, true) );
+			boost::shared_ptr<render::Texture2> tex(new render::Texture2(pool, true));
 			int width = -1;
 			int height = -1;
 			int channels = -1;
-			Soil soil( SOIL_load_image_from_memory(reinterpret_cast<ubyte*>(memory.get()), size, &width, &height, &channels, SOIL_LOAD_RGBA) );
+			Soil soil(SOIL_load_image_from_memory(reinterpret_cast<ubyte*>(memory.get()), size, &width, &height, &channels, SOIL_LOAD_RGBA));
 			render::Load(tex.get(), width, height, reinterpret_cast<byte*>(soil.pixels), *engine);
 			return tex;
 		}

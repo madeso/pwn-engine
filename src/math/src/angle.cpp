@@ -18,11 +18,11 @@ namespace pwn
 		{
 			const real rad2deg(const real rad)
 			{
-				return (PWN_MATH_VALUE(180.0)/Pi()) * rad;
+				return (PWN_MATH_VALUE(180.0) / Pi()) * rad;
 			}
 			const real deg2rad(const real deg)
 			{
-				return Pi()/PWN_MATH_VALUE(180.0) * deg;
+				return Pi() / PWN_MATH_VALUE(180.0) * deg;
 			}
 		}
 
@@ -53,7 +53,7 @@ namespace pwn
 
 		void Angle::wrap()
 		{
-			mRad = Wrap(0, mRad, Pi()*PWN_MATH_VALUE(2.0));
+			mRad = Wrap(0, mRad, Pi() * PWN_MATH_VALUE(2.0));
 		}
 
 		void Angle::operator+=(const Angle& rhs)
@@ -88,7 +88,7 @@ namespace pwn
 
 		const Angle Asin(const real v)
 		{
-		    Assert(v <= 1 && "v must be smaller than 1, use Limmit or Max on the value to not trigger this Assert");
+			Assert(v <= 1 && "v must be smaller than 1, use Limmit or Max on the value to not trigger this Assert");
 			Assert(v >= -1 && "v must be greater than -1, use Limmit or Min on the value to not trigger this Assert");
 			return Angle::FromRadians(std::asin(v));
 		}
@@ -115,27 +115,27 @@ namespace pwn
 		const Angle operator+(const Angle& lhs, const Angle& rhs)
 		{
 			Angle temp(lhs);
-			temp+=rhs;
+			temp += rhs;
 			return temp;
 		}
 
 		const Angle operator-(const Angle& lhs, const Angle& rhs)
 		{
 			Angle temp(lhs);
-			temp-=rhs;
+			temp -= rhs;
 			return temp;
 		}
 
 		const Angle operator*(const Angle& lhs, const real rhs)
 		{
 			Angle temp(lhs);
-			temp*=rhs;
+			temp *= rhs;
 			return temp;
 		}
 
 		const Angle operator*(const real rhs, const Angle& lhs)
 		{
-			return lhs*rhs;
+			return lhs * rhs;
 		}
 
 		const Angle FromPercentOf360(const real percent)

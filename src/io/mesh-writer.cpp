@@ -19,7 +19,8 @@ namespace pwn
 			struct MeshUtil {};
 
 			template<>
-			struct MeshUtil<FileReader> {
+			struct MeshUtil<FileReader>
+			{
 				static mesh::Mesh::TriList& GetTriList(mesh::Mesh::TriangleMap& map, pwn::uint32 id)
 				{
 					return map[id];
@@ -27,11 +28,15 @@ namespace pwn
 			};
 
 			template<>
-			struct MeshUtil<FileWriter> {
+			struct MeshUtil<FileWriter>
+			{
 				static const mesh::Mesh::TriList& GetTriList(const mesh::Mesh::TriangleMap& map, pwn::uint32 id)
 				{
 					mesh::Mesh::TriangleMap::const_iterator r = map.find(id);
-					if( r == map.end() ) throw "trilist id invalid";
+					if(r == map.end())
+					{
+						throw "trilist id invalid";
+					}
 					return r->second;
 				}
 			};
@@ -45,12 +50,15 @@ namespace pwn
 			static void handle(Filer& vf, MeshArg mesh, VersionType version)
 			{
 				vf.handle8(version);
-				if( version != kVersion ) throw "mesh version mismatch";
+				if(version != kVersion)
+				{
+					throw "mesh version mismatch";
+				}
 				vf.handle32(mesh.vertexes.count);
-				vf.handleArray(mesh.vertexes.locations, mesh.vertexes.count*3);
-				vf.handleArray(mesh.vertexes.normals, mesh.vertexes.count*3);
-				vf.handleArray(mesh.vertexes.textcoords, mesh.vertexes.count*2);
-				vf.handleArray(mesh.vertexes.boneindexes, mesh.vertexes.count*4);
+				vf.handleArray(mesh.vertexes.locations, mesh.vertexes.count * 3);
+				vf.handleArray(mesh.vertexes.normals, mesh.vertexes.count * 3);
+				vf.handleArray(mesh.vertexes.textcoords, mesh.vertexes.count * 2);
+				vf.handleArray(mesh.vertexes.boneindexes, mesh.vertexes.count * 4);
 				vf.handleVector(mesh.bones);
 				std::vector<pwn::uint32> keys = vf.handleKeys(mesh.triangles);
 				BOOST_FOREACH(pwn::uint32 id, keys)
@@ -67,7 +75,7 @@ namespace pwn
 			VirtualFile vf(filename, false);
 			FileWriter w;
 			w.file = &vf;
-			MeshFile<const mesh::Mesh&,const pwn::uint8>::handle(w, mesh, kVersion);
+			MeshFile<const mesh::Mesh&, const pwn::uint8>::handle(w, mesh, kVersion);
 		}
 
 		void Read(mesh::Mesh* mesh, const pwn::string& filename)
@@ -76,7 +84,7 @@ namespace pwn
 			VirtualFile vf(filename, true);
 			FileReader r;
 			r.file = &vf;
-			MeshFile<mesh::Mesh&,pwn::uint8&>::handle(r, *mesh, version);
+			MeshFile<mesh::Mesh&, pwn::uint8&>::handle(r, *mesh, version);
 			Assert(mesh->validate(true) == 0);
 		}
 	}

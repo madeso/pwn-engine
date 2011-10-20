@@ -16,7 +16,7 @@ namespace test
 
 	GTEST(testArrayOp)
 	{
-		const vec2 ctest(7,9);
+		const vec2 ctest(7, 9);
 		EXPECT_REAL_EQ(7, ctest.data()[0]);
 		EXPECT_REAL_EQ(9, ctest.data()[1]);
 		EXPECT_REAL_EQ(7, ctest[0]);
@@ -24,7 +24,7 @@ namespace test
 		EXPECT_REAL_EQ(7, X(ctest));
 		EXPECT_REAL_EQ(9, Y(ctest));
 
-		vec2 test(4,5);
+		vec2 test(4, 5);
 		EXPECT_REAL_EQ(4, test.data()[0]);
 		EXPECT_REAL_EQ(5, test.data()[1]);
 		EXPECT_REAL_EQ(4, test[0]);
@@ -35,31 +35,31 @@ namespace test
 
 	GTEST(testAdd)
 	{
-		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(0,1), vec2(0,1) + vec2(0,0));
-		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(0,3), vec2(0,1) + vec2(0,2));
-		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(5,0), vec2(3,0) + vec2(2,0));
-		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(3,1), vec2(3,0) + vec2(0,1));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(0, 1), vec2(0, 1) + vec2(0, 0));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(0, 3), vec2(0, 1) + vec2(0, 2));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(5, 0), vec2(3, 0) + vec2(2, 0));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(3, 1), vec2(3, 0) + vec2(0, 1));
 	}
 
 	GTEST(testSub)
 	{
-		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(0,1), vec2(0,2) - vec2(0,1));
-		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(0,-2), vec2(0,0) - vec2(0,2));
-		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(5,0), vec2(7,0) - vec2(2,0));
-		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(3,1), vec2(8,2) - vec2(5,1));
-		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(-5,-1), -vec2(5,1));
-		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(7,1), -vec2(-7,-1));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(0, 1), vec2(0, 2) - vec2(0, 1));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(0, -2), vec2(0, 0) - vec2(0, 2));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(5, 0), vec2(7, 0) - vec2(2, 0));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(3, 1), vec2(8, 2) - vec2(5, 1));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(-5, -1), -vec2(5, 1));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(7, 1), -vec2(-7, -1));
 	}
 
 	GTEST(testDiv)
 	{
-		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(4,2), vec2(8,4) / 2);
-		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(2,1), vec2(10,5) / 5);
+		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(4, 2), vec2(8, 4) / 2);
+		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(2, 1), vec2(10, 5) / 5);
 	}
 
 	GTEST(testMult)
 	{
-		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(4,2), vec2(2,1) * 2);
-		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(25,50), 5 * vec2(5,10));
+		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(4, 2), vec2(2, 1) * 2);
+		EXPECT_PRED_FORMAT2(::pwn::math::vec2_equal_test, vec2(25, 50), 5 * vec2(5, 10));
 	}
 }

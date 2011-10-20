@@ -21,7 +21,7 @@ namespace pwn
 		ComponentArgs::PropertyPtr ComponentArgs::get(const string& s) const
 		{
 			Vars::const_iterator f = vars.find(s);
-			if( f == vars.end() )
+			if(f == vars.end())
 			{
 				throw "unknown component argument";
 			}

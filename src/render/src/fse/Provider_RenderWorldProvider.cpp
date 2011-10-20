@@ -34,7 +34,7 @@ namespace pwn
 
 			const string RenderWorldProvider::toString() const
 			{
-				return Provider::toString() + " renders world with " + ((shader.get())?"shader":"no shader");
+				return Provider::toString() + " renders world with " + ((shader.get()) ? "shader" : "no shader");
 			}
 		}
 	}

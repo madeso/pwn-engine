@@ -13,23 +13,23 @@ namespace pwn
 		Engine::Engine()
 		{
 			const GLenum err = glewInit();
-			if (GLEW_OK != err)
+			if(GLEW_OK != err)
 			{
 				pwn::string error = reinterpret_cast<const char*>(glewGetErrorString(err));
 				throw error;
 			}
 
-			if( false == Shader::IsSupported() )
+			if(false == Shader::IsSupported())
 			{
 				throw "Shaders unsupported";
 			}
 
-			if( false == Fbo::IsSupported() )
+			if(false == Fbo::IsSupported())
 			{
 				throw "Fbos not supported";
 			}
 
-			if( false == Image::IsSupported() )
+			if(false == Image::IsSupported())
 			{
 				throw "Images not supported";
 			}

@@ -15,10 +15,13 @@ namespace pwn
 		template<typename pwnType>
 		void SwapBackAndEraseObject(pwnType what, std::vector<pwnType>* from)
 		{
-		    std::vector<int>::iterator iii;
-		    typedef std::vector<pwnType> Vec;
+			std::vector<int>::iterator iii;
+			typedef std::vector<pwnType> Vec;
 			typename Vec::iterator result = std::find(from->begin(), from->end(), what);
-			if( result == from->end() ) return;
+			if(result == from->end())
+			{
+				return;
+			}
 			typename Vec::iterator last = from->end();
 			last--; // point to a valid entry
 			std::swap(*result, *last);

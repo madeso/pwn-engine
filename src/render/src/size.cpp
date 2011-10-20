@@ -18,8 +18,14 @@ namespace pwn
 
 		bool Size::operator<(const Size& o) const
 		{
-			if( width != o.width ) return width < o.width;
-			else return height < o.height;
+			if(width != o.width)
+			{
+				return width < o.width;
+			}
+			else
+			{
+				return height < o.height;
+			}
 		}
 	}
 }

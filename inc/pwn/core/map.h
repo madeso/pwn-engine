@@ -16,7 +16,7 @@ namespace pwn
 		private:
 			typedef std::map<string, T> M;
 		public:
-			typedef boost::function<T (const string&)> Generator;
+			typedef boost::function<T(const string&)> Generator;
 		public:
 			Map(Generator g)
 				: generator(g)
@@ -26,7 +26,10 @@ namespace pwn
 			T get(const string& var)
 			{
 				typename M::iterator r = m.find(var);
-				if( r != m.end() ) return r->second;
+				if(r != m.end())
+				{
+					return r->second;
+				}
 
 				T t = generator(var);
 				add(var, t);

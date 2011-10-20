@@ -21,7 +21,10 @@ namespace pwn
 
 			T get()
 			{
-				if (pool.empty()) return creator();
+				if(pool.empty())
+				{
+					return creator();
+				}
 				else
 				{
 					T temp = pool.back();

@@ -17,10 +17,13 @@ namespace pwn
 		boost::shared_ptr<Texture2> TexturePool2::get(const string& path)
 		{
 			Map::iterator it = map.find(path);
-			if( it != map.end() )
+			if(it != map.end())
 			{
 				boost::shared_ptr<Texture2> pt = it->second.lock();
-				if( pt ) return pt;
+				if(pt)
+				{
+					return pt;
+				}
 			}
 			boost::shared_ptr<Texture2> pt = doLoad(&ids, path);
 			map[path] = pt;

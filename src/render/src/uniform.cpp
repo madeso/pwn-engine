@@ -12,7 +12,10 @@ namespace pwn
 			: var(glGetUniformLocation(sh->getProgram(), name.c_str()))
 		{
 			pwnAssert_NoGLError();
-			if( var == -1 ) throw static_cast<string>(core::Str() << name << " is not a recognized uniform");
+			if(var == -1)
+			{
+				throw static_cast<string>(core::Str() << name << " is not a recognized uniform");
+			}
 		}
 
 		void Uniform::bindUniform(int position)

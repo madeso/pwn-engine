@@ -40,12 +40,12 @@ namespace test //SUITE(testRenderList)
 
 	RenderList::MeshPtr CreateMesh(const int index, List* list)
 	{
-		return RenderList::MeshPtr( new CompiledMeshStub(index, list) );
+		return RenderList::MeshPtr(new CompiledMeshStub(index, list));
 	}
 
 	RenderList::MaterialPtr CreateMaterial(bool trans, Material::TexturePtr texture)
 	{
-		RenderList::MaterialPtr m( new Material() );
+		RenderList::MaterialPtr m(new Material());
 		m->hasTransperency = trans;
 		m->texture = texture;
 		return m;
@@ -53,24 +53,24 @@ namespace test //SUITE(testRenderList)
 
 	Material::TexturePtr CreateTexture(IdPool* pool)
 	{
-		return Material::TexturePtr( new Texture2(pool, useGlTexture) );
+		return Material::TexturePtr(new Texture2(pool, useGlTexture));
 	}
 
 	namespace
 	{
 		const mat44 CreateTranslationMatrixFromdepth(const real z)
 		{
-			return cmat44(vec3(0,0,z) );
+			return cmat44(vec3(0, 0, z));
 		}
 	}
 
 	struct CommonMeshMat : ::testing::Test
 	{
 		CommonMeshMat()
-			: m0( CreateTranslationMatrixFromdepth(0) )
-			, m1( CreateTranslationMatrixFromdepth(10) )
-			, m2( CreateTranslationMatrixFromdepth(20) )
-			, m3( CreateTranslationMatrixFromdepth(30) )
+			: m0(CreateTranslationMatrixFromdepth(0))
+			, m1(CreateTranslationMatrixFromdepth(10))
+			, m2(CreateTranslationMatrixFromdepth(20))
+			, m3(CreateTranslationMatrixFromdepth(30))
 
 			, rl(useGlCommands)
 		{
@@ -102,7 +102,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
 		rl.end(false);
 
-		ASSERT_THAT(list, testing::ElementsAre(0) );
+		ASSERT_THAT(list, testing::ElementsAre(0));
 	}
 
 	TEST_F(CommonMeshMat, testRender_Several)
@@ -115,7 +115,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
 		rl.end(false);
 
-		ASSERT_THAT(list, testing::ElementsAre(0, 0, 0, 0, 0) );
+		ASSERT_THAT(list, testing::ElementsAre(0, 0, 0, 0, 0));
 	}
 
 	// test alpha/non alpha sorting
@@ -126,7 +126,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(2, &list), CreateMaterial(true, tNull), m0, &poseable);
 		rl.end(false);
 
-		ASSERT_THAT(list, testing::ElementsAre(1, 2) );
+		ASSERT_THAT(list, testing::ElementsAre(1, 2));
 	}
 
 	TEST_F(CommonMeshMat, testRender_Alpha_WrongOrder)
@@ -136,7 +136,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m0, &poseable);
 		rl.end(false);
 
-		ASSERT_THAT(list, testing::ElementsAre(1, 2) );
+		ASSERT_THAT(list, testing::ElementsAre(1, 2));
 	}
 
 	// test sort distance order...
@@ -148,7 +148,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(2, &list), CreateMaterial(false, tNull), m2, &poseable);
 		rl.end(false);
 
-		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2) );
+		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2));
 	}
 
 	TEST_F(CommonMeshMat, testRender_Distance_Solid_WrongOrder)
@@ -159,7 +159,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m1, &poseable);
 		rl.end(false);
 
-		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2) );
+		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2));
 	}
 
 	TEST_F(CommonMeshMat, testRender_Distance_Transparent_RightOrder)
@@ -170,7 +170,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(2, &list), CreateMaterial(true, tNull), m0, &poseable);
 		rl.end(false);
 
-		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2) );
+		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2));
 	}
 
 	TEST_F(CommonMeshMat, testRender_Distance_Transparent_WrongOrder)
@@ -181,7 +181,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(1, &list), CreateMaterial(true, tNull), m1, &poseable);
 		rl.end(false);
 
-		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2) );
+		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2));
 	}
 
 	// test sort textures order...
@@ -193,7 +193,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(2, &list), CreateMaterial(false, t3), m0, &poseable);
 		rl.end(false);
 
-		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2 ) );
+		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2));
 	}
 
 	TEST_F(CommonMeshMat, testRender_Texture_WrongOrder)
@@ -204,7 +204,7 @@ namespace test //SUITE(testRenderList)
 		rl.add(CreateMesh(1, &list), CreateMaterial(false, t2), m0, &poseable);
 		rl.end(false);
 
-		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2 ) );
+		ASSERT_THAT(list, testing::ElementsAre(0, 1, 2));
 	}
 
 	// test complex sorting order
@@ -231,7 +231,7 @@ namespace test //SUITE(testRenderList)
 		rl.end(false);
 
 		int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
-		ASSERT_THAT(list, testing::ElementsAreArray(arr) );
+		ASSERT_THAT(list, testing::ElementsAreArray(arr));
 	}
 
 	TEST_F(CommonMeshMat, testRender_Complex_WrongOrder)
@@ -257,6 +257,6 @@ namespace test //SUITE(testRenderList)
 		rl.end(false);
 
 		int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
-		ASSERT_THAT(list, testing::ElementsAreArray(arr) );
+		ASSERT_THAT(list, testing::ElementsAreArray(arr));
 	}
 }

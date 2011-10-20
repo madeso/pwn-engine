@@ -48,8 +48,8 @@ namespace pwn
 		real& Z(quat& v);
 		real& W(quat& v);
 
-		typedef cml::matrix<real, cml::fixed<3,3>, cml::col_basis, cml::col_major > mat33;
-		typedef cml::matrix<real, cml::fixed<4,4>, cml::col_basis, cml::col_major > mat44;
+		typedef cml::matrix<real, cml::fixed<3, 3>, cml::col_basis, cml::col_major > mat33;
+		typedef cml::matrix<real, cml::fixed<4, 4>, cml::col_basis, cml::col_major > mat44;
 
 		/** a point in 2d.
 		a simple wrapper over vec2 for added type-safety

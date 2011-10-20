@@ -15,20 +15,23 @@ namespace pwn
 
 			string toString() const
 			{
-				if (strings.empty()) return Str() << start << mempty << end;
+				if(strings.empty())
+				{
+					return Str() << start << mempty << end;
+				}
 
 				ostringstream ss;
 
 				ss << start;
 
 				const Vec::size_type count = strings.size();
-				for (Vec::size_type index = 0; index < count; ++index)
+				for(Vec::size_type index = 0; index < count; ++index)
 				{
 					ss << strings[index];
 
-					if (count != index + 1) // if this item isnt the last one in the list
+					if(count != index + 1)  // if this item isnt the last one in the list
 					{
-						if (count == index + 2)
+						if(count == index + 2)
 						{
 							ss << fisep;
 						}
@@ -47,13 +50,13 @@ namespace pwn
 			StringSeperator& english()
 			{
 				return between(", ", " and ")
-					.startend("", "");
+				       .startend("", "");
 			}
 
 			StringSeperator& array()
 			{
 				return between(", ")
-					.startend("[", "]");
+				       .startend("[", "]");
 			}
 
 			StringSeperator& between(const string& seperator, const string finalSeperator)
@@ -87,9 +90,9 @@ namespace pwn
 			template<class C>
 			StringSeperator& iterate(const C& c)
 			{
-				for(typename C::const_iterator i = c.begin(); i!= c.end(); ++i)
+				for(typename C::const_iterator i = c.begin(); i != c.end(); ++i)
 				{
-					strings.push_back( Str() << *i );
+					strings.push_back(Str() << *i);
 				}
 				return *this;
 			}

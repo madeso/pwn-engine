@@ -382,7 +382,7 @@ namespace pwn
 				template<typename Prop, typename Base>
 				boost::shared_ptr<Property> CreateProperty(const Base& s)
 				{
-					boost::shared_ptr<Property> p( new Prop(s) );
+					boost::shared_ptr<Property> p(new Prop(s));
 					return p;
 				}
 			}

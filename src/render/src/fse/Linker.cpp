@@ -72,7 +72,7 @@ namespace pwn
 
 			void Linker::storePipeline(PipelinePtr pl, TargetPtr target)
 			{
-				pl->add( target->getProvider() );
+				pl->add(target->getProvider());
 			}
 
 			void Linker::link()
@@ -85,7 +85,10 @@ namespace pwn
 				BOOST_FOREACH(TargetPtr t, targets.getData())
 				{
 					t->link(this);
-					if (t->getProvider() == 0) throw FseException(t->toString() + " is missing a provider");
+					if(t->getProvider() == 0)
+					{
+						throw FseException(t->toString() + " is missing a provider");
+					}
 				}
 
 				BOOST_FOREACH(ProviderPtr p, providers.getData())
@@ -105,32 +108,35 @@ namespace pwn
 				io::Read(path, &file);
 				core::Ptree root = file.get_child("pipeline");
 				const string t = root.get<string>("target");
-				BOOST_FOREACH (const core::Ptree::value_type& shaderElement, root.get_child("shaders"))
+				BOOST_FOREACH(const core::Ptree::value_type & shaderElement, root.get_child("shaders"))
 				{
 					const string& type = shaderElement.first;
-					if( type == "shader" )
+					if(type == "shader")
 					{
 						const core::Ptree& data = shaderElement.second;
 						const string& id = data.get<string>("id");
 						ShaderPtr shader = pool->getFromSource(data.get_child("source"), core::Str() << path << ":" << id);
 						shaders.add(id, shader);
 					}
-					else throw "unknown element in shaders";
+					else
+					{
+						throw "unknown element in shaders";
+					}
 				}
-				BOOST_FOREACH (const core::Ptree::value_type& targetElement, root.get_child("targets"))
+				BOOST_FOREACH(const core::Ptree::value_type & targetElement, root.get_child("targets"))
 				{
 					const string& type = targetElement.first;
 					const core::Ptree& data = targetElement.second;
 					TargetPtr target = Targets_Create(type, data);
-					target->setId( data.get<string>("id") );
+					target->setId(data.get<string>("id"));
 					addTarget(target);
 				}
-				BOOST_FOREACH (const core::Ptree::value_type& providerElement, root.get_child("providers"))
+				BOOST_FOREACH(const core::Ptree::value_type & providerElement, root.get_child("providers"))
 				{
 					const string& type = providerElement.first;
 					const core::Ptree& data = providerElement.second;
 					ProviderPtr provider = Providers_Create(type, data, path);
-					provider->setId(data.get<string>("id") );
+					provider->setId(data.get<string>("id"));
 					addProvider(provider);
 				}
 

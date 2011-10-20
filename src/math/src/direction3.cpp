@@ -37,33 +37,33 @@ namespace pwn
 		}
 		const direction3 ToUnit(const direction3& dir)
 		{
-			return direction3( GetNormalized(dir.vec) );
+			return direction3(GetNormalized(dir.vec));
 		}
 
 		const direction3 FromTo(const point3& from, const point3& to)
 		{
-			return direction3( to.vec-from.vec );
+			return direction3(to.vec - from.vec);
 		}
 
 		// ------------------------------------------------------------------------
 
 		const direction3 operator+(const direction3& lhs, const direction3& rhs)
 		{
-			return direction3(lhs.vec+rhs.vec);
+			return direction3(lhs.vec + rhs.vec);
 		}
 
 		const direction3 operator-(const direction3& lhs, const direction3& rhs)
 		{
-			return direction3(lhs.vec-rhs.vec);
+			return direction3(lhs.vec - rhs.vec);
 		}
 
 		const direction3 operator*(const direction3& lhs, const real rhs)
 		{
-			return direction3(lhs.vec*rhs);
+			return direction3(lhs.vec * rhs);
 		}
 		const direction3 operator*(const real lhs, const direction3& rhs)
 		{
-			return direction3(lhs*rhs.vec);
+			return direction3(lhs * rhs.vec);
 		}
 		const direction3 operator/(const direction3& lhs, const real rhs)
 		{

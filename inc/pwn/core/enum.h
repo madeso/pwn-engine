@@ -24,7 +24,7 @@ namespace pwn
 			void stopAdding();
 		private:
 			typedef std::map<size_t, string> List;
-			typedef std::map<string,size_t> Map;
+			typedef std::map<string, size_t> Map;
 			List list;
 			Map map;
 

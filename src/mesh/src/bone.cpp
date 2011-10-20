@@ -8,7 +8,7 @@ namespace pwn
 	namespace mesh
 	{
 		Bone::Bone()
-			: rot( math::qIdentity() )
+			: rot(math::qIdentity())
 			, parent(0)
 		{
 			name[0] = 0;
@@ -22,12 +22,12 @@ namespace pwn
 		BoneIndex Bone::getParent() const
 		{
 			Assert(parent != 0);
-			return parent -1;
+			return parent - 1;
 		}
 
 		void Bone::setParent(BoneIndex bi)
 		{
-			parent = bi +1;
+			parent = bi + 1;
 		}
 
 		void Bone::setName(const string& n)

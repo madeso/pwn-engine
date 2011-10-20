@@ -27,8 +27,14 @@ namespace pwn
 
 			void Target::setId(const string& aid)
 			{
-				if (id.empty()) id = aid;
-				else FseException("Unable to change id from " + id + " to " + aid);
+				if(id.empty())
+				{
+					id = aid;
+				}
+				else
+				{
+					FseException("Unable to change id from " + id + " to " + aid);
+				}
 			}
 
 			Provider* Target::getProvider()
@@ -38,7 +44,7 @@ namespace pwn
 
 			void Target::setProvider(Provider* aprovider)
 			{
-				if (provider == 0)
+				if(provider == 0)
 				{
 					provider = aprovider;
 				}

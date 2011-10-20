@@ -28,7 +28,7 @@ namespace pwn
 		void Component::onEvent(const core::EnumValue& type, const EventArgs& args)
 		{
 			Map::const_iterator r = callbacks.find(type);
-			if( r != callbacks.end() )
+			if(r != callbacks.end())
 			{
 				r->second(args);
 			}
@@ -36,7 +36,7 @@ namespace pwn
 
 		void Component::addCallback(const core::EnumValue& type, Callback c)
 		{
-			callbacks.insert( Map::value_type(type,c));
+			callbacks.insert(Map::value_type(type, c));
 		}
 	}
 }

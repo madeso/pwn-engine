@@ -10,7 +10,7 @@ namespace pwn
 		struct VideoMode
 		{
 			VideoMode(); // doesn't do anything
-			VideoMode(int width, int height, int bits, bool fullscreen=false);
+			VideoMode(int width, int height, int bits, bool fullscreen = false);
 			int width;
 			int height;
 			int bits;

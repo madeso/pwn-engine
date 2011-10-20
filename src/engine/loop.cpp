@@ -24,7 +24,10 @@ namespace pwn
 
 		Game& Loop::game()
 		{
-			if( game_ == 0 ) throw "invalid game variable";
+			if(game_ == 0)
+			{
+				throw "invalid game variable";
+			}
 			return *game_;
 		}
 
@@ -50,7 +53,7 @@ namespace pwn
 			{
 			public:
 				explicit RaiiInnerMostLoop(Loop* me)
-					: old( InnerMostLoop() )
+					: old(InnerMostLoop())
 				{
 					InnerMostLoop() = me;
 				}
@@ -69,7 +72,10 @@ namespace pwn
 			Loop& Get()
 			{
 				Loop* loop = InnerMostLoop();
-				if( loop == 0 ) throw "assertion";
+				if(loop == 0)
+				{
+					throw "assertion";
+				}
 				return *loop;
 			}
 			bool Has()
@@ -94,16 +100,25 @@ namespace pwn
 
 		void Loop::update(real delta)
 		{
-			if( isRunning() == false ) return;
+			if(isRunning() == false)
+			{
+				return;
+			}
 			game().getImp().updateSystems();
 
-			if( isRunning() == false ) return;
+			if(isRunning() == false)
+			{
+				return;
+			}
 			onUpdate(delta);
 		}
 
 		void Loop::render()
 		{
-			if( isRunning() == false ) return;
+			if(isRunning() == false)
+			{
+				return;
+			}
 			onRender();
 		}
 

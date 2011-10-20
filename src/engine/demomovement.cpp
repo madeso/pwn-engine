@@ -29,14 +29,17 @@ namespace pwn
 		bool DemoMovement::onKey(Key::Code key, bool newState)
 		{
 #define HANDLEKEY(k) if( k == key ) { k##State=newState; return true; }
-			      HANDLEKEY(forward )
-			else HANDLEKEY( backward )
-			else HANDLEKEY( left )
-			else HANDLEKEY( right )
-			else HANDLEKEY( up )
-			else HANDLEKEY( down )
+			HANDLEKEY(forward)
+			else HANDLEKEY(backward)
+				else HANDLEKEY(left)
+					else HANDLEKEY(right)
+						else HANDLEKEY(up)
+							else HANDLEKEY(down)
 #undef HANDLEKEY
-			else return false;
+								else
+								{
+									return false;
+								}
 		}
 
 		namespace // local
@@ -44,8 +47,14 @@ namespace pwn
 			pwn::real multi(bool pos, bool neg)
 			{
 				pwn::real v = 0;
-				if( pos ) v+=1;
-				if( neg ) v-=1;
+				if(pos)
+				{
+					v += 1;
+				}
+				if(neg)
+				{
+					v -= 1;
+				}
 				return v;
 			}
 		}
@@ -54,8 +63,8 @@ namespace pwn
 		{
 			using namespace pwn::math;
 			const vec3 movement = multi(forwardState, backwardState) * In(rotation)
-				+ multi(rightState, leftState) * Right(rotation)
-				+ multi(upState, downState) * (localUp?Up(rotation):Up());
+			                      + multi(rightState, leftState) * Right(rotation)
+			                      + multi(upState, downState) * (localUp ? Up(rotation) : Up());
 			position->vec += movement * delta * speed;
 		}
 	}

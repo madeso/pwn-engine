@@ -29,7 +29,10 @@ public:
 	// Fired after a failed assertion or a SUCCESS().
 	virtual void OnTestPartResult(const ::testing::TestPartResult& r)
 	{
-		if( r.passed() ) return;
+		if(r.passed())
+		{
+			return;
+		}
 		const std::string errname = "error"; //r.nonfatally_failed() ? "warning" : "error";
 		::std::cout << r.file_name() << "(" << r.line_number() << ") : " << errname << " C4242: " << r.summary() << std::endl;// << r.message() << std::endl;
 		// message seems to be the same as summary()
@@ -51,12 +54,12 @@ public:
 
 	// Fired after each iteration of tests finishes.
 	virtual void OnTestIterationEnd(const ::testing::UnitTest&,
-		int) { }
+	                                int) { }
 
 	// Fired after all test activities have ended.
 	virtual void OnTestProgramEnd(const ::testing::UnitTest& unit_test)
 	{
-		if( unit_test.failed_test_case_count() == 0 )
+		if(unit_test.failed_test_case_count() == 0)
 		{
 			::std::cout << "All " << unit_test.successful_test_count() <<  " tests PASSED." << ::std::endl;
 		}
@@ -69,13 +72,13 @@ public:
 	static void Setup()
 	{
 		::testing::TestEventListeners& l = ::testing::UnitTest::GetInstance()->listeners();
-		delete l.Release( l.default_result_printer() );
-		l.Append( new QuietConsolePrinter() );
+		delete l.Release(l.default_result_printer());
+		l.Append(new QuietConsolePrinter());
 	}
 };
 
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 	pwn::assert::Init(pwn::assert::AlwaysThrow);
 	QuietConsolePrinter::Setup();

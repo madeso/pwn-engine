@@ -8,7 +8,7 @@ namespace pwn
 		namespace fse
 		{
 			Command::Command(const core::Ptree& el, Provider* aprov)
-				: id( el.get<string>("id") )
+				: id(el.get<string>("id"))
 				, prov(aprov)
 			{
 			}

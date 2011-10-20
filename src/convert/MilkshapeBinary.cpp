@@ -26,7 +26,7 @@ namespace pwn
 					std::vector<int> tri;
 				};
 
-				#pragma pack(push,1)
+#pragma pack(push,1)
 				struct MS3DHeader
 				{
 					char ID[10];
@@ -62,18 +62,18 @@ namespace pwn
 					char mode; // 0, 1, 2 is unused now
 					char texture[128];
 					char alphamap[128];
-	/*
-					char name[32];
-					float ambient;
-					float diffuse[4];
-					float specular[4];
-					float emissive[4];
-					float shininess; // 0.0f - 128.0f
-					float transparency; // 0.0f - 1.0f
-					char mode; // 0, 1, 2 is unused now
-					char texture[128];
-					char alphamap[128];
-					*/
+					/*
+									char name[32];
+									float ambient;
+									float diffuse[4];
+									float specular[4];
+									float emissive[4];
+									float shininess; // 0.0f - 128.0f
+									float transparency; // 0.0f - 1.0f
+									char mode; // 0, 1, 2 is unused now
+									char texture[128];
+									char alphamap[128];
+									*/
 				};
 				struct MS3DJoint
 				{
@@ -90,16 +90,16 @@ namespace pwn
 					float time;
 					float parameter[3];
 				};
-				#pragma pack(pop)
+#pragma pack(pop)
 
-				void copyToColor(Color& color,float* p)
+				void copyToColor(Color& color, float* p)
 				{
 					color.r = p[0];
 					color.g = p[1];
 					color.b = p[2];
 					color.a = p[3];
 				}
-				void copyToColor(Color& color,float p)
+				void copyToColor(Color& color, float p)
 				{
 					color.r = p;
 					color.g = p;
@@ -124,8 +124,11 @@ namespace pwn
 					T Read()
 					{
 						T t;
-						fs.read( reinterpret_cast<char*>(&t), sizeof(T));
-						if( fs.good() == false) throw "bad file";
+						fs.read(reinterpret_cast<char*>(&t), sizeof(T));
+						if(fs.good() == false)
+						{
+							throw "bad file";
+						}
 						return t;
 					}
 
@@ -136,7 +139,7 @@ namespace pwn
 
 					string ReadString(int count)
 					{
-						boost::scoped_array<char> str( new char[count] );
+						boost::scoped_array<char> str(new char[count]);
 						fs.read(str.get(), count);
 						return str.get();
 					}
@@ -144,7 +147,10 @@ namespace pwn
 					Runner(const std::string& path)
 						: fs(path.c_str(), std::ios::binary)
 					{
-						if( fs.good() == false ) throw "failed to open " + path;
+						if(fs.good() == false)
+						{
+							throw "failed to open " + path;
+						}
 					}
 
 					void run()
@@ -164,16 +170,16 @@ namespace pwn
 					{
 						int jointcount = ReadCount();
 
-						for (int ji = 0; ji < jointcount; ++ji)
+						for(int ji = 0; ji < jointcount; ++ji)
 						{
 							Joint joint;
 							joint.joint = Read<MS3DJoint>();
-							for (int ki = 0; ki < joint.joint.numRotationKeyframes; ++ki)
+							for(int ki = 0; ki < joint.joint.numRotationKeyframes; ++ki)
 							{
 								MS3DKeyframe kf = Read<MS3DKeyframe>();
 								joint.rotations.push_back(kf);
 							}
-							for (int ki = 0; ki < joint.joint.numTranslationKeyframes; ++ki)
+							for(int ki = 0; ki < joint.joint.numTranslationKeyframes; ++ki)
 							{
 								MS3DKeyframe kf = Read<MS3DKeyframe>();
 								joint.translations.push_back(kf);
@@ -186,7 +192,7 @@ namespace pwn
 					void readMaterials()
 					{
 						int matcount = ReadCount();
-						for (int m = 0; m < matcount; ++m)
+						for(int m = 0; m < matcount; ++m)
 						{
 							MS3DMaterial mat = Read<MS3DMaterial>();
 							materials.push_back(mat);
@@ -196,13 +202,13 @@ namespace pwn
 					void readMeshGroups()
 					{
 						int meshgroups = ReadCount();
-						for (int m = 0; m < meshgroups; ++m)
+						for(int m = 0; m < meshgroups; ++m)
 						{
 							MeshGroup group;
 							byte flags = Read<byte>();
 							group.name = ReadString(32);
 							int mtricount = ReadCount();
-							for (int t = 0; t < mtricount; ++t)
+							for(int t = 0; t < mtricount; ++t)
 							{
 								int tr = Read<short>();
 								group.tri.push_back(tr);
@@ -215,7 +221,7 @@ namespace pwn
 					void readTriangles()
 					{
 						int tricount = ReadCount();
-						for (int t = 0; t < tricount; ++t)
+						for(int t = 0; t < tricount; ++t)
 						{
 							MS3DTriangle tri = Read<MS3DTriangle>();
 							triangles.push_back(tri);
@@ -225,7 +231,7 @@ namespace pwn
 					void readVertices()
 					{
 						int vertcount = ReadCount();
-						for (int v = 0; v < vertcount; ++v)
+						for(int v = 0; v < vertcount; ++v)
 						{
 							MS3DVertex vt = Read<MS3DVertex>();
 							vertices.push_back(vt);
@@ -274,7 +280,7 @@ namespace pwn
 							int vid[3];
 							int nid[3];
 
-							for (int i = 0; i < 3; ++i)
+							for(int i = 0; i < 3; ++i)
 							{
 								vid[i] = m.vertices.size();
 								nid[i] = m.normals.size();

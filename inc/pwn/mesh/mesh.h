@@ -33,7 +33,7 @@ namespace pwn
 
 			enum
 			{
-				TextureSize = 200
+			   TextureSize = 200
 			};
 
 			pwn::tchar texture_diffuse[TextureSize];
@@ -52,7 +52,7 @@ namespace pwn
 		{
 			enum
 			{
-				Value = 100
+			   Value = 100
 			};
 		}
 
@@ -232,9 +232,9 @@ namespace pwn
 		public:
 			VertexData();
 			VertexData(const std::vector<math::vec3>& posv,
-				const std::vector<math::vec3>& normv,
-				const std::vector<math::vec2>&textv,
-				const std::vector<math::vec4>& bonev);
+			           const std::vector<math::vec3>& normv,
+			           const std::vector<math::vec2>&textv,
+			           const std::vector<math::vec4>& bonev);
 			VertexData(const VertexData& m);
 			const VertexData& operator=(const VertexData& m);
 
@@ -273,12 +273,12 @@ namespace pwn
 
 			Mesh();
 			Mesh(const std::vector<math::vec3>& posv,
-				const std::vector<math::vec3>& normv,
-				const std::vector<math::vec2>&textv,
-				const std::vector<math::vec4>& bonev,
-				const TriangleMap& trim,
-				const std::vector<Bone>& bones,
-				const std::vector<Material>& materials);
+			     const std::vector<math::vec3>& normv,
+			     const std::vector<math::vec2>&textv,
+			     const std::vector<math::vec4>& bonev,
+			     const TriangleMap& trim,
+			     const std::vector<Bone>& bones,
+			     const std::vector<Material>& materials);
 
 			pwn::uint32 validate(bool testSortedBones) const;
 			const VertexData& data() const;

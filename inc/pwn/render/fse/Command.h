@@ -41,7 +41,7 @@ namespace pwn
 			template<typename T>
 			T& operator<<(T& t, CommandPtr c)
 			{
-				if( c.get() )
+				if(c.get())
 				{
 					t << c->toString();
 				}

@@ -15,7 +15,7 @@ namespace pwn
 	{
 		Builder* Move(Builder* mesh, const math::vec3& dir)
 		{
-			BOOST_FOREACH(BPoint& p, mesh->positions)
+			BOOST_FOREACH(BPoint & p, mesh->positions)
 			{
 				p.position += dir;
 			}
@@ -25,12 +25,12 @@ namespace pwn
 
 		Builder* Scale(Builder* mesh, pwn::real scale)
 		{
-			BOOST_FOREACH(BPoint& p, mesh->positions)
+			BOOST_FOREACH(BPoint & p, mesh->positions)
 			{
 				p.position *= scale;
 			}
 
-			BOOST_FOREACH(Bone& b, mesh->bones)
+			BOOST_FOREACH(Bone & b, mesh->bones)
 			{
 				b.pos *= scale;
 			}
@@ -40,7 +40,7 @@ namespace pwn
 
 		Builder* InvertNormals(Builder* mesh)
 		{
-			BOOST_FOREACH(math::vec3& p, mesh->normals)
+			BOOST_FOREACH(math::vec3 & p, mesh->normals)
 			{
 				p = -p;
 			}
@@ -68,10 +68,10 @@ namespace pwn
 
 			Builder b;
 
-			const BTriangle::index t0 = b.addTextCoord(vec2(0,1));
-			const BTriangle::index t1 = b.addTextCoord(vec2(1,1));
-			const BTriangle::index t2 = b.addTextCoord(vec2(0,0));
-			const BTriangle::index t3 = b.addTextCoord(vec2(1,0));
+			const BTriangle::index t0 = b.addTextCoord(vec2(0, 1));
+			const BTriangle::index t1 = b.addTextCoord(vec2(1, 1));
+			const BTriangle::index t2 = b.addTextCoord(vec2(0, 0));
+			const BTriangle::index t3 = b.addTextCoord(vec2(1, 0));
 
 			const math::vec4 noBone(-1, -1, -1, -1);
 
@@ -87,12 +87,12 @@ namespace pwn
 			const BTriangle::index v6 = b.addPosition(vec3(0, h, d), noBone);
 			const BTriangle::index v7 = b.addPosition(vec3(w, h, d), noBone);
 
-			b.addQuad(!faceOut, 0, v(v0,t2), v(v2,t0), v(v3,t1), v(v1,t3)); // front
-			b.addQuad(!faceOut, 0, v(v1,t3), v(v3,t1), v(v7,t0), v(v5,t2)); // right
-			b.addQuad(!faceOut, 0, v(v4,t3), v(v6,t1), v(v2,t0), v(v0,t2)); // left
-			b.addQuad(!faceOut, 0, v(v5,t2), v(v7,t0), v(v6,t1), v(v4,t3)); // back
-			b.addQuad(!faceOut, 0, v(v3,t1), v(v2,t3), v(v6,t2), v(v7,t0)); // up
-			b.addQuad(!faceOut, 0, v(v4,t0), v(v0,t1), v(v1,t3), v(v5,t2)); // bottom
+			b.addQuad(!faceOut, 0, v(v0, t2), v(v2, t0), v(v3, t1), v(v1, t3)); // front
+			b.addQuad(!faceOut, 0, v(v1, t3), v(v3, t1), v(v7, t0), v(v5, t2)); // right
+			b.addQuad(!faceOut, 0, v(v4, t3), v(v6, t1), v(v2, t0), v(v0, t2)); // left
+			b.addQuad(!faceOut, 0, v(v5, t2), v(v7, t0), v(v6, t1), v(v4, t3)); // back
+			b.addQuad(!faceOut, 0, v(v3, t1), v(v2, t3), v(v6, t2), v(v7, t0)); // up
+			b.addQuad(!faceOut, 0, v(v4, t0), v(v0, t1), v(v1, t3), v(v5, t2)); // bottom
 
 			b.materials.push_back(material);
 			return b;
@@ -103,27 +103,39 @@ namespace pwn
 			void KeepLast(pwn::string& t, const char c)
 			{
 				std::size_t i = t.find_last_of(c);
-				if( i != pwn::string::npos )
+				if(i != pwn::string::npos)
 				{
-					t = t.substr(i+1);
+					t = t.substr(i + 1);
 				}
 			}
 
 			pwn::string MoveTexture(const pwn::string& texture, const pwn::string& newFolder)
 			{
-				if( pwn::core::Trim(texture) == "" ) return "";
+				if(pwn::core::Trim(texture) == "")
+				{
+					return "";
+				}
 				pwn::string t = texture;
 				KeepLast(t, '\\');
 				KeepLast(t, '/');
 				KeepLast(t, '|');
-				if( pwn::core::EndsWith(t, ".tif") ) t = pwn::core::StringReplace(t, ".tif", ".png");
-				if( newFolder.empty() ) return t;
-				else return newFolder + "/" + t;
+				if(pwn::core::EndsWith(t, ".tif"))
+				{
+					t = pwn::core::StringReplace(t, ".tif", ".png");
+				}
+				if(newFolder.empty())
+				{
+					return t;
+				}
+				else
+				{
+					return newFolder + "/" + t;
+				}
 			}
 
 			void MoveTextures(Material& mat, const pwn::string& newFolder)
 			{
-				mat.setTexture_Diffuse( MoveTexture(mat.texture_diffuse, newFolder) );
+				mat.setTexture_Diffuse(MoveTexture(mat.texture_diffuse, newFolder));
 			}
 		}
 
@@ -203,13 +215,13 @@ namespace pwn
 		BTriangle::index Builder::addTextCoord(const math::vec2& tc)
 		{
 			texcoords.push_back(tc);
-			return static_cast<BTriangle::index>(texcoords.size()-1);
+			return static_cast<BTriangle::index>(texcoords.size() - 1);
 		}
 
 		BTriangle::index Builder::addPosition(const BPoint& pos)
 		{
 			positions.push_back(pos);
-			return static_cast<BTriangle::index>(positions.size()-1);
+			return static_cast<BTriangle::index>(positions.size() - 1);
 		}
 
 		BTriangle::index Builder::addPosition(const math::vec3& pos, math::vec4 bone)
@@ -220,7 +232,7 @@ namespace pwn
 		BTriangle::index Builder::addNormal(const math::vec3& norm)
 		{
 			normals.push_back(norm);
-			return static_cast<BTriangle::index>(normals.size()-1);
+			return static_cast<BTriangle::index>(normals.size() - 1);
 		}
 
 		void Builder::addTriangle(pwn::uint32 material, const BTriangle& t)
@@ -231,14 +243,20 @@ namespace pwn
 		BTriangle::index Builder::addMaterial(Material m)
 		{
 			materials.push_back(m);
-			return static_cast<BTriangle::index>(materials.size()-1);
+			return static_cast<BTriangle::index>(materials.size() - 1);
 		}
 
 		BTriangle::index Builder::getMaterial(const pwn::string& name) const
 		{
 			MaterialNameIdMap::const_iterator res = materialid.find(name);
-			if( res == materialid.end() ) throw "unable to find material..";
-			else return res->second;
+			if(res == materialid.end())
+			{
+				throw "unable to find material..";
+			}
+			else
+			{
+				return res->second;
+			}
 		}
 
 		BTriangle::index Builder::addMaterial(const pwn::string& name, Material m)
@@ -250,15 +268,15 @@ namespace pwn
 
 		void Builder::addQuad(bool reverse, pwn::uint32 material, const BTriangle::Vertex& v0, const BTriangle::Vertex& v1, const BTriangle::Vertex& v2, const BTriangle::Vertex& v3)
 		{
-			if( reverse )
+			if(reverse)
 			{
-				addTriangle(material, BTriangle(v0, v1, v2) );
-				addTriangle(material, BTriangle(v0, v2, v3) );
+				addTriangle(material, BTriangle(v0, v1, v2));
+				addTriangle(material, BTriangle(v0, v2, v3));
 			}
 			else
 			{
-				addTriangle(material, BTriangle(v2, v1, v0) );
-				addTriangle(material, BTriangle(v3, v2, v0) );
+				addTriangle(material, BTriangle(v2, v1, v0));
+				addTriangle(material, BTriangle(v3, v2, v0));
 			}
 		}
 
@@ -267,12 +285,15 @@ namespace pwn
 			// we currently doesnt support ton-triangular faces so - triangulate it
 			const std::vector<BTriangle::Vertex>::size_type size = vertices.size();
 			bool added = false;
-			for(std::vector<BTriangle::Vertex>::size_type i=2; i<size; ++i)
+			for(std::vector<BTriangle::Vertex>::size_type i = 2; i < size; ++i)
 			{
-				addTriangle(material, BTriangle(vertices[0], vertices[i-1], vertices[i]));
+				addTriangle(material, BTriangle(vertices[0], vertices[i - 1], vertices[i]));
 				added = true;
 			}
-			if( false == added ) throw "Unable to triangulate face";
+			if(false == added)
+			{
+				throw "Unable to triangulate face";
+			}
 		}
 
 		void Builder::addBone(const Bone& b)
@@ -284,10 +305,10 @@ namespace pwn
 		{
 			//Assert(normals.empty());
 			using math::vec3;
-			std::vector<vec3> vertexNormalsSum(positions.size(), vec3(0,0,0));
-			BOOST_FOREACH(TriMap::value_type& tr, triangles)
+			std::vector<vec3> vertexNormalsSum(positions.size(), vec3(0, 0, 0));
+			BOOST_FOREACH(TriMap::value_type & tr, triangles)
 			{
-				BOOST_FOREACH(BTriangle& t, tr.second)
+				BOOST_FOREACH(BTriangle & t, tr.second)
 				{
 					const vec3 p0 = positions[t[0].position].position;
 					const vec3 p1 = positions[t[1].position].position;
@@ -298,7 +319,7 @@ namespace pwn
 
 					const vec3 faceNormal = math::crossNorm(d1, d0);
 
-					for(int i=0; i<3; ++i)
+					for(int i = 0; i < 3; ++i)
 					{
 						vertexNormalsSum[t[i].position] += faceNormal;
 						t[i].normal = t[i].position;
@@ -307,9 +328,9 @@ namespace pwn
 			}
 
 			normals.clear();
-			BOOST_FOREACH(const vec3& normalSum, vertexNormalsSum)
+			BOOST_FOREACH(const vec3 & normalSum, vertexNormalsSum)
 			{
-				normals.push_back( math::GetNormalized(normalSum) );
+				normals.push_back(math::GetNormalized(normalSum));
 			}
 
 			Assert(normals.size() == positions.size());
@@ -331,39 +352,45 @@ namespace pwn
 
 				std::vector<Data> bdp(mesh->getBones().size());
 
-				for (unsigned int i = 0; i < mesh->getBones().size(); ++i)
+				for(unsigned int i = 0; i < mesh->getBones().size(); ++i)
 				{
 					const Bone& bone = mesh->getBones()[i];
 					Assert(!bone.hasParent() || bone.getParent() < i); // if it has a parent, it should already have been processed
 					const mat44 local = mat44helper(mat44Identity()).translate(bone.pos).rotate(GetConjugate(bone.rot)).mat;
 					const mat44 parent = bone.hasParent() ? bdp[bone.getParent()].globalskel : mat44Identity();
-					const mat44 global = parent*local;
+					const mat44 global = parent * local;
 					bdp[i].globalskel = global;
 				}
 
-				for(unsigned int i=0; i < mesh->data().getCount(); ++i)
+				for(unsigned int i = 0; i < mesh->data().getCount(); ++i)
 				{
 					const Point& p = mesh->data().getPoint(i);
-					if( p.hasBone() == false) continue;
+					if(p.hasBone() == false)
+					{
+						continue;
+					}
 					const math::vec4 bone = p.getBone();
 
-					vec3 position(0,0,0);
-					vec3 normal(0,0,0);
+					vec3 position(0, 0, 0);
+					vec3 normal(0, 0, 0);
 
 					real insum = 0;
 
-					for(int b=0; b<4; ++b)
+					for(int b = 0; b < 4; ++b)
 					{
 						const real x = bone[b];
-						if( x < 0 ) break;
+						if(x < 0)
+						{
+							break;
+						}
 						const real in = GetBoneInfluence(x);
 						insum += in;
 						Data& data = bdp[GetBoneIndex(x)];
 						position += in * TranslateWithInverseMatrix(p.position, data.globalskel);
-						normal += in * GetNormalized(TranslateWithInverseMatrix(p.normal, math::SetTransform(data.globalskel, math::vec3(0,0,0))));
+						normal += in * GetNormalized(TranslateWithInverseMatrix(p.normal, math::SetTransform(data.globalskel, math::vec3(0, 0, 0))));
 					}
-					const real inv = 1/insum;
-					mesh->setLocationNormal(i, inv*position, GetNormalized(math::vec3(inv*normal)));
+					const real inv = 1 / insum;
+					mesh->setLocationNormal(i, inv * position, GetNormalized(math::vec3(inv * normal)));
 				}
 			}
 		}
@@ -388,9 +415,18 @@ namespace pwn
 		{
 #define TEST(x) if( lhs.x != rhs.x ) return lhs.x < rhs.x
 			TEST(position);
-			else TEST(texture);
-			else TEST(normal);
-			else TEST(boneIndex);
+			else
+			{
+				TEST(texture);
+			}
+			else
+			{
+				TEST(normal);
+			}
+			else
+			{
+				TEST(boneIndex);
+			}
 			else
 			{
 				// all equal
@@ -410,34 +446,34 @@ namespace pwn
 			std::vector<math::vec2> textv;
 			std::vector<math::vec4> bonev;
 			Mesh::TriangleMap trim;
-			BOOST_FOREACH(const TriMap::value_type& triangleMaterial, triangles)
+			BOOST_FOREACH(const TriMap::value_type & triangleMaterial, triangles)
 			{
 				const pwn::uint32 material = triangleMaterial.first;
-				BOOST_FOREACH(const BTriangle& sourceTriangle, triangleMaterial.second)
+				BOOST_FOREACH(const BTriangle & sourceTriangle, triangleMaterial.second)
 				{
 					Triangle::VertexIndex triangle[3];
 
 					// get combinations, add if not existing
-					for(int i=0; i<3; ++i)
+					for(int i = 0; i < 3; ++i)
 					{
 						const math::vec4 boneIndex = positions[sourceTriangle[i].position].bone;
 						const Combo c(sourceTriangle[i], boneIndex);
 						ComboMap::iterator result = combinations.find(c);
-						if( result != combinations.end() )
+						if(result != combinations.end())
 						{
 							triangle[i] = result->second;
 						}
 						else
 						{
 							const math::vec3 pos = positions[c.position].position;
-							const math::vec2 text = texcoords.empty() ? math::vec2(0,0) : texcoords[c.texture];
-							const math::vec3 normal = normals.empty() == false ? normals[c.normal] : math::vec3(0,0,0);
+							const math::vec2 text = texcoords.empty() ? math::vec2(0, 0) : texcoords[c.texture];
+							const math::vec3 normal = normals.empty() == false ? normals[c.normal] : math::vec3(0, 0, 0);
 							Triangle::VertexIndex ind = posv.size();
 							posv.push_back(pos);
 							textv.push_back(text);
 							normv.push_back(normal);
 							bonev.push_back(boneIndex);
-							combinations.insert( ComboMap::value_type(c, ind) );
+							combinations.insert(ComboMap::value_type(c, ind));
 							triangle[i] = ind;
 						}
 					}
@@ -452,7 +488,10 @@ namespace pwn
 
 			PrepareVericesForAnimation(&mesh);
 
-			if(mesh.validate(true) != 0 ) throw "Mesh failed to validate";
+			if(mesh.validate(true) != 0)
+			{
+				throw "Mesh failed to validate";
+			}
 			return mesh;
 		}
 
@@ -466,7 +505,7 @@ namespace pwn
 			void traverse(std::vector<BoneIndex>* list) const
 			{
 				list->push_back(index);
-				BOOST_FOREACH(BoneToSort* b, children)
+				BOOST_FOREACH(BoneToSort * b, children)
 				{
 					b->traverse(list);
 				}
@@ -509,21 +548,24 @@ namespace pwn
 
 		void Flatouter::modify(Builder* mesh) const
 		{
-			if( newIndices.empty() ) return;
-			BOOST_FOREACH(BPoint& p, mesh->positions)
+			if(newIndices.empty())
 			{
-				for(int i=0; i<4; ++i)
+				return;
+			}
+			BOOST_FOREACH(BPoint & p, mesh->positions)
+			{
+				for(int i = 0; i < 4; ++i)
 				{
 					SetBoneIndex(&p.bone[i], newIndices[ GetBoneIndex(p.bone[i]) ]);
 				}
 			}
 
 			std::vector<Bone> bs = mesh->bones;
-			for(pwn::uint32 i=0; i<mesh->bones.size(); ++i)
+			for(pwn::uint32 i = 0; i < mesh->bones.size(); ++i)
 			{
 				mesh->bones[i] = bs[newIndices[i]];
 				Bone& b = mesh->bones[i];
-				if( b.hasParent() )
+				if(b.hasParent())
 				{
 					b.setParent(newIndices[b.getParent()]);
 				}
@@ -532,10 +574,13 @@ namespace pwn
 
 		void Flatouter::modify(Animation* animation) const
 		{
-			if( newIndices.empty() ) return;
+			if(newIndices.empty())
+			{
+				return;
+			}
 
 			std::vector<AnimationPerBone> apb = animation->bones;
-			for(pwn::uint32 i=0; i<animation->bones.size(); ++i)
+			for(pwn::uint32 i = 0; i < animation->bones.size(); ++i)
 			{
 				animation->bones[i] = apb[newIndices[i]];
 			}

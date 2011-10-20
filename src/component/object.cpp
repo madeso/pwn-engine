@@ -30,7 +30,7 @@ namespace pwn
 		boost::shared_ptr<Property> PropertyMap::get(const string& name) const
 		{
 			Map::const_iterator r = map.find(name);
-			if( r == map.end() )
+			if(r == map.end())
 			{
 				throw "property not added";
 			}
@@ -60,7 +60,7 @@ namespace pwn
 		{
 			BOOST_FOREACH(boost::shared_ptr<Component> c, list)
 			{
-				if( c->shouldBeRemoved() == false )
+				if(c->shouldBeRemoved() == false)
 				{
 					c->onEvent(type, args);
 				}

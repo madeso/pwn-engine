@@ -24,7 +24,10 @@ namespace pwn
 
 			void BufferReference::setBuffer(FboPtr fbo)
 			{
-				if (buffer.get() != 0) throw FseException("Error, buffer already initialized!");
+				if(buffer.get() != 0)
+				{
+					throw FseException("Error, buffer already initialized!");
+				}
 				buffer = fbo;
 			}
 

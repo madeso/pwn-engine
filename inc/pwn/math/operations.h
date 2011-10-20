@@ -367,8 +367,8 @@ namespace pwn
 		/** creates a matrix from the col-major argument.
 		*/
 		const mat33 mat33_FromColMajor(const real data0, const real data1, const real data2,
-										const real data3, const real data4, const real data5,
-										const real data6, const real data7, const real data8);
+		                               const real data3, const real data4, const real data5,
+		                               const real data6, const real data7, const real data8);
 
 		/** Scaling matrix.
 		*/
@@ -417,10 +417,10 @@ namespace pwn
 		/** creates a matrix from the row-major argument.
 		*/
 		const mat44 mat44_FromColMajor(
-									const real data0,  const real data1,  const real data2,  const real data3,
-									const real data4,  const real data5,  const real data6,  const real data7,
-									const real data8,  const real data9,  const real data10, const real data11,
-									const real data12, const real data13, const real data14, const real data15 );
+		   const real data0,  const real data1,  const real data2,  const real data3,
+		   const real data4,  const real data5,  const real data6,  const real data7,
+		   const real data8,  const real data9,  const real data10, const real data11,
+		   const real data12, const real data13, const real data14, const real data15);
 
 		/** matrix-vector multiplication.
 		the "4th" element on the vector is ignored.

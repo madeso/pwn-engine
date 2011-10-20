@@ -39,7 +39,10 @@ namespace pwn
 
 		const InputFormat* SuggestFormat(const pwn::string& inputfile, const InputFormat* formatOveride)
 		{
-			if( formatOveride != 0 ) return formatOveride;
+			if(formatOveride != 0)
+			{
+				return formatOveride;
+			}
 			const pwn::string ext = boost::filesystem::path(inputfile).extension();
 
 			return SuggestFormat(ext);
@@ -60,7 +63,10 @@ namespace pwn
 
 			if(fileFormat)
 			{
-				if( verbose ) cout << "reading " << inputfile << " (" << fileFormat->getName() << ").." << std::endl;
+				if(verbose)
+				{
+					cout << "reading " << inputfile << " (" << fileFormat->getName() << ").." << std::endl;
+				}
 				fileFormat->load(builders, subobjects, inputfile, verbose);
 				return true;
 			}
@@ -81,14 +87,17 @@ namespace pwn
 		bool SuggestAnimationFile(const pwn::string& in, pwn::string* out)
 		{
 			boost::filesystem::path p
-				= boost::filesystem::path(in).replace_extension("animinfo");
-			if( out ) *out = p.file_string();
+			   = boost::filesystem::path(in).replace_extension("animinfo");
+			if(out)
+			{
+				*out = p.file_string();
+			}
 			return boost::filesystem::exists(p);
 		}
 
 		pwn::string GetAbsolutePath(const pwn::string& in)
 		{
-			return boost::filesystem::system_complete( boost::filesystem::path( in.c_str(), boost::filesystem::native ) ).string();
+			return boost::filesystem::system_complete(boost::filesystem::path(in.c_str(), boost::filesystem::native)).string();
 		}
 
 		pwn::string SuggestOutDirectory(const pwn::string& in)
@@ -100,7 +109,7 @@ namespace pwn
 		{
 			std::vector<mesh::AnimationPerBone> apb;
 
-			BOOST_FOREACH(const mesh::Bone& bone, builder.bones)
+			BOOST_FOREACH(const mesh::Bone & bone, builder.bones)
 			{
 				mesh::AnimationPerBone a;
 				a.addRotation(0, bone.rot);
@@ -139,9 +148,18 @@ namespace pwn
 
 		pwn::string CombineFilename(const pwn::string& name, const pwn::string& object)
 		{
-			if( object.empty() ) return name;
-			else if( object == name ) return name;
-			else return name + "-" + object;
+			if(object.empty())
+			{
+				return name;
+			}
+			else if(object == name)
+			{
+				return name;
+			}
+			else
+			{
+				return name + "-" + object;
+			}
 		}
 
 		AnimationExtract LoadAnimations(const pwn::string& filename)
@@ -151,7 +169,7 @@ namespace pwn
 			AnimationExtract ae;
 			ptree pt;
 			read_info(filename, pt);
-			BOOST_FOREACH(ptree::value_type &an, pt.get_child("animations"))
+			BOOST_FOREACH(ptree::value_type & an, pt.get_child("animations"))
 			{
 				ptree anida = an.second;
 				const pwn::string name = anida.get<pwn::string>("name");
@@ -167,11 +185,14 @@ namespace pwn
 		{
 			const pwn::string inputfile = GetAbsolutePath(ainputfile);
 			const pwn::string outdir =
-				cd.outdir.empty() ? SuggestOutDirectory(inputfile) : cd.outdir;
+			   cd.outdir.empty() ? SuggestOutDirectory(inputfile) : cd.outdir;
 			BuilderList builders;
-			if( Load(&builders, subobjects, inputfile, formatOveride, cd.verbose) == false ) return false;
+			if(Load(&builders, subobjects, inputfile, formatOveride, cd.verbose) == false)
+			{
+				return false;
+			}
 
-			BOOST_FOREACH(Entry& e, builders)
+			BOOST_FOREACH(Entry & e, builders)
 			{
 				mesh::Builder& builder = e.builder;
 				//if( builder.normals.empty() )
@@ -180,52 +201,61 @@ namespace pwn
 				pwn::mesh::Flatouter flatouter(builder);
 				flatouter.modify(&builder);
 
-				BOOST_FOREACH(AnimationEntry& ae, e.animations)
+				BOOST_FOREACH(AnimationEntry & ae, e.animations)
 				{
 					flatouter.modify(&ae.animation);
 				}
 
-				if( cd.useModelScale )
+				if(cd.useModelScale)
 				{
-					if( cd.verbose ) cout << "scaling " << cd.modelScale << ".." << std::endl;
+					if(cd.verbose)
+					{
+						cout << "scaling " << cd.modelScale << ".." << std::endl;
+					}
 					pwn::mesh::Scale(&builder, cd.modelScale);
-					BOOST_FOREACH(AnimationEntry& ae, e.animations)
+					BOOST_FOREACH(AnimationEntry & ae, e.animations)
 					{
 						ae.animation.scale(cd.modelScale);
 					}
 				}
 
-				if( cd.verbose ) cout << endl;
+				if(cd.verbose)
+				{
+					cout << endl;
+				}
 
 				pwn::string texturedir = cd.texturedir == "@" ? SuggestTextureDirectory(inputfile) : cd.texturedir;
 				pwn::mesh::MoveTextures(&builder, texturedir);
 
-				if( cd.writeDefaultAnimation && e.builder.bones.empty() == false)
+				if(cd.writeDefaultAnimation && e.builder.bones.empty() == false)
 				{
 					e.animations.push_back(AnimationEntry(ExtractDefaultAnimation(e.builder), "_default"));
 				}
 
 				pwn::mesh::Mesh mesh = builder.asMesh();
 				const pwn::uint32 validationErrors = mesh.validate(true);
-				if( validationErrors != 0)
+				if(validationErrors != 0)
 				{
 					cerr << inputfile << " failed validation with " << validationErrors << " error(s)... ignoring file..." << endl;
 					return false;
 				}
 
-				if( cd.meshInfo )
+				if(cd.meshInfo)
 				{
 					cout
-						<< "Mesh information " << name << ":" << endl
-						<< " positions: " << mesh.data().getCount() << endl
-						<< " materials: " << mesh.getMaterials().size() << endl
-						<< " triangles: " << mesh.getNumberOfTriangles() << endl
-						<< endl;
+					      << "Mesh information " << name << ":" << endl
+					      << " positions: " << mesh.data().getCount() << endl
+					      << " materials: " << mesh.getMaterials().size() << endl
+					      << " triangles: " << mesh.getNumberOfTriangles() << endl
+					      << endl;
 				}
 
-				if( cd.writeResult )
+				if(cd.writeResult)
 				{
-					if( cd.verbose ) cout << "writing.." << endl;
+					if(cd.verbose)
+					{
+						cout << "writing.." << endl;
+					}
 
 					pwn::string fname = CombineFilename(boost::filesystem::path(inputfile).stem(), name);
 
@@ -238,23 +268,23 @@ namespace pwn
 
 					AnimationExtract animationsToExtract;
 					pwn::string animationfile;
-					if( SuggestAnimationFile(inputfile, &animationfile) )
+					if(SuggestAnimationFile(inputfile, &animationfile))
 					{
 						animationsToExtract = LoadAnimations(animationfile);
 
-						BOOST_FOREACH(AnimationEntry& ae, e.animations)
+						BOOST_FOREACH(AnimationEntry & ae, e.animations)
 						{
-							if( ae.name.empty() == false )
+							if(ae.name.empty() == false)
 							{
 								anis.push_back(ae);
 							}
 							else
 							{
-								BOOST_FOREACH(const pwn::mesh::AnimationInformation& ai, animationsToExtract)
+								BOOST_FOREACH(const pwn::mesh::AnimationInformation & ai, animationsToExtract)
 								{
 									pwn::mesh::Animation ani;
 									ae.animation.subanim(ai, &ani);
-									anis.push_back( AnimationEntry(ani, ai.name));
+									anis.push_back(AnimationEntry(ani, ai.name));
 								}
 							}
 						}
@@ -264,16 +294,16 @@ namespace pwn
 						anis = e.animations;
 					}
 
-					BOOST_FOREACH(AnimationEntry& ae, anis)
+					BOOST_FOREACH(AnimationEntry & ae, anis)
 					{
 						pwn::string adir = cd.animdir;
-						if( adir.empty() )
+						if(adir.empty())
 						{
 							adir = (
-								boost::filesystem::path(outdir)
-								/ fname
-								)
-								.directory_string();
+							          boost::filesystem::path(outdir)
+							          / fname
+							       )
+							       .directory_string();
 						};
 
 						{
@@ -284,7 +314,10 @@ namespace pwn
 				}
 			}
 
-			if( cd.verbose ) cout << endl << "done." << endl;
+			if(cd.verbose)
+			{
+				cout << endl << "done." << endl;
+			}
 
 			return true;
 		}
@@ -330,7 +363,7 @@ namespace pwn
 		{
 			const pwn::string usage = args->displayUsage(val);
 
-			if( usage.empty() )
+			if(usage.empty())
 			{
 				std::cerr << "Unknown command " << val << std::endl;
 				args->stop = true;
@@ -338,8 +371,8 @@ namespace pwn
 			}
 
 			std::cout << "Usage: " << usage << std::endl
-				<< "Aliases: " << args->displayAliases(val) << std::endl
-				<< "Description: " << args->displayDescription(val) << std::endl;
+			          << "Aliases: " << args->displayAliases(val) << std::endl
+			          << "Description: " << args->displayDescription(val) << std::endl;
 
 			args->stop = true;
 			return 0;
@@ -353,7 +386,7 @@ namespace pwn
 
 		int CommandArg_WriteDefaultAnim(App* app, core::ConsoleArguments<App>* args, const pwn::string& val)
 		{
-			app->arg.writeDefaultAnimation = val=="Y" || val =="y";
+			app->arg.writeDefaultAnimation = val == "Y" || val == "y";
 			return 0;
 		}
 
@@ -389,7 +422,7 @@ namespace pwn
 		int CommandArg_ForceFormat(App* app, core::ConsoleArguments<App>* args, const pwn::string& val)
 		{
 			const InputFormat* sf = SuggestFormatData(val);
-			if( sf )
+			if(sf)
 			{
 				app->formatOveride = sf;
 				return 0;
@@ -482,7 +515,7 @@ namespace pwn
 
 			args.setMain(CommandArg_RunFile);
 
-			args.handle(argc, argv,this);
+			args.handle(argc, argv, this);
 			errors = args.getErrors();
 		}
 	}
@@ -492,7 +525,7 @@ int main(int argc, char* argv[])
 {
 	using namespace std;
 
-	if( argc == 1 )
+	if(argc == 1)
 	{
 		cout << "error usage: pwn-convert filename arguments";
 		return 1;

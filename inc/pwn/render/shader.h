@@ -23,8 +23,8 @@ namespace pwn
 		public:
 			enum Type
 			{
-				Vertex
-				,Fragment
+			   Vertex
+			   , Fragment
 			};
 
 			ShaderSource(const string& name, Type type, const string& source);

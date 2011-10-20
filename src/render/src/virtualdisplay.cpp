@@ -25,8 +25,8 @@ namespace pwn
 
 		void VirtualDisplay::render(int width, int height)
 		{
-			glViewport(0,0, width, height);
-			glClear( GL_COLOR_BUFFER_BIT );
+			glViewport(0, 0, width, height);
+			glClear(GL_COLOR_BUFFER_BIT);
 
 			BOOST_FOREACH(WidgetPtr w, widgets)
 			{

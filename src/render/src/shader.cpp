@@ -25,30 +25,36 @@ namespace pwn
 			pwnAssert_NoGLError();
 
 			int length = -1;
-			boost::scoped_array<char> log(new char[size+1]);
+			boost::scoped_array<char> log(new char[size + 1]);
 			glGetShaderInfoLog(prog, size, &length, log.get());
 			pwnAssert_NoGLError();
 
-			if( length == -1 ) return "";
+			if(length == -1)
+			{
+				return "";
+			}
 
 			return log.get();
 		}
 
 		ShaderSource::ShaderSource(const string& name, Type shaderType, const string& source)
-			: mShader( glCreateShader(shaderType == Vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER) )
+			: mShader(glCreateShader(shaderType == Vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER))
 		{
 			pwnAssert_NoGLError();
-			if( mShader == 0 ) throw "failed to create shader";
+			if(mShader == 0)
+			{
+				throw "failed to create shader";
+			}
 			GLint length = source.length();
 			const char* sourcep = source.c_str();
 			glShaderSource(mShader, 1, &sourcep, &length);
 			pwnAssert_NoGLError();
 			glCompileShader(mShader);
 			pwnAssert_NoGLError();
-			if( false == CompileStatus(mShader) )
+			if(false == CompileStatus(mShader))
 			{
 				throw
-					static_cast<string>(core::Str() << "Shader: "<< name << " failed to compile: " << GetInfoLog(mShader));
+				static_cast<string>(core::Str() << "Shader: " << name << " failed to compile: " << GetInfoLog(mShader));
 			}
 		}
 
@@ -73,8 +79,8 @@ namespace pwn
 		ShaderPtr Shader::Create(const core::Ptree& source, const string& id)
 		{
 			ShaderPtr sh(new Shader());
-			sh->vertex.reset( new ShaderSource(core::Str() << id << "#vertex", ShaderSource::Vertex, source.get<string>("vertex")));
-			sh->fragment.reset( new ShaderSource(core::Str() << id << "#fragment", ShaderSource::Fragment, source.get<string>("fragment")));
+			sh->vertex.reset(new ShaderSource(core::Str() << id << "#vertex", ShaderSource::Vertex, source.get<string>("vertex")));
+			sh->fragment.reset(new ShaderSource(core::Str() << id << "#fragment", ShaderSource::Fragment, source.get<string>("fragment")));
 
 			glAttachShader(sh->getProgram(), sh->vertex->getShader());
 			pwnAssert_NoGLError();
@@ -87,13 +93,13 @@ namespace pwn
 
 		UniformPtr Shader::getUniform(const string& name)
 		{
-			UniformPtr ret(new Uniform(this, name) );
+			UniformPtr ret(new Uniform(this, name));
 			return ret;
 		}
 
 		void Shader::Bind(ShaderPtr sh)
 		{
-			if( sh )
+			if(sh)
 			{
 				glUseProgram(sh->getProgram());
 				pwnAssert_NoGLError();
@@ -107,10 +113,13 @@ namespace pwn
 		}
 
 		Shader::Shader()
-			: program( glCreateProgram() )
+			: program(glCreateProgram())
 		{
 			pwnAssert_NoGLError();
-			if( program == 0 ) throw "failed to create shader program";
+			if(program == 0)
+			{
+				throw "failed to create shader program";
+			}
 		}
 
 		Shader::~Shader()

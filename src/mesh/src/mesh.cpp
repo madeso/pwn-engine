@@ -37,12 +37,15 @@ namespace pwn
 
 		int Check(const string& reason, size_t index, size_t size)
 		{
-			if( index >= size )
+			if(index >= size)
 			{
-				Assert( 0 && reason.c_str());
+				Assert(0 && reason.c_str());
 				return 1;
 			}
-			else return 0;
+			else
+			{
+				return 0;
+			}
 		}
 
 
@@ -73,16 +76,16 @@ namespace pwn
 		}
 
 		Mesh::Mesh(const std::vector<math::vec3>& posv,
-				const std::vector<math::vec3>& normv,
-				const std::vector<math::vec2>&textv,
-				const std::vector<math::vec4>& bonev,
-				const TriangleMap& trim,
-				const std::vector<Bone>& abones,
-				const std::vector<Material>& amaterials)
-				: vertexes(posv, normv, textv, bonev)
-				, bones(abones)
-				, triangles(trim)
-				, materials(amaterials)
+		           const std::vector<math::vec3>& normv,
+		           const std::vector<math::vec2>&textv,
+		           const std::vector<math::vec4>& bonev,
+		           const TriangleMap& trim,
+		           const std::vector<Bone>& abones,
+		           const std::vector<Material>& amaterials)
+			: vertexes(posv, normv, textv, bonev)
+			, bones(abones)
+			, triangles(trim)
+			, materials(amaterials)
 
 		{
 		}
@@ -92,25 +95,25 @@ namespace pwn
 			pwn::uint32 errors = 0;
 
 			// test if bones are sorted
-			if( testSortedBones )
+			if(testSortedBones)
 			{
-				for(std::size_t i = 0; i<bones.size(); ++i)
+				for(std::size_t i = 0; i < bones.size(); ++i)
 				{
-					if( bones[i].hasParent() )
+					if(bones[i].hasParent())
 					{
-						errors += Check("bone sorted", bones[i].getParent(), i );
+						errors += Check("bone sorted", bones[i].getParent(), i);
 					}
 				}
 			}
 
 			// test that the triangles point to valid indices
 			const std::size_t materialSize = materials.size();
-			BOOST_FOREACH(const TriangleMap::value_type& mt, triangles)
+			BOOST_FOREACH(const TriangleMap::value_type & mt, triangles)
 			{
 				errors += Check("material index", mt.first, materialSize);
-				BOOST_FOREACH(const pwn::mesh::Triangle& t, mt.second)
+				BOOST_FOREACH(const pwn::mesh::Triangle & t, mt.second)
 				{
-					for(int i=0; i<3; ++i)
+					for(int i = 0; i < 3; ++i)
 					{
 						errors += Check("position index", t[i], vertexes.getCount());
 					}
@@ -121,13 +124,13 @@ namespace pwn
 			const std::size_t boneSize = bones.size();
 			for(pwn::uint32 i = 0; i < vertexes.getCount(); ++i)
 			{
-				for(int b=0; b<4; ++b)
+				for(int b = 0; b < 4; ++b)
 				{
 					const real x = vertexes.getBone(i)[b];
-					if( x >= 0 )
+					if(x >= 0)
 					{
 						const BoneIndex p = GetBoneIndex(x);
-						errors += Check("bone index", p -1, boneSize);
+						errors += Check("bone index", p - 1, boneSize);
 					}
 				}
 			}
@@ -178,17 +181,17 @@ namespace pwn
 		}
 
 		VertexData::VertexData(const std::vector<math::vec3>& posv,
-				const std::vector<math::vec3>& normv,
-				const std::vector<math::vec2>&textv,
-				const std::vector<math::vec4>& bonev)
-				: count(posv.size())
+		                       const std::vector<math::vec3>& normv,
+		                       const std::vector<math::vec2>&textv,
+		                       const std::vector<math::vec4>& bonev)
+			: count(posv.size())
 		{
 			Assert(posv.size() == normv.size() && textv.size() == bonev.size() && normv.size() == textv.size()); // if this fails, we didnt get a matched data
-			locations.reset(new real[count*3]);
-			normals.reset(new real[count*3]);
-			textcoords.reset(new real[count*2]);
-			boneindexes.reset(new real[count*4]);
-			for(uint32 i=0; i<count; ++i)
+			locations.reset(new real[count * 3]);
+			normals.reset(new real[count * 3]);
+			textcoords.reset(new real[count * 2]);
+			boneindexes.reset(new real[count * 4]);
+			for(uint32 i = 0; i < count; ++i)
 			{
 				pos(i) = posv[i];
 				norm(i) = normv[i];
@@ -231,42 +234,42 @@ namespace pwn
 
 		math::vec3x VertexData::pos(const uint32 i)
 		{
-			return math::vec3x(&locations[i*3]);
+			return math::vec3x(&locations[i * 3]);
 		}
 
 		math::vec3x VertexData::norm(const uint32 i)
 		{
-			return math::vec3x(&normals[i*3]);
+			return math::vec3x(&normals[i * 3]);
 		}
 
 		math::vec2x VertexData::tex(const uint32 i)
 		{
-			return math::vec2x(&textcoords[i*2]);
+			return math::vec2x(&textcoords[i * 2]);
 		}
 
 		math::vec4x VertexData::bone(const uint32 i)
 		{
-			return math::vec4x(&boneindexes[i*4]);
+			return math::vec4x(&boneindexes[i * 4]);
 		}
 
 		const math::vec3x VertexData::pos(const uint32 i) const
 		{
-			return math::vec3x(&locations[i*3]);
+			return math::vec3x(&locations[i * 3]);
 		}
 
 		const math::vec3x VertexData::norm(const uint32 i) const
 		{
-			return math::vec3x(&normals[i*3]);
+			return math::vec3x(&normals[i * 3]);
 		}
 
 		const math::vec2x VertexData::tex(const uint32 i) const
 		{
-			return math::vec2x(&textcoords[i*2]);
+			return math::vec2x(&textcoords[i * 2]);
 		}
 
 		const math::vec4x VertexData::bone(const uint32 i) const
 		{
-			return math::vec4x(&boneindexes[i*4]);
+			return math::vec4x(&boneindexes[i * 4]);
 		}
 
 		template<typename T>
@@ -280,10 +283,10 @@ namespace pwn
 		{
 			count = m.count;
 
-			Copy<real>(locations, m.locations, 3*count);
-			Copy<real>(normals, m.normals, 3*count);
-			Copy<real>(textcoords, m.textcoords, 2*count);
-			Copy<real>(boneindexes, m.boneindexes, 4*count);
+			Copy<real>(locations, m.locations, 3 * count);
+			Copy<real>(normals, m.normals, 3 * count);
+			Copy<real>(textcoords, m.textcoords, 2 * count);
+			Copy<real>(boneindexes, m.boneindexes, 4 * count);
 		}
 	}
 }

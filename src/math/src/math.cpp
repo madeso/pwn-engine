@@ -16,7 +16,7 @@ namespace pwn
 	{
 		bool IsEqual(real lhs, real rhs)
 		{
-			return IsZero(lhs-rhs);
+			return IsZero(lhs - rhs);
 		}
 
 		bool IsZero(real r)
@@ -27,14 +27,26 @@ namespace pwn
 
 		real ZeroOrValue(real r)
 		{
-			if( IsZero(r) ) return 0;
-			else return r;
+			if(IsZero(r))
+			{
+				return 0;
+			}
+			else
+			{
+				return r;
+			}
 		}
 
 		const int Sign(const real r)
 		{
-			if( r > PWN_MATH_VALUE(0.0) ) return 1;
-			else return -1;
+			if(r > PWN_MATH_VALUE(0.0))
+			{
+				return 1;
+			}
+			else
+			{
+				return -1;
+			}
 		}
 
 		const real Lerp(const real f, real scale, const real t)
@@ -47,13 +59,19 @@ namespace pwn
 			const int sign = Sign(oldValue - newValue);
 			const real slip = (oldValue - newValue) / smoothingValue;
 			const real val = oldValue - slip;
-			if (sign != Sign(val - newValue)) return newValue;
-			else return val;
+			if(sign != Sign(val - newValue))
+			{
+				return newValue;
+			}
+			else
+			{
+				return val;
+			}
 		}
 
 		const real Square(const real r)
 		{
-			return r*r;
+			return r * r;
 		}
 
 		const real Sqrt(const real r)
@@ -64,48 +82,75 @@ namespace pwn
 
 		const real Abs(const real r)
 		{
-			if(r < PWN_MATH_VALUE(0.0) ) return -r;
-			else return r;
+			if(r < PWN_MATH_VALUE(0.0))
+			{
+				return -r;
+			}
+			else
+			{
+				return r;
+			}
 		}
 
 		const real Min(const real lhs, const real rhs)
 		{
-			if( lhs < rhs ) return lhs;
-			else return rhs;
+			if(lhs < rhs)
+			{
+				return lhs;
+			}
+			else
+			{
+				return rhs;
+			}
 		}
 
 		const real Max(const real lhs, const real rhs)
 		{
-			if( lhs > rhs ) return lhs;
-			else return rhs;
+			if(lhs > rhs)
+			{
+				return lhs;
+			}
+			else
+			{
+				return rhs;
+			}
 		}
 
 		const real To01(const real L, const real v, const real U)
 		{
-			return (v-L)/(U-L);
+			return (v - L) / (U - L);
 		}
 
 		const real From01(const real L, const real v, const real U)
 		{
-			return v*(U-L)+L;
+			return v * (U - L) + L;
 		}
 
 		const real Remap(const real ol, const real ou, const real v, const real nl, const real nu)
 		{
-			return From01(nl, To01(ol,v,ou), nu);
+			return From01(nl, To01(ol, v, ou), nu);
 		}
 
 		const real Get360Angular(const real min, const real value, const real max)
 		{
-			const real halfdiff = (max-min)/PWN_MATH_VALUE(2.0);
-			return min+halfdiff-halfdiff*Cos(Angle::FromDegrees(value*PWN_MATH_VALUE(360.0)));
+			const real halfdiff = (max - min) / PWN_MATH_VALUE(2.0);
+			return min + halfdiff - halfdiff * Cos(Angle::FromDegrees(value * PWN_MATH_VALUE(360.0)));
 		}
 
 		const real KeepWithin(const real min, const real v, const real max)
 		{
-			if( v > max ) return max;
-			else if( v < min ) return min;
-			else return v;
+			if(v > max)
+			{
+				return max;
+			}
+			else if(v < min)
+			{
+				return min;
+			}
+			else
+			{
+				return v;
+			}
 		}
 
 		const bool IsWithin(const real min, const real c, const real max)
@@ -123,17 +168,29 @@ namespace pwn
 			const real diff = max - min;
 			Assert(diff > 0);
 			real value = v - min;
-			while( value < PWN_MATH_VALUE(0.0) ) value += diff;
-			while( value > diff ) value -= diff;
+			while(value < PWN_MATH_VALUE(0.0))
+			{
+				value += diff;
+			}
+			while(value > diff)
+			{
+				value -= diff;
+			}
 			return min + value;
 		}
 
 		const int Wrapi(const int min, const int v, const int max)
 		{
-			const int diff = max - min+1;
+			const int diff = max - min + 1;
 			int value = v;
-			while( value < min ) value += diff;
-			while( value > max ) value -= diff;
+			while(value < min)
+			{
+				value += diff;
+			}
+			while(value > max)
+			{
+				value -= diff;
+			}
 			return value;
 		}
 
@@ -142,11 +199,13 @@ namespace pwn
 			const real diff = max - min;
 			real value = *current + change;
 			int wraps = 0;
-			while( value < min ) {
+			while(value < min)
+			{
 				value += diff;
 				--wraps;
 			}
-			while( value > max ) {
+			while(value > max)
+			{
 				value -= diff;
 				++wraps;
 			}
@@ -156,14 +215,16 @@ namespace pwn
 
 		const int IncrementAndWrapi(const int min, int* current, const int change, const int max)
 		{
-			const int diff = max - min+1;
+			const int diff = max - min + 1;
 			int value = *current + change;
 			int wraps = 0;
-			while( value < min ) {
+			while(value < min)
+			{
 				value += diff;
 				--wraps;
 			}
-			while( value > max ) {
+			while(value > max)
+			{
 				value -= diff;
 				++wraps;
 			}
@@ -175,12 +236,12 @@ namespace pwn
 		{
 			real LowerBound(real num, real gran)
 			{
-				return std::floor(num/gran) * gran;
+				return std::floor(num / gran) * gran;
 			}
 
 			real UpperBound(real num, real gran)
 			{
-				return std::ceil(num/gran) * gran;
+				return std::ceil(num / gran) * gran;
 			}
 		}
 
@@ -188,10 +249,16 @@ namespace pwn
 		{
 			const real lower = LowerBound(num, gran);
 			const real upper = UpperBound(num, gran);
-			const real percent = (num-lower)/gran; // 1.0 is upper, 0.0 is lower, 0.25 is 25% between lower and upper, moving from lower to upper
+			const real percent = (num - lower) / gran; // 1.0 is upper, 0.0 is lower, 0.25 is 25% between lower and upper, moving from lower to upper
 
-			if( percent >= 0.5 ) return upper;
-			else return lower;
+			if(percent >= 0.5)
+			{
+				return upper;
+			}
+			else
+			{
+				return lower;
+			}
 		}
 
 		const real Pi()
@@ -201,7 +268,7 @@ namespace pwn
 
 		const real HalfPi()
 		{
-			return Pi()/PWN_MATH_VALUE(2.0);
+			return Pi() / PWN_MATH_VALUE(2.0);
 		}
 
 		const bool kTrue()

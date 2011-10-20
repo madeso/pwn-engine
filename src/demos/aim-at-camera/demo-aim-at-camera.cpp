@@ -29,9 +29,9 @@ using namespace pwn::mesh;
 
 boost::shared_ptr<ActorDef> CreateCube(real size, const string& texture, TexturePool2* tpool, real alpha, bool out)
 {
-	const real halfsize = size/2;
+	const real halfsize = size / 2;
 
-	Builder b = CreateBox(materials::White(), halfsize*2, halfsize*2, halfsize*2, out);;
+	Builder b = CreateBox(materials::White(), halfsize * 2, halfsize * 2, halfsize * 2, out);;
 	b.materials[0].setTexture_Diffuse(texture);
 	b.materials[0].diffuse.alpha(alpha);
 	Move(&b, vec3(-halfsize, -halfsize, -halfsize));
@@ -63,27 +63,27 @@ public:
 	EasyLoop(Game* game)
 		: Loop(game)
 		, pos(0)
-		, cam(point3(10,10,10), qIdentity(), 45, 0.1f, 1000)
+		, cam(point3(10, 10, 10), qIdentity(), 45, 0.1f, 1000)
 	{
-		World3::Ptr world( new WorldWithCameraBoundObject3(Actor::Create(Origo3(), qIdentity(), CreateCube(10, "gray.png", &tpool, 1, false) ),
-			World3::Create()) );
-		world->light_setAmbient( math::Rgba(1.0f) );
+		World3::Ptr world(new WorldWithCameraBoundObject3(Actor::Create(Origo3(), qIdentity(), CreateCube(10, "gray.png", &tpool, 1, false)),
+		                  World3::Create()));
+		world->light_setAmbient(math::Rgba(1.0f));
 		SetupGrid(world, 10, 1, 3, 2, 100);
 
-		object = Actor::Create(point3(0,0,15), qIdentity(), CreateCube(1, "crate01a.jpg", &tpool, 1, true));
+		object = Actor::Create(point3(0, 0, 15), qIdentity(), CreateCube(1, "crate01a.jpg", &tpool, 1, true));
 		object->debug = true;
 		world->actor_add(object);
 
-		wid.reset(new World3Widget( Dock::Fill(), world ) );
+		wid.reset(new World3Widget(Dock::Fill(), world));
 		cam.pipeline = fse::Pipeline::Create("fse/normal.xml", &tempShaderPool);
-		display.widget_add( wid );
+		display.widget_add(wid);
 
 		//ctrl.localUp = true;
 	}
 
 	void onKey(Key::Code key, bool isDown)
 	{
-		if( key == Key::Escape && isDown )
+		if(key == Key::Escape && isDown)
 		{
 			stop();
 		}
@@ -116,8 +116,8 @@ int main(int, char** argv)
 	{
 		Game game;
 		InstallDefaultSystems(&game,
-			Startup(argv[0], "entsoft", "pwn-demo-basic-camera", "pwn demo: basic camera")
-			);
+		                      Startup(argv[0], "entsoft", "pwn-demo-basic-camera", "pwn demo: basic camera")
+		                     );
 		EasyLoop(&game).loop();
 	}
 }

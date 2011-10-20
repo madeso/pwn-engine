@@ -9,8 +9,8 @@ namespace pwn
 		namespace fse
 		{
 			BufferTarget::BufferTarget(const core::Ptree& el)
-				: width( el.get("width", 512) )
-				, height( el.get("height", 512) )
+				: width(el.get("width", 512))
+				, height(el.get("height", 512))
 			{
 			}
 

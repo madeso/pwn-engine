@@ -24,13 +24,13 @@ namespace pwn
 			DemoMovement::update(position, *rotation, delta, speed);
 			using namespace pwn::math;
 
-			const math::quat updown = math::cquat(math::RightHandAround(Right(), Angle::FromDegrees(Y(mouse)*sensitivity)));
-			const math::quat rightleft = math::cquat( math::RightHandAround(Up(), Angle::FromDegrees(-X(mouse)*sensitivity)));
+			const math::quat updown = math::cquat(math::RightHandAround(Right(), Angle::FromDegrees(Y(mouse) * sensitivity)));
+			const math::quat rightleft = math::cquat(math::RightHandAround(Up(), Angle::FromDegrees(-X(mouse) * sensitivity)));
 
 			//*rotation = math::Combine_Local(*rotation, rightleft);
 			*rotation = math::Combine_Parent(*rotation, updown);
 
-			mouse = vec2(0,0);
+			mouse = vec2(0, 0);
 		}
 	}
 }

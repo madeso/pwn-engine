@@ -27,7 +27,7 @@ namespace pwn
 
 		boost::shared_ptr<render::Material> Compile(const mesh::Material mm, TexturePool2* pool)
 		{
-			boost::shared_ptr<render::Material> rm( new render::Material() );
+			boost::shared_ptr<render::Material> rm(new render::Material());
 
 			// todo: move to the render::Material constructor..
 			rm->ambient = mm.ambient;
@@ -39,7 +39,7 @@ namespace pwn
 			// todo: check more than diffuse alpha
 			rm->hasTransperency = mm.diffuse.alpha() < 0.9f;
 
-			if( false == mm.getTexture_Diffuse().empty() )
+			if(false == mm.getTexture_Diffuse().empty())
 			{
 				rm->texture = pool->get(mm.texture_diffuse);
 			}
@@ -48,16 +48,16 @@ namespace pwn
 
 		boost::shared_ptr<ActorDef> Compile(const mesh::Mesh& mesh, TexturePool2* pool)
 		{
-			boost::shared_ptr<ActorDef> def( new ActorDef() );
-			std::auto_ptr<MeshCompiler> compiler( CreateMeshCompiler_ImmediateMode(mesh) );
+			boost::shared_ptr<ActorDef> def(new ActorDef());
+			std::auto_ptr<MeshCompiler> compiler(CreateMeshCompiler_ImmediateMode(mesh));
 
 			// todo: implement better rendering
 			BOOST_FOREACH(mesh::Mesh::TriangleMap::const_reference r, mesh.getTriangles())
 			{
-				ActorDef::PartPtr part( new Part() );
+				ActorDef::PartPtr part(new Part());
 				const pwn::uint32 index = r.first;
-				part->material = Compile( mesh.getMaterials()[index], pool );
-				part->mesh.reset( compiler->compile(r.second) );
+				part->material = Compile(mesh.getMaterials()[index], pool);
+				part->mesh.reset(compiler->compile(r.second));
 				def->parts.push_back(part);
 			}
 

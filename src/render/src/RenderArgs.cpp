@@ -31,20 +31,27 @@ namespace pwn
 
 		void RenderArgs::render(World3* world) const
 		{
-			glMatrixMode(GL_PROJECTION); pwnAssert_NoGLError();
-			glLoadIdentity(); pwnAssert_NoGLError();
+			glMatrixMode(GL_PROJECTION);
+			pwnAssert_NoGLError();
+			glLoadIdentity();
+			pwnAssert_NoGLError();
 			pwn::math::mat44 m;
 			cml::matrix_perspective_xfov_RH(m, cml::rad(camera.fov), aspect, camera.znear, camera.zfar, cml::z_clip_neg_one);
-			gluPerspective(camera.fov, aspect, camera.znear, camera.zfar); pwnAssert_NoGLError();
+			gluPerspective(camera.fov, aspect, camera.znear, camera.zfar);
+			pwnAssert_NoGLError();
 			//glRotatef(180, 0,1,0);
 			//glScalef(1,1,-1);
 			//glLoadMatrixf(m.data());
-			glClear(GL_DEPTH_BUFFER_BIT); pwnAssert_NoGLError();
+			glClear(GL_DEPTH_BUFFER_BIT);
+			pwnAssert_NoGLError();
 
-			glEnable(GL_DEPTH_TEST); pwnAssert_NoGLError();
-			glEnable(GL_CULL_FACE); pwnAssert_NoGLError();
+			glEnable(GL_DEPTH_TEST);
+			pwnAssert_NoGLError();
+			glEnable(GL_CULL_FACE);
+			pwnAssert_NoGLError();
 			world->render(*this);
-			glDisable(GL_DEPTH_TEST); pwnAssert_NoGLError();
+			glDisable(GL_DEPTH_TEST);
+			pwnAssert_NoGLError();
 		}
 	}
 }

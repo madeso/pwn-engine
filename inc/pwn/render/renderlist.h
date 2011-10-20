@@ -45,7 +45,7 @@ namespace pwn
 
 			enum DebugRenderType
 			{
-				kUndefined, kDebugRenderPoints, kDebugRenderLines, kDebugRenderMatrix
+			   kUndefined, kDebugRenderPoints, kDebugRenderLines, kDebugRenderMatrix
 			};
 
 			struct DebugCommand

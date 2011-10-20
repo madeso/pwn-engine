@@ -14,7 +14,7 @@ namespace test
 		IdPool pool;
 		IdPool::ID first = pool.generate();
 		IdPool::ID second = pool.generate();
-		EXPECT_NE(first, second );
+		EXPECT_NE(first, second);
 	}
 
 	GTEST(idpoolCreateIdObjectTest)
@@ -22,7 +22,7 @@ namespace test
 		IdPool pool;
 		Id first(&pool);
 		Id second(&pool);
-		EXPECT_NE(first.value, second.value );
+		EXPECT_NE(first.value, second.value);
 	}
 
 	GTEST(idpoolReleaseTest)
@@ -31,7 +31,7 @@ namespace test
 		IdPool::ID first = pool.generate();
 		pool.release(first);
 		IdPool::ID second = pool.generate();
-		EXPECT_EQ(first, second );
+		EXPECT_EQ(first, second);
 	}
 
 	GTEST(idpoolIdObjectTest)
@@ -43,6 +43,6 @@ namespace test
 			first = useless.value;
 		}
 		Id second(&pool);
-		EXPECT_EQ(first, second.value );
+		EXPECT_EQ(first, second.value);
 	}
 }

@@ -43,7 +43,7 @@ namespace pwn
 		void GameImp::display_add(int id, Display* disp)
 		{
 			const DisplayMap::iterator res = displays.find(id);
-			if( res != displays.end() && res->second != 0 )
+			if(res != displays.end() && res->second != 0)
 			{
 				throw "id belongs to someone else";
 			}
@@ -53,7 +53,7 @@ namespace pwn
 		void GameImp::display(int id, render::VirtualDisplay& world)
 		{
 			const DisplayMap::iterator res = displays.find(id);
-			if( res == displays.end() )
+			if(res == displays.end())
 			{
 				throw "id not recognized";
 			}
@@ -65,12 +65,12 @@ namespace pwn
 		void GameImp::display_remove(int id, Display* disp)
 		{
 			const DisplayMap::iterator res = displays.find(id);
-			if( res == displays.end() )
+			if(res == displays.end())
 			{
 				throw "id not previously added";
 			}
 
-			if( res->second != disp )
+			if(res->second != disp)
 			{
 				throw "id was not associated with disp";
 			}
@@ -80,7 +80,7 @@ namespace pwn
 
 		void GameImp::handleKey(Key::Code key, bool isDown)
 		{
-			if( ActiveLoop::Has() )
+			if(ActiveLoop::Has())
 			{
 				ActiveLoop::Get().onKey(key, isDown);
 			}
@@ -88,7 +88,7 @@ namespace pwn
 
 		void GameImp::handleMouse(const math::vec2 movement)
 		{
-			if( ActiveLoop::Has() )
+			if(ActiveLoop::Has())
 			{
 				ActiveLoop::Get().onMouse(movement);
 			}

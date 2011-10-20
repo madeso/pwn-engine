@@ -15,7 +15,7 @@ namespace pwn
 	namespace math
 	{
 		AxisAngle::AxisAngle(const vec3& ax, const Angle& ang)
-			: axis( GetNormalized(ax) )
+			: axis(GetNormalized(ax))
 			, angle(ang)
 		{
 		}
@@ -23,7 +23,7 @@ namespace pwn
 		// rewrite to better fit the mathematics instead of this "hack"
 		const AxisAngle cAxisAngle(const quat& q)
 		{
-			Assert( W(q) <= 1 ); // if this happes, we should normalize, but this shouldnt happen
+			Assert(W(q) <= 1);   // if this happes, we should normalize, but this shouldnt happen
 			vec3 axis;
 			real angle;
 			cml::quaternion_to_axis_angle(q, axis, angle);

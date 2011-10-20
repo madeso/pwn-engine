@@ -9,6 +9,28 @@ namespace pwn
 {
 	namespace component
 	{
+		ComponentCreator::ComponentCreator()
+		{
+		}
+
+		ComponentCreator::~ComponentCreator()
+		{
+		}
+
+		boost::shared_ptr<Component> ComponentCreator::create(const ID& name, const PropertyMap& props, const ComponentArgs& args) const
+		{
+			Functions::const_iterator r = functions.find(name);
+			if( r == functions.end() ) throw "unknown component";
+			return r->second(props, args);
+		}
+
+		void ComponentCreator::add(const ID& name, CreateFunction func)
+		{
+			functions.insert(Functions::value_type(name, func));
+		}
+
+		// sample components
+
 		class ComponentTimeout
 			: public Component
 		{
@@ -77,6 +99,12 @@ namespace pwn
 			void onDamage(const EventArgs& args)
 			{
 				currentPauseTime = waitTime;
+			}
+
+			static boost::shared_ptr<Component> Create(const PropertyMap& props, const ComponentArgs& args)
+			{
+				boost::shared_ptr<Component> c(new ComponentReboundingHealth(props,args));
+				return c;
 			}
 
 			DECLARE_CALLBACK();

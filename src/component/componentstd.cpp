@@ -9,31 +9,6 @@ namespace pwn
 {
 	namespace component
 	{
-		ComponentCreator::ComponentCreator()
-		{
-		}
-
-		ComponentCreator::~ComponentCreator()
-		{
-		}
-
-		boost::shared_ptr<Component> ComponentCreator::create(const ID& name, const PropertyMap& props, const ComponentArgs& args) const
-		{
-			Functions::const_iterator r = functions.find(name);
-			if(r == functions.end())
-			{
-				throw "unknown component";
-			}
-			return r->second(props, args);
-		}
-
-		void ComponentCreator::add(const ID& name, CreateFunction func)
-		{
-			functions.insert(Functions::value_type(name, func));
-		}
-
-		// sample components
-
 		class ComponentTimeout
 			: public Component
 		{
@@ -58,7 +33,7 @@ namespace pwn
 
 			DECLARE_CALLBACK();
 
-			static boost::shared_ptr<Component> Create(const ComponentArgs& args)
+			static boost::shared_ptr<Component> Create(const PropertyMap&, const ComponentArgs& args)
 			{
 				boost::shared_ptr<Component> c(new ComponentTimeout(args));
 				return c;
@@ -72,7 +47,7 @@ namespace pwn
 			REGISTER_CALLBACK(Update, onUpdate);
 		END_EVENT_TABLE()
 
-		//
+		//-----------------------------------------------------------------------------------------------
 
 		class ComponentReboundingHealth
 			: public Component
@@ -122,5 +97,38 @@ namespace pwn
 			REGISTER_CALLBACK(Update, onUpdate);
 			REGISTER_CALLBACK(Damage, onDamage);
 		END_EVENT_TABLE()
+
+		//-----------------------------------------------------------------------------------------------
+
+		ComponentCreator::ComponentCreator()
+		{
+		}
+
+		ComponentCreator::~ComponentCreator()
+		{
+		}
+
+		boost::shared_ptr<Component> ComponentCreator::create(const ID& name, const PropertyMap& props, const ComponentArgs& args) const
+		{
+			Functions::const_iterator r = functions.find(name);
+			if(r == functions.end())
+			{
+				throw "unknown component";
+			}
+			return r->second(props, args);
+		}
+
+		void ComponentCreator::add(const ID& name, CreateFunction func)
+		{
+			functions.insert(Functions::value_type(name, func));
+		}
+
+		//-----------------------------------------------------------------------------------------------
+
+		void AddStandardComponents(ComponentCreator* cc)
+		{
+			cc->add("rebounding-health", ComponentReboundingHealth::Create);
+			cc->add("timeout", ComponentTimeout::Create);
+		}
 	}
 }

@@ -28,6 +28,8 @@ namespace pwn
 			typedef std::map<ID, CreateFunction> Functions;
 			Functions functions;
 		};
+
+		void AddStandardComponents(ComponentCreator* cc);
 	}
 }
 

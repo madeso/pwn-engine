@@ -36,6 +36,7 @@ namespace pwn
 		{
 		public:
 			// EnumValue id;
+			string name;
 			ComponentArgs args;
 		private:
 		};

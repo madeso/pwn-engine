@@ -91,9 +91,14 @@ namespace pwn
 		{
 		}
 
-		void Object::add(boost::shared_ptr<Component> component)
+		void Object::addComponent(boost::shared_ptr<Component> component)
 		{
 			components.add(component);
+		}
+
+		void Object::addProperty(const string& name, boost::shared_ptr<Property> prop)
+		{
+			properties.add(name, prop);
 		}
 
 		void Object::onEvent(const core::EnumValue& type, const EventArgs& args)

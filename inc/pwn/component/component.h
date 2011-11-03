@@ -24,6 +24,7 @@ namespace pwn
 			real& refReal();
 		};
 
+		/// Live part of a object.
 		class Component
 			: boost::noncopyable
 		{

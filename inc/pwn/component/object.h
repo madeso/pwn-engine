@@ -19,6 +19,7 @@ namespace pwn
 		class Property;
 		class Component;
 		class EventArgs;
+		class ObjectDef;
 
 		class PropertyMap
 			: boost::noncopyable
@@ -56,8 +57,13 @@ namespace pwn
 			Object();
 			~Object();
 
-			void add(boost::shared_ptr<Component> component);
+			void addProperty(const string& name, boost::shared_ptr<Property> prop);
+			void addComponent(boost::shared_ptr<Component> component);
 			void onEvent(const core::EnumValue& type, const EventArgs& args);
+
+		protected:
+			friend class ObjectDef;
+			const PropertyMap& getProperties() const;
 		private:
 			PropertyMap properties;
 			ComponentList components;

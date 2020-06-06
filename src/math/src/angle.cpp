@@ -147,5 +147,18 @@ namespace pwn
 		{
 			return Angle::FromRadians(0);
 		}
+
+
+		std::ostream& operator<<(std::ostream& s, const Angle& a)
+		{
+			s << a.inDegrees() << "°";
+			return s;
+		}
+
+		std::ostream& operator<<(std::ostream& s, const AxisAngle& aa)
+		{
+			s << "(" << aa.angle << " around " << aa.axis << ")";
+			return s;
+		}
 	}
 }

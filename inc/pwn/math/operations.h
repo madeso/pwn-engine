@@ -1,6 +1,7 @@
 #ifndef PWN_MATH_FUNCTIONS
 #define PWN_MATH_FUNCTIONS
 
+#include <ostream>
 #include <pwn/math/types.h>
 
 namespace pwn
@@ -944,19 +945,9 @@ namespace pwn
 
 		/// @}
 
-		template<class Stream>
-		Stream& operator<<(Stream& s, const Angle& a)
-		{
-			s << a.inDegrees() << "°";
-			return s;
-		}
+		std::ostream& operator<<(std::ostream& s, const Angle& a);
 
-		template<class Stream>
-		Stream& operator<<(Stream& s, const AxisAngle& aa)
-		{
-			s << "(" << aa.angle << " around " << aa.axis << ")";
-			return s;
-		}
+		std::ostream& operator<<(std::ostream& s, const AxisAngle& aa);
 	}
 }
 

@@ -28,3 +28,5 @@ dist/posable_guy.an8
 inc/pwn/component/component_inc.cmake
 src/component/component_src.cmake
 
+# ide files
+.vscode

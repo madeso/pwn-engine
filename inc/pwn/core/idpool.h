@@ -1,15 +1,15 @@
 #ifndef PWN_CORE_IDPOOL
 #define PWN_CORE_IDPOOL
 
-#include <pwn/number.h>
 #include <vector>
-#include <boost/noncopyable.hpp>
+#include "pwn/number.h"
+#include "noncopyable.h"
 
 namespace pwn
 {
 	namespace core
 	{
-		class IdPool : boost::noncopyable
+		class IdPool : noncopyable
 		{
 		public:
 			typedef uint32 ID;
@@ -23,7 +23,7 @@ namespace pwn
 			std::vector<ID> released;
 		};
 
-		class Id : boost::noncopyable
+		class Id
 		{
 		public:
 			Id(IdPool* pool);

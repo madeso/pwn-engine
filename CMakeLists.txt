@@ -1,8 +1,15 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 3.1.0)
 project(pwn)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(pwn_version_major 1)
 set(pwn_version_minor 0)
+
+set(OpenGL_GL_PREFERENCE "GLVND")
 
 option (PWN_USE_FOLDERS "Use solution folders" OFF)
 
@@ -15,9 +22,9 @@ endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake-modules")
 
-set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_ADDITIONAL_VERSIONS "1.43" "1.43.0" "1.45" "1.45.0")
+# set(Boost_USE_STATIC_LIBS ON)
+# set(Boost_USE_MULTITHREADED ON)
+# set(Boost_ADDITIONAL_VERSIONS "1.43" "1.43.0" "1.45" "1.45.0" "1.72")
 
 if(WIN32)
 	#on windows, link to sfml static, to avoid crash on exit with ati cards
@@ -38,52 +45,15 @@ if(CMAKE_CONFIGURATION_TYPES)
 	set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING "Reset the configurations to what we need" FORCE)
  endif()
 
-find_package(GoogleMock)
-find_package(PhysFS)
-find_package(Boost COMPONENTS filesystem system)
-find_package(OpenGL)
+find_package(PhysFS REQUIRED)
+find_package(Boost REQUIRED)
+find_package(OpenGL REQUIRED)
 
-#on windows main is needed, not on linux
-if(WIN32)
-	find_package(SFML COMPONENTS system window main)
-else(WIN32)
-	find_package(SFML COMPONENTS system window)
-endif(WIN32)
+find_package(SFML COMPONENTS system window REQUIRED)
 
+set(SFML_MAIN_LIBS "")
+set(SFML_LIBS sfml-system sfml-window)
 
-if(NOT PHYSFS_FOUND)
-	message(SEND_ERROR "PhysFs not found")
-endif()
-
-if(NOT Boost_FOUND)
-	message(SEND_ERROR "boost not found")
-endif()
-
-if(NOT GOOGLEMOCK_FOUND)
-	message(SEND_ERROR "gmock not found")
-endif()
-
-if(NOT OPENGL_FOUND)
-	message(SEND_ERROR "opengl not found")
-endif()
-
-if( NOT SFML_FOUND)
-	message(SEND_ERROR "sfml not found")
-endif()
-
-set(SFML_LIBS_DEBUG ${SFML_SYSTEM_LIBRARY_DEBUG} ${SFML_WINDOW_LIBRARY_DEBUG})
-set(SFML_MAIN_LIBS_DEBUG ${SFML_MAIN_LIBRARY_DEBUG})
-set(SFML_LIBS_RELEASE ${SFML_SYSTEM_LIBRARY} ${SFML_WINDOW_LIBRARY})
-set(SFML_MAIN_LIBS_RELEASE ${SFML_MAIN_LIBRARY})
-
-if(WIN32)
-	set(SFML_MAIN_LIBS debug ${SFML_MAIN_LIBS_DEBUG} optimized ${SFML_MAIN_LIBS_RELEASE})
-else(WIN32)
-	set(SFML_MAIN_LIBS "")
-endif(WIN32)
-set(SFML_LIBS debug ${SFML_LIBS_DEBUG} optimized ${SFML_LIBS_RELEASE})
-
-message("main libs: ${SFML_MAIN_LIBS}" )
 message("libs: ${SFML_LIBS}" )
 
 option (PWN_USE_CUSTOM_MATH "Use pwn.math instead of cml" ON)
@@ -108,6 +78,5 @@ include_directories(inc)
 include_directories(external)
 include_directories(external/cml-1_0_2)
 include_directories(${Boost_INCLUDE_DIRS})
-include_directories(${GOOGLEMOCK_INCLUDE_DIRS})
 
 add_subdirectory(src)

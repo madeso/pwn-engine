@@ -1,15 +1,14 @@
 #ifndef PWN_COMPONENT_COMPONENT
 #define PWN_COMPONENT_COMPONENT
 
-#include <boost/noncopyable.hpp>
-#include <map>
-#include <boost/function.hpp>
-#include <pwn/core/enum.h>
-#include <pwn/number.h>
+#include "noncopyable.h"
 
-// for event declaration macros at the end
 #include <functional>
-#include <boost/bind.hpp>
+#include <map>
+
+#include "pwn/core/enum.h"
+#include "pwn/number.h"
+
 
 namespace pwn
 {
@@ -26,7 +25,7 @@ namespace pwn
 
 		/// Live part of a object.
 		class Component
-			: boost::noncopyable
+			: noncopyable
 		{
 		protected:
 			Component();
@@ -44,7 +43,7 @@ namespace pwn
 
 			// internal
 			virtual void registerCallbacks() = 0;
-			typedef boost::function<void (const EventArgs&)> Callback;
+			typedef std::function<void (const EventArgs&)> Callback;
 			void addCallback(const core::EnumValue& type, Callback c);
 		protected:
 			PropertyList locals; // local variables that automatically are saved to files
@@ -56,6 +55,7 @@ namespace pwn
 	}
 }
 
+// todo(Gustav): fix
 #define BEGIN_EVENT_TABLE(X) void X::registerCallbacks() { typedef X C;
 #define REGISTER_CALLBACK(e,f) addCallback(::pwn::component::EventArgs::Type().toEnum(#e),boost::bind(std::mem_fun(&C::f), this, _1))
 #define END_EVENT_TABLE() }

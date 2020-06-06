@@ -10,7 +10,7 @@ namespace pwn
 		class CompiledMesh;
 		class Material;
 
-		/** A part is a part of a mesh wíth the same material
+		/** A part is a part of a mesh wÃ­th the same material
 		*/
 		class Part
 		{

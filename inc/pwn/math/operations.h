@@ -947,7 +947,7 @@ namespace pwn
 		template<class Stream>
 		Stream& operator<<(Stream& s, const Angle& a)
 		{
-			s << a.inDegrees() << "°";
+			s << a.inDegrees() << "Â°";
 			return s;
 		}
 

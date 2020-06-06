@@ -60,7 +60,7 @@ namespace pwn
 			const real cy = math::Y(c);
 			const real dx = cx - x;
 			const real dy = y - cy;
-			return math::vec2(dx / math::X(s), dy / math::Y(s)); // divide by size.y (height) as movement is measured in ´percenteage of window height
+			return math::vec2(dx / math::X(s), dy / math::Y(s)); // divide by size.y (height) as movement is measured in percenteage of window height
 		}
 
 		void Test_MouseMovement()
@@ -150,7 +150,7 @@ namespace pwn
 				Test_MouseMovement();
 				const sf::Input& i = window.GetInput();
 				const math::vec2 size(static_cast<pwn::real>(window.GetWidth()), static_cast<pwn::real>(window.GetHeight()));
-				//const math::vec2 movement( (i.GetMouseX()-math::X(center))/ math::X(size), (math::Y(center) - i.GetMouseY())/math::Y(size) ); // divide by size.y (height) as movement is measured in ´percenteage of window height
+				//const math::vec2 movement( (i.GetMouseX()-math::X(center))/ math::X(size), (math::Y(center) - i.GetMouseY())/math::Y(size) ); // divide by size.y (height) as movement is measured in percenteage of window height
 				const math::vec2 movement = CalculateSmartMovement(math::vec2(i.GetMouseX(), i.GetMouseY()), size);
 				/// @todo: make it so that is determined by desktop resolution and not game size
 				imp.handleMouse(movement * 2);

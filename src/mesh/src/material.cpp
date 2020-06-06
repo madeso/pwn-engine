@@ -46,7 +46,7 @@ namespace pwn
 				}
 			}
 
-			// These numbers come from the OpenGL teapots.c demo, © Silicon Graphics, Inc., © 1994, Mark J. Kilgard
+			// These numbers come from the OpenGL teapots.c demo, Â© Silicon Graphics, Inc., Â© 1994, Mark J. Kilgard
 			// http://devernay.free.fr/cours/opengl/materials.html
 			// todo: come up with own
 

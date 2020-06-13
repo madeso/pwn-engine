@@ -10,35 +10,32 @@ namespace test
 using namespace pwn;
 using namespace pwn::core;
 
-struct fix : ::testing::Test
+GTEST(fix)
 {
-    fix()
-    {
+        std::vector<int> vec;
         vec.push_back(1);
         vec.push_back(4);
         vec.push_back(2);
         vec.push_back(-12);
         vec.push_back(5);
         vec.push_back(3);
+
+    SECTION("testSwapBackAndErase_hasRemoved")
+    {
+        const std::size_t before = vec.size();
+        SwapBackAndEraseObject(4, &vec);
+        EXPECT_EQ(before - 1, vec.size());
     }
-    std::vector<int> vec;
-};
 
-TEST_F(fix, testSwapBackAndErase_hasRemoved)
-{
-    const std::size_t before = vec.size();
-    SwapBackAndEraseObject(4, &vec);
-    EXPECT_EQ(before - 1, vec.size());
-}
-
-TEST_F(fix, testSwapBackAndErase_order)
-{
-    SwapBackAndEraseObject(4, &vec);
-    EXPECT_EQ(1, vec[0]);
-    EXPECT_EQ(3, vec[1]);
-    EXPECT_EQ(2, vec[2]);
-    EXPECT_EQ(-12, vec[3]);
-    EXPECT_EQ(5, vec[4]);
+    SECTION("SwapBackAndErase_order")
+    {
+        SwapBackAndEraseObject(4, &vec);
+        EXPECT_EQ(1, vec[0]);
+        EXPECT_EQ(3, vec[1]);
+        EXPECT_EQ(2, vec[2]);
+        EXPECT_EQ(-12, vec[3]);
+        EXPECT_EQ(5, vec[4]);
+    }
 }
 
 GTEST(stringBuilderStartsEmpty)

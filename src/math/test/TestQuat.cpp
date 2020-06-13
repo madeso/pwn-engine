@@ -185,53 +185,51 @@ GTEST(checkQuatConjugate)
     EXPECT_PRED_FORMAT2(::pwn::math::quat_equal_test, a, b);
 }
 
-struct Quat : ::testing::Test
+GTEST(Quat)
 {
-    quat qa;
-    quat qb;
+    quat qa = cquat(RightHandAround(Up(), Angle::FromDegrees(45)));
+    quat qb = cquat(RightHandAround(Up(), Angle::FromDegrees(90)));
 
-    Quat()
-        : qa(cquat(RightHandAround(Up(), Angle::FromDegrees(45))))
-        , qb(cquat(RightHandAround(Up(), Angle::FromDegrees(90))))
+    SECTION("testSlerp1")
     {
+        EXPECT_PRED_FORMAT2(
+                ::pwn::math::quat_equal_test,
+                qIdentity(),
+                Slerp(qIdentity(), 0, qb));
     }
-};
 
-TEST_F(Quat, testSlerp1)
-{
-    EXPECT_PRED_FORMAT2(
-            ::pwn::math::quat_equal_test,
-            qIdentity(),
-            Slerp(qIdentity(), 0, qb));
-}
-TEST_F(Quat, testSlerp2)
-{
-    EXPECT_PRED_FORMAT2(
-            ::pwn::math::quat_equal_test,
-            qb,
-            Slerp(qIdentity(), 1, qb));
-}
-TEST_F(Quat, testSlerp3)
-{
-    EXPECT_PRED_FORMAT2(
-            ::pwn::math::quat_equal_test,
-            qIdentity(),
-            SlerpShortway(qIdentity(), 0, qb));
-}
-TEST_F(Quat, testSlerp4)
-{
-    EXPECT_PRED_FORMAT2(
-            ::pwn::math::quat_equal_test,
-            qb,
-            SlerpShortway(qIdentity(), 1, qb));
-}
-TEST_F(Quat, testSlerp5)
-{
-    EXPECT_PRED_FORMAT2(
-            ::pwn::math::quat_equal_test,
-            qa,
-            SlerpShortway(qIdentity(), 0.5f, qb));
-}
+    SECTION("testSlerp2")
+    {
+        EXPECT_PRED_FORMAT2(
+                ::pwn::math::quat_equal_test,
+                qb,
+                Slerp(qIdentity(), 1, qb));
+    }
+
+    SECTION("testSlerp3")
+    {
+        EXPECT_PRED_FORMAT2(
+                ::pwn::math::quat_equal_test,
+                qIdentity(),
+                SlerpShortway(qIdentity(), 0, qb));
+    }
+
+    SECTION("testSlerp4")
+    {
+        EXPECT_PRED_FORMAT2(
+                ::pwn::math::quat_equal_test,
+                qb,
+                SlerpShortway(qIdentity(), 1, qb));
+    }
+
+    SECTION("testSlerp5")
+    {
+        EXPECT_PRED_FORMAT2(
+                ::pwn::math::quat_equal_test,
+                qa,
+                SlerpShortway(qIdentity(), 0.5f, qb));
+    }
+}    
 
 
 }

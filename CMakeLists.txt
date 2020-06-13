@@ -80,4 +80,5 @@ include_directories(external/catch)
 include_directories(external/cml-1_0_2)
 include_directories(${Boost_INCLUDE_DIRS})
 
+add_subdirectory(external/catchy)
 add_subdirectory(src)

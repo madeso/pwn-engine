@@ -1,5 +1,7 @@
 #include "TestBase.h"
 
+#include "pwn/core/str.h"
+
 namespace  // local
 {
 using namespace pwn;
@@ -94,31 +96,31 @@ namespace math
                  equal(rhs.angle.inDegrees(), -lhs.angle.inDegrees()));
         return a || inv;
     }
-    /*
-::testing::AssertionResult&
-    operator<<(::testing::AssertionResult& o, const vec2& t)
+    
+    std::ostream&
+    operator<<(std::ostream& o, const vec2& t)
     {
         o << "(" << math::X(t) << ", " << math::Y(t) << ")";
         return o;
     }
 
-    ::testing::AssertionResult&
-    operator<<(::testing::AssertionResult& o, const point2& t)
+    std::ostream&
+    operator<<(std::ostream& o, const point2& t)
     {
         o << "(" << t.x() << ", " << t.y() << ")";
         return o;
     }
 
     
-    ::testing::AssertionResult&
-    operator<<(::testing::AssertionResult& o, const vec3& t)
+    std::ostream&
+    operator<<(std::ostream& o, const vec3& t)
     {
         o << "(" << math::X(t) << ", " << math::Y(t) << ", " << math::Z(t)
           << ")";
         return o;
     }
-    ::testing::AssertionResult&
-    operator<<(::testing::AssertionResult& o, const quat& t)
+    std::ostream&
+    operator<<(std::ostream& o, const quat& t)
     {
         std::stringstream ss;
         ss.precision(5);
@@ -128,8 +130,8 @@ namespace math
         o << ss.str();
         return o;
     }
-    ::testing::AssertionResult&
-    operator<<(::testing::AssertionResult& o, const mat33& m)
+    std::ostream&
+    operator<<(std::ostream& o, const mat33& m)
     {
         o << "( ";
         for (int i = 0; i < 3 * 3; ++i)
@@ -139,8 +141,8 @@ namespace math
         o << ")";
         return o;
     }
-    ::testing::AssertionResult&
-    operator<<(::testing::AssertionResult& o, const mat44& m)
+    std::ostream&
+    operator<<(std::ostream& o, const mat44& m)
     {
         o << "( ";
         for (int i = 0; i < 4 * 4; ++i)
@@ -150,38 +152,31 @@ namespace math
         o << ")";
         return o;
     }
-    ::testing::AssertionResult&
-    operator<<(::testing::AssertionResult& o, const rect& t)
+    std::ostream&
+    operator<<(std::ostream& o, const rect& t)
     {
         o << "(" << t.upperLeft.x() << ", " << t.upperLeft.y() << ", "
           << t.lowerRight.x() << ", " << t.lowerRight.y() << ")";
         return o;
     }
-    ::testing::AssertionResult&
-    operator<<(::testing::AssertionResult& o, const AxisAngle& aa)
-    {
-        o << "(" << math::X(aa.axis) << ", " << math::Y(aa.axis) << ", "
-          << math::Z(aa.axis) << ": " << aa.angle.inDegrees() << ")";
-        return o;
-    }
 
     template <typename T>
-    ::testing::AssertionResult
+    catchy::FalseString
     equal_test(const char* aa, const char* bb, const T& a, const T& b)
     {
         if (IsEqual(a, b))
         {
-            return ::testing::AssertionSuccess();
+            return catchy::FalseString::True();
         }
         else
         {
-            return ::testing::AssertionFailure() << "Not equal! Expected:\n"
+            return catchy::FalseString::False(core::Str() << "Not equal! Expected:\n"
                                                  << a << " but got:\n"
-                                                 << b;
+                                                 << b);
         }
     }
 
-    ::testing::AssertionResult
+    catchy::FalseString
     vec2_equal_test(
             const char* a,
             const char* b,
@@ -190,7 +185,7 @@ namespace math
     {
         return equal_test(a, b, d, rhs);
     }
-    ::testing::AssertionResult
+    catchy::FalseString
     point2_equal_test(
             const char* a,
             const char* b,
@@ -199,7 +194,8 @@ namespace math
     {
         return equal_test(a, b, d, rhs);
     }
-    ::testing::AssertionResult
+
+    catchy::FalseString
     vec3_equal_test(
             const char* a,
             const char* b,
@@ -208,7 +204,8 @@ namespace math
     {
         return equal_test(a, b, d, rhs);
     }
-    ::testing::AssertionResult
+
+    catchy::FalseString
     quat_equal_test(
             const char* aa,
             const char* bb,
@@ -217,17 +214,18 @@ namespace math
     {
         if (IsEqual(a, b))
         {
-            return ::testing::AssertionSuccess();
+            return catchy::FalseString::True();
         }
         else
         {
-            return ::testing::AssertionFailure() << "Not equal! Expected:\n"
+            return catchy::FalseString::False(core::Str() << "Not equal! Expected:\n"
                                                  << a << " but got:\n"
                                                  << b << "\n"
-                                                 << "Dot is " << cml::dot(a, b);
+                                                 << "Dot is " << cml::dot(a, b));
         }
     }
-    ::testing::AssertionResult
+
+    catchy::FalseString
     mat33_equal_test(
             const char* a,
             const char* b,
@@ -236,7 +234,8 @@ namespace math
     {
         return equal_test(a, b, lhs, rhs);
     }
-    ::testing::AssertionResult
+
+    catchy::FalseString
     mat44_equal_test(
             const char* a,
             const char* b,
@@ -245,7 +244,8 @@ namespace math
     {
         return equal_test(a, b, lhs, rhs);
     }
-    ::testing::AssertionResult
+
+    catchy::FalseString
     rect_equal_test(
             const char* a,
             const char* b,
@@ -254,7 +254,8 @@ namespace math
     {
         return equal_test(a, b, lhs, rhs);
     }
-    ::testing::AssertionResult
+
+    catchy::FalseString
     axisangle_equal_test(
             const char* a,
             const char* b,
@@ -263,6 +264,5 @@ namespace math
     {
         return equal_test(a, b, lhs, rhs);
     }
-    */
 }
 }

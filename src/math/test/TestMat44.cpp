@@ -42,32 +42,24 @@ GTEST(TestIn)
             In());
 }
 
-struct TestRotationFixture : ::testing::Test
+GTEST(TestRotationFixture)
 {
-    mat44 start;
-    AxisAngle aa;
-    vec3 toTransform;
-    vec3 result;
+    auto start = mat44Identity();
+    auto aa = RightHandAround(Up(), Angle::FromDegrees(-90));
+    auto toTransform = vec3(0, 0, -5);
+    auto result = vec3(5, 0, 0);
 
-    TestRotationFixture()
-        : start(mat44Identity())
-        , aa(RightHandAround(Up(), Angle::FromDegrees(-90)))
-        , toTransform(0, 0, -5)
-        , result(5, 0, 0)
+    SECTION("TestRotationAxisAngle")
     {
+        vec3 r = mat44helper(start).rotate(aa).transform(toTransform);
+        EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, r, result);
     }
-};
 
-TEST_F(TestRotationFixture, TestRotationAxisAngle)
-{
-    vec3 r = mat44helper(start).rotate(aa).transform(toTransform);
-    EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, r, result);
-}
-
-TEST_F(TestRotationFixture, TestRotationQuat)
-{
-    vec3 r = mat44helper(start).rotate(cquat(aa)).transform(toTransform);
-    EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, r, result);
+    SECTION("TestRotationQuat")
+    {
+        vec3 r = mat44helper(start).rotate(cquat(aa)).transform(toTransform);
+        EXPECT_PRED_FORMAT2(::pwn::math::vec3_equal_test, r, result);
+    }
 }
 
 GTEST(TestCombined_RT)

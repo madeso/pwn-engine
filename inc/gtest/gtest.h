@@ -12,4 +12,6 @@
 
 #define EXPECT_FLOAT_EQ(lhs, rhs) REQUIRE(lhs == Approx(rhs))
 
+#define EXPECT_PRED_FORMAT2(f, lhs, rhs) REQUIRE(f(#lhs, #rhs, lhs, rhs))
+
 #endif  // FAKE_GTEST_H

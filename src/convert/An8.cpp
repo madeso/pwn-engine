@@ -1666,7 +1666,7 @@ namespace pwn
 					ExtractFigureNames(f, &subs);
 				}
 
-				BOOST_FOREACH(pwn::string & name, subs)
+				BOOST_FOREACH(const pwn::string& name, subs)
 				{
 					const pwn::string id = name.substr(0, 1);
 					if(id == kObjectId)
@@ -1684,7 +1684,8 @@ namespace pwn
 						An8 a;
 						a.f = f;
 						mesh::Builder builder;
-						a.addToBuilder(a.prepareFigure(a.f.getFigure(figName)), &builder);
+                        auto fig = a.f.getFigure(figName);
+						a.addToBuilder(a.prepareFigure(fig), &builder);
 						Entry e(builder, figName);
 						LoadAnimations(&e.animations, f, builder);
 						builders->push_back(e);

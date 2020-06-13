@@ -75,9 +75,9 @@ namespace pwn
 			{
 				BOOST_FOREACH(const pwn::string & n, commands)
 				{
-					cout << n << " ";
+                    std::cout << n << " ";
 				}
-				cout << std::endl;
+                std::cout << std::endl;
 			}
 
 			const pwn::string displayAliases(const pwn::string& id) const
@@ -133,7 +133,7 @@ namespace pwn
 						{
 							const std::string name = pwn::core::TrimLeft(argv[i], "-/");
 							const std::string val = i + 1 < argc ? argv[i + 1] : "";
-							CommandMap::iterator cmdi = cmd.find(name);
+							auto cmdi = cmd.find(name);
 							if(cmdi != cmd.end())
 							{
 								errors += cmdi->second(main, this);

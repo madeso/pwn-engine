@@ -8,6 +8,6 @@
 #define EXPECT_NE(lhs, rhs) REQUIRE(lhs != rhs)
 #define EXPECT_EQ(lhs, rhs) REQUIRE(lhs == rhs)
 #define EXPECT_TRUE(hs) REQUIRE(hs)
-#define EXCEPT_FALSE(hs) REQUIRE_FALSE(hs)
+#define EXPECT_FALSE(hs) REQUIRE_FALSE(hs)
 
 #endif  // FAKE_GTEST_H

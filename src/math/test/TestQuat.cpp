@@ -229,7 +229,7 @@ GTEST(Quat)
                 qa,
                 SlerpShortway(qIdentity(), 0.5f, qb));
     }
-}    
+}
 
 
 }

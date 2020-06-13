@@ -96,7 +96,7 @@ namespace math
                  equal(rhs.angle.inDegrees(), -lhs.angle.inDegrees()));
         return a || inv;
     }
-    
+
     std::ostream&
     operator<<(std::ostream& o, const vec2& t)
     {
@@ -111,7 +111,7 @@ namespace math
         return o;
     }
 
-    
+
     std::ostream&
     operator<<(std::ostream& o, const vec3& t)
     {

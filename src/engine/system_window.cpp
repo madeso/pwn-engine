@@ -163,7 +163,9 @@ namespace engine
                     static_cast<pwn::real>(window.getSize().y));
             //const math::vec2 movement( (i.GetMouseX()-math::X(center))/ math::X(size), (math::Y(center) - i.GetMouseY())/math::Y(size) ); // divide by size.y (height) as movement is measured in percenteage of window height
             const math::vec2 movement = CalculateSmartMovement(
-                    math::vec2(sf::Mouse::getPosition().x, sf::Mouse::getPosition().y),
+                    math::vec2(
+                            sf::Mouse::getPosition().x,
+                            sf::Mouse::getPosition().y),
                     size);
             /// @todo: make it so that is determined by desktop resolution and not game size
             imp.handleMouse(movement * 2);

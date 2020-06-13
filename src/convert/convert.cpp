@@ -44,7 +44,8 @@ namespace convert
         {
             return formatOveride;
         }
-        const pwn::string ext = boost::filesystem::path(inputfile).extension().c_str();
+        const pwn::string ext =
+                boost::filesystem::path(inputfile).extension().c_str();
 
         return SuggestFormat(ext);
     }
@@ -336,7 +337,8 @@ namespace convert
                     pwn::string adir = cd.animdir;
                     if (adir.empty())
                     {
-                        adir = (boost::filesystem::path(outdir) / fname).c_str();
+                        adir = (boost::filesystem::path(outdir) / fname)
+                                       .c_str();
                     };
 
                     {
@@ -345,7 +347,8 @@ namespace convert
                                 ae.animation,
                                 boost::filesystem::path(ae.name)
                                         .replace_extension("anim")
-                                        .filename().c_str());
+                                        .filename()
+                                        .c_str());
                     }
                 }
             }

@@ -32,14 +32,14 @@ namespace engine
         const VideoMode
         ToPwn(const sf::VideoMode& v)
         {
-            return VideoMode(v.Width, v.Height, v.BitsPerPixel, false);
+            return VideoMode(v.width, v.height, v.bitsPerPixel, false);
         }
     }
 
     bool
     VideoMode::isValid() const
     {
-        return ToSfml(*this).IsValid();
+        return ToSfml(*this).isValid();
     }
 
     namespace VideoModes
@@ -48,7 +48,7 @@ namespace engine
         List()
         {
             const std::vector<sf::VideoMode>& m =
-                    sf::VideoMode::GetFullscreenModes();
+                    sf::VideoMode::getFullscreenModes();
             std::vector<VideoMode> r(m.size());
             std::transform(m.begin(), m.end(), r.begin(), ToPwn);
             return r;
@@ -57,7 +57,7 @@ namespace engine
         const VideoMode
         Desktop()
         {
-            return ToPwn(sf::VideoMode::GetDesktopMode());
+            return ToPwn(sf::VideoMode::getDesktopMode());
         }
     }
 }

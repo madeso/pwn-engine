@@ -28,7 +28,7 @@ namespace engine
     namespace
     {
         pwn::engine::Key::Code
-        ToKey(sf::Key::Code k)
+        ToKey(sf::Keyboard k)
         {
             return static_cast<pwn::engine::Key::Code>(k);
         }
@@ -90,15 +90,15 @@ namespace engine
         {
             const int windowstyle = mode.fullscreen ? sf::Style::Fullscreen
                                                     : sf::Style::Titlebar;
-            window.Create(
+            window.create(
                     sf::VideoMode(mode.width, mode.height, mode.bits),
                     title.c_str(),
                     windowstyle);
             imp.display_add(id, this);
             doRemove = true;
 
-            window.EnableKeyRepeat(false);
-            window.ShowMouseCursor(false);
+            window.setKeyRepeatEnabled(false);
+            window.setMouseCursorVisible(false);
             // window.UseVerticalSync(true);
 
             // Indicates the quality of color, texture coordinate, and fog coordinate

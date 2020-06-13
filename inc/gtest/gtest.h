@@ -10,4 +10,6 @@
 #define EXPECT_TRUE(hs) REQUIRE(hs)
 #define EXPECT_FALSE(hs) REQUIRE_FALSE(hs)
 
+#define EXPECT_FLOAT_EQ(lhs, rhs) REQUIRE(lhs == Approx(rhs))
+
 #endif  // FAKE_GTEST_H

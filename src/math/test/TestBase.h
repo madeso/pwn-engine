@@ -22,6 +22,8 @@ namespace pwn
 		bool IsEqual(const rect& lhs, const rect& rhs);
 		bool IsEqual(const AxisAngle& lhs, const AxisAngle& rhs);
 
+		// todo(Gustav): transform to ostream output?
+		/*
 		::testing::AssertionResult vec2_equal_test(const char* a, const char* b, const vec2& d, const vec2& rhs);
 		::testing::AssertionResult point2_equal_test(const char* a, const char* b, const point2& d, const point2& rhs);
 		::testing::AssertionResult vec3_equal_test(const char* a, const char* b, const vec3& d, const vec3& rhs);
@@ -30,6 +32,7 @@ namespace pwn
 		::testing::AssertionResult mat44_equal_test(const char* a, const char* b, const mat44& lhs, const mat44& rhs);
 		::testing::AssertionResult rect_equal_test(const char* a, const char* b, const rect& lhs, const rect& rhs);
 		::testing::AssertionResult axisangle_equal_test(const char* a, const char* b, const AxisAngle& lhs, const AxisAngle& rhs);
+		*/
 	}
 }
 

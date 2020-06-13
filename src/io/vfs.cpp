@@ -3,7 +3,7 @@
 #include <boost/scoped_array.hpp>
 #include <pwn/core/stringutils.h>
 #include <pwn/core/str.h>
-#include <pwn/core/stringseperator.h>
+#include <pwn/core/StringSeperator.h>
 
 namespace pwn
 {

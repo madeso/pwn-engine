@@ -22,24 +22,10 @@ namespace math
                 equal(math::Y(d), math::Y(rhs));
     }
 
-    ::testing::AssertionResult&
-    operator<<(::testing::AssertionResult& o, const vec2& t)
-    {
-        o << "(" << math::X(t) << ", " << math::Y(t) << ")";
-        return o;
-    }
-
     bool
     IsEqual(const point2& d, const point2& rhs)
     {
         return equal(d.x(), rhs.x()) && equal(d.y(), rhs.y());
-    }
-
-    ::testing::AssertionResult&
-    operator<<(::testing::AssertionResult& o, const point2& t)
-    {
-        o << "(" << t.x() << ", " << t.y() << ")";
-        return o;
     }
 
     bool
@@ -50,13 +36,6 @@ namespace math
                 equal(math::Z(d), math::Z(rhs));
     }
 
-    ::testing::AssertionResult&
-    operator<<(::testing::AssertionResult& o, const vec3& t)
-    {
-        o << "(" << math::X(t) << ", " << math::Y(t) << ", " << math::Z(t)
-          << ")";
-        return o;
-    }
 
     bool
     IsEqual(const quat& lhs, const quat& rhs)
@@ -66,17 +45,6 @@ namespace math
                 1);  //, math::X(rhs)) && equal(math::Y(lhs), math::Y(rhs)) && equal(math::Z(lhs), math::Z(rhs)) && equal(math::W(lhs), math::W(rhs));
     }
 
-    ::testing::AssertionResult&
-    operator<<(::testing::AssertionResult& o, const quat& t)
-    {
-        std::stringstream ss;
-        ss.precision(5);
-        ss.setf(std::ios::fixed, std::ios::floatfield);
-        ss << "(" << math::X(t) << ", " << math::Y(t) << ", " << math::Z(t)
-           << ", " << math::W(t) << ")";
-        o << ss.str();
-        return o;
-    }
 
     bool
     IsEqual(const mat33& lhs, const mat33& rhs)
@@ -87,17 +55,6 @@ namespace math
                 return false;
             }
         return true;
-    }
-    ::testing::AssertionResult&
-    operator<<(::testing::AssertionResult& o, const mat33& m)
-    {
-        o << "( ";
-        for (int i = 0; i < 3 * 3; ++i)
-        {
-            o << m.data()[i] << " ";
-        }
-        o << ")";
-        return o;
     }
 
     bool
@@ -111,17 +68,6 @@ namespace math
         return true;
     }
 
-    ::testing::AssertionResult&
-    operator<<(::testing::AssertionResult& o, const mat44& m)
-    {
-        o << "( ";
-        for (int i = 0; i < 4 * 4; ++i)
-        {
-            o << m.data()[i] << " ";
-        }
-        o << ")";
-        return o;
-    }
 
     bool
     IsEqual(const rect& lhs, const rect& rhs)
@@ -130,13 +76,6 @@ namespace math
                 IsEqual(lhs.lowerRight, rhs.lowerRight);
     }
 
-    ::testing::AssertionResult&
-    operator<<(::testing::AssertionResult& o, const rect& t)
-    {
-        o << "(" << t.upperLeft.x() << ", " << t.upperLeft.y() << ", "
-          << t.lowerRight.x() << ", " << t.lowerRight.y() << ")";
-        return o;
-    }
 
     bool
     IsEqual(const AxisAngle& lhs, const AxisAngle& rhs)
@@ -155,7 +94,69 @@ namespace math
                  equal(rhs.angle.inDegrees(), -lhs.angle.inDegrees()));
         return a || inv;
     }
+    /*
+::testing::AssertionResult&
+    operator<<(::testing::AssertionResult& o, const vec2& t)
+    {
+        o << "(" << math::X(t) << ", " << math::Y(t) << ")";
+        return o;
+    }
 
+    ::testing::AssertionResult&
+    operator<<(::testing::AssertionResult& o, const point2& t)
+    {
+        o << "(" << t.x() << ", " << t.y() << ")";
+        return o;
+    }
+
+    
+    ::testing::AssertionResult&
+    operator<<(::testing::AssertionResult& o, const vec3& t)
+    {
+        o << "(" << math::X(t) << ", " << math::Y(t) << ", " << math::Z(t)
+          << ")";
+        return o;
+    }
+    ::testing::AssertionResult&
+    operator<<(::testing::AssertionResult& o, const quat& t)
+    {
+        std::stringstream ss;
+        ss.precision(5);
+        ss.setf(std::ios::fixed, std::ios::floatfield);
+        ss << "(" << math::X(t) << ", " << math::Y(t) << ", " << math::Z(t)
+           << ", " << math::W(t) << ")";
+        o << ss.str();
+        return o;
+    }
+    ::testing::AssertionResult&
+    operator<<(::testing::AssertionResult& o, const mat33& m)
+    {
+        o << "( ";
+        for (int i = 0; i < 3 * 3; ++i)
+        {
+            o << m.data()[i] << " ";
+        }
+        o << ")";
+        return o;
+    }
+    ::testing::AssertionResult&
+    operator<<(::testing::AssertionResult& o, const mat44& m)
+    {
+        o << "( ";
+        for (int i = 0; i < 4 * 4; ++i)
+        {
+            o << m.data()[i] << " ";
+        }
+        o << ")";
+        return o;
+    }
+    ::testing::AssertionResult&
+    operator<<(::testing::AssertionResult& o, const rect& t)
+    {
+        o << "(" << t.upperLeft.x() << ", " << t.upperLeft.y() << ", "
+          << t.lowerRight.x() << ", " << t.lowerRight.y() << ")";
+        return o;
+    }
     ::testing::AssertionResult&
     operator<<(::testing::AssertionResult& o, const AxisAngle& aa)
     {
@@ -262,5 +263,6 @@ namespace math
     {
         return equal_test(a, b, lhs, rhs);
     }
+    */
 }
 }

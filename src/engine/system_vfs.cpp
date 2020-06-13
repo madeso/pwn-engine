@@ -67,7 +67,7 @@ namespace engine
                                    .parent_path()
                                    .parent_path() /
                            "dummy.exe")
-                    .file_string();
+                    .c_str();
         }
     }
 

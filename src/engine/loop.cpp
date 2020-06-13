@@ -95,8 +95,8 @@ namespace engine
         sf::Clock clock;
         while (isRunning())
         {
-            const real delta = clock.GetElapsedTime();
-            clock.Reset();
+            const real delta = clock.getElapsedTime().asSeconds();
+            clock.restart();
             update(delta);
             render();
         }

@@ -140,7 +140,7 @@ namespace pwn
 							}
 							else
 							{
-								CommandArgMap::iterator cmdai = cmda.find(name);
+								auto cmdai = cmda.find(name);
 								if(cmdai != cmda.end())
 								{
 									errors += cmdai->second(main, this, val);

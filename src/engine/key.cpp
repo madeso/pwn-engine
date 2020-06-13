@@ -22,6 +22,7 @@ namespace engine
 
 #define KEY(k)                                                                 \
     case k: return #k
+                KEY(Undefined);
                 KEY(A);
                 KEY(B);
                 KEY(C);
@@ -70,18 +71,18 @@ namespace engine
                 KEY(Menu);
                 KEY(LBracket);
                 KEY(RBracket);
-                KEY(SemiColon);
+                KEY(Semicolon);
                 KEY(Comma);
                 KEY(Period);
                 KEY(Quote);
                 KEY(Slash);
-                KEY(BackSlash);
+                KEY(Backslash);
                 KEY(Tilde);
                 KEY(Equal);
-                KEY(Dash);
+                KEY(Hyphen);
                 KEY(Space);
-                KEY(Return);
-                KEY(Back);
+                KEY(Enter);
+                KEY(Backspace);
                 KEY(Tab);
                 KEY(PageUp);
                 KEY(PageDown);
@@ -123,7 +124,6 @@ namespace engine
                 KEY(F14);
                 KEY(F15);
                 KEY(Pause);
-
                 KEY(LMB);
                 KEY(RMB);
                 KEY(MMB);
@@ -192,18 +192,18 @@ namespace engine
                 KEY(Menu);
                 KEY(LBracket);
                 KEY(RBracket);
-                KEY(SemiColon);
+                KEY(Semicolon);
                 KEY(Comma);
                 KEY(Period);
                 KEY(Quote);
                 KEY(Slash);
-                KEY(BackSlash);
+                KEY(Backslash);
                 KEY(Tilde);
                 KEY(Equal);
-                KEY(Dash);
+                KEY(Hyphen);
                 KEY(Space);
-                KEY(Return);
-                KEY(Back);
+                KEY(Enter);
+                KEY(Backspace);
                 KEY(Tab);
                 KEY(PageUp);
                 KEY(PageDown);
@@ -245,7 +245,7 @@ namespace engine
                 KEY(F14);
                 KEY(F15);
                 KEY(Pause);
-
+                KEY(Unassigned);
                 KEY(LMB);
                 KEY(RMB);
                 KEY(MMB);

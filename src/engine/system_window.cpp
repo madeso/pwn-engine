@@ -28,7 +28,7 @@ namespace engine
     namespace
     {
         pwn::engine::Key::Code
-        ToKey(sf::Keyboard k)
+        ToKey(sf::Keyboard::Key k)
         {
             return static_cast<pwn::engine::Key::Code>(k);
         }
@@ -130,41 +130,40 @@ namespace engine
             {
                 imp.display_remove(id, this);
             }
-            window.ShowMouseCursor(true);
-            window.Close();
+            window.setMouseCursorVisible(true);
+            window.close();
         }
 
         void
         update()
         {
             sf::Event e;
-            while (window.GetEvent(e))
+            while (window.pollEvent(e))
             {
-                switch (e.Type)
+                switch (e.type)
                 {
                 case sf::Event::Closed: break;
                 case sf::Event::KeyPressed:
-                    imp.handleKey(ToKey(e.Key.Code), true);
+                    imp.handleKey(ToKey(e.key.code), true);
                     break;
                 case sf::Event::KeyReleased:
-                    imp.handleKey(ToKey(e.Key.Code), false);
+                    imp.handleKey(ToKey(e.key.code), false);
                     break;
                 case sf::Event::MouseButtonPressed:
-                    imp.handleKey(ToKey(e.MouseButton.Button), true);
+                    imp.handleKey(ToKey(e.mouseButton.button), true);
                     break;
                 case sf::Event::MouseButtonReleased:
-                    imp.handleKey(ToKey(e.MouseButton.Button), false);
+                    imp.handleKey(ToKey(e.mouseButton.button), false);
                     break;
                 }
             }
             Test_MouseMovement();
-            const sf::Input& i = window.GetInput();
             const math::vec2 size(
-                    static_cast<pwn::real>(window.GetWidth()),
-                    static_cast<pwn::real>(window.GetHeight()));
+                    static_cast<pwn::real>(window.getSize().x),
+                    static_cast<pwn::real>(window.getSize().y));
             //const math::vec2 movement( (i.GetMouseX()-math::X(center))/ math::X(size), (math::Y(center) - i.GetMouseY())/math::Y(size) ); // divide by size.y (height) as movement is measured in percenteage of window height
             const math::vec2 movement = CalculateSmartMovement(
-                    math::vec2(i.GetMouseX(), i.GetMouseY()),
+                    math::vec2(sf::Mouse::getPosition().x, sf::Mouse::getPosition().y),
                     size);
             /// @todo: make it so that is determined by desktop resolution and not game size
             imp.handleMouse(movement * 2);
@@ -173,16 +172,16 @@ namespace engine
         void
         resetMouse()
         {
-            window.SetCursorPosition(
-                    window.GetWidth() / 2,
-                    window.GetHeight() / 2);
+            sf::Mouse::setPosition(
+                    window.getSize().x / 2,
+                    window.getSize().y / 2);
         }
         void
         render(render::VirtualDisplay& world)
         {
-            window.SetActive();
-            world.render(window.GetWidth(), window.GetHeight());
-            window.Display();
+            window.setActive();
+            world.render(window.getSize().x, window.getSize().y);
+            window.display();
         }
 
     private:

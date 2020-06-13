@@ -6,14 +6,16 @@
 
 namespace pwn
 {
-	namespace render
-	{
-		/** returns glGetError() and outputs the result if fatal to some debug output
+namespace render
+{
+    /** returns glGetError() and outputs the result if fatal to some debug output
 		*/
-		GLenum glGetError_WithString();
-	}
+    GLenum
+    glGetError_WithString();
+}
 }
 
-#define pwnAssert_NoGLError() Assert( ::pwn::render::glGetError_WithString() == GL_NO_ERROR)
+#define pwnAssert_NoGLError()                                                  \
+    Assert(::pwn::render::glGetError_WithString() == GL_NO_ERROR)
 
 #endif

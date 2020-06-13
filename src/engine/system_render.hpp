@@ -3,11 +3,12 @@
 
 namespace pwn
 {
-	namespace engine
-	{
-		class Game;
-		void SystemInstall_Render(Game* game);
-	}
+namespace engine
+{
+    class Game;
+    void
+    SystemInstall_Render(Game* game);
+}
 }
 
 #endif

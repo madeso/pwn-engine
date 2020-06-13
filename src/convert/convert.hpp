@@ -7,27 +7,27 @@
 
 namespace pwn
 {
-	namespace convert
-	{
-		struct AnimationEntry
-		{
-			AnimationEntry(const mesh::Animation& a, const string& n="");
-			pwn::mesh::Animation animation;
-			pwn::string name;
-		};
+namespace convert
+{
+    struct AnimationEntry
+    {
+        AnimationEntry(const mesh::Animation& a, const string& n = "");
+        pwn::mesh::Animation animation;
+        pwn::string name;
+    };
 
-		typedef std::vector<AnimationEntry> AnimationList;
+    typedef std::vector<AnimationEntry> AnimationList;
 
-		struct Entry
-		{
-			Entry(const mesh::Builder& b, const string& n="");
-			pwn::mesh::Builder builder;
-			AnimationList animations;
-			pwn::string name;
-		};
+    struct Entry
+    {
+        Entry(const mesh::Builder& b, const string& n = "");
+        pwn::mesh::Builder builder;
+        AnimationList animations;
+        pwn::string name;
+    };
 
-		typedef std::vector<Entry> BuilderList;
-	}
+    typedef std::vector<Entry> BuilderList;
+}
 }
 
 #endif

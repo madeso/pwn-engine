@@ -2,15 +2,14 @@
 
 namespace pwn
 {
-	namespace render
-	{
-		Widget::Widget(const Dock& adock)
-			: dock(adock)
-		{
-		}
+namespace render
+{
+    Widget::Widget(const Dock& adock) : dock(adock)
+    {
+    }
 
-		Widget::~Widget()
-		{
-		}
-	}
+    Widget::~Widget()
+    {
+    }
+}
 }

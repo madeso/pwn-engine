@@ -4,39 +4,45 @@
 
 namespace pwn
 {
-	namespace render
-	{
-		namespace fse
-		{
-			BufferTarget::BufferTarget(const core::Ptree& el)
-				: width(el.get("width", 512))
-				, height(el.get("height", 512))
-			{
-			}
+namespace render
+{
+    namespace fse
+    {
+        BufferTarget::BufferTarget(const core::Ptree& el)
+            : width(el.get("width", 512))
+            , height(el.get("height", 512))
+        {
+        }
 
-			BufferTarget::~BufferTarget()
-			{
-			}
+        BufferTarget::~BufferTarget()
+        {
+        }
 
-			void BufferTarget::apply(Provider& a, World3* world, const RenderArgs& ra)
-			{
-				buffer->updateTexture(a, world, ra);
-			}
+        void
+        BufferTarget::apply(Provider& a, World3* world, const RenderArgs& ra)
+        {
+            buffer->updateTexture(a, world, ra);
+        }
 
-			void BufferTarget::link(Linker* usr)
-			{
-				buffer = createBuffer(getName(), width, height);
-			}
+        void
+        BufferTarget::link(Linker* usr)
+        {
+            buffer = createBuffer(getName(), width, height);
+        }
 
-			const string BufferTarget::getName() const
-			{
-				return getId();
-			}
+        const string
+        BufferTarget::getName() const
+        {
+            return getId();
+        }
 
-			string BufferTarget::toString() const
-			{
-				return core::Str() << Target::toString() << " targeting a buffer (" << width << "x" << height << ") named " << getName();
-			}
-		}
-	}
+        string
+        BufferTarget::toString() const
+        {
+            return core::Str()
+                    << Target::toString() << " targeting a buffer (" << width
+                    << "x" << height << ") named " << getName();
+        }
+    }
+}
 }

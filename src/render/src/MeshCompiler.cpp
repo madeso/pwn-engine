@@ -2,14 +2,14 @@
 
 namespace pwn
 {
-	namespace render
-	{
-		MeshCompiler::MeshCompiler()
-		{
-		}
+namespace render
+{
+    MeshCompiler::MeshCompiler()
+    {
+    }
 
-		MeshCompiler::~MeshCompiler()
-		{
-		}
-	}
+    MeshCompiler::~MeshCompiler()
+    {
+    }
+}
 }

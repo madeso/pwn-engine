@@ -7,103 +7,114 @@
 
 namespace pwn
 {
-	namespace component
-	{
-		///////////////////////////////////////////////////////////////////////////////////
-		// PopertyMap
+namespace component
+{
+    ///////////////////////////////////////////////////////////////////////////////////
+    // PopertyMap
 
-		PropertyMap::PropertyMap()
-		{
-			// empty
-		}
+    PropertyMap::PropertyMap()
+    {
+        // empty
+    }
 
-		PropertyMap::~PropertyMap()
-		{
-			// empty
-		}
+    PropertyMap::~PropertyMap()
+    {
+        // empty
+    }
 
-		void PropertyMap::add(const string& name, boost::shared_ptr<Property> prop)
-		{
-			map.insert(Map::value_type(name, prop));
-		}
+    void
+    PropertyMap::add(const string& name, boost::shared_ptr<Property> prop)
+    {
+        map.insert(Map::value_type(name, prop));
+    }
 
-		boost::shared_ptr<Property> PropertyMap::get(const string& name) const
-		{
-			Map::const_iterator r = map.find(name);
-			if(r == map.end())
-			{
-				throw "property not added";
-			}
+    boost::shared_ptr<Property>
+    PropertyMap::get(const string& name) const
+    {
+        Map::const_iterator r = map.find(name);
+        if (r == map.end())
+        {
+            throw "property not added";
+        }
 
-			return r->second;
-		}
+        return r->second;
+    }
 
-		///////////////////////////////////////////////////////////////////////////////////
-		// ComponentList
+    ///////////////////////////////////////////////////////////////////////////////////
+    // ComponentList
 
-		ComponentList::ComponentList()
-		{
-			// empty
-		}
+    ComponentList::ComponentList()
+    {
+        // empty
+    }
 
-		ComponentList::~ComponentList()
-		{
-			// empty
-		}
+    ComponentList::~ComponentList()
+    {
+        // empty
+    }
 
-		void ComponentList::add(boost::shared_ptr<Component> component)
-		{
-			list.push_back(component);
-		}
+    void
+    ComponentList::add(boost::shared_ptr<Component> component)
+    {
+        list.push_back(component);
+    }
 
-		void ComponentList::onEvent(const core::EnumValue& type, const EventArgs& args)
-		{
-			BOOST_FOREACH(boost::shared_ptr<Component> c, list)
-			{
-				if(c->shouldBeRemoved() == false)
-				{
-					c->onEvent(type, args);
-				}
-			}
-		}
+    void
+    ComponentList::onEvent(const core::EnumValue& type, const EventArgs& args)
+    {
+        BOOST_FOREACH (boost::shared_ptr<Component> c, list)
+        {
+            if (c->shouldBeRemoved() == false)
+            {
+                c->onEvent(type, args);
+            }
+        }
+    }
 
-		namespace
-		{
-			bool ShouldBeRemoved(boost::shared_ptr<Component> c)
-			{
-				return c->shouldBeRemoved();
-			}
-		}
+    namespace
+    {
+        bool
+        ShouldBeRemoved(boost::shared_ptr<Component> c)
+        {
+            return c->shouldBeRemoved();
+        }
+    }
 
-		void ComponentList::removePendingComponents()
-		{
-			list.erase(std::remove_if(list.begin(), list.end(), ShouldBeRemoved), list.end());
-		}
+    void
+    ComponentList::removePendingComponents()
+    {
+        list.erase(
+                std::remove_if(list.begin(), list.end(), ShouldBeRemoved),
+                list.end());
+    }
 
-		///////////////////////////////////////////////////////////////////////////////////
-		// Object
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Object
 
-		Object::Object()
-		{
-		}
+    Object::Object()
+    {
+    }
 
-		Object::~Object()
-		{
-		}
+    Object::~Object()
+    {
+    }
 
-		void Object::addComponent(boost::shared_ptr<Component> component)
-		{
-			components.add(component);
-		}
+    void
+    Object::addComponent(boost::shared_ptr<Component> component)
+    {
+        components.add(component);
+    }
 
-		void Object::addProperty(const string& name, boost::shared_ptr<Property> prop)
-		{
-			properties.add(name, prop);
-		}
+    void
+    Object::addProperty(const string& name, boost::shared_ptr<Property> prop)
+    {
+        properties.add(name, prop);
+    }
 
-		void Object::onEvent(const core::EnumValue& type, const EventArgs& args)
-		{
-			components.onEvent(type, args);
-		}
-	}
+    void
+    Object::onEvent(const core::EnumValue& type, const EventArgs& args)
+    {
+        components.onEvent(type, args);
+    }
+}
 }

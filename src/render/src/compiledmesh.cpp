@@ -2,14 +2,14 @@
 
 namespace pwn
 {
-	namespace render
-	{
-		CompiledMesh::CompiledMesh()
-		{
-		}
+namespace render
+{
+    CompiledMesh::CompiledMesh()
+    {
+    }
 
-		CompiledMesh::~CompiledMesh()
-		{
-		}
-	}
+    CompiledMesh::~CompiledMesh()
+    {
+    }
+}
 }

@@ -5,13 +5,18 @@
 
 namespace pwn
 {
-	namespace engine
-	{
-		class Game;
-		struct VideoMode;
+namespace engine
+{
+    class Game;
+    struct VideoMode;
 
-		void SystemInstall_Window(Game* game, const VideoMode& mode, const pwn::string& title, int id);
-	}
+    void
+    SystemInstall_Window(
+            Game* game,
+            const VideoMode& mode,
+            const pwn::string& title,
+            int id);
+}
 }
 
 #endif

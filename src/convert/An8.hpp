@@ -7,13 +7,16 @@
 
 namespace pwn
 {
-	namespace convert
-	{
-		namespace an8
-		{
-			void read(BuilderList* builders, const std::vector<pwn::string>& subobjects, const pwn::string& file);
-		}
-	}
+namespace convert
+{
+    namespace an8
+    {
+        void
+        read(BuilderList* builders,
+             const std::vector<pwn::string>& subobjects,
+             const pwn::string& file);
+    }
+}
 }
 
 #endif

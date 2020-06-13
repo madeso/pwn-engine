@@ -8,19 +8,20 @@
 
 namespace pwn
 {
-	namespace engine
-	{
-		class File
-		{
-		public:
-			explicit File(PHYSFS_file* file);
-			~File();
+namespace engine
+{
+    class File
+    {
+    public:
+        explicit File(PHYSFS_file* file);
+        ~File();
 
-			const std::size_t loadToMemory(boost::scoped_array<byte>* memory);
+        const std::size_t
+        loadToMemory(boost::scoped_array<byte>* memory);
 
-			PHYSFS_file* file;
-		};
-	}
+        PHYSFS_file* file;
+    };
+}
 }
 
 #endif

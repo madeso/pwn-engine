@@ -5,41 +5,48 @@
 
 namespace pwn
 {
-	namespace render
-	{
-		namespace fse
-		{
-			RenderFullscreenProvider::RenderFullscreenProvider(const core::Ptree& el, const string& file)
-				: Provider(el, file)
-			{
-			}
+namespace render
+{
+    namespace fse
+    {
+        RenderFullscreenProvider::RenderFullscreenProvider(
+                const core::Ptree& el,
+                const string& file)
+            : Provider(el, file)
+        {
+        }
 
-			RenderFullscreenProvider::~RenderFullscreenProvider()
-			{
-			}
+        RenderFullscreenProvider::~RenderFullscreenProvider()
+        {
+        }
 
-			void RenderFullscreenProvider::doProvide(World3* world, const RenderArgs& ra)
-			{
-				Shader::Bind(shader);
-				callCommands(); // lets call the commands
-				RenderFullscreenQuad(0, ra.width, ra.height);
-				Shader::Unbind(shader);
-			}
+        void
+        RenderFullscreenProvider::doProvide(World3* world, const RenderArgs& ra)
+        {
+            Shader::Bind(shader);
+            callCommands();  // lets call the commands
+            RenderFullscreenQuad(0, ra.width, ra.height);
+            Shader::Unbind(shader);
+        }
 
-			void RenderFullscreenProvider::doLink(Linker* user)
-			{
-				denyAutocallOfCommands(); // call the commands ourself
-			}
+        void
+        RenderFullscreenProvider::doLink(Linker* user)
+        {
+            denyAutocallOfCommands();  // call the commands ourself
+        }
 
-			void RenderFullscreenProvider::doBind(Binder* bd)
-			{
-			}
+        void
+        RenderFullscreenProvider::doBind(Binder* bd)
+        {
+        }
 
-			const string RenderFullscreenProvider::toString() const
-			{
-				// todo: add shader to description?
-				return Provider::toString() + " renders fullscreen with " + (shader.get() ? "shader" : " no shader");
-			}
-		}
-	}
+        const string
+        RenderFullscreenProvider::toString() const
+        {
+            // todo: add shader to description?
+            return Provider::toString() + " renders fullscreen with " +
+                    (shader.get() ? "shader" : " no shader");
+        }
+    }
+}
 }

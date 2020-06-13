@@ -3,16 +3,18 @@
 
 namespace pwn
 {
-	namespace engine
-	{
-		class Loop;
+namespace engine
+{
+    class Loop;
 
-		namespace ActiveLoop
-		{
-			Loop& Get();
-			bool Has();
-		}
-	}
+    namespace ActiveLoop
+    {
+        Loop&
+        Get();
+        bool
+        Has();
+    }
+}
 }
 
 #endif

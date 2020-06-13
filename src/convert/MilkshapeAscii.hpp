@@ -6,21 +6,22 @@
 
 namespace pwn
 {
-	namespace mesh
-	{
-		class Animation;
-	}
+namespace mesh
+{
+    class Animation;
+}
 
-	namespace convert
-	{
-		namespace milkshape
-		{
-			namespace ascii
-			{
-				void Read(BuilderList* builders, const pwn::string& file);
-			}
-		}
-	}
+namespace convert
+{
+    namespace milkshape
+    {
+        namespace ascii
+        {
+            void
+            Read(BuilderList* builders, const pwn::string& file);
+        }
+    }
+}
 }
 
 #endif

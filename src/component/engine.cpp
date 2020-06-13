@@ -2,7 +2,7 @@
 
 namespace pwn
 {
-	namespace component
-	{
-	}
+namespace component
+{
+}
 }

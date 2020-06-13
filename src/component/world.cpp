@@ -6,42 +6,46 @@
 
 namespace events
 {
-	pwnDeclareEventType(Update);
-	pwnDeclareEventType(Render);
+pwnDeclareEventType(Update);
+pwnDeclareEventType(Render);
 }
 
 namespace pwn
 {
-	namespace component
-	{
-		World::World()
-		{
-		}
-		World::~World()
-		{
-		}
+namespace component
+{
+    World::World()
+    {
+    }
+    World::~World()
+    {
+    }
 
-		void World::add(ObjectPtr o)
-		{
-			objects.push_back(o);
-		}
+    void
+    World::add(ObjectPtr o)
+    {
+        objects.push_back(o);
+    }
 
-		void World::update(real delta)
-		{
-			sendEvent(events::Update, EventArgs() << property::CreateReal(delta));
-		}
+    void
+    World::update(real delta)
+    {
+        sendEvent(events::Update, EventArgs() << property::CreateReal(delta));
+    }
 
-		void World::render()
-		{
-			sendEvent(events::Render, EventArgs());
-		}
+    void
+    World::render()
+    {
+        sendEvent(events::Render, EventArgs());
+    }
 
-		void World::sendEvent(const core::EnumValue& type, const EventArgs& args)
-		{
-			BOOST_FOREACH(ObjectPtr & o, objects)
-			{
-				o->onEvent(type, args);
-			}
-		}
-	}
+    void
+    World::sendEvent(const core::EnumValue& type, const EventArgs& args)
+    {
+        BOOST_FOREACH (ObjectPtr& o, objects)
+        {
+            o->onEvent(type, args);
+        }
+    }
+}
 }

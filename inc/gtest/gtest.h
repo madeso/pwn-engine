@@ -11,4 +11,3 @@
 #define EXCEPT_FALSE(hs) REQUIRE_FALSE(hs)
 
 #endif  // FAKE_GTEST_H
-

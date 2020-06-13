@@ -7,48 +7,56 @@
 
 namespace pwn
 {
-	namespace render
-	{
-		namespace fse
-		{
-			BindBufferCommand::BindBufferCommand(const core::Ptree& el, Provider* prov)
-				: Command(el, prov)
-				, position(el.get("position", -1))
-				, name(el.get<string>("buffer"))
-			{
-			}
+namespace render
+{
+    namespace fse
+    {
+        BindBufferCommand::BindBufferCommand(
+                const core::Ptree& el,
+                Provider* prov)
+            : Command(el, prov)
+            , position(el.get("position", -1))
+            , name(el.get<string>("buffer"))
+        {
+        }
 
-			BindBufferCommand::~BindBufferCommand()
-			{
-			}
+        BindBufferCommand::~BindBufferCommand()
+        {
+        }
 
-			void BindBufferCommand::apply()
-			{
-				buffer->bindTexture(position);
-			}
+        void
+        BindBufferCommand::apply()
+        {
+            buffer->bindTexture(position);
+        }
 
-			std::vector<Provider*> BindBufferCommand::getDependencies()
-			{
-				std::vector<Provider*> ret;
-				ret.push_back(targ->getProvider());
-				return ret;
-			}
+        std::vector<Provider*>
+        BindBufferCommand::getDependencies()
+        {
+            std::vector<Provider*> ret;
+            ret.push_back(targ->getProvider());
+            return ret;
+        }
 
-			const string BindBufferCommand::toString() const
-			{
-				return core::Str() << Command::toString() << " who binds buffer " << name << " to " << position;
-			}
+        const string
+        BindBufferCommand::toString() const
+        {
+            return core::Str() << Command::toString() << " who binds buffer "
+                               << name << " to " << position;
+        }
 
-			void BindBufferCommand::doLink(Linker* user)
-			{
-				buffer = createBuffer(name);
-				targ = user->getTarget(name);
-			}
+        void
+        BindBufferCommand::doLink(Linker* user)
+        {
+            buffer = createBuffer(name);
+            targ = user->getTarget(name);
+        }
 
-			void BindBufferCommand::doBind(Binder* bd)
-			{
-				bd->reference(buffer);
-			}
-		}
-	}
+        void
+        BindBufferCommand::doBind(Binder* bd)
+        {
+            bd->reference(buffer);
+        }
+    }
+}
 }

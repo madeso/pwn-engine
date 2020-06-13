@@ -6,17 +6,21 @@
 
 namespace pwn
 {
-	namespace convert
-	{
-		namespace obj
-		{
-			struct VoidVoidCallback
-			{
-				virtual void perform() = 0;
-			};
-			void read(BuilderList* builders, const std::string& file, VoidVoidCallback& cb);
-		}
-	}
+namespace convert
+{
+    namespace obj
+    {
+        struct VoidVoidCallback
+        {
+            virtual void
+            perform() = 0;
+        };
+        void
+        read(BuilderList* builders,
+             const std::string& file,
+             VoidVoidCallback& cb);
+    }
+}
 }
 
 #endif

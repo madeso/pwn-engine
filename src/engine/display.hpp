@@ -3,24 +3,25 @@
 
 namespace pwn
 {
-	namespace render
-	{
-		class VirtualDisplay;
-	}
+namespace render
+{
+    class VirtualDisplay;
+}
 
-	namespace engine
-	{
-		/** basic interface for diplaying something on-screen
+namespace engine
+{
+    /** basic interface for diplaying something on-screen
 		*/
-		class Display
-		{
-		public:
-			Display();
-			virtual ~Display();
+    class Display
+    {
+    public:
+        Display();
+        virtual ~Display();
 
-			virtual void render(render::VirtualDisplay& world) = 0;
-		};
-	}
+        virtual void
+        render(render::VirtualDisplay& world) = 0;
+    };
+}
 }
 
 #endif

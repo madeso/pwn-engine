@@ -4,14 +4,14 @@
 
 namespace pwn
 {
-	namespace engine
-	{
-		System::System()
-		{
-		}
+namespace engine
+{
+    System::System()
+    {
+    }
 
-		System::~System()
-		{
-		}
-	}
+    System::~System()
+    {
+    }
+}
 }

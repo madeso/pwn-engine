@@ -5,25 +5,29 @@
 
 namespace pwn
 {
-	namespace render
-	{
-		namespace fse
-		{
-			ProviderPtr Providers_Create(const string& name, const core::Ptree& x, const string& file)
-			{
-				if(name == "fullscreen")
-				{
-					return ProviderPtr(new RenderFullscreenProvider(x, file));
-				}
-				else if(name == "world")
-				{
-					return ProviderPtr(new RenderWorldProvider(x, file));
-				}
-				else
-				{
-					throw FseException(name + " is not a known provider");
-				}
-			}
-		}
-	}
+namespace render
+{
+    namespace fse
+    {
+        ProviderPtr
+        Providers_Create(
+                const string& name,
+                const core::Ptree& x,
+                const string& file)
+        {
+            if (name == "fullscreen")
+            {
+                return ProviderPtr(new RenderFullscreenProvider(x, file));
+            }
+            else if (name == "world")
+            {
+                return ProviderPtr(new RenderWorldProvider(x, file));
+            }
+            else
+            {
+                throw FseException(name + " is not a known provider");
+            }
+        }
+    }
+}
 }

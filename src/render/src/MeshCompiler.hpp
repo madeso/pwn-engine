@@ -6,17 +6,18 @@
 
 namespace pwn
 {
-	namespace render
-	{
-		class MeshCompiler
-		{
-		public:
-			MeshCompiler();
-			virtual ~MeshCompiler();
+namespace render
+{
+    class MeshCompiler
+    {
+    public:
+        MeshCompiler();
+        virtual ~MeshCompiler();
 
-			virtual CompiledMesh* compile(const mesh::Mesh::TriList& tridata) = 0;
-		};
-	}
+        virtual CompiledMesh*
+        compile(const mesh::Mesh::TriList& tridata) = 0;
+    };
+}
 }
 
 #endif

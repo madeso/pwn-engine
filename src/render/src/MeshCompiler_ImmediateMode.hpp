@@ -4,10 +4,11 @@
 
 namespace pwn
 {
-	namespace render
-	{
-		MeshCompiler* CreateMeshCompiler_ImmediateMode(const mesh::Mesh& mesh);
-	}
+namespace render
+{
+    MeshCompiler*
+    CreateMeshCompiler_ImmediateMode(const mesh::Mesh& mesh);
+}
 }
 
 #endif

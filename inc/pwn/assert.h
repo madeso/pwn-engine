@@ -11,22 +11,32 @@
 #define pwnBreakpoint() assert(false)
 #endif
 
-#define Assert(x) do { if( (x)==0 && ::pwn::assert::ShouldBreak(#x) ) { pwnBreakpoint(); } } while( ::pwn::assert::kFalse() )
+#define Assert(x)                                                              \
+    do                                                                         \
+    {                                                                          \
+        if ((x) == 0 && ::pwn::assert::ShouldBreak(#x))                        \
+        {                                                                      \
+            pwnBreakpoint();                                                   \
+        }                                                                      \
+    } while (::pwn::assert::kFalse())
 
 namespace pwn
 {
-	namespace assert
-	{
-		enum AssertAction
-		{
-		   AlwaysBreak
-		   , AlwaysThrow
-		};
+namespace assert
+{
+    enum AssertAction
+    {
+        AlwaysBreak,
+        AlwaysThrow
+    };
 
-		bool kFalse();
-		bool ShouldBreak(const std::string& expression);
-		void Init(AssertAction aa);
-	}
+    bool
+    kFalse();
+    bool
+    ShouldBreak(const std::string& expression);
+    void
+    Init(AssertAction aa);
+}
 }
 
 #endif

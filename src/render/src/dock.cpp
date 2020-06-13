@@ -3,21 +3,27 @@
 
 namespace pwn
 {
-	namespace render
-	{
-		Dock Dock::Fill()
-		{
-			Dock fill;
-			return fill;
-		}
+namespace render
+{
+    Dock
+    Dock::Fill()
+    {
+        Dock fill;
+        return fill;
+    }
 
-		math::rect Dock::getRect(int width, int height) const
-		{
-			return math::FromLrud(0, static_cast<pwn::real>(width), 0, static_cast<pwn::real>(-height));
-		}
+    math::rect
+    Dock::getRect(int width, int height) const
+    {
+        return math::FromLrud(
+                0,
+                static_cast<pwn::real>(width),
+                0,
+                static_cast<pwn::real>(-height));
+    }
 
-		Dock::Dock()
-		{
-		}
-	}
+    Dock::Dock()
+    {
+    }
+}
 }

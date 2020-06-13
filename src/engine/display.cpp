@@ -4,14 +4,14 @@
 
 namespace pwn
 {
-	namespace engine
-	{
-		Display::Display()
-		{
-		}
+namespace engine
+{
+    Display::Display()
+    {
+    }
 
-		Display::~Display()
-		{
-		}
-	}
+    Display::~Display()
+    {
+    }
+}
 }

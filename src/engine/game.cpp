@@ -5,26 +5,27 @@
 
 namespace pwn
 {
-	namespace engine
-	{
-		Game::Game()
-			: imp(new GameImp())
-		{
-		}
+namespace engine
+{
+    Game::Game() : imp(new GameImp())
+    {
+    }
 
-		Game::~Game()
-		{
-			imp.reset();
-		}
+    Game::~Game()
+    {
+        imp.reset();
+    }
 
-		void Game::install(System* system)
-		{
-			imp->install(system);
-		}
+    void
+    Game::install(System* system)
+    {
+        imp->install(system);
+    }
 
-		GameImp& Game::getImp()
-		{
-			return *imp;
-		}
-	}
+    GameImp&
+    Game::getImp()
+    {
+        return *imp;
+    }
+}
 }

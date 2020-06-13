@@ -2,14 +2,14 @@
 
 namespace pwn
 {
-	namespace component
-	{
-		Property::Property()
-		{
-		}
+namespace component
+{
+    Property::Property()
+    {
+    }
 
-		Property::~Property()
-		{
-		}
-	}
+    Property::~Property()
+    {
+    }
+}
 }

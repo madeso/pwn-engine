@@ -3,20 +3,23 @@
 
 namespace pwn
 {
-	namespace engine
-	{
-		class System
-		{
-		public:
-			System();
-			virtual ~System();
+namespace engine
+{
+    class System
+    {
+    public:
+        System();
+        virtual ~System();
 
-			virtual void update() = 0;
-		private:
-			System(const System&);
-			System& operator=(const System&);
-		};
-	}
+        virtual void
+        update() = 0;
+
+    private:
+        System(const System&);
+        System&
+        operator=(const System&);
+    };
+}
 }
 
 #endif

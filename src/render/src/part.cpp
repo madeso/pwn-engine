@@ -2,14 +2,14 @@
 
 namespace pwn
 {
-	namespace render
-	{
-		Part::Part()
-		{
-		}
+namespace render
+{
+    Part::Part()
+    {
+    }
 
-		Part::~Part()
-		{
-		}
-	}
+    Part::~Part()
+    {
+    }
+}
 }

@@ -11,122 +11,145 @@
 
 namespace pwn
 {
-	namespace engine
-	{
-		namespace // local
-		{
-			void ThrowPhysFsError()
-			{
-				const char* error = PHYSFS_getLastError();
-				Assert(error);
-				const std::string message = error;
-				throw message;
-			}
+namespace engine
+{
+    namespace  // local
+    {
+        void
+        ThrowPhysFsError()
+        {
+            const char* error = PHYSFS_getLastError();
+            Assert(error);
+            const std::string message = error;
+            throw message;
+        }
 
-			bool& gPhysFsCreated()
-			{
-				static bool created = false;
-				return created;
-			}
-		}
+        bool&
+        gPhysFsCreated()
+        {
+            static bool created = false;
+            return created;
+        }
+    }
 
-		struct PhysFsStarter
-		{
-			bool deinitInDestructor;
+    struct PhysFsStarter
+    {
+        bool deinitInDestructor;
 
-			PhysFsStarter(const pwn::string& argv0)
-				: deinitInDestructor(false)
-			{
-				Assert(gPhysFsCreated() == false);
-				const int result = PHYSFS_init(argv0.c_str());
-				deinitInDestructor = true;
-				if(result == 0)
-				{
-					ThrowPhysFsError();
-				}
-			}
+        PhysFsStarter(const pwn::string& argv0) : deinitInDestructor(false)
+        {
+            Assert(gPhysFsCreated() == false);
+            const int result = PHYSFS_init(argv0.c_str());
+            deinitInDestructor = true;
+            if (result == 0)
+            {
+                ThrowPhysFsError();
+            }
+        }
 
-			~PhysFsStarter()
-			{
-				if(deinitInDestructor)
-				{
-					PHYSFS_deinit();
-				}
-			}
-		};
+        ~PhysFsStarter()
+        {
+            if (deinitInDestructor)
+            {
+                PHYSFS_deinit();
+            }
+        }
+    };
 
-		namespace // local
-		{
-			const pwn::string GetParent(const pwn::string& app)
-			{
-				// system_complete solves relative paths we get from argv[0] and physfs seems give bad folders and data when it revieves them
-				return boost::filesystem::system_complete(boost::filesystem::path(app).parent_path().parent_path() / "dummy.exe").file_string();
-			}
-		}
+    namespace  // local
+    {
+        const pwn::string
+        GetParent(const pwn::string& app)
+        {
+            // system_complete solves relative paths we get from argv[0] and physfs seems give bad folders and data when it revieves them
+            return boost::filesystem::system_complete(
+                           boost::filesystem::path(app)
+                                   .parent_path()
+                                   .parent_path() /
+                           "dummy.exe")
+                    .file_string();
+        }
+    }
 
-		class System_Vfs : public System
-		{
-		public:
-			System_Vfs(const pwn::string& argv0, const pwn::string& company, const pwn::string& app)
-			{
-				{
-					const pwn::string parentdir = GetParent(argv0);
-					PhysFsStarter start(parentdir);
-					const int result = PHYSFS_setSaneConfig(company.c_str(), app.c_str(), "vfs", 0, 0); // ignore cd-rom, append archives to search-list
-					if(result == 0)
-					{
-						ThrowPhysFsError();
-					}
+    class System_Vfs : public System
+    {
+    public:
+        System_Vfs(
+                const pwn::string& argv0,
+                const pwn::string& company,
+                const pwn::string& app)
+        {
+            {
+                const pwn::string parentdir = GetParent(argv0);
+                PhysFsStarter start(parentdir);
+                const int result = PHYSFS_setSaneConfig(
+                        company.c_str(),
+                        app.c_str(),
+                        "vfs",
+                        0,
+                        0);  // ignore cd-rom, append archives to search-list
+                if (result == 0)
+                {
+                    ThrowPhysFsError();
+                }
 
-					start.deinitInDestructor = false;
-				}
-				gPhysFsCreated() = true;
-			}
+                start.deinitInDestructor = false;
+            }
+            gPhysFsCreated() = true;
+        }
 
-			~System_Vfs()
-			{
-				PHYSFS_deinit();
-				gPhysFsCreated() = false;
-			}
+        ~System_Vfs()
+        {
+            PHYSFS_deinit();
+            gPhysFsCreated() = false;
+        }
 
-			void update()
-			{
-				// nothing to do
-			}
-		};
+        void
+        update()
+        {
+            // nothing to do
+        }
+    };
 
-		namespace
-		{
-			std::vector<pwn::string> FilesSeen(const pwn::string& dir)
-			{
-				std::vector<pwn::string> files;
-				char** rc = PHYSFS_enumerateFiles(dir.c_str());
-				char** i;
+    namespace
+    {
+        std::vector<pwn::string>
+        FilesSeen(const pwn::string& dir)
+        {
+            std::vector<pwn::string> files;
+            char** rc = PHYSFS_enumerateFiles(dir.c_str());
+            char** i;
 
-				for(i = rc; *i != NULL; i++)
-				{
-					files.push_back(*i);
-				}
+            for (i = rc; *i != NULL; i++)
+            {
+                files.push_back(*i);
+            }
 
-				PHYSFS_freeList(rc);
+            PHYSFS_freeList(rc);
 
-				return files;
-			}
+            return files;
+        }
 
-			void WriteFilesSeen()
-			{
-				std::vector<pwn::string> root = FilesSeen("");
-			}
-		}
+        void
+        WriteFilesSeen()
+        {
+            std::vector<pwn::string> root = FilesSeen("");
+        }
+    }
 
-		void SystemInstall_Vfs(Game* game, const pwn::string& argv0, const pwn::string& company, const pwn::string& app)
-		{
-			game->install(new System_Vfs(argv0, company, app));
+    void
+    SystemInstall_Vfs(
+            Game* game,
+            const pwn::string& argv0,
+            const pwn::string& company,
+            const pwn::string& app)
+    {
+        game->install(new System_Vfs(argv0, company, app));
 
-			WriteFilesSeen();
-		}
+        WriteFilesSeen();
+    }
 
-		/*
+    /*
 		FMOD_RESULT F_CALLBACK Open(const char *name, int unicode, unsigned int *filesize, void **handle, void **userdata) {
 			if (name) {
 
@@ -212,5 +235,5 @@ namespace pwn
 				// A buffer of 0 means all reads go directly to the pointer specified. 2048 bytes is the size of a CD sector on most CD ISO formats so it is chosen as the default, for optimal reading speed from CD media.
 				test(mSystem->setFileSystem(Open, Close, Read, Seek, 2048), "setting file system");
 			*/
-	}
+}
 }

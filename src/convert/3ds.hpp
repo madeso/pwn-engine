@@ -6,13 +6,14 @@
 
 namespace pwn
 {
-	namespace convert
-	{
-		namespace studio3ds
-		{
-			void read(BuilderList* builders, const pwn::string& file);
-		}
-	}
+namespace convert
+{
+    namespace studio3ds
+    {
+        void
+        read(BuilderList* builders, const pwn::string& file);
+    }
+}
 }
 
 #endif

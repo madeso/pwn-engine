@@ -9,34 +9,39 @@
 
 namespace pwn
 {
-	namespace render
-	{
-		WorldWithCameraBoundObject3::WorldWithCameraBoundObject3(ActorPtr a, World3::Ptr w)
-			: WorldWith3(w)
-			, actor(a)
-		{
-		}
+namespace render
+{
+    WorldWithCameraBoundObject3::WorldWithCameraBoundObject3(
+            ActorPtr a,
+            World3::Ptr w)
+        : WorldWith3(w)
+        , actor(a)
+    {
+    }
 
-		Camera MoveToOrigo(const Camera& camera)
-		{
-			Camera c = camera;
-			c.position = math::Origo3();
-			return c;
-		}
+    Camera
+    MoveToOrigo(const Camera& camera)
+    {
+        Camera c = camera;
+        c.position = math::Origo3();
+        return c;
+    }
 
-		void WorldWithCameraBoundObject3::render(const RenderArgs& r) const
-		{
-			RenderList list(true); // todo: move to pimpl or provide a render direct interface to the actor..?
-			CompiledCamera cc(MoveToOrigo(r.camera));
-			list.begin();
-			actor->render(&list, cc);
-			list.end(false);
+    void
+    WorldWithCameraBoundObject3::render(const RenderArgs& r) const
+    {
+        RenderList list(
+                true);  // todo: move to pimpl or provide a render direct interface to the actor..?
+        CompiledCamera cc(MoveToOrigo(r.camera));
+        list.begin();
+        actor->render(&list, cc);
+        list.end(false);
 
-			pwnAssert_NoGLError();
-			glClear(GL_DEPTH_BUFFER_BIT);
-			pwnAssert_NoGLError();
+        pwnAssert_NoGLError();
+        glClear(GL_DEPTH_BUFFER_BIT);
+        pwnAssert_NoGLError();
 
-			WorldWith3::render(r);
-		}
-	}
+        WorldWith3::render(r);
+    }
+}
 }

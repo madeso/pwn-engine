@@ -8,13 +8,14 @@
 
 namespace pwn
 {
-	namespace engine
-	{
-		void InstallDefaultSystems(Game* game, const Startup& s)
-		{
-			SystemInstall_Vfs(game, s.argv0, s.company, s.app);
-			SystemInstall_Window(game, s.mode, s.title, 0);
-			SystemInstall_Render(game);
-		}
-	}
+namespace engine
+{
+    void
+    InstallDefaultSystems(Game* game, const Startup& s)
+    {
+        SystemInstall_Vfs(game, s.argv0, s.company, s.app);
+        SystemInstall_Window(game, s.mode, s.title, 0);
+        SystemInstall_Render(game);
+    }
+}
 }

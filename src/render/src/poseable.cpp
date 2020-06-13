@@ -3,11 +3,10 @@
 
 namespace pwn
 {
-	namespace render
-	{
-		Poseable::Poseable()
-			: pose()
-		{
-		}
-	}
+namespace render
+{
+    Poseable::Poseable() : pose()
+    {
+    }
+}
 }

@@ -8,29 +8,31 @@
 
 namespace pwn
 {
-	namespace engine
-	{
-		class System_Render : public System
-		{
-		public:
-			System_Render()
-			{
-			}
+namespace engine
+{
+    class System_Render : public System
+    {
+    public:
+        System_Render()
+        {
+        }
 
-			~System_Render()
-			{
-			}
+        ~System_Render()
+        {
+        }
 
-			void update()
-			{
-			}
+        void
+        update()
+        {
+        }
 
-			render::Engine engine;
-		};
+        render::Engine engine;
+    };
 
-		void SystemInstall_Render(Game* game)
-		{
-			game->install(new System_Render());
-		}
-	}
+    void
+    SystemInstall_Render(Game* game)
+    {
+        game->install(new System_Render());
+    }
+}
 }

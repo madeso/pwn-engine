@@ -9,6 +9,8 @@
 #include "pwn/core/enum.h"
 #include "pwn/number.h"
 
+#include <boost/bind.hpp>
+
 
 namespace pwn
 {

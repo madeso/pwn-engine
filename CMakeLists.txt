@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.1.0)
 project(pwn)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -76,6 +76,7 @@ message("will place builds at ${PWN_DIST_FOLDER}")
 
 include_directories(inc)
 include_directories(external)
+include_directories(external/catch)
 include_directories(external/cml-1_0_2)
 include_directories(${Boost_INCLUDE_DIRS})
 

@@ -12,8 +12,8 @@ namespace pwn
 	{
 		const pwn::string& kSpaceCharacters();
 
-		void SplitString(const pwn::string& stringToSplit, std::vector<pwn::string>* result, char delimiterString);
-		std::vector<pwn::string> SplitString(const pwn::string& stringToSplit, char delimiterString);
+		void SplitString(const pwn::string& stringToSplit, std::vector<pwn::string>* result, const pwn::string& delimiterString);
+		std::vector<pwn::string> SplitString(const pwn::string& stringToSplit, const pwn::string& delimiterString);
 		pwn::string TrimRight(const pwn::string& stringToTrim, const pwn::string& trimCharacters = kSpaceCharacters());
 		pwn::string TrimLeft(const pwn::string& stringToTrim, const pwn::string& trimCharacters = kSpaceCharacters());
 		pwn::string Trim(const pwn::string& stringToTrim, const pwn::string& trimCharacters = kSpaceCharacters());

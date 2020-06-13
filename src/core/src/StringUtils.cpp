@@ -9,7 +9,6 @@
 #include <boost/tokenizer.hpp>
 #include <boost/smart_ptr.hpp>
 #include <cstring>
-#include <algorithm>
 
 namespace pwn
 {
@@ -21,34 +20,20 @@ namespace pwn
 			return space;
 		}
 
-
-        // from euph
-        template <typename Out>
-        void
-        Split(const std::string& s, char delim, Out result)
-        {
-            std::stringstream ss(s);
-            std::string       item;
-            while(std::getline(ss, item, delim))
-            {
-                *(result++) = item;
-            }
-        }
-
-
-		void SplitString(const pwn::string& stringToSplit, std::vector<pwn::string>* result, char delim)
+		void SplitString(const pwn::string& stringToSplit, std::vector<pwn::string>* result, const pwn::string& delimiterString)
 		{
-            *result = SplitString(stringToSplit, delim);
+			Assert(result);
+			boost::char_separator<pwn::tchar> sep(delimiterString.c_str());
+			boost::tokenizer< boost::char_separator<pwn::tchar> > tok(stringToSplit, sep);
+			std::copy(tok.begin(), tok.end(), std::back_inserter(*result));
 		}
 
-
-        std::vector<std::string>
-        SplitString(const pwn::string& s, char delim)
-        {
-            std::vector<std::string> elems;
-            Split(s, delim, std::back_inserter(elems));
-            return elems;
-        }
+		std::vector<pwn::string> SplitString(const pwn::string& stringToSplit, const pwn::string& delimiterString)
+		{
+			std::vector<pwn::string> temp;
+			SplitString(stringToSplit, &temp, delimiterString);
+			return temp;
+		}
 
 		pwn::string TrimRight(const pwn::string& stringToTrim, const pwn::string& trimCharacters)
 		{

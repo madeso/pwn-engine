@@ -187,11 +187,24 @@ public:
 int
 main(int, char** argv)
 {
+    try
     {
         Game game;
         InstallDefaultSystems(
                 &game,
                 Startup(argv[0], "entsoft", "survivors", "Survivors!"));
         EasyLoop(&game).loop();
+    }
+    catch(const std::string& err)
+    {
+        std::cout << "Error: " << err <<"\n";
+    }
+    catch(const char* const err)
+    {
+        std::cout << "Error: " << err <<"\n";
+    }
+    catch(...)
+    {
+        std::cout << "Unknown error\n";
     }
 }

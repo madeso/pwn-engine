@@ -46,8 +46,7 @@ namespace engine
     VfsTexturePool2::doLoad(core::IdPool* pool, const string& filename)
     {
         boost::scoped_array<byte> memory;
-        const std::size_t size =
-                File(filename, PHYSFS_openRead(filename.c_str())).loadToMemory(&memory);
+        const std::size_t size = loadFileToMemory(filename, &memory);
         boost::shared_ptr<render::Texture2> tex(
                 new render::Texture2(pool, true));
         int width = -1;

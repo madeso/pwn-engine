@@ -5,156 +5,175 @@
 #include <pwn/core/str.h>
 #include <pwn/core/StringSeperator.h>
 
+#include <fstream>
+
 namespace pwn
 {
 namespace io
 {
-    namespace
+    FileHandle::~FileHandle() {}
+
+    struct ReadFileHandle : public FileHandle
     {
+        std::ifstream f;
+        explicit ReadFileHandle(const std::string& p) : f(p.c_str(), std::ios::binary)
+        {
+            if(!f)
+            {
+                throw (core::Str() << "Failed to read " << p).toString();
+            }
+        }
+
         void
-        Error(const pwn::string& message)
-        {
-            const char* error = PHYSFS_getLastError();
-            const pwn::string vfsError = error ? error : "<null from physfs>";
-            throw "Unable to " + message + ": " + vfsError;
-        }
-    }
+        write8(const pwn::uint8& j) override { throw "invalid operation"; }
 
-    WriteTarget::WriteTarget(
-            const pwn::string& argv0,
-            const pwn::string& target)
+        template<typename T>
+        T readSome()
+        {
+            T t;
+            read(&t, sizeof(T));
+            return t;
+        }
+
+        pwn::uint8
+        read8() override { return readSome<pwn::uint8>(); }
+
+        void
+        write16(const pwn::uint16& i) override { throw "invalid operation"; }
+
+        pwn::uint16
+        read16() override { return readSome<pwn::uint16>(); }
+
+        void
+        writeReal(const pwn::real& r) override { throw "invalid operation"; }
+
+        pwn::real
+        readReal() override { return readSome<pwn::real>(); }
+
+        void
+        write32(const pwn::uint32& i) override { throw "invalid operation"; }
+
+        pwn::uint32
+        read32() override { return readSome<pwn::uint32>(); }
+
+        void
+        read(void* data, pwn::uint32 size) override
+        {
+            if(!f.read(static_cast<char*>(data), size))
+            {
+                throw "failed to read data";
+            }
+        }
+        
+        void
+        write(const void* data, pwn::uint32 size) override { throw "invalid operation"; }
+    };
+
+    struct WriteFileHandle : public FileHandle
     {
-        if (0 == PHYSFS_init(argv0.c_str()))
+        std::ofstream f;
+        explicit WriteFileHandle(const std::string& p) : f(p.c_str(), std::ios::out | std::ios::binary)
         {
-            Error("init");
+            if(!f)
+            {
+                throw (core::Str() << "Failed to write " << p).toString();
+            }
         }
-        if (0 == PHYSFS_addToSearchPath(target.c_str(), 0))
-        {
-            Error("adding to searchpath: " + target);
-        }
-        set(target);
-    }
 
-    WriteTarget::~WriteTarget()
-    {
-        PHYSFS_deinit();
-    }
+        void
+        write8(const pwn::uint8& j) override {}
 
-    void
-    WriteTarget::set(const pwn::string& target)
-    {
-        if (0 == PHYSFS_setWriteDir(target.c_str()))
-        {
-            Error("change write dir to " + target);
-        }
-    }
+        pwn::uint8
+        read8() override { throw "invalid operation"; return 0; }
 
+        void
+        write16(const pwn::uint16& i) override {}
+
+        pwn::uint16
+        read16() override { throw "invalid operation"; return 0; }
+
+        void
+        writeReal(const pwn::real& r) override {}
+
+        pwn::real
+        readReal() override { throw "invalid operation"; return 0; }
+
+        void
+        write32(const pwn::uint32& i) override {}
+
+        pwn::uint32
+        read32() override { throw "invalid operation"; return 0; }
+
+        void
+        read(void* data, pwn::uint32 size) override { throw "invalid operation"; }
+        
+        void
+        write(const void* data, pwn::uint32 size) override {}
+    };
 
     VirtualFile::VirtualFile(const pwn::string& path, bool isLoading)
-        : file(isLoading ? PHYSFS_openRead(path.c_str())
-                         : PHYSFS_openWrite(path.c_str()))
     {
-        if (file != 0)
+        if(isLoading)
         {
-            return;
+            file.reset(new ReadFileHandle(path));
         }
-        const pwn::string action = isLoading ? "read" : "write";
-        Error(action + " " + path + " can see " +
-              core::StringSeperator()
-                      .array()
-                      .iterate(GetFileListing(""))
-                      .toString());
+        else
+        {
+            file.reset(new WriteFileHandle(path));
+        }
     }
 
     VirtualFile::~VirtualFile()
     {
-        if (file)
-        {
-            PHYSFS_close(file);
-        }
     }
 
     void
     VirtualFile::write8(const pwn::uint8& j)
     {
-        const pwn::uint16 i = j;
-        if (0 == PHYSFS_writeULE16(file, i))
-        {
-            Error("write uint8");
-        }
+        file->write8(j);
     }
 
     pwn::uint8
     VirtualFile::read8()
     {
-        pwn::uint16 value = 0;
-        if (0 == PHYSFS_readULE16(file, &value))
-        {
-            Error("read uint8");
-        }
-        return static_cast<pwn::uint8>(value);
+        return file->read8();
     }
 
     void
     VirtualFile::write16(const pwn::uint16& value)
     {
-        if (0 == PHYSFS_writeULE16(file, value))
-        {
-            Error("write uint16");
-        }
+        file->write16(value);
     }
 
     pwn::uint16
     VirtualFile::read16()
     {
-        pwn::uint16 value;
-        if (0 == PHYSFS_readULE16(file, &value))
-        {
-            Error("read uint16");
-        }
-        return value;
+        return file->read16();
     }
 
     void
     VirtualFile::write32(const pwn::uint32& value)
     {
-        if (0 == PHYSFS_writeULE32(file, value))
-        {
-            Error("write uint32");
-        }
+        file->write32(value);
     }
 
     pwn::uint32
     VirtualFile::read32()
     {
-        pwn::uint32 value = 0;
-        if (0 == PHYSFS_readULE32(file, &value))
-        {
-            Error("read uint32");
-        }
-        return value;
+        return file->read32();
     }
 
     void
     VirtualFile::writeReal(const pwn::real& value)
     {
-        const PHYSFS_sint64 objects =
-                PHYSFS_write(file, &value, 1, sizeof(pwn::real));
-        if (objects != sizeof(pwn::real))
-        {
-            Error("write real");
-        }
+        file->write(&value, sizeof(pwn::real));
     }
 
     pwn::real
     VirtualFile::readReal()
     {
         pwn::real value;
-        if (PHYSFS_read(file, &value, 1, sizeof(pwn::real)) !=
-            sizeof(pwn::real))
-        {
-            Error("reading real");
-        }
+        file->read(&value, sizeof(pwn::real));
         return value;
     }
 
@@ -163,11 +182,7 @@ namespace io
     {
         const uint32 length = value.length();
         write32(length);
-        if (PHYSFS_write(file, value.c_str(), 1, length * sizeof(pwn::tchar)) !=
-            length * sizeof(pwn::tchar))
-        {
-            Error("write string");
-        }
+        file->write(value.c_str(), length * sizeof(pwn::tchar));
     }
 
     pwn::string
@@ -181,11 +196,7 @@ namespace io
         else
         {
             boost::scoped_array<pwn::tchar> arr(new tchar[length + 1]);
-            if (PHYSFS_read(file, arr.get(), 1, length * sizeof(pwn::tchar)) !=
-                length * sizeof(pwn::tchar))
-            {
-                Error("reading string");
-            }
+            file->read(arr.get(), length * sizeof(pwn::tchar));
             arr[length] = 0;
             return arr.get();
         }
@@ -194,20 +205,13 @@ namespace io
     void
     VirtualFile::read(void* data, pwn::uint32 size)
     {
-        if (PHYSFS_read(file, data, 1, size) != size)
-        {
-            Error("reading data");
-        }
+        file->read(data, size);
     }
 
     void
     VirtualFile::write(const void* data, pwn::uint32 size)
     {
-        const PHYSFS_sint64 objects = PHYSFS_write(file, data, size, 1);
-        if (objects != 1)
-        {
-            Error("writing data");  // size was 1, bug in nightly physfs
-        }
+        file->write(data, size);
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -272,25 +276,6 @@ namespace io
     FileReader::handleString(pwn::string& value)
     {
         value = file->readString();
-    }
-
-    std::vector<pwn::string>
-    GetFileListing(const pwn::string& dir)
-    {
-        std::vector<pwn::string> files;
-
-        const pwn::string SEPERATOR = "/";
-        const bool shouldAddSeperator = !core::EndsWith(dir, SEPERATOR);
-        const pwn::string sep = shouldAddSeperator ? SEPERATOR : "";
-
-        char** rc = PHYSFS_enumerateFiles(dir.c_str());
-        for (char** i = rc; *i != NULL; i++)
-        {
-            files.push_back(core::Str() << dir << sep << *i);
-        }
-        PHYSFS_freeList(rc);
-
-        return files;
     }
 }
 }

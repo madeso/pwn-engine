@@ -294,7 +294,6 @@ namespace convert
                         name);
 
                 {
-                    pwn::io::WriteTarget wt(argv0, outdir);
                     pwn::io::Write(mesh, fname + ".mesh");
                 }
 
@@ -340,10 +339,9 @@ namespace convert
                     };
 
                     {
-                        pwn::io::WriteTarget wt(argv0, adir);
                         pwn::io::Write(
                                 ae.animation,
-                                boost::filesystem::path(ae.name)
+                                argv0+boost::filesystem::path(ae.name)
                                         .replace_extension("anim")
                                         .filename()
                                         .c_str());

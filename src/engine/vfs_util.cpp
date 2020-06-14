@@ -1,39 +1,33 @@
 #include "vfs_util.hpp"
-
 #include "pwn/core/str.h"
+
+#include <fstream>
+#include <vector>
 
 namespace pwn
 {
 namespace engine
 {
-    File::File(const std::string& filename, PHYSFS_file* file) : file(file)
-    {
-        if (file == 0)
-        {
-            throw (core::Str() << "failed to load file: " << filename).toString();
-        }
-    }
-
-    File::~File()
-    {
-        PHYSFS_close(file);
-    }
-
     const std::size_t
-    File::loadToMemory(boost::scoped_array<byte>* memory)
+    loadFileToMemory(const std::string& filename, boost::scoped_array<byte>* memory)
     {
-        const PHYSFS_sint64 ssize = PHYSFS_fileLength(file);
-        if (ssize < 0)
+        std::ifstream file(filename, std::ios::binary | std::ios::ate);
+
+        if(!file.good())
         {
-            throw "failed to load to get length";
+            throw (core::Str() << "Failed to open " << filename).toString();
         }
-        const std::size_t size = ssize;
+
+        std::streamsize size = file.tellg();
+        file.seekg(0, std::ios::beg);
+
         memory->reset(new byte[size]);
-        const PHYSFS_sint64 read = PHYSFS_read(file, memory->get(), 1, size);
-        if (read != ssize)
+
+        if (file.read(memory->get(), size))
         {
-            throw "failed to read data";
+            /* worked! */
         }
+        
         return size;
     }
 }

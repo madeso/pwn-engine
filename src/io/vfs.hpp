@@ -6,16 +6,49 @@
 #include <boost/noncopyable.hpp>
 #include <boost/scoped_array.hpp>
 
-#include <physfs.h>
 #include <vector>
 #include <map>
+#include <memory>
 
 namespace pwn
 {
 namespace io
 {
-    std::vector<pwn::string>
-    GetFileListing(const pwn::string& dir);
+    struct FileHandle
+    {
+        virtual ~FileHandle();
+
+        virtual void
+        write8(const pwn::uint8& j) = 0;
+
+        virtual pwn::uint8
+        read8() = 0;
+
+        virtual void
+        write16(const pwn::uint16& i) = 0;
+
+        virtual pwn::uint16
+        read16() = 0;
+
+        virtual void
+        writeReal(const pwn::real& r) = 0;
+
+        virtual pwn::real
+        readReal() = 0;
+
+        virtual void
+        write32(const pwn::uint32& i) = 0;
+
+        virtual pwn::uint32
+        read32() = 0;
+
+        virtual void
+        read(void* data, pwn::uint32 size) = 0;
+        
+        virtual void
+        write(const void* data, pwn::uint32 size) = 0;
+    };
+
 
     class VirtualFile : boost::noncopyable
     {
@@ -50,11 +83,12 @@ namespace io
 
         void
         read(void* data, pwn::uint32 size);
+
         void
         write(const void* data, pwn::uint32 size);
 
     private:
-        PHYSFS_file* file;
+        std::shared_ptr<FileHandle> file;
     };
 
     class FileWriter

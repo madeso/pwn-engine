@@ -7,7 +7,7 @@ include(../../inc/pwn/engine/engine_inc.cmake)
 include(../../external/soil/soil_src.cmake)
 
 set(src ${engine_src} ${engine_inc} ${soil_src})
-include_directories(${PHYSFS_INCLUDE_DIR} ${SFML_INCLUDE_DIR})
+include_directories(${SFML_INCLUDE_DIR})
 
 source_group("" FILES ${src})
 source_group(soil FILES ${soil_src})

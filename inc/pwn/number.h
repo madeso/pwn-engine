@@ -23,7 +23,7 @@ typedef unsigned int uint32;
 typedef unsigned short uint16;
 typedef unsigned char uint8;
 
-typedef int8 byte;
+typedef char byte;
 typedef uint8 ubyte;
 
 // and finally real

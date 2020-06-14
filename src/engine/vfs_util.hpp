@@ -5,24 +5,14 @@
 
 #include <pwn/number.h>
 
-#include <physfs.h>
 #include <boost/scoped_array.hpp>
 
 namespace pwn
 {
 namespace engine
 {
-    class File
-    {
-    public:
-        File(const std::string& filename, PHYSFS_file* file);
-        ~File();
-
-        const std::size_t
-        loadToMemory(boost::scoped_array<byte>* memory);
-
-        PHYSFS_file* file;
-    };
+    const std::size_t
+    loadFileToMemory(const std::string& filename, boost::scoped_array<byte>* memory);
 }
 }
 

@@ -140,8 +140,7 @@ namespace meshdebug
                                              .remove_filename()
                                              .string();
             const pwn::string fname = boost::filesystem::path(file).filename().string();
-            io::WriteTarget wt(GetAbsolutePath(args->argv0), fdir);
-            io::Read(&mesh, fname);
+            io::Read(&mesh, GetAbsolutePath(args->argv0) + fname);
         }
 
         DumpData(

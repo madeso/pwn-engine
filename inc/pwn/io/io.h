@@ -13,14 +13,6 @@ namespace pwn
 
 	namespace io
 	{
-		class WriteTarget
-		{
-		public:
-			WriteTarget(const pwn::string& argv0, const pwn::string& target);
-			void set(const pwn::string& target);
-			~WriteTarget();
-		};
-
 		void Write(const mesh::Mesh& mesh, const pwn::string& filename);
 		void Read(mesh::Mesh* mesh, const pwn::string& filename);
 

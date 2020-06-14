@@ -1,13 +1,16 @@
 #include <gtest/gtest.h>
-#include <gmock/gmock.h>
 
 #include <vector>
+
+#include "catchy/vectorequals.h"
+
 #include <pwn/render/renderlist.h>
 #include <pwn/render/compiledmesh.h>
 #include <pwn/render/material.h>
 #include <pwn/core/idpool.h>
 #include <pwn/math/operations.h>
 #include <pwn/render/poseable.h>
+#include "pwn/core/str.h"
 
 namespace test  //SUITE(testRenderList)
 {
@@ -20,6 +23,24 @@ const bool useGlCommands = false;
 const bool useGlTexture = false;
 
 typedef std::vector<int> List;
+
+catchy::FalseString
+ElementsAre(const List& lhs, const List& rhs)
+{
+    return catchy::VectorEquals
+    (
+        lhs,
+        rhs,
+        [](int i)
+        {
+            return (Str() << i).toString();
+        },
+        [](int lhsi, int rhsi)
+        {
+            return lhsi != rhsi ? catchy::FalseString::False("differs") : catchy::FalseString::True();
+        }
+    );
+}
 
 class CompiledMeshStub : public CompiledMesh
 {
@@ -66,199 +87,185 @@ namespace
     }
 }
 
-struct CommonMeshMat : ::testing::Test
+TEST(testRenderList, CommonMeshMat)
 {
-    CommonMeshMat()
-        : m0(CreateTranslationMatrixFromdepth(0))
-        , m1(CreateTranslationMatrixFromdepth(10))
-        , m2(CreateTranslationMatrixFromdepth(20))
-        , m3(CreateTranslationMatrixFromdepth(30))
-
-        , rl(useGlCommands)
-    {
-        t1 = CreateTexture(&pool);
-        t2 = CreateTexture(&pool);
-        t3 = CreateTexture(&pool);
-    }
-
     IdPool pool;
     Material::TexturePtr tNull;
-    Material::TexturePtr t1;
-    Material::TexturePtr t2;
-    Material::TexturePtr t3;
+    Material::TexturePtr t1 = CreateTexture(&pool);
+    Material::TexturePtr t2 = CreateTexture(&pool);
+    Material::TexturePtr t3 = CreateTexture(&pool);
 
-    mat44 m0;
-    mat44 m1;
-    mat44 m2;
-    mat44 m3;
+    mat44 m1 = CreateTranslationMatrixFromdepth(0);
+    mat44 m0 = CreateTranslationMatrixFromdepth(10);
+    mat44 m2 = CreateTranslationMatrixFromdepth(20);
+    mat44 m3 = CreateTranslationMatrixFromdepth(30);
 
-    RenderList rl;
+    RenderList rl(useGlCommands);
     List list;
     Poseable poseable;
-};
 
-// basic tests to check that it renders it
-TEST_F(CommonMeshMat, testRender_Single)
-{
-    rl.begin();
-    rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
-    rl.end(false);
 
-    ASSERT_THAT(list, testing::ElementsAre(0));
+    // basic tests to check that it renders it
+    SECTION("testRender_Single")
+    {
+        rl.begin();
+        rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
+        rl.end(false);
+
+        CHECK(ElementsAre(list, {0}));
+    }
+
+    SECTION("testRender_Several")
+    {
+        rl.begin();
+        rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
+        rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
+        rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
+        rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
+        rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
+        rl.end(false);
+
+        CHECK(ElementsAre(list, {0, 0, 0, 0, 0}));
+    }
+
+    // test alpha/non alpha sorting
+    SECTION("testRender_Alpha_RightOrder")
+    {
+        rl.begin();
+        rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m0, &poseable);
+        rl.add(CreateMesh(2, &list), CreateMaterial(true, tNull), m0, &poseable);
+        rl.end(false);
+
+        CHECK(ElementsAre(list, {1, 2}));
+    }
+
+    SECTION("testRender_Alpha_WrongOrder")
+    {
+        rl.begin();
+        rl.add(CreateMesh(2, &list), CreateMaterial(true, tNull), m0, &poseable);
+        rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m0, &poseable);
+        rl.end(false);
+
+        CHECK(ElementsAre(list, {1, 2}));
+    }
+
+    // test sort distance order...
+    SECTION("testRender_Distance_Solid_RightOrder")
+    {
+        rl.begin();
+        rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
+        rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m1, &poseable);
+        rl.add(CreateMesh(2, &list), CreateMaterial(false, tNull), m2, &poseable);
+        rl.end(false);
+
+        CHECK(ElementsAre(list, {0, 1, 2}));
+    }
+
+    SECTION("testRender_Distance_Solid_WrongOrder")
+    {
+        rl.begin();
+        rl.add(CreateMesh(2, &list), CreateMaterial(false, tNull), m2, &poseable);
+        rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
+        rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m1, &poseable);
+        rl.end(false);
+
+        CHECK(ElementsAre(list, {0, 1, 2}));
+    }
+
+    SECTION("testRender_Distance_Transparent_RightOrder")
+    {
+        rl.begin();
+        rl.add(CreateMesh(0, &list), CreateMaterial(true, tNull), m2, &poseable);
+        rl.add(CreateMesh(1, &list), CreateMaterial(true, tNull), m1, &poseable);
+        rl.add(CreateMesh(2, &list), CreateMaterial(true, tNull), m0, &poseable);
+        rl.end(false);
+
+        CHECK(ElementsAre(list, {0, 1, 2}));
+    }
+
+    SECTION("testRender_Distance_Transparent_WrongOrder")
+    {
+        rl.begin();
+        rl.add(CreateMesh(2, &list), CreateMaterial(true, tNull), m0, &poseable);
+        rl.add(CreateMesh(0, &list), CreateMaterial(true, tNull), m2, &poseable);
+        rl.add(CreateMesh(1, &list), CreateMaterial(true, tNull), m1, &poseable);
+        rl.end(false);
+
+        CHECK(ElementsAre(list, {0, 1, 2}));
+    }
+
+    // test sort textures order...
+    SECTION("testRender_Texture_RightOrder")
+    {
+        rl.begin();
+        rl.add(CreateMesh(0, &list), CreateMaterial(false, t1), m0, &poseable);
+        rl.add(CreateMesh(1, &list), CreateMaterial(false, t2), m0, &poseable);
+        rl.add(CreateMesh(2, &list), CreateMaterial(false, t3), m0, &poseable);
+        rl.end(false);
+
+        CHECK(ElementsAre(list, {0, 1, 2}));
+    }
+
+    SECTION("testRender_Texture_WrongOrder")
+    {
+        rl.begin();
+        rl.add(CreateMesh(2, &list), CreateMaterial(false, t3), m0, &poseable);
+        rl.add(CreateMesh(0, &list), CreateMaterial(false, t1), m0, &poseable);
+        rl.add(CreateMesh(1, &list), CreateMaterial(false, t2), m0, &poseable);
+        rl.end(false);
+
+        CHECK(ElementsAre(list, {0, 1, 2}));
+    }
+
+    // test complex sorting order
+    SECTION("testRender_Complex_RightOrder")
+    {
+        rl.begin();
+        rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m0, &poseable);
+        rl.add(CreateMesh(2, &list), CreateMaterial(false, tNull), m1, &poseable);
+        rl.add(CreateMesh(3, &list), CreateMaterial(false, t1), m0, &poseable);
+        rl.add(CreateMesh(4, &list), CreateMaterial(false, t1), m1, &poseable);
+        rl.add(CreateMesh(5, &list), CreateMaterial(false, t2), m0, &poseable);
+        rl.add(CreateMesh(6, &list), CreateMaterial(false, t2), m1, &poseable);
+        rl.add(CreateMesh(7, &list), CreateMaterial(false, t3), m0, &poseable);
+        rl.add(CreateMesh(8, &list), CreateMaterial(false, t3), m1, &poseable);
+
+        rl.add(CreateMesh(9, &list), CreateMaterial(true, tNull), m1, &poseable);
+        rl.add(CreateMesh(10, &list), CreateMaterial(true, t1), m1, &poseable);
+        rl.add(CreateMesh(11, &list), CreateMaterial(true, t2), m1, &poseable);
+        rl.add(CreateMesh(12, &list), CreateMaterial(true, t3), m1, &poseable);
+        rl.add(CreateMesh(13, &list), CreateMaterial(true, tNull), m0, &poseable);
+        rl.add(CreateMesh(14, &list), CreateMaterial(true, t1), m0, &poseable);
+        rl.add(CreateMesh(15, &list), CreateMaterial(true, t2), m0, &poseable);
+        rl.add(CreateMesh(16, &list), CreateMaterial(true, t3), m0, &poseable);
+        rl.end(false);
+
+        CHECK(ElementsAre(list, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}));
+    }
+
+    SECTION("testRender_Complex_WrongOrder")
+    {
+        rl.begin();
+        rl.add(CreateMesh(7, &list), CreateMaterial(false, t3), m0, &poseable);
+        rl.add(CreateMesh(8, &list), CreateMaterial(false, t3), m1, &poseable);
+        rl.add(CreateMesh(16, &list), CreateMaterial(true, t3), m0, &poseable);
+        rl.add(CreateMesh(3, &list), CreateMaterial(false, t1), m0, &poseable);
+        rl.add(CreateMesh(6, &list), CreateMaterial(false, t2), m1, &poseable);
+        rl.add(CreateMesh(14, &list), CreateMaterial(true, t1), m0, &poseable);
+        rl.add(CreateMesh(15, &list), CreateMaterial(true, t2), m0, &poseable);
+        rl.add(CreateMesh(13, &list), CreateMaterial(true, tNull), m0, &poseable);
+        rl.add(CreateMesh(11, &list), CreateMaterial(true, t2), m1, &poseable);
+        rl.add(CreateMesh(2, &list), CreateMaterial(false, tNull), m1, &poseable);
+        rl.add(CreateMesh(5, &list), CreateMaterial(false, t2), m0, &poseable);
+        rl.add(CreateMesh(12, &list), CreateMaterial(true, t3), m1, &poseable);
+        rl.add(CreateMesh(9, &list), CreateMaterial(true, tNull), m1, &poseable);
+        rl.add(CreateMesh(10, &list), CreateMaterial(true, t1), m1, &poseable);
+        rl.add(CreateMesh(4, &list), CreateMaterial(false, t1), m1, &poseable);
+        rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m0, &poseable);
+        rl.end(false);
+
+        CHECK(ElementsAre(list, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}));
+    }
 }
 
-TEST_F(CommonMeshMat, testRender_Several)
-{
-    rl.begin();
-    rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
-    rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
-    rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
-    rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
-    rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
-    rl.end(false);
-
-    ASSERT_THAT(list, testing::ElementsAre(0, 0, 0, 0, 0));
-}
-
-// test alpha/non alpha sorting
-TEST_F(CommonMeshMat, testRender_Alpha_RightOrder)
-{
-    rl.begin();
-    rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m0, &poseable);
-    rl.add(CreateMesh(2, &list), CreateMaterial(true, tNull), m0, &poseable);
-    rl.end(false);
-
-    ASSERT_THAT(list, testing::ElementsAre(1, 2));
-}
-
-TEST_F(CommonMeshMat, testRender_Alpha_WrongOrder)
-{
-    rl.begin();
-    rl.add(CreateMesh(2, &list), CreateMaterial(true, tNull), m0, &poseable);
-    rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m0, &poseable);
-    rl.end(false);
-
-    ASSERT_THAT(list, testing::ElementsAre(1, 2));
-}
-
-// test sort distance order...
-TEST_F(CommonMeshMat, testRender_Distance_Solid_RightOrder)
-{
-    rl.begin();
-    rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
-    rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m1, &poseable);
-    rl.add(CreateMesh(2, &list), CreateMaterial(false, tNull), m2, &poseable);
-    rl.end(false);
-
-    ASSERT_THAT(list, testing::ElementsAre(0, 1, 2));
-}
-
-TEST_F(CommonMeshMat, testRender_Distance_Solid_WrongOrder)
-{
-    rl.begin();
-    rl.add(CreateMesh(2, &list), CreateMaterial(false, tNull), m2, &poseable);
-    rl.add(CreateMesh(0, &list), CreateMaterial(false, tNull), m0, &poseable);
-    rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m1, &poseable);
-    rl.end(false);
-
-    ASSERT_THAT(list, testing::ElementsAre(0, 1, 2));
-}
-
-TEST_F(CommonMeshMat, testRender_Distance_Transparent_RightOrder)
-{
-    rl.begin();
-    rl.add(CreateMesh(0, &list), CreateMaterial(true, tNull), m2, &poseable);
-    rl.add(CreateMesh(1, &list), CreateMaterial(true, tNull), m1, &poseable);
-    rl.add(CreateMesh(2, &list), CreateMaterial(true, tNull), m0, &poseable);
-    rl.end(false);
-
-    ASSERT_THAT(list, testing::ElementsAre(0, 1, 2));
-}
-
-TEST_F(CommonMeshMat, testRender_Distance_Transparent_WrongOrder)
-{
-    rl.begin();
-    rl.add(CreateMesh(2, &list), CreateMaterial(true, tNull), m0, &poseable);
-    rl.add(CreateMesh(0, &list), CreateMaterial(true, tNull), m2, &poseable);
-    rl.add(CreateMesh(1, &list), CreateMaterial(true, tNull), m1, &poseable);
-    rl.end(false);
-
-    ASSERT_THAT(list, testing::ElementsAre(0, 1, 2));
-}
-
-// test sort textures order...
-TEST_F(CommonMeshMat, testRender_Texture_RightOrder)
-{
-    rl.begin();
-    rl.add(CreateMesh(0, &list), CreateMaterial(false, t1), m0, &poseable);
-    rl.add(CreateMesh(1, &list), CreateMaterial(false, t2), m0, &poseable);
-    rl.add(CreateMesh(2, &list), CreateMaterial(false, t3), m0, &poseable);
-    rl.end(false);
-
-    ASSERT_THAT(list, testing::ElementsAre(0, 1, 2));
-}
-
-TEST_F(CommonMeshMat, testRender_Texture_WrongOrder)
-{
-    rl.begin();
-    rl.add(CreateMesh(2, &list), CreateMaterial(false, t3), m0, &poseable);
-    rl.add(CreateMesh(0, &list), CreateMaterial(false, t1), m0, &poseable);
-    rl.add(CreateMesh(1, &list), CreateMaterial(false, t2), m0, &poseable);
-    rl.end(false);
-
-    ASSERT_THAT(list, testing::ElementsAre(0, 1, 2));
-}
-
-// test complex sorting order
-TEST_F(CommonMeshMat, testRender_Complex_RightOrder)
-{
-    rl.begin();
-    rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m0, &poseable);
-    rl.add(CreateMesh(2, &list), CreateMaterial(false, tNull), m1, &poseable);
-    rl.add(CreateMesh(3, &list), CreateMaterial(false, t1), m0, &poseable);
-    rl.add(CreateMesh(4, &list), CreateMaterial(false, t1), m1, &poseable);
-    rl.add(CreateMesh(5, &list), CreateMaterial(false, t2), m0, &poseable);
-    rl.add(CreateMesh(6, &list), CreateMaterial(false, t2), m1, &poseable);
-    rl.add(CreateMesh(7, &list), CreateMaterial(false, t3), m0, &poseable);
-    rl.add(CreateMesh(8, &list), CreateMaterial(false, t3), m1, &poseable);
-
-    rl.add(CreateMesh(9, &list), CreateMaterial(true, tNull), m1, &poseable);
-    rl.add(CreateMesh(10, &list), CreateMaterial(true, t1), m1, &poseable);
-    rl.add(CreateMesh(11, &list), CreateMaterial(true, t2), m1, &poseable);
-    rl.add(CreateMesh(12, &list), CreateMaterial(true, t3), m1, &poseable);
-    rl.add(CreateMesh(13, &list), CreateMaterial(true, tNull), m0, &poseable);
-    rl.add(CreateMesh(14, &list), CreateMaterial(true, t1), m0, &poseable);
-    rl.add(CreateMesh(15, &list), CreateMaterial(true, t2), m0, &poseable);
-    rl.add(CreateMesh(16, &list), CreateMaterial(true, t3), m0, &poseable);
-    rl.end(false);
-
-    int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
-    ASSERT_THAT(list, testing::ElementsAreArray(arr));
-}
-
-TEST_F(CommonMeshMat, testRender_Complex_WrongOrder)
-{
-    rl.begin();
-    rl.add(CreateMesh(7, &list), CreateMaterial(false, t3), m0, &poseable);
-    rl.add(CreateMesh(8, &list), CreateMaterial(false, t3), m1, &poseable);
-    rl.add(CreateMesh(16, &list), CreateMaterial(true, t3), m0, &poseable);
-    rl.add(CreateMesh(3, &list), CreateMaterial(false, t1), m0, &poseable);
-    rl.add(CreateMesh(6, &list), CreateMaterial(false, t2), m1, &poseable);
-    rl.add(CreateMesh(14, &list), CreateMaterial(true, t1), m0, &poseable);
-    rl.add(CreateMesh(15, &list), CreateMaterial(true, t2), m0, &poseable);
-    rl.add(CreateMesh(13, &list), CreateMaterial(true, tNull), m0, &poseable);
-    rl.add(CreateMesh(11, &list), CreateMaterial(true, t2), m1, &poseable);
-    rl.add(CreateMesh(2, &list), CreateMaterial(false, tNull), m1, &poseable);
-    rl.add(CreateMesh(5, &list), CreateMaterial(false, t2), m0, &poseable);
-    rl.add(CreateMesh(12, &list), CreateMaterial(true, t3), m1, &poseable);
-    rl.add(CreateMesh(9, &list), CreateMaterial(true, tNull), m1, &poseable);
-    rl.add(CreateMesh(10, &list), CreateMaterial(true, t1), m1, &poseable);
-    rl.add(CreateMesh(4, &list), CreateMaterial(false, t1), m1, &poseable);
-    rl.add(CreateMesh(1, &list), CreateMaterial(false, tNull), m0, &poseable);
-
-    rl.end(false);
-
-    int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
-    ASSERT_THAT(list, testing::ElementsAreArray(arr));
-}
 }

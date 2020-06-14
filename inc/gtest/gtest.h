@@ -14,4 +14,5 @@
 
 #define EXPECT_PRED_FORMAT2(f, lhs, rhs) REQUIRE(f(#lhs, #rhs, lhs, rhs))
 
+
 #endif  // FAKE_GTEST_H

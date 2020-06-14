@@ -11,7 +11,6 @@ dist/Debug/pwn-*
 dist/Release/pwn-*
 dist/*.mesh
 dist/*/*.anim
-dist/alien_chamber/*
 dist/-Debug/*
 dist/-Release/*
 dist/build/*

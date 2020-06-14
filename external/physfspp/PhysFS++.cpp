@@ -2,11 +2,13 @@
 
 //#include <OgreException.h> // sirGustav: removed header since I don't have it and apperently it wasn't needed
 #include <sstream> // sirGustav: added better exception throwing message
+#include <iostream>
 
 namespace PhysFS
 {
   void init(const char* argv0, bool symLinks)
   {
+      std::cout << "physfs pp init: " << argv0 << "\n";
     if (!PHYSFS_init(argv0))
       throw Exception(PHYSFS_getLastError());
 

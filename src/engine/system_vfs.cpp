@@ -8,6 +8,7 @@
 #include <pwn/assert.h>
 
 #include <boost/filesystem.hpp>
+#include <iostream>
 
 namespace pwn
 {
@@ -39,6 +40,7 @@ namespace engine
         PhysFsStarter(const pwn::string& argv0) : deinitInDestructor(false)
         {
             Assert(gPhysFsCreated() == false);
+            std::cout << "Initializing vfs with " << argv0 << "\n";
             const int result = PHYSFS_init(argv0.c_str());
             deinitInDestructor = true;
             if (result == 0)
@@ -62,12 +64,11 @@ namespace engine
         GetParent(const pwn::string& app)
         {
             // system_complete solves relative paths we get from argv[0] and physfs seems give bad folders and data when it revieves them
-            return boost::filesystem::system_complete(
+            return (boost::filesystem::system_complete(
                            boost::filesystem::path(app)
                                    .parent_path()
-                                   .parent_path() /
-                           "dummy.exe")
-                    .c_str();
+                                   .parent_path()).remove_trailing_separator()
+                                   .parent_path() / "dummy").string();
         }
     }
 
@@ -80,6 +81,7 @@ namespace engine
                 const pwn::string& app)
         {
             {
+                std::cout << "Starting vfs system with " << argv0 << "\n";
                 const pwn::string parentdir = GetParent(argv0);
                 PhysFsStarter start(parentdir);
                 const int result = PHYSFS_setSaneConfig(
@@ -133,7 +135,16 @@ namespace engine
         void
         WriteFilesSeen()
         {
-            std::vector<pwn::string> root = FilesSeen("");
+            const auto root = FilesSeen("");
+            std::cout << "\n";
+            std::cout << "\n";
+            std::cout << "Can see the following files\n";
+            for(const auto f: root)
+            {
+                std::cout << f << "\n";
+            }
+            std::cout << "\n";
+            std::cout << "\n";
         }
     }
 

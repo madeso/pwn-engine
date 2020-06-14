@@ -16,6 +16,8 @@
 
 #include <pwn/render/shaderpool.h>
 
+#include <iostream>
+
 using namespace pwn;
 using namespace pwn::engine;
 using namespace pwn::render;
@@ -109,6 +111,7 @@ public:
 int
 main(int, char** argv)
 {
+    try
     {
         Game game;
         InstallDefaultSystems(
@@ -118,5 +121,17 @@ main(int, char** argv)
                         "pwn-demo-basic-camera",
                         "pwn demo: basic camera"));
         EasyLoop(&game).loop();
+    }
+    catch(const std::string& err)
+    {
+        std::cout << "Error: " << err <<"\n";
+    }
+    catch(const char* const err)
+    {
+        std::cout << "Error: " << err <<"\n";
+    }
+    catch(...)
+    {
+        std::cout << "Unknown error\n";
     }
 }

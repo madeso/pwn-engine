@@ -1,14 +1,16 @@
 #include "vfs_util.hpp"
 
+#include "pwn/core/str.h"
+
 namespace pwn
 {
 namespace engine
 {
-    File::File(PHYSFS_file* file) : file(file)
+    File::File(const std::string& filename, PHYSFS_file* file) : file(file)
     {
         if (file == 0)
         {
-            throw "failed to load file";
+            throw (core::Str() << "failed to load file: " << filename).toString();
         }
     }
 

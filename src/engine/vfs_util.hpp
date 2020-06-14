@@ -1,6 +1,8 @@
 #ifndef PWN_ENGINE_VFSUTIL_HPP
 #define PWN_ENGINE_VFSUTIL_HPP
 
+#include <string>
+
 #include <pwn/number.h>
 
 #include <physfs.h>
@@ -13,7 +15,7 @@ namespace engine
     class File
     {
     public:
-        explicit File(PHYSFS_file* file);
+        File(const std::string& filename, PHYSFS_file* file);
         ~File();
 
         const std::size_t

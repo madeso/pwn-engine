@@ -47,7 +47,7 @@ namespace engine
     {
         boost::scoped_array<byte> memory;
         const std::size_t size =
-                File(PHYSFS_openRead(filename.c_str())).loadToMemory(&memory);
+                File(filename, PHYSFS_openRead(filename.c_str())).loadToMemory(&memory);
         boost::shared_ptr<render::Texture2> tex(
                 new render::Texture2(pool, true));
         int width = -1;

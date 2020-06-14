@@ -122,9 +122,7 @@ namespace meshdebug
     GetAbsolutePath(const pwn::string& in)
     {
         return boost::filesystem::system_complete(
-                       boost::filesystem::path(
-                               in.c_str(),
-                               boost::filesystem::native))
+                       boost::filesystem::path(in))
                 .string();
     }
 
@@ -140,8 +138,8 @@ namespace meshdebug
         {
             const pwn::string fdir = boost::filesystem::path(file)
                                              .remove_filename()
-                                             .directory_string();
-            const pwn::string fname = boost::filesystem::path(file).filename();
+                                             .string();
+            const pwn::string fname = boost::filesystem::path(file).filename().string();
             io::WriteTarget wt(GetAbsolutePath(args->argv0), fdir);
             io::Read(&mesh, fname);
         }

@@ -45,7 +45,7 @@ namespace convert
             return formatOveride;
         }
         const pwn::string ext =
-                boost::filesystem::path(inputfile).extension().c_str();
+                boost::filesystem::path(inputfile).extension().string();
 
         return SuggestFormat(ext);
     }
@@ -92,7 +92,7 @@ namespace convert
     pwn::string
     SuggestTextureDirectory(const pwn::string& in)
     {
-        return boost::filesystem::path(in).replace_extension().filename();
+        return boost::filesystem::path(in).replace_extension().filename().string();
     }
 
     bool
@@ -102,7 +102,7 @@ namespace convert
                 boost::filesystem::path(in).replace_extension("animinfo");
         if (out)
         {
-            *out = p.file_string();
+            *out = p.string();
         }
         return boost::filesystem::exists(p);
     }
@@ -111,16 +111,14 @@ namespace convert
     GetAbsolutePath(const pwn::string& in)
     {
         return boost::filesystem::system_complete(
-                       boost::filesystem::path(
-                               in.c_str(),
-                               boost::filesystem::native))
+                       boost::filesystem::path(in))
                 .string();
     }
 
     pwn::string
     SuggestOutDirectory(const pwn::string& in)
     {
-        return boost::filesystem::path(in).remove_filename().directory_string();
+        return boost::filesystem::path(in).remove_filename().c_str();
     }
 
     mesh::Animation
@@ -292,7 +290,7 @@ namespace convert
                 }
 
                 pwn::string fname = CombineFilename(
-                        boost::filesystem::path(inputfile).stem(),
+                        boost::filesystem::path(inputfile).stem().string(),
                         name);
 
                 {

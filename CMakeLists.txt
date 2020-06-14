@@ -46,7 +46,7 @@ if(CMAKE_CONFIGURATION_TYPES)
  endif()
 
 find_package(PhysFS REQUIRED)
-find_package(Boost REQUIRED)
+find_package(Boost REQUIRED COMPONENTS filesystem)
 find_package(OpenGL REQUIRED)
 
 find_package(SFML COMPONENTS system window REQUIRED)
